@@ -4,11 +4,11 @@
       <div>
         <font-awesome-icon icon="arrowLeft" />
       </div>
-      
+
       <div>
         <h1>{{ username }}</h1>
       </div>
-      
+
       <div>
         <img style="width: 50px; border-radius: 50%;" :src="profileImage" />
       </div>
@@ -30,11 +30,11 @@
             <div class="icons">
               <div class="image" @click="openFileInput('imageInp')">
                 <font-awesome-icon icon="image" />
-                <input id="imageInp" type="file" style="display: none;" />
+                <input id="imageInp" type="file" style="display: none;" @change="handleImageChange" />
               </div>
               <div class="video" @click="openFileInput('videoInp')">
                 <font-awesome-icon icon="video" />
-                <input id="videoInp" type="file" style="display: none;" />
+                <input id="videoInp" type="file" style="display: none;" @change="handleVideoChange" />
               </div>
               <div class="emotion">
                 <font-awesome-icon icon="smile" />
@@ -67,7 +67,6 @@
   </div>
 </template>
 
-
 <script>
 export default {
   data() {
@@ -76,12 +75,30 @@ export default {
       profileImage: '',
       photos: [],
       content: '',
-      videoSource: null
+      videoSource: null,
+      imageSource: null
     };
   },
   methods: {
     openFileInput(inputId) {
       document.getElementById(inputId).click();
+    },
+    handleImageChange(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      
+      reader.onload = (ev) => {
+        if (this.photos.length >= 10) {
+          alert('Has excedido la cantidad máxima de imágenes.');
+          return;
+        }
+        this.photos.push(ev.target.result);
+        this.imageSource = ev.target.result;
+        console.log('image source: ', this.imageSource);
+      };
     },
     handleVideoChange(e) {
       const file = e.target.files[0];
@@ -94,67 +111,29 @@ export default {
         this.videoSource = ev.target.result;
       };
     },
-  async  submitForm() {
+    async submitForm() {
       const response = await fetch('http://localhost:3000/api/sofi/createPost', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          credentials: 'include',
-          body: JSON.stringify({
-          
-               //description: post.description,
-              //  postPicture: post.postPicture,
-             //   private: post.private,
-             //   only_friends: post.only_friends,
-            //    user_id: userId,
-              //  user_name: username,
-              //  user_img: userImg
-    
-          
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
           description: this.content,
-          postPicture: 'lebeau.jpg',
+          postPicture: this.imageSource,
+          videoSource: this.videoSource,
           privatePost: false,
           only_friends: false
-          
-          
-          
-          })
-      })
-      
-      if(!response.ok) {
-          console.log('Response not Ok.')
+        })
+      });
+
+      if (!response.ok) {
+        console.log('Response not Ok.');
       }
-      
-      const data = await response.json()
-      console.log(data)
+
+      const data = await response.json();
+      console.log(data);
     }
-  },
-  mounted() {
-    document.getElementById('imageInp').addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      
-      if (file) {
-        if (this.photos.length >= 10) {
-          alert('Has excedido la cantidad máxima de imágenes.');
-          return;
-        }
-        
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        
-        reader.onload = (ev) => {
-          this.photos.push(ev.target.result);
-        };
-      } else {
-        alert('No hay archivo seleccionado.');
-      }
-    });
-    
-    document.getElementById('videoInp').addEventListener('change', this.handleVideoChange);
-  },
-  beforeDestroy() {
-    document.getElementById('videoInp').removeEventListener('change', this.handleVideoChange);
   }
 };
 </script>
