@@ -1,23 +1,23 @@
 const Post = require('../models/Post')
 
-const createPost = (post, userId, username, userImg) => {
-    return new Promise(async(resolve, reject) => {
+const createPost = async (post, userId, username, userImg, postImg) => {
         try {
-            
-            await Post.create({
+            console.log('Post image picture xd: ', postImg)
+           const socialpost = await Post.create({
                 description: post.description,
-                postPicture: post.postPicture,
+                postPicture: postImg,
                 privatePost: post.privatePost,
                 only_friends: post.only_friends,
                 user_id: userId,
                 user_name: username,
                 user_img: userImg
             })
+
+            return socialpost
             
         } catch(e) {
             console.log(e)
         }
-    })
 }
 
 module.exports = {

@@ -112,11 +112,12 @@ app.get('/api/sofi/check_token', async (req, res) => {
 
 app.post('/api/sofi/createPost', upload.single('postPicture'), [
     body("description").escape().trim(),
-    body("picture").escape().trim(),
+    body("postPicture").escape().trim(),
     body("privatePost").isBoolean(),
     body("only_friends").isBoolean(),
 ], async (req, res) => {
-    console.log(req.files)
+    console.log('FILE:::::,,,', req.file.path)
+    console.log('BODY....????', req.body)
     try {
         const jwt = req.cookies.jwt;
         const decoded = await tokenController.verifyJwtToken(jwt);
@@ -124,7 +125,7 @@ app.post('/api/sofi/createPost', upload.single('postPicture'), [
         const user_name = decoded.username;
         const user_img = decoded.userPicture;
 
-        await createPostController.createPost(req.body, user_id, user_name, user_img);
+        await createPostController.createPost(req.body, user_id, user_name, user_img, req.file.path);
         return res.status(201).json({ detail: 'Your Post Has Been Submitted To Our System.' });
     } catch (e) {
         console.log(e);
