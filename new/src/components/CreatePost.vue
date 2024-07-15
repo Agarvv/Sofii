@@ -111,29 +111,42 @@ export default {
         this.videoSource = ev.target.result;
       };
     },
+
+
     async submitForm() {
-      const response = await fetch('http://localhost:3000/api/sofi/createPost', {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          description: this.content,
-          postPicture: this.imageSource,
-          videoSource: this.videoSource,
-          privatePost: false,
-          only_friends: false
-        })
-      });
+  const formData = new FormData();
+  formData.append('description', this.content);
+  formData.append('privatePost', false);
+  formData.append('only_friends', false);
+  
+  if (this.imageSource) {
+    const imageBlob = await fetch(this.imageSource).then(res => res.blob());
+    console.log('Image BLOB: ', imageBlob)
+    formData.append('postPicture', imageBlob);
+  }
+  
+  if (this.videoSource) {
+    const videoBlob = await fetch(this.videoSource).then(res => res.blob());
+    formData.append('videoSource', videoBlob, 'video.mp4');
+  }
 
-      if (!response.ok) {
-        console.log('Response not Ok.');
-      }
+  const response = await fetch('http://localhost:3000/api/sofi/createPost', {
+    method: 'POST',
+    credentials: 'include',
+    body: formData
+  });
 
-      const data = await response.json();
-      console.log(data);
-    }
+  if (!response.ok) {
+    console.log('Response not Ok.');
+  }
+
+  const data = await response.json();
+  console.log(data);
+}
+
+
+
+
   }
 };
 </script>

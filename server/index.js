@@ -110,7 +110,7 @@ app.get('/api/sofi/check_token', async (req, res) => {
     }
 });
 
-app.post('/api/sofi/createPost', upload.single('picture'), [
+app.post('/api/sofi/createPost', upload.single('postPicture'), [
     body("description").escape().trim(),
     body("picture").escape().trim(),
     body("privatePost").isBoolean(),
