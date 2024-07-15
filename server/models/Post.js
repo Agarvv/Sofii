@@ -10,9 +10,6 @@ const Post = sequelize.define('Post', {
   postPicture: {
     type: DataTypes.STRING,
     allowNull: true,
-    validate: {
-      isUrl: true
-    }
   },
   private: {
     type: DataTypes.BOOLEAN,
