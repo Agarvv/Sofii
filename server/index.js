@@ -39,6 +39,7 @@ const upload = multer({ storage: storage });
 
 
 const app = express();
+app.use('/media', express.static(path.join(__dirname, 'media')));
 app.use(cors({
     origin: 'http://localhost:5000',
     credentials: true
@@ -109,7 +110,7 @@ app.get('/api/sofi/check_token', async (req, res) => {
         return res.status(500).json({ message: e.message });
     }
 });
-
+//xd
 app.post('/api/sofi/createPost', upload.single('postPicture'), [
     body("description").escape().trim(),
     body("postPicture").escape().trim(),
