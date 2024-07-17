@@ -17,6 +17,8 @@ const cors = require('cors')
 const multer = require("multer");
 const path = require('path');
 // PC VERSION COMMIT
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 
 
@@ -31,8 +33,6 @@ const storage = multer.diskStorage({
 
 // Configuración de Multer
 const upload = multer({ storage: storage });
-
-
 
 
 
@@ -156,6 +156,52 @@ app.get('/api/sofi/post/:post_id', async (req, res) => {
         return res.status(500).json({ error: e.message });
     }
 });
+
+
+
+
+passport.use(new GoogleStrategy({
+    clientID: '511731360531-eln69b4400hvrf4a0r6l8lr05jrsce52.apps.googleusercontent.com',
+    clientSecret: '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',
+    callbackURL: 'http://localhost:3000/auth/google/callback',
+    scope: ['profile', 'email'] // Incluir el scope aquí
+  },
+  (accessToken, refreshToken, profile, done) => {
+    // Aquí puedes manejar el perfil del usuario
+    console.log('Google profile: ', profile);
+    return done(null, profile);
+  }
+));
+
+app.use(passport.initialize());
+
+// Ruta para iniciar sesión con Google
+app.get('/auth/google',
+  passport.authenticate('google', {
+    scope: ['profile', 'email'] // Asegúrate de incluir el scope aquí también
+  })
+);
+
+// Callback de autenticación de Google
+app.get('/auth/google/callback',
+  passport.authenticate('google', { failureRedirect: '/login' }),
+  (req, res) => {
+    // Redirigir al dashboard o enviar una respuesta de éxito
+    res.redirect('/dashboard');
+  }
+);
+
+
+
+
+
+
+
+
+
+
+
+
 
 sequelize.authenticate().then(() => {
     console.log('Database Working Fine');
