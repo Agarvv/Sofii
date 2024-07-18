@@ -19,6 +19,10 @@ const path = require('path');
 // PC VERSION COMMIT
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const usersService = require('./services/usersService.js')
+
+
+
 
 
 
@@ -157,6 +161,15 @@ app.get('/api/sofi/post/:post_id', async (req, res) => {
     }
 });
 
+app.get('/api/sofi/post_user/:userId', (req, res) => {
+  try {
+
+  } catch(e) {
+    console.log(e
+    )
+    return res.status(500)
+  }
+})
 
 
 
@@ -192,7 +205,15 @@ app.get('/auth/google/callback',
 );
 
 
-
+app.get('/api/sofi/user/:userId', async (req, res) => {
+    try {
+       const user = await usersService.findUserById(req.params.userId)
+        return res.status(200).json({ user: user})
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({error: error.message})
+    }
+})
 
 
 
