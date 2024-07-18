@@ -17,7 +17,7 @@ const routes = [
     { path: '/create', component: CreatePost },
     { path: '/chat', component: ChatPage, meta: { requiresAuth: true } },
     { path: '/search/:query', component: SearchPage, meta: { requiresAuth: true } },
-    { path: '/user/:username', component: ProfilePage, meta: { requiresAuth: true } },
+    { path: '/user/:id', component: ProfilePage, meta: { requiresAuth: true } },
     { path: '/saved', component: SavedPage, meta: { requiresAuth: true } }
 ];
 

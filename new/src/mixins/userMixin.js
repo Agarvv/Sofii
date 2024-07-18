@@ -18,7 +18,9 @@ export default {
       });
 
       if (response.ok) {
-        this.usuario = await response.json();
+      const data = await response.json()
+      this.usuario = data.user
+      console.log('mixin user: ', this.usuario)
       } else {
         this.$router.push('/login'); // Redirigir al login si la autenticación falla
       }

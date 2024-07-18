@@ -7,21 +7,30 @@
       
       <div class="user">
         <div class="user-img">
-          <img src="invict-victory-edp.jpg" alt="Foto de Perfil">
+          <img :src="user.userPicture" alt="Foto de Perfil">
         </div>
 
         <div class="user-details">
           <div class="username">
-            <h1>{{ username }}</h1>
-            <p>@{{ handle }}</p>
+            <h1>{{ user.username }}</h1>
           </div>
           
-          <div class="followers">
-            <p style="font-weight: 700;">{{ followers }} Followers</p>
-            <p style="color: gray">{{ following }} Following</p>
+          <div class="followers" style="margin-bottom: 20px">
+            <p style="font-weight: 700;">500Followers</p>
+            <p style="color: gray">120 Following</p>
+          </div>
+
+          <div v-if="isSelfUser" class="isSelfUserDiv">
+
+           <div class="buttons">
+             <div>
+             <button>Edit Your Account</button>
+             </div>
+           </div>
+
           </div>
           
-          <div class="interact-buttons">
+          <div v-else class="interact-buttons">
             <button style="background: gray;"> <font-awesome-icon :icon="['fas', 'comment']" />Chat</button>
             <button style="background: #007bff;"> <font-awesome-icon :icon="['fas', 'user-plus']" />Follow</button>
           </div>
@@ -38,33 +47,33 @@
             </div>
            
            <div class="user-i">
-             <div class="description">
-               <p>{{ bio }}</p>
+             <div v-if="user.description" class="description">
+               <p>{{ user.description }}</p>
              </div>
              
             <div class="ubication">
               <font-awesome-icon icon="fas fa-map-marker-alt" style="color: red" />
-              <span>{{ location }}</span>
+              <span>{{ user.location }}</span>
             </div>
             
             <div class="native">
               <font-awesome-icon icon="fas fa-globe" style="color: black" />
-              <span>{{ nationality }}</span>
+              <span>{{ user.nationality }}</span>
             </div>
             
             <div class="gender">
               <font-awesome-icon icon="fas fa-venus-mars" style="color: hotpink" />
-              <span>{{ gender }}</span>
+              <span>{{ user.gender }}</span>
             </div>
             
             <div class="work">
               <font-awesome-icon icon="fas fa-briefcase" style="color: gray" />
-              <span>{{ occupation }}</span>
+              <span>{{ user.occupation }}</span>
             </div>
             
             <div class="love">
               <font-awesome-icon icon="fa fa-heart" style="color: red" />
-              <span>{{ status }}</span>
+              <span>{{ user.status }}</span>
             </div>
            </div>
           </div>
@@ -75,8 +84,7 @@
         <div class="posts">
           <h1>Posts</h1>
           
-          <!-- Contenedor de posts vacío -->
-          <!-- No hay ningún elemento aquí -->
+    
           
         </div>
       </main>
@@ -85,23 +93,44 @@
 </template>
 
 <script>
+import userMixin from '../mixins/userMixin';
 export default {
+ mixins: [userMixin], // Asegúrate de incluir el mixin aquí
   data() {
     return {
-      username: 'Le Beau',
-      handle: 'Lebeauu',
-      followers: 78,
-      following: 2,
-      bio: "Hola a todos! Soy Alex, un chico de 13 años que ama los videojuegos, los cómics y las aventuras. Me encanta compartir mis logros en Minecraft, mis ideas locas y algunas historias divertidas del colegio. Si te gustan los memes y las risas, ¡sígueme! 🎮📚😂",
-      location: 'Paris',
-      nationality: 'Berlin',
-      gender: 'Woman',
-      occupation: 'Backend Engineer',
-      status: 'Married'
+      user: {},
+      isSelfUser: false
     };
+  },
+  methods: {
+    async getUser() {
+      try {
+        const response = await fetch(`http://localhost:3000/api/sofi/user/${this.$route.params.id}`);
+        if (!response.ok) {
+          throw new Error('Something went wrong.');
+        }
+        const data = await response.json();
+        console.log(data);
+        this.user = data.user;
+         
+        if(this.user.id == this.usuario.user_id) {
+          this.isSelfUser = true
+        } else {
+          this.isSelfUser = false
+        }
+        
+       
+      } catch (error) {
+        console.error('Error fetching user:', error);
+      }
+    }
+  },
+  async mounted() {
+    await this.getUser(); // Corregir llamada a método
   }
 };
 </script>
+
 
 <style scoped>
 html, body {
@@ -293,6 +322,29 @@ aside .info {
 
 aside .description {
   margin-bottom: 20px;
+}
+
+.isSelfUserDiv {
+}
+
+.isSelfUserDiv .buttons {
+  display: grid;
+  grid-template-columns:  1fr;
+
+}
+
+.isSelfUserDiv .buttons div {
+  height: 40px;
+}
+
+.isSelfUserDiv .buttons div button {
+ width: 100%;
+ height: 100%;
+ border: none;
+ background: blue;
+ color: white;
+ font-weight: 700;
+ border-radius: 20px;
 }
 
 @media (max-width: 600px) {
