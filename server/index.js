@@ -215,7 +215,62 @@ app.get('/api/sofi/user/:userId', async (req, res) => {
     }
 })
 
+app.post('/api/sofi/set_profile_picture',  upload.single('profile-picture'), async(req, res) => {
+	try {
+		await  userService.handleProfilePictureChange(req.file.profile-picture, req, res)
+		return res.status(201).json({success: 'Your Profile Photo Has Been Changed Sucesfully !'})
+	} catch(e) {
+		return res.status(500).json({eror: e}) 
+	}
+})
 
+
+app.post('/api/sofi/set_profile_banner',  upload.single('profile-banner'), async(req, res) => {
+	try {
+		await  userService.handleProfileBannerChange(req.file.profile-banner)
+		return res.status(201).json({success: 'Your Profile Banner Has Been Changed Sucesfully !'})
+	} catch(e) {
+		return res.status(500).json({eror: e}) 
+	}
+})
+
+
+app.post('/api/sofi/set_profile_picture',  async(req, res) => {
+	try {
+		await  userService.handleProfileBioChange(req.body.bio)
+		return res.status(201).json({success: 'Your Profile BIO Has Been Changed Sucesfully !'})
+	} catch(e) {
+		return res.status(500).json({eror: e}) 
+	}
+})
+
+
+app.post('/api/sofi/set_native_city',  async(req, res) => {
+	try {
+		await  userService.handleProfileNativeCityChange(req.body.native_city)
+		return res.status(201).json({success: 'Your Profile Native City Has Been Changed Sucesfully !'})
+	} catch(e) {
+		return res.status(500).json({eror: e}) 
+	}
+})
+
+app.post('/api/sofi/set_civil_status',  async(req, res) => {
+	try {
+		await  userService.handleProfileCivilStatusChange(req.body.civil_status)
+		return res.status(201).json({success: 'Your Profile Civil Status Has Been Changed Sucesfully !'})
+	} catch(e) {
+		return res.status(500).json({eror: e}) 
+	}
+})
+
+app.post('/api/sofi/set_ubication',  async(req, res) => {
+	try {
+		await  userService.handleProfileUbicationChange(req.body.ubication)
+		return res.status(201).json({success: 'Your Profile Ubication Has Been Changed Sucesfully !'})
+	} catch(e) {
+		return res.status(500).json({eror: e}) 
+	}
+})
 
 
 
