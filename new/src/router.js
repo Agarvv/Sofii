@@ -8,6 +8,7 @@ import ChatPage from './components/ChatPage.vue';
 import SearchPage from './components/SearchPage.vue';
 import ProfilePage from './components/ProfilePage.vue';
 import SavedPage from './components/SavedPage.vue';
+import profileDetails from './components/profileDetails.vue'
 
 const routes = [
     { path: '/', component: HelloWorld },
@@ -18,7 +19,9 @@ const routes = [
     { path: '/chat', component: ChatPage, meta: { requiresAuth: true } },
     { path: '/search/:query', component: SearchPage, meta: { requiresAuth: true } },
     { path: '/user/:id', component: ProfilePage, meta: { requiresAuth: true } },
+    { path: '/userDetails', component: profileDetails},
     { path: '/saved', component: SavedPage, meta: { requiresAuth: true } }
+
 ];
 
 const router = createRouter({
