@@ -19,7 +19,7 @@ const path = require('path');
 // PC VERSION COMMIT
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const usersService = require('./services/usersService.js')
+const userService = require('./services/userService.js')
 
 
 
@@ -207,7 +207,7 @@ app.get('/auth/google/callback',
 
 app.get('/api/sofi/user/:userId', async (req, res) => {
     try {
-       const user = await usersService.findUserById(req.params.userId)
+       const user = await userService.findUserById(req.params.userId)
         return res.status(200).json({ user: user})
     } catch (error) {
         console.log(error)
@@ -215,15 +215,8 @@ app.get('/api/sofi/user/:userId', async (req, res) => {
     }
 })
 
-app.post('/api/sofi/set_profile_picture',  upload.single('profile-picture'), async(req, res) => {
-	try {
-		await  userService.handleProfilePictureChange(req.file.profile-picture, req, res)
-		return res.status(201).json({success: 'Your Profile Photo Has Been Changed Sucesfully !'})
-	} catch(e) {
-		return res.status(500).json({eror: e}) 
-	}
-})
 
+  
 
 app.post('/api/sofi/set_profile_banner',  upload.single('profile-banner'), async(req, res) => {
 	try {
@@ -237,10 +230,18 @@ app.post('/api/sofi/set_profile_banner',  upload.single('profile-banner'), async
 
 app.post('/api/sofi/set_profile_picture',  async(req, res) => {
 	try {
-		await  userService.handleProfileBioChange(req.body.bio)
-		return res.status(201).json({success: 'Your Profile BIO Has Been Changed Sucesfully !'})
+        if(!req.cookies.jwt) {
+            return res.status(404).json({err: "no token"})
+        } else {
+            console.log('endpoint token', req.cookies.jwt)
+        }
+        const token = req.cookies.jwt
+		await  userService.handleProfilePictureChange(req.file, token)
+		return res.status(201).json({success: 'Your Profile pic Has Been Changed Sucesfully !'})
 	} catch(e) {
-		return res.status(500).json({eror: e}) 
+        console.log(e)
+        console.log(e.message)
+		return res.status(500).json({eror: e.message}) 
 	}
 })
 
@@ -256,16 +257,16 @@ app.post('/api/sofi/set_native_city',  async(req, res) => {
 
 app.post('/api/sofi/set_civil_status',  async(req, res) => {
 	try {
-		await  userService.handleProfileCivilStatusChange(req.body.civil_status)
+		await  usersService.handleProfileCivilStatusChange(req.body.civil_status)
 		return res.status(201).json({success: 'Your Profile Civil Status Has Been Changed Sucesfully !'})
 	} catch(e) {
-		return res.status(500).json({eror: e}) 
+		return res.status(500).json({eror: e.message}) 
 	}
 })
 
 app.post('/api/sofi/set_ubication',  async(req, res) => {
 	try {
-		await  userService.handleProfileUbicationChange(req.body.ubication)
+		await  usersService.handleProfileUbicationChange(req.body.ubication)
 		return res.status(201).json({success: 'Your Profile Ubication Has Been Changed Sucesfully !'})
 	} catch(e) {
 		return res.status(500).json({eror: e}) 
