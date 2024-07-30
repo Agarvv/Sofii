@@ -1,293 +1,56 @@
 const express = require('express');
-const sequelize = require('./config/database.js');
-const User = require('./models/User.js');
-const Post = require('./models/Post');
-const PostComment = require('./models/Comment');
-const CommentAnswer = require('./models/CommentAwnser');
-const Likes = require('./models/Likes');
-const Follower = require('./models/Followers');
-const Message = require('./models/Message');
-const { body, validationResult } = require('express-validator');
-const registerController = require('./controllers/registerController');
-const loginController = require('./controllers/loginController');
+const http = require('http')
+const sequelize = require('./config/database');
 const cookieParser = require('cookie-parser');
-const tokenController = require('./controllers/tokenController');
-const createPostController = require('./controllers/createPostController');
-const cors = require('cors')
-const multer = require("multer");
+const cors = require('cors');
 const path = require('path');
-// PC VERSION COMMIT
+const multer = require("multer");
 const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const userService = require('./services/userService.js')
-
-
-
-
-
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'media/images'); // Carpeta donde se guardarán los archivos
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); // Nombre del archivo
-  }
-});
-
-// Configuración de Multer
-const upload = multer({ storage: storage });
-
-
-
+const { setupRoutes } = require('./routes/main.js');
+const socket = require('./websocket/socket')
+require('./config/passport'); // Archivo para la configuración de Passport
+const socketIo = require('socket.io')
 
 
 const app = express();
+const server = http.createServer(app) 
+const io = socketIo(server)
+socket.handleWebSocket(io)
+
+
+
+
 app.use('/media', express.static(path.join(__dirname, 'media')));
 app.use(cors({
     origin: 'http://localhost:5000',
     credentials: true
-}))
+}));
+
+
 app.use(express.json());
 app.use(cookieParser());
-
-app.get('/health', (req, res) => {
-    return res.json('Ok');
-});
-
-app.post('/api/sofi/register', [
-    body("name").escape().trim().isLength({ min: 3, max: 30 }),
-    body("email").escape().trim().isEmail(),
-    body("password").escape().trim().isLength({min: 3, max: 50})
-], async (req, res) => {
-    const { name, email, password } = req.body;
-
-    if (!name || !email || !password) {
-        return res.status(400).json({ message: 'Data Is Missing.' });
-    }
-
-    try {
-        await registerController.createUser(name, email, password);
-        return res.status(201).json({ success: 'Welcome To Sofii!' });
-    } catch (e) {
-        console.log(e);
-        return res.status(500).json({ error: e.message });
-    }
-});
-
-app.post('/api/sofi/login', [
-    body("email").escape().trim().isEmail(),
-    body("password").escape().trim()
-], async (req, res) => {
-    const { email, password } = req.body;
-
-    if (!email || !password) {
-        return res.status(400).json({ message: 'Email or Password Missing' });
-    }
-
-    try {
-        const token = await loginController.handleLogin(email, password);
-        res.cookie('jwt', token);
-        return res.status(200).json({ welcome: 'Welcome Back To Sofii, Have a Good Session.' });
-    } catch (e) {
-        console.log(e);
-        return res.status(401).json({ error: e.message });
-    }
-});
-
-app.get('/api/sofi/check_token', async (req, res) => {
-    try {
-        console.log('Endpoint Solicited.');
-        const jwt = req.cookies.jwt;
-        if (!jwt) {
-            return res.status(404).json({ detail: 'No Token Found.' });
-        } else {
-            console.log('You do have a Token.');
-        }
-
-        console.log('before invoking verifyJwtToken');
-       const user =  await tokenController.verifyJwtToken(jwt)
-        
-        console.log('after invoking verifyJwtToken');
-        return res.status(200).json({ detail: 'Your Session Is Valid.', user: user});
-    } catch (e) {
-        return res.status(500).json({ message: e.message });
-    }
-});
-//xd
-app.post('/api/sofi/createPost', upload.single('postPicture'), [
-    body("description").escape().trim(),
-    body("postPicture").escape().trim(),
-    body("privatePost").isBoolean(),
-    body("only_friends").isBoolean(),
-], async (req, res) => {
-    console.log('FILE:::::,,,', req.file.path)
-    console.log('BODY....????', req.body)
-    try {
-        const jwt = req.cookies.jwt;
-        const decoded = await tokenController.verifyJwtToken(jwt);
-        const user_id = decoded.user_id;
-        const user_name = decoded.username;
-        const user_img = decoded.userPicture;
-
-        await createPostController.createPost(req.body, user_id, user_name, user_img, req.file.path);
-        return res.status(201).json({ detail: 'Your Post Has Been Submitted To Our System.' });
-    } catch (e) {
-        console.log(e);
-        return res.status(500).json({ error: e.message });
-    }
-});
-
-app.get('/api/sofi/posts', async (req, res) => {
-    try {
-        const posts = await Post.findAll({ where: { private: false } });
-        return res.status(200).json({ posts });
-    } catch (e) {
-        return res.status(500).json({ error: e.message });
-    }
-});
-
-app.get('/api/sofi/post/:post_id', async (req, res) => {
-    const post_id = req.params.post_id;
-
-    try {
-        const post = await Post.findOne({ where: { id: post_id } });
-        if (!post) {
-            return res.status(404).json({ detail: 'Post Not Found.' });
-        }
-        return res.status(200).json({ post });
-    } catch (e) {
-        return res.status(500).json({ error: e.message });
-    }
-});
-
-app.get('/api/sofi/post_user/:userId', (req, res) => {
-  try {
-
-  } catch(e) {
-    console.log(e
-    )
-    return res.status(500)
-  }
-})
-
-
-
-passport.use(new GoogleStrategy({
-    clientID: '511731360531-eln69b4400hvrf4a0r6l8lr05jrsce52.apps.googleusercontent.com',
-    clientSecret: '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',
-    callbackURL: 'http://localhost:3000/auth/google/callback',
-    scope: ['profile', 'email'] // Incluir el scope aquí
-  },
-  (accessToken, refreshToken, profile, done) => {
-    // Aquí puedes manejar el perfil del usuario
-    console.log('Google profile: ', profile);
-    return done(null, profile);
-  }
-));
-
 app.use(passport.initialize());
 
-// Ruta para iniciar sesión con Google
-app.get('/auth/google',
-  passport.authenticate('google', {
-    scope: ['profile', 'email'] // Asegúrate de incluir el scope aquí también
-  })
-);
 
-// Callback de autenticación de Google
-app.get('/auth/google/callback',
-  passport.authenticate('google', { failureRedirect: '/login' }),
-  (req, res) => {
-    // Redirigir al dashboard o enviar una respuesta de éxito
-    res.redirect('/dashboard');
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'media/images');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
   }
-);
+});
 
 
-app.get('/api/sofi/user/:userId', async (req, res) => {
-    try {
-       const user = await userService.findUserById(req.params.userId)
-        return res.status(200).json({ user: user})
-    } catch (error) {
-        console.log(error)
-        return res.status(500).json({error: error.message})
-    }
-})
-
-
-  
-
-app.post('/api/sofi/set_profile_banner',  upload.single('profile-banner'), async(req, res) => {
-	try {
-		await  userService.handleProfileDataChange('banner', req.file, req.cookies.jwt)
-		return res.status(201).json({success: 'Your Profile Banner Has Been Changed Sucesfully !'})
-	} catch(e) {
-		return res.status(500).json({eror: e}) 
-	}
-})
-
-
-app.post('/api/sofi/set_profile_picture',  async(req, res) => {
-	try {
-        if(!req.cookies.jwt) {
-            return res.status(404).json({err: "no token"})
-        } else {
-            console.log('endpoint token', req.cookies.jwt)
-        }
-        const token = req.cookies.jwt
-		await  userService.handleProfileDataChange('profilePicture', req.file, token)
-		return res.status(201).json({success: 'Your Profile pic Has Been Changed Sucesfully !'})
-	} catch(e) {
-        console.log(e)
-        console.log(e.message)
-		return res.status(500).json({eror: e.message}) 
-	}
-})
-
-
-app.post('/api/sofi/set_native_city',  async(req, res) => {
-	try {
-		await  userService.handleProfileDataChange('native_city', req.body.native_city, req.cookies.jwt)
-		return res.status(201).json({success: 'Your Profile Native City Has Been Changed Sucesfully !'})
-	} catch(e) {
-		return res.status(500).json({eror: e}) 
-	}
-})
-
-app.post('/api/sofi/set_civil_status',  async(req, res) => {
-	try {
-		await  usersService.handleProfileDataChange('civil_status', req.body.civil_status, req.cookies.jwt)
-		return res.status(201).json({success: 'Your Profile Civil Status Has Been Changed Sucesfully !'})
-	} catch(e) {
-		return res.status(500).json({eror: e.message}) 
-	}
-})
-
-app.post('/api/sofi/set_ubication',  async(req, res) => {
-	try {
-		await  usersService.handleProfileDataChange('ubication', req.body.ubication, req.cookies.jwt)
-		return res.status(201).json({success: 'Your Profile Ubication Has Been Changed Sucesfully !'})
-	} catch(e) {
-		return res.status(500).json({eror: e}) 
-	}
-})
-
-
-app.post('/api/sofi/set_bio',  async(req, res) => {
-	try {
-		await  usersService.handleProfileDataChange('bio', req.body.bio, req.cookies.jwt)
-		return res.status(201).json({success: 'Your Profile BIO Has Been Changed Sucesfully !'})
-	} catch(e) {
-		return res.status(500).json({eror: e}) 
-	}
-})
+app.use(multer({ storage }).single('file'));
 
 
 
+app.get('/health', (req, res) => res.json('Ok'));
 
 
 
+setupRoutes(app);
 
 sequelize.authenticate().then(() => {
     console.log('Database Working Fine');
@@ -296,7 +59,9 @@ sequelize.authenticate().then(() => {
     console.log(e);
 });
 
-app.listen(3000, (err) => {
+
+
+server.listen(3000, (err) => {
     if (err) {
         console.log(err);
     } else {

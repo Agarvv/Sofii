@@ -22,12 +22,12 @@ export default {
       this.usuario = data.user
       console.log('mixin user: ', this.usuario)
       } else {
-        this.$router.push('/login'); // Redirigir al login si la autenticación falla
+        console.log('Mixin user bsd')
       }
     } catch (e) {
       console.error('Error al obtener los datos del usuario:', e);
       this.userError = 'Error al obtener los datos del usuario.';
-      this.$router.push('/login'); // Redirigir al login en caso de error
+      
     } finally {
       this.isLoadingUser = false; // Finalizar la carga
     }

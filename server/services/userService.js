@@ -1,7 +1,7 @@
 const User = require('../models/User')
 const tokenController = require('../controllers/tokenController')
 
-const handleProfileDataChange = (field, value, token) => {
+const handleProfileDataChange = async (field, value, token) => {
     try {
         const userDecoded = await tokenController.verifyJwtToken(token)
         

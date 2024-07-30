@@ -95,14 +95,14 @@ export default {
   },
   methods: {
     async getUserData() {
-      // Aquí deberías obtener los datos originales del usuario
+        console.log('profile details user mixin', this.usuario)
       this.originalData = {
-        profile_pic: "",
-        profile_banner: "",
-        bio: "",
-        native_city: "",
-        ubication: "",
-        civil_status: ""
+        profile_pic: this.usuario.profilePicture,
+        profile_banner: this.usuario.banner,
+        bio: this.usuario.bio,
+        native_city: this.usuario.native_city,
+        ubication: this.usuario.ubication,
+        civil_status: this.usuario.civil_status
       };
       this.userNewData = { ...this.originalData };
     },

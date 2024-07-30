@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-const PostComment = sequelize.define('comment', {
+const Comment = sequelize.define('comment', {
   post_id: {
     type: DataTypes.INTEGER,
     allowNull: false
@@ -28,10 +28,10 @@ const PostComment = sequelize.define('comment', {
   likes: {
     type: DataTypes.INTEGER,
     defaultValue: 0,
-    allowNull: false
+    allowNull: true
   }
 }, {
   tableName: 'comment'
 });
 
-module.exports = PostComment;
+module.exports = Comment;
