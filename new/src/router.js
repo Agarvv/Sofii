@@ -14,7 +14,7 @@ const routes = [
     { path: '/', component: HelloWorld },
     { path: '/register', component: RegisterComponent },
     { path: '/login', component: LoginComponent },
-    { path: '/post/:id', component: PostPage, meta: { requiresAuth: true } },
+    { path: '/post/:id', component: PostPage },
     { path: '/create', component: CreatePost },
     { path: '/chat', component: ChatPage, meta: { requiresAuth: true } },
     { path: '/search/:query', component: SearchPage, meta: { requiresAuth: true } },
@@ -44,11 +44,11 @@ router.beforeEach(async (to, from, next) => {
                 next(); // Permitir la navegación
                 
             } else {
-                next('/login'); // Redirigir al login si la autenticación falla
+              console.log('repsones not ok')
             }
         } catch (e) {
             console.log('Error.', e);
-            next('/login'); // Redirigir al login en caso de error
+           
         }
     } else {
         next(); // Permitir la navegación si no se requiere autenticación

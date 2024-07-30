@@ -145,17 +145,32 @@ export default {
               console.log('random data changed banner')
               break;
             case 'bio':
-              console.log('random data changed banner2')
+              response = await fetch('http://localhost:3000/api/sofi/set_bio', {
+                method: 'POST',
+                body: formData,
+                credentials: 'include'
+              });
               break;
             case 'native_city':
-             console.log('random data changed banner3')
+               response = await fetch('http://localhost:3000/api/sofi/set_native_city', {
+                method: 'POST',
+                body: formData,
+                credentials: 'include'
+              });
               break;
             case 'ubication':
-             
-              console.log('random data changed banner4')
+               response = await fetch('http://localhost:3000/api/sofi/set_ubication', {
+                method: 'POST',
+                body: formData,
+                credentials: 'include'
+              });
               break;
             case 'civil_status':
-              console.log('random data changed banner5')
+              response = await fetch('http://localhost:3000/api/sofi/set_civil_status', {
+                method: 'POST',
+                body: formData,
+                credentials: 'include'
+              });
               break;
             default:
               console.error(`No se encontró un endpoint para el campo ${key}`);
@@ -163,6 +178,8 @@ export default {
           }
           if (response.ok) {
             console.log(`Cambio en ${key} guardado exitosamente`);
+            const data = await response.json()
+            console.log(data)
           } else {
             const errorData = await response.json();
             console.error(`Error al guardar ${key}: ${response.statusText}`, errorData);

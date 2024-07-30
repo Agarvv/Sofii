@@ -4,16 +4,13 @@
       <div>
         <font-awesome-icon icon="arrowLeft" />
       </div>
-
       <div>
         <h1>{{ username }}</h1>
       </div>
-
       <div>
         <img style="width: 50px; border-radius: 50%;" :src="profileImage" />
       </div>
     </header>
-
     <div class="container">
       <div class="form">
         <form @submit.prevent="submitForm">
@@ -25,7 +22,6 @@
               <input v-model="content" placeholder="What's Up?" />
             </div>
           </div>
-
           <div class="form-buttons">
             <div class="icons">
               <div class="image" @click="openFileInput('imageInp')">
@@ -50,11 +46,9 @@
               </button>
             </div>
           </div>
-
           <div class="form-image">
             <img v-for="(photo, index) in photos" :key="index" :src="photo" class="uploaded-photo" />
           </div>
-
           <div class="form-video">
             <video controls v-if="videoSource" class="uploaded-video">
               <source :src="videoSource" type="video/mp4" />
@@ -111,7 +105,6 @@ export default {
         this.videoSource = ev.target.result;
       };
     },
-
     async submitForm() {
       const formData = new FormData();
       formData.append('description', this.content);
@@ -121,7 +114,7 @@ export default {
       if (this.imageSource) {
         const imageBlob = await fetch(this.imageSource).then(res => res.blob());
         console.log('Image BLOB: ', imageBlob);
-        formData.append('postPicture', imageBlob, 'image.jpg'); // Especifica el nombre del archivo aquí
+        formData.append('postPicture', imageBlob, 'image.jpg');
       }
       
       if (this.videoSource) {
@@ -182,95 +175,76 @@ header i {
   color: white;
   width: 100%;
   height: 100%;
-  padding: 10px; /* Aumenté el padding para más espacio */
+  padding: 10px;
 }
 
 .container .form form {
-  background: #03B9FF; /* Cambié el color de fondo */
-  padding: 20px; /* Añadí un padding para separar del borde */
-  border-radius: 10px; /* Redondeé los bordes */
+  background: #03B9FF;
+  padding: 20px;
+  border-radius: 10px;
 }
 
 .form-input {
   display: flex;
-  gap: 20px; /* Aumenté el espacio entre los elementos */
   align-items: center;
-}
-
-.form-input-input {
-  width: 100%;
-  height: 100px;
 }
 
 .form-input-input input {
-  width: 100%;
+  border: none;
+  outline: none;
+  border-radius: 10px;
   padding: 10px;
-  height: 100%;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+  font-size: 14px;
+  width: 100%;
+  margin-left: 10px;
 }
 
 .form-buttons {
+  margin-top: 20px;
   display: flex;
   justify-content: space-between;
-  margin-top: 20px; /* Añadí margen arriba para separar de los botones */
-}
-
-.form-buttons .icons {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px; /* Añadí espacio entre iconos */
-  font-size: 20px;
-}
-
-.form-buttons .icons div {
-  display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 10px;
-  background-color: #007BFF; /* Color de fondo de los íconos */
-  border-radius: 5px; /* Redondeé los botones de íconos */
 }
 
-.form-buttons .post-button {
-  width: 30%;
-  margin-top: 0; /* Ajusté el margen superior */
+.icons {
+  display: flex;
 }
 
-.form-buttons button {
-  width: 100%;
-  padding: 10px;
+.icons div {
+  margin-right: 10px;
   font-size: 18px;
-  font-weight: 700;
-  color: black;
-  border: .3px solid white;
+}
+
+.post-button button {
+  background: #0862aa;
+  border: none;
+  color: white;
   border-radius: 10px;
+  padding: 10px 15px;
   cursor: pointer;
-  background: #68FF03; /* Color de fondo del botón */
+}
+
+.post-button button i {
+  margin-right: 5px;
 }
 
 .form-image {
+  margin-top: 10px;
+}
+
+.uploaded-photo {
   width: 100%;
-  margin-top: 20px;
-  display: flex;
-  gap: 20px;
-  overflow: auto;
+  max-height: 200px;
+  object-fit: cover;
+  margin-bottom: 10px;
+  border-radius: 10px;
 }
 
-.form-image img {
-  width: 100px;
-  height: 100px; /* Asegura que las imágenes mantengan su proporción */
-  object-fit: cover; /* Mantiene el ajuste de las imágenes dentro del contenedor */
-}
-
-.form-video {
-  margin-top: 20px;
-  max-width: 100%;
-  overflow: hidden;
-}
-
-.form-video video {
+.uploaded-video {
   width: 100%;
-  height: auto;
+  max-height: 200px;
+  object-fit: cover;
+  margin-bottom: 10px;
+  border-radius: 10px;
 }
 </style>

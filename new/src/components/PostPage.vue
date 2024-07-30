@@ -12,7 +12,7 @@
               <img :src="post.user_img">
             </div>
             <div class="post-username">
-              <h3>{{ post.user_username }}</h3>
+              <h3>{{ post.user_name }}</h3>
               <p style="color: gray">3h</p>
             </div>
           </div>
@@ -22,7 +22,7 @@
         </div>
         
         <div class="post-image">
-          <img :src="post.image">
+          <img style="width: 300px" :src="'http://localhost:3000/' + post.postPicture" alt="Post Image">
         </div>
         
         <div class="post-interactions">
@@ -51,7 +51,7 @@
           <div class="upload-comment">
               
             <div class="user-picture">
-              <img :src="user.img">
+              <img :src="user">
             </div>
             
             <div class="input">
@@ -224,7 +224,10 @@ export default {
             console.log(data);
             this.awnsers = data.awnsers;
         }
-    }
+    }, 
+    async mounted() {
+      await this.getPost()
+    },
 }
 </script>
 

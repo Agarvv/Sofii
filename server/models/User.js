@@ -30,9 +30,6 @@ const User = sequelize.define('User', {
   profilePicture: {
     type: DataTypes.STRING,
     allowNull: true,
-    validate: {
-      isUrl: true
-    }
   },
   bio: {
     type: DataTypes.TEXT,

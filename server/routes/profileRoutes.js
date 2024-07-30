@@ -41,7 +41,7 @@ router.post('/set_profile_picture', upload.single('profilePicture'), async (req,
             console.log('endpoint token', req.cookies.jwt);
         }
         const token = req.cookies.jwt;
-        await userService.handleProfileDataChange('profilePicture', req.file, token);
+        await userService.handleProfileDataChange('profilePicture', 'elpepe', token);
         return res.status(201).json({ success: 'Your Profile Picture Has Been Changed Successfully!' });
     } catch (e) {
         console.log(e);
@@ -79,7 +79,7 @@ router.post('/set_ubication', async (req, res) => {
 router.post('/set_bio', async (req, res) => {
     try {
         await userService.handleProfileDataChange('bio', req.body.bio, req.cookies.jwt);
-        return res.status(201).json({ success: 'Your Profile Bio Has Been Changed Successfully!' });
+        return res.status(201).json({ success: 'Your Profile Bio Has Been Changed Successfully!' , req.body.bio});
     } catch (e) {
         return res.status(500).json({ error: e.message });
     }

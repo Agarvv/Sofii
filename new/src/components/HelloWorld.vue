@@ -58,13 +58,13 @@
           <div class="notifications"><font-awesome-icon icon="bell" /><p>Notifications</p></div>
         </div>
         <div class="posts">
-          <div v-for="post in posts" :key="post.id" class="post">
+          <div v-for="post in posts" :key="post.id" class="post" @click="goToPostPage(post.id)">
             <div class="post-header">
               <div class="post-user-img">
                 <img :src="post.userImage" style="width: 50px; border-radius: 50%">
               </div>
               <div class="post-user-detail">
-                <h4>{{ post.userName }}</h4>
+                <h4>{{ post.user_name }}</h4>
                 <p style="color: gray">{{ post.userHandle }}</p>
               </div>
               <div class="post-button-ellipsis">
@@ -76,7 +76,7 @@
                 <p>{{ post.description }}</p>
               </div>
               <div class="post-image">
-                <img :src="post.image" alt="Post Image">
+                <img :src="'http://localhost:3000/' + post.postPicture" alt="Post Image">
               </div>
             </div>
             <div class="post-interactions">
@@ -118,10 +118,15 @@ export default {
         }
         const data = await response.json();
         this.posts = data.posts;
+        console.log(data.posts)
       } catch (e) {
         console.error(e);
       }
-    }
+    },
+    goToPostPage(post_id) {
+    console.log(post_id)
+    this.$router.push('/post/' + post_id)
+  },
   },
   created() {
     this.getPosts();
@@ -135,6 +140,7 @@ html, body {
     margin: 0;
     padding: 0;
     font-family: 'Poppins', sans-serif;
+    background-color: #f5f5f5; /* Fondo suave para la página */
 }
 
 * {
@@ -147,13 +153,14 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #42445A;
+    background: #333;
     padding: 15px;
     color: white;
     position: relative;
     top: 0;
     left: 0;
-    width: 100;
+    width: 100%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
 }
 
 header .icons i {
@@ -178,34 +185,28 @@ header .icons .user-img img {
     width: 100%;
 }
 
-.container aside {
-  border: 1px solid black;
+.container aside,
+.right-aside {
+    border: none; /* Sin borde */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+    background: #fff; /* Fondo blanco */
+    padding: 10px;
+    border-radius: 8px; /* Bordes redondeados */
 }
-
 
 .container main {
     min-height: 100%;
     padding: 15px;
-  
 }
-
-
-.right-aside {
-     border: 1px solid black;
-  
-}
-
-
-
-
 
 .main-header {
     width: 100%;
-    border-bottom: .3px solid gray;
+    border-bottom: 1px solid #ccc; /* Línea más sutil */
     margin-bottom: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding-bottom: 10px;
 }
 
 .main-header .friends, 
@@ -222,41 +223,53 @@ header .icons .user-img img {
   font-size: 20px;
 }
 
-
 .posts {
-
     height: 100%;
     width: 100%;
 }
 
 .posts .post {
     padding: 15px;
-    border-bottom: 3px solid gray;
+    border-bottom: 1px solid #eee; /* Línea más ligera */
     display: flex;
     flex-direction: column;
+    background: #fff; /* Fondo blanco para los posts */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+    margin-bottom: 20px; /* Espacio entre posts */
 }
 
 .post .post-header {
     display: flex;
-    gap: 5px;
+    gap: 10px;
+    align-items: center;
+}
+
+.post .post-header .username {
+    flex: 1; /* Permite que el nombre de usuario ocupe todo el espacio disponible */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .post .post-button-ellipsis {
     display: flex;
     align-items: top;
-    justify-content: right;
-    width: 100%;
-    padding: 10px;
+    justify-content: flex-end;
+    width: auto;
 }
 
 .post-description {
     margin-bottom: 15px;
+    color: #333; /* Color de texto más oscuro */
 }
 
 .post-image img {
     width: 100%;
     height: auto;
+    max-height: 300px;
     object-fit: cover;
+    border-radius: 8px; /* Bordes redondeados para imágenes */
 }
 
 .post-image {
@@ -267,7 +280,9 @@ header .icons .user-img img {
     width: 100%;
     display: flex;
     justify-content: space-around;
-    padding: 15px;
+    padding: 15px 0;
+    border-top: 1px solid #eee; /* Separador superior */
+    color: #555; /* Color de los íconos de interacción */
 }
 
 .post-interactions i {
@@ -296,7 +311,6 @@ header .icons .user-img img {
 }
 
 aside .aside-logo {
-  border: 1px solid black;
   display: flex;
   align-items: center;
   padding: 15px;
@@ -307,18 +321,13 @@ aside .aside-logo i {
   font-size: 30px;
 }
 
-
 .aside-links {
-  border: 2px solid blue;
   height: 92.5%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   padding: 15px;
-  
 }
-
-
 
 .aside-links li {
   list-style: none;
@@ -326,6 +335,9 @@ aside .aside-logo i {
   align-items: center;
   gap: 15px;
   font-weight: 700;
+  padding: 10px;
+  border-radius: 4px; /* Bordes redondeados */
+  transition: background 0.3s, color 0.3s;
 }
 
 .aside-links li:hover {
@@ -333,27 +345,13 @@ aside .aside-logo i {
   color: white;
 }
 
-
-.aside-links .f-row li {
-  padding: 20px;
-  
-}
-
-.s-row li {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  padding: 20px;
-}
-
-
-
 .right-aside .users-might-like {
-  border: 1px solid red;
   width: 100%;
   height: 350px;
-
-
+  padding: 10px;
+  background: #fff; /* Fondo blanco */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+  border-radius: 8px; /* Bordes redondeados */
 }
 
 .users-might-like {
@@ -363,7 +361,7 @@ aside .aside-logo i {
 
 .users-might-like .user img {
   width: 30px;
-  height: 100%;
+  height: 30px;
   border-radius: 100%;
 }
 
@@ -372,31 +370,34 @@ aside .aside-logo i {
   display: flex;
   align-items: center;
   font-size: 12px;
-  gap: 5px;
-  padding: 20px;
-}
-
-
-.users-might-like {
-  border: 1px solid black;
-
+  gap: 10px;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
 }
 
 .follow-btn {
-  width: 10%;
-  border: 1px solid red;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .follow-btn button {
- width: 60px;
-  
+  width: auto;
+  padding: 5px 10px;
+  border-radius: 4px;
+  border: none;
+  background-color: #051AFF;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.follow-btn button:hover {
+  background-color: #0000ff;
 }
 
 .search-box {
-  background: red;
+  background: white;
   width: 100%;
   height: 80px;
   position: absolute;
@@ -408,6 +409,7 @@ aside .aside-logo i {
   justify-content: space-between;
   padding: 20px;
   visibility: hidden; /* Inicialmente oculto */
+  border-bottom: 1px solid #ccc;
 }
 
 .search-box.show {
@@ -431,9 +433,7 @@ aside .aside-logo i {
 .search-box .input input {
   width: calc(100% - 70px); /* Ajusta el ancho para dejar espacio a los íconos */
   height: 100%;
-  border: none;
-  outline: none;
-  background-color: white;
+  border: 1px solid #ddd;
   border-radius: 10px;
   padding-left: 10px;
 }
@@ -446,5 +446,6 @@ aside .aside-logo i {
   gap: 10px;
   align-items: center;
 }
+
 
 </style>

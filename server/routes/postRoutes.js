@@ -1,10 +1,10 @@
 const express = require('express');
+const multer = require('multer');
+const path = require('path');
 const { body } = require('express-validator');
 const createPostController = require('../controllers/createPostController');
 const tokenController = require('../controllers/tokenController');
 const Post = require('../models/Post');
-const multer = require('multer');
-const path = require('path'); // Asegúrate de haber requerido 'path'
 const router = express.Router();
 
 const storage = multer.diskStorage({
@@ -16,9 +16,14 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({ storage });
+// Configurar Multer para aceptar múltiples campos con diferentes nombres
+const upload = multer({ storage }).fields([
+  { name: 'postPicture', maxCount: 1 },
+  { name: 'videoSource', maxCount: 1 }
+]);
 
-router.post('/createPost', upload.single('postPicture'), [
+// Ruta para crear un post
+router.post('/createPost', upload, [
     body("description").escape().trim(),
     body("privatePost").isBoolean(),
     body("only_friends").isBoolean(),
@@ -30,7 +35,10 @@ router.post('/createPost', upload.single('postPicture'), [
         const user_name = decoded.username;
         const user_img = decoded.userPicture;
 
-        await createPostController.createPost(req.body, user_id, user_name, user_img, req.file.path);
+        const postPicture = req.files.postPicture ? req.files.postPicture[0].path : null;
+        const videoSource = req.files.videoSource ? req.files.videoSource[0].path : null;
+
+        await createPostController.createPost(req.body, user_id, user_name, user_img, postPicture, videoSource);
         return res.status(201).json({ detail: 'Your Post Has Been Submitted To Our System.' });
     } catch (e) {
         console.log(e);
@@ -38,6 +46,7 @@ router.post('/createPost', upload.single('postPicture'), [
     }
 });
 
+// Ruta para obtener todos los posts públicos
 router.get('/posts', async (req, res) => {
     try {
         const posts = await Post.findAll({ where: { private: false } });
@@ -47,6 +56,7 @@ router.get('/posts', async (req, res) => {
     }
 });
 
+// Ruta para obtener un post específico por ID
 router.get('/post/:post_id', async (req, res) => {
     const post_id = req.params.post_id;
 
@@ -61,21 +71,27 @@ router.get('/post/:post_id', async (req, res) => {
     }
 });
 
-router.get('/post_user/:userId', (req, res) => {
+// Ruta para obtener los posts de un usuario específico por ID de usuario
+router.get('/post_user/:userId', async (req, res) => {
+  const userId = req.params.userId;
+
   try {
-    // Implementar lógica para obtener posts de un usuario específico
+    const posts = await Post.findAll({ where: { userId } });
+    return res.status(200).json({ posts });
   } catch (e) {
     console.log(e);
     return res.status(500).json({ error: e.message });
   }
 });
 
+// Ruta para comentar en un post
 router.post('/comment_post', [
     body("comment").escape().trim(),
     body("post_id").isNumeric()
 ], async (req, res) => {
     try {
         await postController.createComment(req.body, req.cookies.jwt);
+        return res.status(201).json({ detail: 'Comment has been added.' });
     } catch (e) {
         console.log(e);
         return res.status(500).json({ error: e.message });
