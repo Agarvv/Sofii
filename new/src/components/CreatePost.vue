@@ -78,31 +78,48 @@ export default {
       document.getElementById(inputId).click();
     },
     handleImageChange(e) {
+      if (this.videoSource) {
+        alert('Ya has seleccionado un video. Solo puedes subir una imagen o un video.');
+        return;
+      }
+
+      if (this.photos.length > 0) {
+        alert('You cannot add more than 1 image.');
+        return;
+      }
+
       const file = e.target.files[0];
       if (!file) return;
-      
+
       const reader = new FileReader();
       reader.readAsDataURL(file);
-      
+
       reader.onload = (ev) => {
-        if (this.photos.length >= 10) {
-          alert('Has excedido la cantidad máxima de imágenes.');
-          return;
-        }
         this.photos.push(ev.target.result);
         this.imageSource = ev.target.result;
         console.log('image source: ', this.imageSource);
       };
     },
     handleVideoChange(e) {
+      if (this.imageSource) {
+        alert('Ya has seleccionado una imagen. Solo puedes subir una imagen o un video.');
+        return;
+      }
+
+      if (this.videoSource) {
+        alert('You cannot add more than 1 video.');
+        return;
+      }
+
       const file = e.target.files[0];
       if (!file) return;
-      
+
       const reader = new FileReader();
       reader.readAsDataURL(file);
-      
+
       reader.onload = (ev) => {
         this.videoSource = ev.target.result;
+        this.photos.push(ev.target.result);  // Esto parece redundante, pero lo dejo porque puede tener lógica en tu código.
       };
     },
     async submitForm() {
@@ -110,19 +127,31 @@ export default {
       formData.append('description', this.content);
       formData.append('privatePost', false);
       formData.append('only_friends', false);
-      
+
       if (this.imageSource) {
         const imageBlob = await fetch(this.imageSource).then(res => res.blob());
         console.log('Image BLOB: ', imageBlob);
         formData.append('postPicture', imageBlob, 'image.jpg');
       }
-      
+
       if (this.videoSource) {
         const videoBlob = await fetch(this.videoSource).then(res => res.blob());
         formData.append('videoSource', videoBlob, 'video.mp4');
       }
 
-      const response = await fetch('http://localhost:3000/api/sofi/createPost', {
+      let url;
+      if (this.videoSource) {
+        url = 'http://localhost:3000/api/sofi/post_video';
+      } else if (this.imageSource) {
+        url = 'http://localhost:3000/api/sofi/createPost';
+      } else {
+        console.log('No image or video to upload.');
+        return;
+      }
+      
+      console.log('Fetching URL: ', url)
+
+      const response = await fetch(url, {
         method: 'POST',
         credentials: 'include',
         body: formData
