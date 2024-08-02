@@ -11,6 +11,7 @@
           <img src="logo.png" alt="User Image">
         </div>
       </div>
+              
     </header>
 
     <div id="search" class="search-box">
@@ -18,9 +19,11 @@
         <font-awesome-icon id="close-search" icon="fas fa-arrow-left" />
       </div>
       <div class="input">
-        <input type="search" placeholder="Search">
+        <input v-model="searchQ" type="search" placeholder="Search">
         <div class="input-icons">
+        <div @click="handleSearch()">
           <font-awesome-icon icon="fas fa-search" />
+         </div>
           <font-awesome-icon icon="fas fa-microphone" />
         </div>
       </div>
@@ -61,7 +64,7 @@
           <div v-for="post in posts" :key="post.id" class="post" @click="goToPostPage(post.id)">
             <div class="post-header">
               <div class="post-user-img">
-                <img :src="post.userImage" style="width: 50px; border-radius: 50%">
+                <img style="width: 50px; border-radius: 50%" :src="'http://localhost:3000/' + post.user_img" alt="Post User Image">
               </div>
               <div class="post-user-detail">
                 <h4>{{ post.user_name }}</h4>
@@ -105,13 +108,16 @@ export default {
   name: 'HelloWorld',
   data() {
     return {
-      posts: []
+      posts: [],
+      searchQ: ""
     };
   },
   methods: {
     async getPosts() {
       try {
-        const response = await fetch('http://localhost:3000/api/sofi/posts');
+        const response = await fetch('http://localhost:3000/api/sofi/posts', {
+            method: 'POST'
+        });
         if (!response.ok) {
           console.error('Oops, Something Went Down Here!');
           return;
@@ -127,6 +133,11 @@ export default {
     console.log(post_id)
     this.$router.push('/post/' + post_id)
   },
+  handleSearch() {
+      console.log('Handle Search Method Called.', this.searchQ)
+      this.$router.push('/search/' + this.searchQ)
+  }, 
+  
   },
   created() {
     this.getPosts();
@@ -176,6 +187,10 @@ header .icons {
 header .icons .user-img img {
     width: 40px;
     border-radius: 50%;
+}
+
+.search-box {
+    background: white;
 }
 
 .container {
@@ -400,22 +415,14 @@ aside .aside-logo i {
   background: white;
   width: 100%;
   height: 80px;
-  position: absolute;
-  z-index: 999;
-  top: 0;
-  left: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 20px;
-  visibility: hidden; /* Inicialmente oculto */
   border-bottom: 1px solid #ccc;
 }
 
-.search-box.show {
-  visibility: visible;
-  opacity: 1;
-}
+
 
 .search-box .search-icons {
   font-size: 30px;

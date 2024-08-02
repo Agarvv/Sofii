@@ -2,7 +2,7 @@
   <header>
     <h1>Profile Settings</h1>
   </header>
-
+<!-- COMMIT AND PUSH VERIFICATION FOR GIT -->
   <div class="container">
     <div class="user-details-section">
       <div class="profile-picture">
@@ -83,19 +83,20 @@ export default {
   data() {
     return {
       userNewData: {
-        profile_pic: "",
-        profile_banner: "",
-        bio: "",
-        native_city: "",
-        ubication: "",
-        civil_status: ""
+        profile_pic: "",        // User profile picture
+        profile_banner: "",     // User profile banner
+        bio: "",                // User biography
+        native_city: "",        // User native city
+        ubication: "",          // User location
+        civil_status: ""        // User civil status
       },
-      originalData: {}
-    }
+      originalData: {}          // Original data to compare with
+    };
   },
   methods: {
+    // Fetch user data and initialize form with existing data
     async getUserData() {
-        console.log('profile details user mixin', this.usuario)
+      console.log('profile details user mixin', this.usuario);
       this.originalData = {
         profile_pic: this.usuario.profilePicture,
         profile_banner: this.usuario.banner,
@@ -106,31 +107,42 @@ export default {
       };
       this.userNewData = { ...this.originalData };
     },
+    
+    // Open file input dialog for profile photo
     handlePhotoOpen() {
-        document.getElementById('profilePhotoInput').click()
+      document.getElementById('profilePhotoInput').click();
     },
+    
+    // Update user data based on input field changes
     setUserData(event, field) {
       this.userNewData[field] = event.target.value;
+      console.log('User New Data Object', this.userNewData);
     },
+    
+    // Handle file changes and update the corresponding data field
     handleFileChanges(event, target) {
       const file = event.target.files[0];
       if (file) {
-        this.userNewData[target] = URL.createObjectURL(file);
+        this.userNewData[target] = file; // Store the file directly
       }
     },
+    
+    // Save all changes to the server
     async saveAllChanges() {
       const changes = {};
+      // Collect changes that are different from original and not empty
       for (const key in this.userNewData) {
         if (this.userNewData[key] !== this.originalData[key] && this.userNewData[key] !== "") {
           changes[key] = this.userNewData[key];
         }
       }
-      console.log("Cambios detectados: ", changes);
+      console.log("Detected changes: ", changes);
 
       for (const key in changes) {
         try {
-          const formData = new FormData();
           let response;
+          const formData = new FormData();
+          
           switch (key) {
             case 'profile_pic':
               formData.append('profile-picture', changes[key]);
@@ -142,58 +154,71 @@ export default {
               break;
             case 'profile_banner':
               formData.append('profile-banner', changes[key]);
-              console.log('random data changed banner')
-              break;
-            case 'bio':
-              response = await fetch('http://localhost:3000/api/sofi/set_bio', {
+              response = await fetch('http://localhost:3000/api/sofi/set_profile_banner', {
                 method: 'POST',
                 body: formData,
+                credentials: 'include'
+              });
+              break;
+            case 'bio':
+              formData.append('bio', changes[key]);
+              response = await fetch('http://localhost:3000/api/sofi/set_bio', {
+                method: 'POST',
+                body: JSON.stringify(this.userNewData.bio),
+                'Content-Type': 'application/json',
                 credentials: 'include'
               });
               break;
             case 'native_city':
-               response = await fetch('http://localhost:3000/api/sofi/set_native_city', {
+              formData.append('native_city', changes[key]);
+              response = await fetch('http://localhost:3000/api/sofi/set_native_city', {
                 method: 'POST',
-                body: formData,
+                body: JSON.stringify(this.userNewData.native_city),
+                'Content-Type': 'application/json',
                 credentials: 'include'
               });
               break;
             case 'ubication':
-               response = await fetch('http://localhost:3000/api/sofi/set_ubication', {
+              formData.append('ubication', changes[key]);
+              response = await fetch('http://localhost:3000/api/sofi/set_ubication', {
                 method: 'POST',
-                body: formData,
+                body: JSON.stringify(this.userNewData.ubication),
+                'Content-Type': 'application/json',
                 credentials: 'include'
               });
               break;
             case 'civil_status':
+              formData.append('civil_status', changes[key]);
               response = await fetch('http://localhost:3000/api/sofi/set_civil_status', {
                 method: 'POST',
-                body: formData,
+                body: JSON.stringify(this.userNewData.civil_status),
+                'Content-Type': 'application/json',
                 credentials: 'include'
               });
               break;
             default:
-              console.error(`No se encontró un endpoint para el campo ${key}`);
+              console.error(`No endpoint found for field ${key}`);
               continue;
           }
+
           if (response.ok) {
-            console.log(`Cambio en ${key} guardado exitosamente`);
-            const data = await response.json()
-            console.log(data)
+            console.log(`Change for ${key} saved successfully`);
+            const data = await response.json();
+            console.log(data);
           } else {
             const errorData = await response.json();
-            console.error(`Error al guardar ${key}: ${response.statusText}`, errorData);
+            console.error(`Error saving ${key}: ${response.statusText}`, errorData);
           }
         } catch (error) {
-          console.error(`Error al guardar ${key}: `, error);
+          console.error(`Error saving ${key}: `, error);
         }
       }
     }
   },
   mounted() {
-    this.getUserData();
+    this.getUserData(); // Fetch user data when component is mounted
   }
-}
+};
 </script>
 
 <style scoped>

@@ -29,10 +29,7 @@ const Post = sequelize.define('Post', {
   },
   user_img: {
     type: DataTypes.STRING,
-    allowNull: true,
-    validate: {
-      isUrl: true
-    }
+    allowNull: true
   }
 }, {
   tableName: 'Post'

@@ -9,7 +9,7 @@
         <div class="post-header">
           <div class="post-user">
             <div class="post-user-img">
-              <img :src="post.user_img">
+              <img :src="'http://localhost:3000/' + post.user_img" alt="Post User Image">
             </div>
             <div class="post-username">
               <h3>{{ post.user_name }}</h3>
@@ -22,24 +22,25 @@
         </div>
         
         <div class="post-image">
-          <img style="width: 300px" :src="'http://localhost:3000/' + post.postPicture" alt="Post Image">
+          <img :src="'http://localhost:3000/' + post.postPicture" alt="Post Image">
         </div>
         
         <div class="post-interactions">
           <div class="like">
-            <i class="fa fa-heart"></i>
-            <span>{{ post.likes }}</span>
+             <font-awesome-icon icon="heart"/>
+             
+            <span>283</span>
           </div>
           <div class="comment">
-            <i class="fa fa-comment"></i>
+            <font-awesome-icon icon="comments" />
             <span>Comment</span>
           </div>
           <div class="share">
-            <i class="fa fa-share"></i>
+            <font-awesome-icon icon="share"/>
             <span>Share</span>
           </div>
           <div class="save">
-            <i class="fa fa-bookmark"></i>
+            <font-awesome-icon icon="bookmark"/>
             <span>Save</span>
           </div>
         </div>
@@ -51,14 +52,14 @@
           <div class="upload-comment">
               
             <div class="user-picture">
-              <img :src="user">
+              <img :src="`http://localhost:3000/${user.user_picture}`" alt="User Picture">
             </div>
             
             <div class="input">
-              <input type="text" placeholder="Upload A Comment">
+              <input v-model="postComment" type="text" placeholder="Upload A Comment">
             </div>
-            <div class="send-button">
-              <i class="fa fa-share"></i>
+            <div @click="postAComment()" class="send-button">
+              <font-awesome-icon icon="paper-plane"/>
             </div>
             
             
@@ -68,12 +69,12 @@
               
               
               
-            <div v-for="(comment, index) in comments" :key="index" class="comment">
+            <div v-for="comment in comments" :key="comment.id" class="comment">
                 
               <div class="comment-user-details">
                   
                 <div class="user-comment-img"> 
-                  <img :src="comment.user_image">
+                  <img :src="`http://localhost:3000/${comment.user_profile_picture}`" alt="User Picture">
                 </div>
                 <div class="user-comment-username">
                   <h4>{{ comment.user_name }}</h4>
@@ -82,7 +83,7 @@
               
               
               <div class="user-comment">
-                <p>{{ comment.content }}</p>
+                <p>{{ comment.comment_content }}</p>
               </div>
               
               
@@ -103,7 +104,7 @@
               
               
               <div class="view-responses-button">
-                <p>See {{ comment.responses.length }} Responses</p>
+                <p>See Responses</p>
                 <i class="fa fa-angle-down"></i>
               </div>
               
@@ -179,56 +180,89 @@
 </template>
 
 
+
 <script>
+import userMixin from '@/mixins/userMixin';
+
 export default {
-    name: 'PostPage',
-    data() {
-        return {
-            post: {},
-            comments: [],
-            awnsers: []
-        }
+  name: 'PostPage',
+  mixins: [userMixin],
+  data() {
+    return {
+      post: {},
+      comments: {},
+      awnsers: [],
+      postComment: "",
+      user: {} 
+    };
+  },
+  methods: {
+    async getPost() {
+      const postId = this.$route.params.id;
+      const response = await fetch(`http://localhost:3000/api/sofi/post/${postId}`);
+
+      if (!response.ok) {
+        console.log('Something Went Wrong.');
+        return;
+      }
+
+      const data = await response.json();
+      console.log(data);
+      this.post = data.post;
+
+      const commentsResponse = await fetch(`http://localhost:3000/api/sofi/postComments/${postId}`);
+      if (!commentsResponse.ok) {
+        console.log('Something Went Wrong..');
+        return;
+      }
+
+      const commentsData = await commentsResponse.json();
+      console.log(commentsData);
+      this.comments = commentsData.Comments
+      console.log('Comments from that post: ', commentsData.Comments)
     },
-    methods: {
-        async getPost() {
-            const postId = this.$route.params.id; // probablemente quieras 'params' aquí
-            const response = await fetch(`http://localhost:3000/api/sofi/post/${postId}`);
+    
+    async getAwnsers(comment_id) {
+      const response = await fetch(`http://localhost:3000/api/sofi/commentAwnsers/${comment_id}`);
+      if (!response.ok) {
+        console.log('Something Went Wrong!');
+        return;
+      }
 
-            if (!response.ok) {
-                console.log('Something Went Wrong.');
-                return;
-            }
-
-            const data = await response.json();
-            console.log(data);
-            this.post = data.post;
-
-            const commentsResponse = await fetch(`http://localhost:3000/api/sofi/postsComments/${postId}`);
-            if (!commentsResponse.ok) {
-                console.log('Something Went Wrong..');
-                return;
-            }
-
-            const commentsData = await commentsResponse.json();
-            console.log(commentsData);
-            this.comments = commentsData;
+      const data = await response.json();
+      console.log(data);
+      this.awnsers = data.awnsers;
+    },
+    
+    
+    async postAComment() {
+      console.log('Post Comment Method Called', this.postComment);
+      const response = await fetch('http://localhost:3000/api/sofi/comment_post', {
+        method: 'POST',
+        body: JSON.stringify({ comment: this.postComment, post_id: this.$route.params.id}),
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
         },
-        async getAwnsers(comment_id) {
-            const response = await fetch(`http://localhost:3000/api/sofi/commentAwnsers/${comment_id}`);
-            if (!response.ok) {
-                console.log('Something Went Wrong!');
-                return;
-            }
+      });
 
-            const data = await response.json();
-            console.log(data);
-            this.awnsers = data.awnsers;
-        }
-    }, 
-    async mounted() {
-      await this.getPost()
+      if (!response.ok) {
+        console.log('Response Not Ok.');
+        return;
+      }
+
+      const data = await response.json();
+      console.log('Response data', data);
+      this.comments.push(data.comment); // Agregar el nuevo comentario a la lista de comentarios
+      this.postComment = ""; // Limpiar el campo de entrada
     },
-}
+  },
+  async mounted() {
+    await this.getPost();
+    this.user = this.usuario 
+    console.log('User data passed to Mixin', this.user.user_picture)
+  },
+};
 </script>
 
 <style scoped>
@@ -279,6 +313,8 @@ header {
     margin-bottom: 10px;
 }
 
+
+
 .post-image img {
     width: 100%;
     height: 100%;
@@ -313,6 +349,15 @@ header {
     z-index: 1;
 }
 
+.post .send-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+
+
+
 .upload-comment .user-picture img {
     width: 40px;
     border-radius: 50%;
@@ -330,6 +375,8 @@ header {
     background: white;
     color: black;
     margin-top: 20px;
+     width: 100%;
+     height: 100vh;
 }
 
 .comment-user-details img {

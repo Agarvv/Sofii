@@ -5,7 +5,6 @@ const createPostService = require('../services/createPostService')
 const createPost = async (post, user_id, username, userImg, postImg) => {
         try {
             
-          
                const socialpost = await createPostService.createPost(post, user_id, username, userImg, postImg)
                return socialpost
             

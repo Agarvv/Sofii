@@ -6,6 +6,7 @@ const createPostController = require('../controllers/createPostController');
 const tokenController = require('../controllers/tokenController');
 const Post = require('../models/Post');
 const router = express.Router();
+const postController = require('../controllers/postController')
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -31,9 +32,10 @@ router.post('/createPost', upload, [
     try {
         const jwt = req.cookies.jwt;
         const decoded = await tokenController.verifyJwtToken(jwt);
+        console.log('Decoded create post user: ', decoded)
         const user_id = decoded.user_id;
         const user_name = decoded.username;
-        const user_img = decoded.userPicture;
+        const user_img = decoded.user_picture;
 
         const postPicture = req.files.postPicture ? req.files.postPicture[0].path : null;
         const videoSource = req.files.videoSource ? req.files.videoSource[0].path : null;
@@ -84,18 +86,10 @@ router.get('/post_user/:userId', async (req, res) => {
   }
 });
 
-// Ruta para comentar en un post
-router.post('/comment_post', [
-    body("comment").escape().trim(),
-    body("post_id").isNumeric()
-], async (req, res) => {
-    try {
-        await postController.createComment(req.body, req.cookies.jwt);
-        return res.status(201).json({ detail: 'Comment has been added.' });
-    } catch (e) {
-        console.log(e);
-        return res.status(500).json({ error: e.message });
-    }
-});
+
+
+
+
+
 
 module.exports = router;

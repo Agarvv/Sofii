@@ -119,7 +119,7 @@ export default {
 
       reader.onload = (ev) => {
         this.videoSource = ev.target.result;
-        this.photos.push(ev.target.result);  // Esto parece redundante, pero lo dejo porque puede tener lógica en tu código.
+        this.photos.push(ev.target.result);
       };
     },
     async submitForm() {

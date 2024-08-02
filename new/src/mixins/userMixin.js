@@ -22,7 +22,8 @@ export default {
       this.usuario = data.user
       console.log('mixin user: ', this.usuario)
       } else {
-        console.log('Mixin user bsd')
+           const data = await response.json()
+           console.log('Mixin user server data', data)
       }
     } catch (e) {
       console.error('Error al obtener los datos del usuario:', e);

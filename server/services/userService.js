@@ -15,7 +15,7 @@ const handleProfileDataChange = async (field, value, token) => {
         if(!user){
             throw new Error("User not found.")
         }
-
+         console.log('service value', value)
         
         user[field] = value
         console.log('Profile Picture Before Save:', user.profilePicture)

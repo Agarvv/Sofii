@@ -1,526 +1,195 @@
 <template>
-    <div>
-        
-        <header>
-  <div class="logo">
-    <h2>Sofii</h2>
-  </div>
-  
-  <div class="search-input">
-    <input type="search" value="Le Male Elixir">
-  </div>
-  
-  <div class="icons"> 
-    <font-awesome-icon icon="search" />
-        <font-awesome-icon  icon="microphone"/>
-        <font-awesome-icon icon="filter"/>
-  </div>
+  <div>
+    <header>
+      <div class="logo">
+        <h2>Sofii</h2>
+      </div>
+      <div class="search-input">
+        <input type="search" v-model="searchQ" />
+      </div>
+      <div class="icons">
+        <font-awesome-icon icon="search" />
+        <font-awesome-icon icon="microphone" />
+        <font-awesome-icon icon="filter" />
+      </div>
+    </header>
 
-</header>
-
-
-<div class="container">
-  
-<aside>
-    <div class="aside-header">
-        <div class="logo">
+    <div class="container">
+      <aside>
+        <div class="aside-header">
+          <div class="logo">
             <h1>Sofii</h1>
+          </div>
         </div>
-    </div>
-
-    <nav>
-        <div class="aside-users">
+        <nav>
+          <div class="aside-users">
             <div>
-                <i class="fa fa-user"></i>
-                <span>Users</span>
+              <font-awesome-icon icon="user" />
+              <span>Users</span>
             </div>
             <div>
-                <i class="fa fa-caret-down"></i>
+              <font-awesome-icon icon="caret-down" />
             </div>
-        </div>
+          </div>
 
-        <div class="hidden-users" style="display: none;">
-
+          <div class="hidden-users" :style="{ display: showUsers ? 'block' : 'none' }">
             <div class="order-by-son">
-                <div class="following">
-                    <label>Following</label>
-                    <input type="checkbox">
-                </div>
-                <div class="friend">
-                    <label>Friend</label>
-                    <input type="checkbox">
-                </div>
-                <div class="blocked">
-                    <label for="Blocked">Blocked</label>
-                    <input type="checkbox">
-                </div>
-                <div class="followers">
-                    <label for="Followers">Followers</label>
-                    <input type="number">
-                </div>
+              <div class="following">
+                <label>Following</label>
+                <input type="checkbox" />
+              </div>
+              <div class="friend">
+                <label>Friend</label>
+                <input type="checkbox" />
+              </div>
+              <div class="blocked">
+                <label>Blocked</label>
+                <input type="checkbox" />
+              </div>
+              <div class="followers">
+                <label>Followers</label>
+                <input type="number" />
+              </div>
             </div>
-        </div>
+          </div>
 
-        <div class="aside-posts">
+          <div class="aside-posts">
             <div>
-        <font-awesome-icon icon="newspaper"/>
-                <span>Posts</span>
+              <font-awesome-icon icon="newspaper" />
+              <span>Posts</span>
             </div>
             <div>
-                                     <font-awesome-icon icon="caret-down"/>
-            </div> 
-        </div>
+              <font-awesome-icon icon="caret-down" />
+            </div>
+          </div>
 
-        <div class="hidden-posts" style="display: none;">
-
+          <div class="hidden-posts" :style="{ display: showPosts ? 'block' : 'none' }">
             <div class="sort-options">
-                <div class="latest">
-                    <label>Latest</label>
-                    <input type="radio" name="sort-posts">
-                </div>
-                <div class="popular">
-                    <label>Popular</label>
-                    <input type="radio" name="sort-posts">
-                </div>
-                <div class="trending">
-                    <label>Trending</label>
-                    <input type="radio" name="sort-posts">
-                </div>
+              <div class="latest">
+                <label>Latest</label>
+                <input type="radio" name="sort-posts" />
+              </div>
+              <div class="popular">
+                <label>Popular</label>
+                <input type="radio" name="sort-posts" />
+              </div>
+              <div class="trending">
+                <label>Trending</label>
+                <input type="radio" name="sort-posts" />
+              </div>
             </div>
-        </div>
-
-        <div class="aside-stories">
-            <div>
-                <i class="fa fa-book-open"></i>
-                <span>Stories</span>
-            </div>
-            <div>
-                <i class="fa fa-caret-down"></i>
-            </div>
-        </div>
-
-        <div class="hidden-stories" style="display: none;">
-
-            <div class="view-options-choices">
-                <div class="grid-view">
-                    <label>Grid View</label>
-                    <input type="radio" name="view-stories">
-                </div>
-                <div class="list-view">
-                    <label>List View</label>
-                    <input type="radio" name="view-stories">
-                </div>
-            </div>
-        </div>
-
-        <div class="aside-groups">
-            <div>
-                <i class="fa fa-users"></i>
-                <span>Groups</span>
-            </div>
-            <div>
-                <i class="fa fa-caret-down"></i>
-            </div>
-        </div>
-
-        <div class="hidden-groups" style="display: none;">
-          
-            <div class="membership-options">
-                <div class="public">
-                    <label>Public</label>
-                    <input type="radio" name="membership">
-                </div>
-                <div class="private">
-                    <label>Private</label>
-                    <input type="radio" name="membership">
-                </div>
-            </div>
-        </div>
-
-        <div class="aside-trends">
-            <div>
-                <i class="fa fa-chart-line"></i>
-                <span>Trends</span>
-            </div>
-            <div>
-                <i class="fa fa-caret-down"></i>
-            </div>
-        </div>
-
-        <div class="hidden-trends" style="display: none;">
-
-            <div class="trending-items">
-                <div class="item">
-                    <span>#1</span>
-                    <p>Trend 1</p>
-                </div>
-                <div class="item">
-                    <span>#2</span>
-                    <p>Trend 2</p>
-                </div>
-                <div class="item">
-                    <span>#3</span>
-                    <p>Trend 3</p>
-                </div>
-            </div>
-        </div>
-    </nav>
-    
-    
-</aside>
-
-
-
-
-
-
-
-  
-  <div class="content">
-    
-    <div class="users">
-      <h4>Users</h4>
-      
-      <div class="user">
-        
-        <div class="user-details">
-          
-          <div class="user-img">
-            <img src="invict-victory-edp.jpg">
           </div>
-          
-          <div class="user-info">
-            <h3>Le Beau</h3>
-            <p>Backend Engineer</p>
-          </div>
+        </nav>
+      </aside>
 
-          
-        </div>
-        
-           <div class="follow-btn">
-            <button>Follow</button>
+      <div class="content">
+        <div v-for="user in content.users" :key="user.id" class="users">
+          <h4>Users</h4>
+          <div @click="goToUserPage(user.id)" class="user">
+            <div class="user-details">
+              <div class="user-img">
+                <img :src="'http://localhost:3000/' + user.profilePicture" />
+              </div>
+              <div class="user-info">
+                <h3>{{ user.username }}</h3>
+                <p>{{ user.bio }}</p>
+              </div>
+            </div>
+            <div class="follow-btn">
+              <button>Follow</button>
+            </div>
           </div>
-        
+        </div>
+
+        <div v-for="post in content.posts" :key="post.id" class="posts">
+          <h4>Posts</h4>
+          <div @click="goToPostPage(post.id)" class="post">
+            <div class="post-user">
+              <div class="post-user-img">
+                <img :src="'http://localhost:3000/' + post.user_img" />
+              </div>
+              <div class="post-user-details">
+                <h3>{{ post.user_name }}</h3>
+              </div>
+            </div>
+            <div class="post-info">
+              <div class="post-details">
+                <p>{{ post.description }}</p>
+              </div>
+              <div class="post-img">
+                <img :src="'http://localhost:3000/' + post.postPicture" />
+              </div>
+            </div>
+            <div class="post-interactions">
+              <div class="like">
+                <font-awesome-icon icon="heart"/>
+                <p>167</p>
+              </div>
+              <div class="comment">
+                <font-awesome-icon icon="comments"/>
+                <p>12</p>
+              </div>
+              <div class="share">
+                 <font-awesome-icon icon="share"/>
+                <p>0</p>
+              </div>
+              <div class="save">
+                <font-awesome-icon icon="bookmark"/>
+                <p>4</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      
-        <div class="user">
-        
-        <div class="user-details">
-          
-          <div class="user-img">
-            <img src="invict-victory-edp.jpg">
-          </div>
-          
-          <div class="user-info">
-            <h3>Le Beau</h3>
-            <p>Backend Engineer</p>
-          </div>
-
-          
-        </div>
-        
-           <div class="follow-btn">
-            <button>Follow</button>
-          </div>
-        
-      </div>
-      
-        <div class="user">
-        
-        <div class="user-details">
-          
-          <div class="user-img">
-            <img src="invict-victory-edp.jpg">
-          </div>
-          
-          <div class="user-info">
-            <h3>Le Beau</h3>
-            <p>Backend Engineer</p>
-          </div>
-
-          
-        </div>
-        
-           <div class="follow-btn">
-            <button>Follow</button>
-          </div>
-        
-      </div>
-      
-        <div class="user">
-        
-        <div class="user-details">
-          
-          <div class="user-img">
-            <img src="invict-victory-edp.jpg">
-          </div>
-          
-          <div class="user-info">
-            <h3>Le Beau</h3>
-            <p>Backend Engineer</p>
-          </div>
-
-          
-        </div>
-        
-           <div class="follow-btn">
-            <button>Follow</button>
-          </div>
-        
-      </div>
-      
-        <div class="user">
-        
-        <div class="user-details">
-          
-          <div class="user-img">
-            <img src="invict-victory-edp.jpg">
-          </div>
-          
-          <div class="user-info">
-            <h3>Le Beau</h3>
-            <p>Backend Engineer</p>
-          </div>
-
-          
-        </div>
-        
-           <div class="follow-btn">
-            <button>Follow</button>
-          </div>
-        
-      </div>
-      
     </div>
-    
-    <div class="posts">
-      <h4>Posts</h4>
-      
-   <div class="post">
-      
-      <div class="post-user">
-        
-        <div class="post-user-img">
-          <img src="invict-victory-edp.jpg">
-        </div>
-        
-        <div class="post-user-details">
-          <h3>Rompedor De Abuelas</h3>
-          <p>@rompedorr</p>
-        </div>
-        
-      </div>
-      
-      <div class="post-info">
-        
-        <div class="post-details">
-          <p>Le beau male le beau male le beay le beay le veay le baye le baye le beay le beay le veau le beau le beuaau le</p>
-        </div>
-        
-                <div class="post-img">
-          <img src="cinco-jotas-jamon.jpg">
-        </div>
-        
-        
-      </div>
-      
-      <div class="post-interactions">
-        <div class="like">
-          <i class="fa fa-heart"></i>
-          <p>167</p>
-        </div>
-        <div class="comment">
-          <i class="fa fa-comment"></i>
-          <p>12</p>
-        </div>
-        <div class="share">
-          <i class="fa fa-share"></i>
-          <p>0</p>
-        </div>
-        <div class="save">
-          <i class="fa fa-bookmark"></i>
-          <p>4</p>
-        </div>
-      </div>
-      
-      
-      
-      
-   </div> 
-      
-      
-      
-      <div class="post">
-      
-      <div class="post-user">
-        
-        <div class="post-user-img">
-          <img src="invict-victory-edp.jpg">
-        </div>
-        
-        <div class="post-user-details">
-          <h3>Rompedor De Abuelas</h3>
-          <p>@rompedorr</p>
-        </div>
-        
-      </div>
-      
-      <div class="post-info">
-        
-        <div class="post-details">
-          <p>Le beau male le beau male le beay le beay le veay le baye le baye le beay le beay le veau le beau le beuaau le</p>
-        </div>
-        
-         <div class="post-img">
-          <img src="invict-victory-edp.jpg">
-        </div>
-        
-        
-      </div>
-      
-      <div class="post-interactions">
-        <div class="like">
-          <i class="fa fa-heart"></i>
-          <p>167</p>
-        </div>
-        <div class="comment">
-          <i class="fa fa-comment"></i>
-          <p>12</p>
-        </div>
-        <div class="share">
-          <i class="fa fa-share"></i>
-          <p>0</p>
-        </div>
-        <div class="save">
-          <i class="fa fa-bookmark"></i>
-          <p>4</p>
-        </div>
-      </div>
-      
-      
-      
-      
-   </div> 
-   
-   
-   <div class="post">
-      
-      <div class="post-user">
-        
-        <div class="post-user-img">
-          <img src="invict-victory-edp.jpg">
-        </div>
-        
-        <div class="post-user-details">
-          <h3>Rompedor De Abuelas</h3>
-          <p>@rompedorr</p>
-        </div>
-        
-      </div>
-      
-      <div class="post-info">
-        
-        <div class="post-details">
-          <p>Le beau male le beau male le beay le beay le veay le baye le baye le beay le beay le veau le beau le beuaau le</p>
-        </div>
-        
-                <div class="post-img">
-          <img src="cinco-jotas-jamon.jpg">
-        </div>
-        
-        
-      </div>
-      
-      <div class="post-interactions">
-        <div class="like">
-          <i class="fa fa-heart"></i>
-          <p>167</p>
-        </div>
-        <div class="comment">
-          <i class="fa fa-comment"></i>
-          <p>12</p>
-        </div>
-        <div class="share">
-          <i class="fa fa-share"></i>
-          <p>0</p>
-        </div>
-        <div class="save">
-          <i class="fa fa-bookmark"></i>
-          <p>4</p>
-        </div>
-      </div>
-      
-      
-      
-      
-   </div> 
-   
-   
-   <div class="post">
-      
-      <div class="post-user">
-        
-        <div class="post-user-img">
-          <img src="invict-victory-edp.jpg">
-        </div>
-        
-        <div class="post-user-details">
-          <h3>Rompedor De Abuelas</h3>
-          <p>@rompedorr</p>
-        </div>
-        
-      </div>
-      
-      <div class="post-info">
-        
-        <div class="post-details">
-          <p>Le beau male le beau male le beay le beay le veay le baye le baye le beay le beay le veau le beau le beuaau le</p>
-        </div>
-        
-                <div class="post-img">
-          <img src="cinco-jotas-jamon.jpg">
-        </div>
-        
-        
-      </div>
-      
-      <div class="post-interactions">
-        <div class="like">
-          <i class="fa fa-heart"></i>
-          <p>167</p>
-        </div>
-        <div class="comment">
-          <i class="fa fa-comment"></i>
-          <p>12</p>
-        </div>
-        <div class="share">
-          <i class="fa fa-share"></i>
-          <p>0</p>
-        </div>
-        <div class="save">
-          <i class="fa fa-bookmark"></i>
-          <p>4</p>
-        </div>
-      </div>
-      
-      
-      
-      
-   </div> 
-      
-      
-      
-    </div>
-    
   </div>
-</div>
-
-
-    </div>
 </template>
 
 <script>
-    
+export default {
+  data() {
+    return {
+      searchQ: "",
+      content: {},
+      showUsers: false,
+      showPosts: false,
+    };
+  },
+  methods: {
+    toggleUsers() {
+      this.showUsers = !this.showUsers;
+    },
+    togglePosts() {
+      this.showPosts = !this.showPosts;
+    },
+    goToUserPage(user_id) {
+      this.$router.push('/user/' + user_id)
+  }, 
+  goToPostPage(post_id) {
+      this.$router.push('/post/' + post_id)
+  }
+  
+  },
+  async mounted() {
+    this.searchQ = this.$route.params.query;
+    try {
+      const response = await fetch('http://localhost:3000/api/sofi/search/' + this.$route.params.query, {
+        method: 'POST',
+      });
+
+      if (!response.ok) {
+        console.error('Something went wrong!');
+        return;
+      }
+
+      const data = await response.json();
+      this.content = data.results.results;
+      console.log('Server data', this.content.posts);
+    } catch (error) {
+      console.error('Fetch error:', error);
+    }
+  },
+};
 </script>
 
 <style scoped>

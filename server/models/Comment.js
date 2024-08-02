@@ -16,10 +16,7 @@ const Comment = sequelize.define('comment', {
   },
   user_profile_picture: {
     type: DataTypes.STRING,
-    allowNull: true,
-    validate: {
-      isUrl: true
-    }
+    allowNull: true
   },
   comment_content: {
     type: DataTypes.TEXT,

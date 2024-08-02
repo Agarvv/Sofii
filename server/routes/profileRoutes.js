@@ -1,7 +1,7 @@
 const express = require('express');
 const userService = require('../services/userService');
 const multer = require('multer');
-
+const path = require('path');
 const router = express.Router();
 
 const storage = multer.diskStorage({
@@ -33,16 +33,25 @@ router.post('/set_profile_banner', upload.single('profile-banner'), async (req, 
     }
 });
 
-router.post('/set_profile_picture', upload.single('profilePicture'), async (req, res) => {
+router.post('/set_profile_picture', upload.single('profile-picture'), async (req, res) => {
     try {
+        
+        
         if (!req.cookies.jwt) {
             return res.status(404).json({ err: "no token" });
         } else {
             console.log('endpoint token', req.cookies.jwt);
         }
+        
+        
+       
         const token = req.cookies.jwt;
-        await userService.handleProfileDataChange('profilePicture', 'elpepe', token);
+        
+        await userService.handleProfileDataChange('profilePicture', req.file.path, token);
+        
         return res.status(201).json({ success: 'Your Profile Picture Has Been Changed Successfully!' });
+        
+        
     } catch (e) {
         console.log(e);
         return res.status(500).json({ error: e.message });
@@ -78,8 +87,9 @@ router.post('/set_ubication', async (req, res) => {
 
 router.post('/set_bio', async (req, res) => {
     try {
+        console.log('bio req.body', req.body)
         await userService.handleProfileDataChange('bio', req.body.bio, req.cookies.jwt);
-        return res.status(201).json({ success: 'Your Profile Bio Has Been Changed Successfully!' , req.body.bio});
+        return res.status(201).json({ success: 'Your Profile Bio Has Been Changed Successfully!', bio: req.body.bio });
     } catch (e) {
         return res.status(500).json({ error: e.message });
     }

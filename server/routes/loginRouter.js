@@ -25,5 +25,23 @@ router.post('/login', [
     }
 });
 
+router.get('/check_token',async (req, res) => {
+    try {
+         let token = req.cookies.jwt 
+         if(!token) {
+             return res.status(500).json({error: 'You Must Be Logged In.'})
+         }
+         
+         let user = await tokenController.verifyJwtToken(token)
+         if(!user) {
+             return res.status(500).json({error: 'Something Went Wrong in your user Validation...'})
+         }
+         return res.status(201).json({user: user})
+    } catch(e) {
+        console.log(e)
+        return res.status(500).json({error: e})
+    }
+})
+
 
 module.exports = router;
