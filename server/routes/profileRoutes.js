@@ -26,6 +26,7 @@ router.get('/user/:userId', async (req, res) => {
 
 router.post('/set_profile_banner', upload.single('profile-banner'), async (req, res) => {
     try {
+        console.log(req.file)
         await userService.handleProfileDataChange('banner', req.file, req.cookies.jwt);
         return res.status(201).json({ success: 'Your Profile Banner Has Been Changed Successfully!' });
     } catch (e) {
@@ -60,6 +61,7 @@ router.post('/set_profile_picture', upload.single('profile-picture'), async (req
 
 router.post('/set_native_city', async (req, res) => {
     try {
+        console.log(req.body)
         await userService.handleProfileDataChange('native_city', req.body.native_city, req.cookies.jwt);
         return res.status(201).json({ success: 'Your Profile Native City Has Been Changed Successfully!' });
     } catch (e) {
@@ -69,6 +71,7 @@ router.post('/set_native_city', async (req, res) => {
 
 router.post('/set_civil_status', async (req, res) => {
     try {
+        console.log(req.body)
         await userService.handleProfileDataChange('civil_status', req.body.civil_status, req.cookies.jwt);
         return res.status(201).json({ success: 'Your Profile Civil Status Has Been Changed Successfully!' });
     } catch (e) {
@@ -78,6 +81,7 @@ router.post('/set_civil_status', async (req, res) => {
 
 router.post('/set_ubication', async (req, res) => {
     try {
+        console.log(req.body)
         await userService.handleProfileDataChange('ubication', req.body.ubication, req.cookies.jwt);
         return res.status(201).json({ success: 'Your Profile Ubication Has Been Changed Successfully!' });
     } catch (e) {

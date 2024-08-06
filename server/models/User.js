@@ -81,6 +81,18 @@ const User = sequelize.define('User', {
   banned: {
     type: DataTypes.BOOLEAN,
     defaultValue: false
+  },
+  tag: {
+      type: DataTypes.STRING,
+      allowNull: true
+  },
+  job: {
+      type: DataTypes.STRING,
+      allowNull: true
+  },
+  banner: {
+      type: DataTypes.STRING,
+      allowNull: true
   }
 }, {
   tableName: 'users'

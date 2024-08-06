@@ -8,7 +8,11 @@ const Comment = sequelize.define('comment', {
   },
   user_id: {
     type: DataTypes.INTEGER,
-    allowNull: false
+    allowNull: false,
+    references: {
+        model: 'users',
+        key: 'id'
+    }
   },
   user_name: {
     type: DataTypes.STRING,

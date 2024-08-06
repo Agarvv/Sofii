@@ -4,9 +4,14 @@ const path = require('path');
 const { body } = require('express-validator');
 const createPostController = require('../controllers/createPostController');
 const tokenController = require('../controllers/tokenController');
-const Post = require('../models/Post');
+const Likes = require('../models/Likes')
+
+
 const router = express.Router();
 const postController = require('../controllers/postController')
+const { User, Post, Comment
+} = require('../models/relations')
+
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -48,12 +53,39 @@ router.post('/createPost', upload, [
     }
 });
 
-// Ruta para obtener todos los posts públicos
+
 router.get('/posts', async (req, res) => {
     try {
-        const posts = await Post.findAll({ where: { private: false } });
+        
+        
+        const posts = await Post.findAll({
+    where: { private: false },
+    include: [
+        {
+            model: User,
+            as: 'user',
+            attributes: ['username', 'email', 'profilePicture']
+        },
+        {
+            model: Comment,
+            as: 'postComments',
+            attributes: ['comment_content'],
+            include: {
+                model: User,
+                as: 'commentUser',
+                attributes: ['username']
+            }
+        },
+        {
+            model: Likes,
+            as: 'postLikes'
+        }
+    ]
+});
+        
         return res.status(200).json({ posts });
     } catch (e) {
+        console.log(e)
         return res.status(500).json({ error: e.message });
     }
 });

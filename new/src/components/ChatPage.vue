@@ -1,6 +1,6 @@
 <template>
   <div>
-    <header>
+    <header >
       <div class="up">
         
         <div class="f-up">
@@ -27,7 +27,7 @@
     
     <div class="container">
       
-      <aside>
+      <aside style="display: none">
         
         <div class="aside-header">
           
@@ -37,7 +37,7 @@
             </div>
             
             <div class="user-details">
-              <h3>Le Beau</h3>
+              <h3>Le beau</h3>
             </div>
           </div>
           
@@ -81,13 +81,12 @@
         <div class="main-header">
           
           <div class="user-details">
-            
             <div class="user-img">
-              <img src="invict-victory-edp.jpg" style="width: 60px; border-radius: 50%;">
-            </div>
+            <img :src="'http://localhost:3000/' + user.profilePicture" style="width: 60px; border-radius: 50%;">
+         </div>
             
             <div class="user-username">
-              <h4>Le Beau</h4>
+              <h4>{{user.username}}</h4>
               <p style="color: green">Conected</p>
             </div>
             
@@ -138,7 +137,34 @@
 </template>
 
 <script>
-    
+    export default {
+        name: 'ChatPage',
+        data() {
+            return {
+                contact: {},
+                messages: [],
+                user: {}
+            }
+        },
+        methods: {
+            
+        }, 
+        async created() {
+            const response = await fetch('http://localhost:3000/api/sofi/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ user_id: this.$route.params.receiver_id }),
+                credentials: 'include'
+            })
+            
+            const data = await response.json()
+            console.log('Server data chat: ', data.userToDisplayInfo)
+            this.messages = data.chat.messages
+            this.user = data.userToDisplayInfo
+        }
+    }
 </script>
 
 <style scoped>
@@ -403,7 +429,7 @@ main .main-chatbox {
   }
 
   .container main {
-    display: none;
+
   }
 
   header {

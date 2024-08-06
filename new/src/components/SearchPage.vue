@@ -85,7 +85,7 @@
       <div class="content">
         <div v-for="user in content.users" :key="user.id" class="users">
           <h4>Users</h4>
-          <div @click="goToUserPage(user.id)" class="user">
+          <div  class="user">
             <div class="user-details">
               <div class="user-img">
                 <img :src="'http://localhost:3000/' + user.profilePicture" />
@@ -96,7 +96,7 @@
               </div>
             </div>
             <div class="follow-btn">
-              <button>Follow</button>
+              <button @click="followUser(user.id)">Follow</button>
             </div>
           </div>
         </div>
@@ -167,7 +167,24 @@ export default {
   }, 
   goToPostPage(post_id) {
       this.$router.push('/post/' + post_id)
-  }
+  }, 
+  async followUser(following_id) {
+    console.log('Follow user method called, ', following_id);
+    const response = await fetch('http://localhost:3000/api/sofi/follow', {
+        body: JSON.stringify({ following_id }), // Asegúrate de enviar un objeto con la clave adecuada
+        method: 'POST',
+        credentials: 'include',
+        headers: { // Asegúrate de usar 'headers' en lugar de 'Content-Type' directamente
+            'Content-Type': 'application/json'
+        }
+    });
+    if (!response.ok) {
+        console.log('response not ok');
+    }
+
+    const data = await response.json();
+    console.log('follow server data', data);
+}
   
   },
   async mounted() {

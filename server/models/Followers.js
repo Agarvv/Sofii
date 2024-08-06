@@ -1,12 +1,11 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 console.log(sequelize)
-if(!sequelize) {
+if (!sequelize) {
     console.log('nor sequelize')
 }
 
-
-const Follower = sequelize.define('followers', {
+const Follower = sequelize.define('Follower', {  // Cambia el nombre aquí
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -15,10 +14,10 @@ const Follower = sequelize.define('followers', {
   follower_id: {
     type: DataTypes.INTEGER,
     allowNull: false
-},
+  },
   follower_name: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: true
   },
   follower_picture: {
     type: DataTypes.STRING,
@@ -33,7 +32,7 @@ const Follower = sequelize.define('followers', {
   },
   following_name: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: true
   },
   following_picture: {
     type: DataTypes.STRING,
@@ -43,7 +42,7 @@ const Follower = sequelize.define('followers', {
     }
   }
 }, {
-  tableName: 'followers'
+  tableName: 'followers'  // Mantén el nombre de la tabla como 'followers'
 });
 
 module.exports = Follower;

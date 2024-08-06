@@ -60,14 +60,18 @@
           <div class="create"><font-awesome-icon icon="plus" /><p>Create</p></div>
           <div class="notifications"><font-awesome-icon icon="bell" /><p>Notifications</p></div>
         </div>
+        
+        
         <div class="posts">
-          <div v-for="post in posts" :key="post.id" class="post" @click="goToPostPage(post.id)">
+          <div v-for="post in posts" :key="post.id" class="post" >
+              
+              
             <div class="post-header">
               <div class="post-user-img">
-                <img style="width: 50px; border-radius: 50%" :src="'http://localhost:3000/' + post.user_img" alt="Post User Image">
+                <img style="width: 50px; border-radius: 50%" :src="'http://localhost:3000/' + post.user.profilePicture" alt="Post User Image">
               </div>
               <div class="post-user-detail">
-                <h4>{{ post.user_name }}</h4>
+                <h4>{{ post.user.username }}</h4>
                 <p style="color: gray">{{ post.userHandle }}</p>
               </div>
               <div class="post-button-ellipsis">
@@ -78,18 +82,23 @@
               <div class="post-description">
                 <p>{{ post.description }}</p>
               </div>
-              <div class="post-image">
+              <div @click="goToPostPage(post.id)" class="post-image">
                 <img :src="'http://localhost:3000/' + post.postPicture" alt="Post Image">
               </div>
             </div>
             <div class="post-interactions">
-              <div class="like"><font-awesome-icon icon="fas fa-thumbs-up" /></div>
-              <div class="comment"><font-awesome-icon icon="fas fa-comment" /></div>
-              <div class="save"><font-awesome-icon icon="fas fa-bookmark" /></div>
+              <div @click="likePost(post.id)" class="like"><font-awesome-icon icon="fas fa-thumbs-up" /> <span>{{post.postLikes.length}}</span>   </div>
+              <div @click="goToPostPage(post.id)"class="comment"><font-awesome-icon icon="fas fa-comment" /> <span>{{post.postComments.length}}</span></div>
+              <div @click="savePost(post.id)" class="save"><font-awesome-icon icon="fas fa-bookmark" /></div>
               <div class="share"><font-awesome-icon icon="fas fa-share" /></div>
             </div>
+            
+            
+            
           </div>
         </div>
+        
+        
       </main>
 
       <div class="right-aside">
@@ -116,7 +125,7 @@ export default {
     async getPosts() {
       try {
         const response = await fetch('http://localhost:3000/api/sofi/posts', {
-            method: 'POST'
+          method: 'GET'
         });
         if (!response.ok) {
           console.error('Oops, Something Went Down Here!');
@@ -124,20 +133,47 @@ export default {
         }
         const data = await response.json();
         this.posts = data.posts;
-        console.log(data.posts)
+        console.log(data.posts);
       } catch (e) {
         console.error(e);
       }
     },
     goToPostPage(post_id) {
-    console.log(post_id)
-    this.$router.push('/post/' + post_id)
-  },
-  handleSearch() {
-      console.log('Handle Search Method Called.', this.searchQ)
-      this.$router.push('/search/' + this.searchQ)
-  }, 
-  
+      console.log(post_id);
+      this.$router.push('/post/' + post_id);
+    },
+    handleSearch() {
+      console.log('Handle Search Method Called.', this.searchQ);
+      this.$router.push('/search/' + this.searchQ);
+    },
+    async likePost(post_id) {
+      try {
+        const response = await fetch('http://localhost:3000/api/sofi/like_content', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ type: 'POST', post_id: post_id }),
+          credentials: 'include'
+        });
+        const data = await response.json();
+        console.log('Server like post data:', data);
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    async savePost(post_id) {
+     const response = await fetch('http://localhost:3000/api/sofi/save_content', {
+         method: 'POST',
+         headers: {
+            'Content-Type': 'application/json'
+          },
+         body: JSON.stringify({ type: 'POST', post_id: post_id }),
+         credentials: 'include'
+     })
+     const data = await response.json()
+     console.log('server data save: ', data)
+    }
   },
   created() {
     this.getPosts();

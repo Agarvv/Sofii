@@ -7,7 +7,7 @@
       
       <div class="user">
         <div class="user-img">
-          <img :src="user.userPicture" alt="Foto de Perfil">
+         <img :src="'http://localhost:3000/' + user.profilePicture" alt="Foto de Perfil">
         </div>
 
         <div class="user-details">
@@ -16,7 +16,7 @@
           </div>
           
           <div class="followers" style="margin-bottom: 20px">
-            <p style="font-weight: 700;">500Followers</p>
+            <p style="font-weight: 700;">500 Followers</p>
             <p style="color: gray">120 Following</p>
           </div>
 
@@ -31,8 +31,8 @@
           </div>
           
           <div v-else class="interact-buttons">
-            <button style="background: gray;"> <font-awesome-icon :icon="['fas', 'comment']" />Chat</button>
-            <button style="background: #007bff;"> <font-awesome-icon :icon="['fas', 'user-plus']" />Follow</button>
+            <button @click="sendChat(user.id)" style="background: gray;"> <font-awesome-icon :icon="['fas', 'comment']" />Chat</button>
+            <button @click="sendFriendRequest(user.id)" style="background: #007bff;"> <font-awesome-icon :icon="['fas', 'user-plus']" />Friend Request</button>
           </div>
         </div>
       </div>
@@ -48,17 +48,17 @@
            
            <div class="user-i">
              <div v-if="user.description" class="description">
-               <p>{{ user.description }}</p>
+               <p>{{ user.bio }}</p>
              </div>
              
             <div class="ubication">
               <font-awesome-icon icon="fas fa-map-marker-alt" style="color: red" />
-              <span>{{ user.location }}</span>
+              <span>{{ user.ubication }}</span>
             </div>
             
             <div class="native">
               <font-awesome-icon icon="fas fa-globe" style="color: black" />
-              <span>{{ user.nationality }}</span>
+              <span>{{ user.native_city }}</span>
             </div>
             
             <div class="gender">
@@ -68,12 +68,12 @@
             
             <div class="work">
               <font-awesome-icon icon="fas fa-briefcase" style="color: gray" />
-              <span>{{ user.occupation }}</span>
+              <span>{{ user.job }}</span>
             </div>
             
             <div class="love">
               <font-awesome-icon icon="fa fa-heart" style="color: red" />
-              <span>{{ user.status }}</span>
+              <span>{{ user.civil_status }}</span>
             </div>
            </div>
           </div>
@@ -81,7 +81,7 @@
       </aside>
 
       <main>
-        <div class="posts">
+        <div v-for="post in userPosts" key="post.id" class="posts">
           <h1>Posts</h1>
           
     
@@ -99,6 +99,7 @@ export default {
   data() {
     return {
       user: {},
+      userPosts: [],
       isSelfUser: false
     };
   },
@@ -110,8 +111,9 @@ export default {
           throw new Error('Something went wrong.');
         }
         const data = await response.json();
-        console.log(data);
+        console.log(data.user);
         this.user = data.user;
+        this.userPosts = data.user.posts
          
         if(this.user.id == this.usuario.user_id) {
           this.isSelfUser = true
@@ -123,7 +125,44 @@ export default {
       } catch (error) {
         console.error('Error fetching user:', error);
       }
+    },
+    async sendFriendRequest(friend_target) {
+    console.log('Send friend request method called, ', friend_target);
+    const response = await fetch('http://localhost:3000/api/sofi/send_friend_request', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ friend_target }),
+        credentials: 'include'
+    });
+    
+    if (!response.ok) {
+        console.log('Response not ok');
     }
+    
+    const data = await response.json();
+    console.log('Server friend request data: ', data);
+},
+
+async sendChat(user_id) {
+    const response = await fetch('http://localhost:3000/api/sofi/chat', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ user_id: user_id }),
+        credentials: 'include'
+    })
+    const data = await response.json()
+    console.log('Server data chat; ', data)
+    if(data.chat.message == "Chat already exists") {
+        return this.$router.push('/chat/' + user_id)
+    } else if(data.chat.message = "chatDoesNotExist") {
+        console.log('This is your first conversation with this person, enjoy !')
+        this.$router.push('/chat/' + user_id)
+    }
+}
   },
   async mounted() {
     await this.getUser(); // Corregir llamada a método

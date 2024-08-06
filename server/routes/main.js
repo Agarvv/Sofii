@@ -5,6 +5,12 @@ const profileRoutes = require('./profileRoutes')
 const googleAuthRoutes = require('./googleAuthRoutes')
 const commentRoutes = require('./commentRoutes')
 const searchRoutes = require('./searchRoutes')
+const followerRoutes = require('./followerRoutes')
+const friendRoutes = require('./friendRoutes')
+const videoRoutes = require('./videoRoutes')
+const likesRoutes = require('./likesRoutes')
+const savedContentRoutes = require('./savedContentRoutes')
+const ChatRoutes = require('./ChatRoutes')
 
 function setupRoutes(app) {
     app.use('/api/sofi', registerRouter);
@@ -13,6 +19,12 @@ function setupRoutes(app) {
     app.use('/api/sofi', profileRoutes);
     app.use('/api/sofi', commentRoutes);
     app.use('/api/sofi', searchRoutes);
+    app.use('/api/sofi', followerRoutes);
+    app.use('/api/sofi', friendRoutes);
+    app.use('/api/sofi', videoRoutes);
+    app.use('/api/sofi', likesRoutes);
+    app.use('/api/sofi', savedContentRoutes);
+    app.use('/api/sofi', ChatRoutes);
     app.use('/auth/google', googleAuthRoutes);
     
 }

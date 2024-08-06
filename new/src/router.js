@@ -9,6 +9,8 @@ import SearchPage from './components/SearchPage.vue';
 import ProfilePage from './components/ProfilePage.vue';
 import SavedPage from './components/SavedPage.vue';
 import profileDetails from './components/profileDetails.vue'
+import VideosPage from './components/VideosPage.vue'
+import SingleVideoPage from './components/SingleVideoPage'
 
 const routes = [
     { path: '/', component: HelloWorld },
@@ -16,11 +18,13 @@ const routes = [
     { path: '/login', component: LoginComponent },
     { path: '/post/:id', component: PostPage },
     { path: '/create', component: CreatePost },
-    { path: '/chat', component: ChatPage, meta: { requiresAuth: true } },
+    { path: '/chat/:receiver_id', component: ChatPage},
     { path: '/search/:query', component: SearchPage, },
     { path: '/user/:id', component: ProfilePage },
     { path: '/userDetails', component: profileDetails},
-    { path: '/saved', component: SavedPage, meta: { requiresAuth: true } }
+    { path: '/saved', component: SavedPage, meta: { requiresAuth: true } },
+    { path: '/watch', component: VideosPage},
+    { path: '/watch/:video_id', component: SingleVideoPage }
 
 ];
 

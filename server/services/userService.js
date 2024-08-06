@@ -1,5 +1,7 @@
 const User = require('../models/User')
 const tokenController = require('../controllers/tokenController')
+const Post = require('../models/Post')
+const FriendRequest = require('../models/FriendRequest')
 
 const handleProfileDataChange = async (field, value, token) => {
     try {
@@ -31,6 +33,48 @@ const handleProfileDataChange = async (field, value, token) => {
     }
 }
 
+const findUserById = async (user_id) => {
+    try {
+        const databaseUser = await User.findOne({
+            where: { id: user_id },
+            include: [
+                {
+                    model: Post,
+                    as: 'posts',
+                    attributes: ['description']
+                },
+                {
+                    model: FriendRequest,
+                    as: 'sentRequests',
+                    attributes: ['id', 'friend_target'] // Incluye los atributos relevantes
+                },
+                {
+                    model: FriendRequest,
+                    as: 'receivedRequests',
+                    attributes: ['id', 'request_sender_id'] // Incluye los atributos relevantes
+                }
+            ]
+        });
+
+        if (!databaseUser) {
+            throw new Error("We could not find that user");
+        }
+
+        return databaseUser;
+
+    } catch (e) {
+        console.log(e);
+        throw new Error(e);
+    }
+};
+
 module.exports = {
-	handleProfileDataChange
+    handleProfileDataChange,
+    findUserById
+};
+
+
+module.exports = {
+	handleProfileDataChange,
+	findUserById
 }

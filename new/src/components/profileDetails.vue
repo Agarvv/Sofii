@@ -77,6 +77,7 @@
   </div>
 </template>
 
+
 <script>
 export default {
   name: 'profileDetails',
@@ -161,38 +162,42 @@ export default {
               });
               break;
             case 'bio':
-              formData.append('bio', changes[key]);
               response = await fetch('http://localhost:3000/api/sofi/set_bio', {
                 method: 'POST',
-                body: JSON.stringify(this.userNewData.bio),
-                'Content-Type': 'application/json',
+                body: JSON.stringify({ bio: changes[key] }), // Cambiado aquí
+                headers: {
+                  'Content-Type': 'application/json'
+                },
                 credentials: 'include'
               });
               break;
             case 'native_city':
-              formData.append('native_city', changes[key]);
               response = await fetch('http://localhost:3000/api/sofi/set_native_city', {
                 method: 'POST',
-                body: JSON.stringify(this.userNewData.native_city),
-                'Content-Type': 'application/json',
+                body: JSON.stringify({ native_city: changes[key] }), // Cambiado aquí
+                headers: {
+                  'Content-Type': 'application/json'
+                },
                 credentials: 'include'
               });
               break;
             case 'ubication':
-              formData.append('ubication', changes[key]);
               response = await fetch('http://localhost:3000/api/sofi/set_ubication', {
                 method: 'POST',
-                body: JSON.stringify(this.userNewData.ubication),
-                'Content-Type': 'application/json',
+                body: JSON.stringify({ ubication: changes[key] }), // Cambiado aquí
+                headers: {
+                  'Content-Type': 'application/json'
+                },
                 credentials: 'include'
               });
               break;
             case 'civil_status':
-              formData.append('civil_status', changes[key]);
               response = await fetch('http://localhost:3000/api/sofi/set_civil_status', {
                 method: 'POST',
-                body: JSON.stringify(this.userNewData.civil_status),
-                'Content-Type': 'application/json',
+                body: JSON.stringify({ civil_status: changes[key] }), // Cambiado aquí
+                headers: {
+                  'Content-Type': 'application/json'
+                },
                 credentials: 'include'
               });
               break;

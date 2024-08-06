@@ -136,12 +136,12 @@ export default {
 
       if (this.videoSource) {
         const videoBlob = await fetch(this.videoSource).then(res => res.blob());
-        formData.append('videoSource', videoBlob, 'video.mp4');
+        formData.append('video', videoBlob, 'video.mp4');
       }
 
       let url;
       if (this.videoSource) {
-        url = 'http://localhost:3000/api/sofi/post_video';
+        url = 'http://localhost:3000/api/sofi/add_video';
       } else if (this.imageSource) {
         url = 'http://localhost:3000/api/sofi/createPost';
       } else {
