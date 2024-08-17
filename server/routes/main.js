@@ -11,6 +11,7 @@ const videoRoutes = require('./videoRoutes')
 const likesRoutes = require('./likesRoutes')
 const savedContentRoutes = require('./savedContentRoutes')
 const ChatRoutes = require('./ChatRoutes')
+const NotificationsRoutes = require('./NotificationsRoutes')
 
 function setupRoutes(app) {
     app.use('/api/sofi', registerRouter);
@@ -25,6 +26,7 @@ function setupRoutes(app) {
     app.use('/api/sofi', likesRoutes);
     app.use('/api/sofi', savedContentRoutes);
     app.use('/api/sofi', ChatRoutes);
+    app.use('/api/sofi', NotificationsRoutes);
     app.use('/auth/google', googleAuthRoutes);
     
 }

@@ -1,25 +1,46 @@
 const Comment = require('../models/Comment')
+const VideoComments = require('../models/VideoComments')
 const tokenController = require('../controllers/tokenController')
+const NotificationService = require('./NotificationService')
 
-const createComment = async (data, token) => {
+const VideoCommentAwnser = require('../models/VideoCommentAwnser')
+
+
+const createComment = async (type, resource, user, comment_content) => {
     try {
-        const decodedUser = await tokenController.verifyJwtToken(token)
-        
-        if(!decodedUser) {
-            throw new Error("Ops, something Went Down !")
+        let comment;
+        switch (type) {
+            case 'POST':
+                comment = await Comment.create({
+                    post_id: resource.id,
+                    user_id: user.user_id,
+                    comment_content: comment_content
+                });
+                
+                if(comment) {
+                    await NotificationService.sendNotificationToSingleUser(resource.user_id, user, 'POST_COMMENT')
+                    return comment
+                }
+                
+                break;
+            case 'VIDEO':
+                
+                comment = await VideoComments.create({
+                    video_id: resource.id,
+                    user_id: user.user_id,
+                    comment_content: comment_content
+                });
+                if(comment) {
+                    await NotificationService.sendNotificationToSingleUser(resource.video_user_id, user, 'VIDEO_COMMENT')
+                    return comment
+                }
+                
+                break;
         }
-        await Comment.create({
-            post_id: data.post_id,
-            user_id: decodedUser.user_id,
-            user_name: decodedUser.username,
-            user_profile_picture: decodedUser.user_picture,
-            comment_content: data.comment
-        })
+        return comment;
         
-        return decodedUser
-        
-    } catch(e) {
-     throw new Error(e)
+    } catch (e) {
+        throw e; // Re-lanzamos el error tal cual
     }
 }
 
@@ -37,7 +58,34 @@ const findCommentByPostId = async (post_id) => {
     }
 }
 
+const awnserToPostComment = async (user, post_id,comment, awnser_content) => {
+    try {
+        
+    
+        
+        
+    } catch(e) {
+        throw new Error(e)
+    }
+}
+
+const awnserToVideoComment = async (user, video_id,comment, awnser_content) => {
+    try {
+        
+    
+        
+        
+    } catch(e) {
+        throw new Error(e)
+    }
+}
+
+
+
+
 module.exports = {
     createComment,
-    findCommentByPostId
+     findCommentByPostId,
+      awnserToPostComment,
+       awnserToVideoComment
 }

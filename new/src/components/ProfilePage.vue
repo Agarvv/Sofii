@@ -2,7 +2,7 @@
   <div id="app">
     <header>
       <div class="profile-banner">
-        <img src="cinco-jotas-jamon.jpg" alt="Profile Banner">
+        <img :src="'http://localhost:3000/' + user.banner" alt="Profile Banner">
       </div>
       
       <div class="user">
@@ -37,6 +37,45 @@
         </div>
       </div>
     </header>
+    
+    <div class="responsive-user-details">
+        
+        <div class="r-bio">
+            <p>{{user.bio}}</p>
+        </div>
+        
+        <div class="r-info">
+            
+             
+             
+            <div class="ubication">
+              <font-awesome-icon icon="fas fa-map-marker-alt" style="color: red" />
+              <span>{{ user.ubication }}</span>
+            </div>
+            
+            <div class="native">
+              <font-awesome-icon icon="fas fa-globe" style="color: black" />
+              <span>{{ user.native_city }}</span>
+            </div>
+            
+            <div class="gender">
+              <font-awesome-icon icon="fas fa-venus-mars" style="color: hotpink" />
+              <span>{{ user.gender }}</span>
+            </div>
+            
+            <div class="work">
+              <font-awesome-icon icon="fas fa-briefcase" style="color: gray" />
+              <span>{{ user.job }}</span>
+            </div>
+            
+            <div class="love">
+              <font-awesome-icon icon="fa fa-heart" style="color: red" />
+              <span>{{ user.civil_status }}</span>
+            </div>
+            
+        </div>
+        
+    </div>
 
     <div class="container">
       <aside>
@@ -47,7 +86,9 @@
             </div>
            
            <div class="user-i">
-             <div v-if="user.description" class="description">
+               
+               
+             <div  class="description">
                <p>{{ user.bio }}</p>
              </div>
              
@@ -75,18 +116,55 @@
               <font-awesome-icon icon="fa fa-heart" style="color: red" />
               <span>{{ user.civil_status }}</span>
             </div>
+            
+            
            </div>
           </div>
         </div>
       </aside>
 
       <main>
-        <div v-for="post in userPosts" key="post.id" class="posts">
-          <h1>Posts</h1>
-          
-    
-          
+             <div class="posts">
+                 
+          <div v-for="post in userPosts" :key="post.id" class="post" >
+              
+              
+            <div class="post-header">
+              <div class="post-user-img">
+                <img style="width: 50px; border-radius: 50%" :src="'http://localhost:3000/' + post.user.profilePicture" alt="Post User Image">
+              </div>
+              <div class="post-user-detail">
+                <h4>{{ post.user.username }}</h4>
+                <p style="color: gray">{{ post.userHandle }}</p>
+              </div>
+              <div class="post-button-ellipsis">
+                <font-awesome-icon icon="fas fa-ellipsis-h" />
+              </div>
+            </div>
+            <div class="post-content">
+              <div class="post-description">
+                <p>{{ post.description }}</p>
+              </div>
+              <div @click="goToPostPage(post.id)" class="post-image">
+                <img :src="'http://localhost:3000/' + post.postPicture" alt="Post Image">
+              </div>
+            </div>
+            <div class="post-interactions">
+              <div @click="likePost(post.id)" class="like"><font-awesome-icon icon="fas fa-thumbs-up" /> <span>Likes</span>   </div>
+              <div @click="goToPostPage(post.id)"class="comment"><font-awesome-icon icon="fas fa-comment" /> <span>Likes</span></div>
+              <div @click="savePost(post.id)" class="save"><font-awesome-icon icon="fas fa-bookmark" /></div>
+              <div class="share"><font-awesome-icon icon="fas fa-share" /></div>
+            </div>
+            
+            
+            
+          </div>
         </div>
+        
+        
+        
+        
+        
       </main>
     </div>
   </div>
@@ -115,6 +193,8 @@ export default {
         this.user = data.user;
         this.userPosts = data.user.posts
          
+         console.log('ghi usuario id: ', this.usuario.user_id)
+         console.log('thi usu 73 d', this.user.id)
         if(this.user.id == this.usuario.user_id) {
           this.isSelfUser = true
         } else {
@@ -219,6 +299,72 @@ header .profile-banner img {
     display: flex;
 }
 
+.posts {
+    height: 100%;
+    width: 100%;
+}
+
+.posts .post {
+    padding: 15px;
+    border-bottom: 1px solid #eee; /* Línea más ligera */
+    display: flex;
+    flex-direction: column;
+    background: #fff; /* Fondo blanco para los posts */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+    margin-bottom: 20px; /* Espacio entre posts */
+}
+
+.post .post-header {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.post .post-header .username {
+    flex: 1; /* Permite que el nombre de usuario ocupe todo el espacio disponible */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.post .post-button-ellipsis {
+    display: flex;
+    align-items: top;
+    justify-content: flex-end;
+    width: auto;
+}
+
+.post-description {
+    margin-bottom: 15px;
+    color: #333; /* Color de texto más oscuro */
+}
+
+.post-image img {
+    width: 100%;
+    height: auto;
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: 8px; /* Bordes redondeados para imágenes */
+}
+
+.post-image {
+    margin-bottom: 20px;
+}
+
+.post-interactions {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    padding: 15px 0;
+    border-top: 1px solid #eee; /* Separador superior */
+    color: #555; /* Color de los íconos de interacción */
+}
+
+.post-interactions i {
+  font-size: 25px;
+}
+
 aside, main {
   
     height: 100vh;
@@ -274,10 +420,6 @@ main .posts .post .post-header .user-information {
     border-radius: 15px;
 }
 
-.post-user-img img {
-    width: 60px;
-    border-radius: 50%;
-}
 
 .post-user {
     display: flex;
@@ -384,6 +526,15 @@ aside .description {
  color: white;
  font-weight: 700;
  border-radius: 20px;
+}
+
+.responsive-user-details {
+    width: 100%;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    
 }
 
 @media (max-width: 600px) {

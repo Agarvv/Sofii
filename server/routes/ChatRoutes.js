@@ -21,4 +21,44 @@ router.post('/chat', async (req, res) => {
     }
 });
 
+router.get('/chats',async (req, res) => {
+    try {
+        const jwt_token = req.cookies.jwt 
+        const chatsWithUserInfo = await ChatController.getUserChats(jwt_token)
+        if(chatsWithUserInfo.length == 0) {
+           return res.status(404).json({ detail: 'You do not have contacts, go and explore!'})
+        } else if(chatsWithUserInfo.length > 0) {
+            return res.status(201).json({ chats: chatsWithUserInfo})
+        }
+        
+    } catch(e) {
+        console.log('errno', e)
+        return res.status(500).json({error: 'Internal server error !'})
+    }
+})
+
+router.post('/user_chat/:chat_id', async (req, res) => {
+    try {
+        
+        const chat_id = req.params.chat_id 
+        const jwtToken = req.cookies.jwt
+        
+        if(!chat_id) {
+            return res.status(404).json({error: 'Some data is missing on your request.'})
+        }
+        
+        const userChat = await 
+        ChatController.findUserChatById(jwtToken, chat_id)
+        if(userChat) {
+            return res.status(201).json({chat: userChat})
+        } else {
+            return res.status(500).json({error: 'Could not find your chat, try again...'})
+        }
+        
+    } catch(e) {
+        console.log(e)
+        return res.status(500).json({error: 'Internal Server Error !'})
+    }
+})
+
 module.exports = router;

@@ -2,10 +2,10 @@ const Post = require('../models/Post')
 const createPostService = require('../services/createPostService')
 
 
-const createPost = async (post, user_id, username, userImg, postImg) => {
+const createPost = async (post, user_id, userDecoded, username, userImg, postImg) => {
         try {
             
-               const socialpost = await createPostService.createPost(post, user_id, username, userImg, postImg)
+               const socialpost = await createPostService.createPost(post, user_id, userDecoded, username, userImg, postImg)
                return socialpost
             
         } catch(e) {

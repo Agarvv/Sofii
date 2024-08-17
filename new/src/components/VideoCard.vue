@@ -29,7 +29,12 @@
       <div @click="goToVideoPage(video.id)" class="comment"><font-awesome-icon icon="fas fa-comment" /></div>
       <div @click="saveVideo(video.id)" class="save"><font-awesome-icon icon="fas fa-bookmark" /></div>
     </div>
+    
+    
+
+    
   </div>
+  
 </template>
 
 <script>
@@ -41,32 +46,35 @@ export default {
       required: true
     }
   },
+  data() {
+    return {
+      comment: ""
+    };
+  },
   methods: {
     async likeVideo(video_id) {
-      
-      const type = "VIDEO"
+      const type = "VIDEO";
       
       const response = await fetch('http://localhost:3000/api/sofi/like_content', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ video_id: video_id, type: type }),
+        body: JSON.stringify({ video_id, type }),
         credentials: 'include'
       });
       const data = await response.json();
       console.log('Server data for likes: ', data);
     },
     async saveVideo(video_id) {
-      
-      const type = "VIDEO"
+      const type = "VIDEO";
       
       const response = await fetch('http://localhost:3000/api/sofi/save_content', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ video_id: video_id, type: type}),
+        body: JSON.stringify({ video_id, type }),
         credentials: 'include'
       });
       const data = await response.json();
@@ -81,7 +89,6 @@ export default {
   },
   mounted() {
     console.log('Video:', this.video); 
-
   }
 };
 </script>
@@ -143,4 +150,6 @@ export default {
 .video-interactions i {
   font-size: 25px;
 }
-</style>
+
+
+</style> 

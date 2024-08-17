@@ -3,6 +3,24 @@ const friendController = require('../controllers/friendController')
 const router = express.Router() 
 
 
+router.get('/friends',async (req, res) => {
+    try {
+        console.log('friend method claled')
+        const jwt_token = req.cookies.jwt 
+        
+        const friends = await friendController.getUserFriendsAndRequests(jwt_token) 
+        
+        if(friends) {
+            return res.status(201).json({ friends: friends })
+        } else {
+            return res.status(500).json({ error: 'Could not get your friends..'})
+        }
+        
+    } catch(e) {
+        console.log(e)
+        return res.status(500).json({ error: 'Something Went Wrong In The Server '})
+    }
+}) 
 
 router.post('/send_friend_request', async (req, res) => {
     try {
@@ -47,11 +65,18 @@ router.get('/friend_requests/:user_id',async (req, res) => {
 
 
 
-router.post('/add_friend', (req, res) => {
+router.post('/accept_friend_request', async (req, res) => {
     try {
+        console.log('accept req.body: ', req.body)
+        const request_id = req.body.request_id 
+        if(!request_id) {
+            return res.status(401).json({ error: 'data missing'})
+        }
         
+        const jwt_token = req.cookies.jwt
         
-        
+        await friendController.acceptFriendRequest(jwt_token, request_id)
+        return res.status(201).json({ detail: 'This person is now your friend.'})
         
     } catch(e) {
         console.log(e)
@@ -59,6 +84,20 @@ router.post('/add_friend', (req, res) => {
     }
 })
 
+
+router.post('/deny_friend_request', async (req, res) => {
+    try {
+        
+        console.log('deny re qbody', req.body)
+        
+        await friendController.denyFriendRequest(req.body.request_id, req.cookies.jwt)
+        return res.status(201).json({ detail: 'Friend request removed sucesfully'})
+        
+    } catch(e) {
+        console.log(e)
+        return res.status(500).json({error: e})
+    }
+})
 
 
 

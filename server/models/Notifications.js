@@ -14,11 +14,21 @@ const Notifications = sequelize.define('Notifications', {
             model: 'users',
             key: 'id'
         }
-    }, 
+    },
+    user_target: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    notification_type: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
     notification: {
         type: DataTypes.TEXT,
         allowNull: false
     }
-})
+}, {
+    timestamps: true // Añade automáticamente los campos createdAt y updatedAt
+});
 
-module.exports = Notifications
+module.exports = Notifications;

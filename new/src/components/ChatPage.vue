@@ -1,3 +1,4 @@
+
 <template>
   <div>
     <header >
@@ -27,7 +28,7 @@
     
     <div class="container">
       
-      <aside style="display: none">
+      <aside style="">
         
         <div class="aside-header">
           
@@ -55,17 +56,19 @@
           
         </div>
         
-        <div class="aside-contacts">
+        <div v-for="contact in contacts" key="contact.chat_id" class="aside-contacts">
           
-          <div class="contact">
+          <div @click="getChatById(contact.chat_id)" class="contact">
             
             <div class="contact-img">
-              <img src="invict-victory-edp.jpg" style="width: 40px; border-radius: 50%;">
+               <img :src="'http://localhost:3000/' + contact.userToDisplayInfo.profilePicture" style="width: 40px; border-radius: 50%;">
             </div>
             
             <div class="contact-details">
-              <h4 class="contact-username">Le Male</h4>
-              <p class="contact-last-message">I think We Should B...</p>
+              <h4 class="contact-username">{{contact.userToDisplayInfo.username}}</h4>
+                <p class="contact-last-message">
+  {{ contact.last_message.length > 25 ? contact.last_message.substring(0, 25) + '...' : contact.last_message }}
+             </p>
             </div>
             
           </div>
@@ -74,20 +77,20 @@
 
         </div>
         
-      </aside>
+      </aside> 
       
-      <main> 
+    <main> 
         
         <div class="main-header">
           
           <div class="user-details">
             <div class="user-img">
-            <img :src="'http://localhost:3000/' + user.profilePicture" style="width: 60px; border-radius: 50%;">
+            <img :src="'http://localhost:3000/' + chat.userToDisplayInfo.profilePicture" style="width: 60px; border-radius: 50%;"> 
          </div>
             
             <div class="user-username">
-              <h4>{{user.username}}</h4>
-              <p style="color: green">Conected</p>
+              <h4>{{chat.userToDisplayInfo.username}}</h4>
+              <p style="color: green">Connected</p>
             </div>
             
           </div>
@@ -102,9 +105,19 @@
           
         </div>
         
-        <div class="main-chatbox">
-           <!-- Aquí irían los mensajes -->
-        </div>
+             
+             
+  <div class="main-chatbox">
+
+  <div v-for="message in messages" key="message.id" class="message">
+      <div class="message-user-img">
+        <img :src="'http://localhost:3000/' + message.message_user.profilePicture" style="width: 60px; border-radius: 50%">
+      </div>
+      
+      <p>{{message.message_content}}</p>
+  </div>
+
+    </div>
         
         <div class="main-footer">
            
@@ -122,8 +135,8 @@
            </div>
            
            <div class="footer-message-input">
-             <input id="inp" type="text" placeholder="Send a message...">
-             <div class="footer-send-message-button">
+             <input v-model="message" id="inp" type="text" placeholder="Send a message...">
+             <div @click="sendMessage()" class="footer-send-message-button">
                <font-awesome-icon icon="paper-plane"></font-awesome-icon>
              </div>
            </div>
@@ -136,35 +149,114 @@
   </div>
 </template>
 
+
 <script>
-    export default {
-        name: 'ChatPage',
-        data() {
-            return {
-                contact: {},
-                messages: [],
-                user: {}
+export default {
+    name: 'ChatPage',
+    data() {
+        return {
+            contacts: [],
+            chat: [],
+            messages: [],
+            message: "",
+            roomId: null
+        }
+    },
+    methods: {
+        async getContacts() {
+            try {
+                const response = await fetch('http://localhost:3000/api/sofi/chats', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+
+                const data = await response.json();
+                console.log('Server data from chats:', data.chats);
+
+                this.contacts = data.chats;
+                console.log('this.contacts:', this.contacts);
+            } catch (error) {
+                console.error('Error fetching contacts:', error);
             }
         },
-        methods: {
-            
-        }, 
-        async created() {
-            const response = await fetch('http://localhost:3000/api/sofi/chat', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ user_id: this.$route.params.receiver_id }),
-                credentials: 'include'
-            })
-            
-            const data = await response.json()
-            console.log('Server data chat: ', data.userToDisplayInfo)
-            this.messages = data.chat.messages
-            this.user = data.userToDisplayInfo
-        }
+
+        async getChatById(chat_id) {
+            try {
+                const response = await fetch('http://localhost:3000/api/sofi/user_chat/' + chat_id, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ chat_id: chat_id }),
+                    credentials: 'include'
+                });
+
+                const data = await response.json();
+                console.log('Server data from single chat:', data.chat.userToDisplayInfo);
+
+                this.chat = data.chat;
+                console.log('thi chat', this.chat)
+                this.roomId = this.chat.databaseChat.chat_id
+                console.log('room die izw', this.roomId)
+                this.messages = data.chat.databaseChat.messages
+                handleChatConnection(this.chat.chat_id)
+                console.log('this.chat:', this.messages); // Ahora esto debería mostrar los datos correctos
+                
+                
+            } catch (error) {
+                console.error('Error fetching chat by ID:', error);
+            }
+        },
+        handleChatConnection(chat_id) {
+      console.log('Connecting to chat:', chat_id);
+      this.$socket.emit('joinRoom', chat_id);
+    },
+       setDefaultChat() {
+          const chats = this.contacts
+          if(chats.length > 0) {
+              console.log('chatsss', chats)
+              this.chat = chats[0]
+              this.roomId = this.chat.chat_id
+              console.log('toom id', this.roomId)
+              this.handleChatConnection(this.chat.chat_id)
+          }
+      },
+      async sendMessage() {
+      if (!this.message.trim()) {
+        this.error = "You cannot send an empty message.";
+        return;
+      }
+      
+      console.log('frontend data before', this.message, this.roomId)
+
+      try {
+        this.$socket.emit('chatMessage', {
+          message: this.message,
+          chat_id: this.roomId // Se corrigió `this.chat.chat_id` por `this.chat_id`
+        });
+
+        this.message = ""; // Limpiar el campo de entrada después de enviar
+      } catch (error) {
+        console.error("Error sending message:", error);
+        this.error = "Failed to send the message.";
+      }
+    },
+    },
+    async created() {
+        await this.getContacts(); // Espera a que se carguen los contactos
+        console.log('this.contacts after fetching:', this.contacts); // Aquí deberían estar los contactos
+         this.setDefaultChat()
+         console.log('this.messages: ', this.messages)
+         
+         
+    this.$socket.on('chatMessage', (message) => {
+      this.messages.push(message);
+    });
+
+  
+         
     }
+};
 </script>
 
 <style scoped>
@@ -245,6 +337,7 @@ header .down .header-down-search-inp i {
 main {
   display: flex;
   flex-direction: column;
+  border: 2px solid black;
 }
 
 main .main-header, .main-chatbox, .main-footer {
@@ -429,7 +522,7 @@ main .main-chatbox {
   }
 
   .container main {
-
+    display: none;
   }
 
   header {

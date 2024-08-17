@@ -12,8 +12,9 @@ const VideoComments = require('./VideoComments')
 const SavedVideo = require('./SavedVideo')
 const Chat = require('./Chat')
 const Message = require('./Message')
-
+const Saved = require('./Saved')
 // Relación de usuario con posts
+const VideoCommentAwnser = require('./VideoCommentAwnser')
 
 
 User.hasMany(Post, { 
@@ -45,15 +46,46 @@ Comment.belongsTo(Post, {
   foreignKey: 'post_id'
 });
 
+Video.hasMany(VideoCommentAwnser, {
+    as: 'comments_awnsers',
+    foreignKey: 'video_id'
+})
+
+VideoCommentAwnser.belongsTo(Video, {
+    as: 'video',
+    foreignKey: 'video_id'
+})
+
+User.hasMany(VideoCommentAwnser, {
+    as: 'comments_awnsers',
+    foreignKey: 'user_id'
+})
+
+VideoCommentAwnser.belongsTo(User, {
+    as: 'comment_awnser_user',
+    foreignKey: 'user_id'
+})
+
 // Relación de post con likes
 Post.hasMany(Likes, {
   as: 'postLikes',
   foreignKey: 'post_id'
 });
+
 Likes.belongsTo(Post, {
   as: 'likedPost',  // Cambié el alias para mayor claridad
   foreignKey: 'post_id'
 });
+
+Post.hasMany(Saved, {
+    as: 'saved_post',
+    foreignKey: 'post_id'
+})
+
+Saved.belongsTo(Post, {
+    as: 'saved_post',
+    foreignKey: 'post_id'
+})
 
 // Relación de seguidores y siguiendo
 User.belongsToMany(User, {
@@ -70,19 +102,28 @@ User.belongsToMany(User, {
 });
 
 // Relación de amistad
-User.belongsToMany(User, {
-  through: Friends,
-  as: 'friends',
-  foreignKey: 'friend_one_id',
-  otherKey: 'friend_two_id',
-  unique: false  // Permite relaciones duplicadas (amigos mutuos)
+// Relación de amistad (Asegúrate de que el alias coincida)
+// Un Usuario puede tener muchas relaciones de amistad como user_one
+User.hasMany(Friends, { 
+  foreignKey: 'friend_one_id', 
+  as: 'friendOne'
 });
-User.belongsToMany(User, {
-  through: Friends,
-  as: 'friendsOf',
-  foreignKey: 'friend_two_id',
-  otherKey: 'friend_one_id',
-  unique: false  // Permite relaciones duplicadas (amigos mutuos)
+
+// Un Usuario puede tener muchas relaciones de amistad como user_two
+User.hasMany(Friends, { 
+  foreignKey: 'friend_two_id', 
+  as: 'friendTwo'
+});
+
+// Configura las asociaciones inversas en Friends
+Friends.belongsTo(User, { 
+  foreignKey: 'friend_one_id', 
+  as: 'friendOne'
+});
+
+Friends.belongsTo(User, { 
+  foreignKey: 'friend_two_id', 
+  as: 'friendTwo'
 });
 
 FriendRequest.belongsTo(User, {
@@ -105,9 +146,24 @@ User.hasMany(FriendRequest, {
 });
 
 User.hasMany(Notifications, {
-    as: 'notifications',
+    as: 'sentNotifications', // Notificaciones que este usuario ha enviado (ha generado)
     foreignKey: 'user_id'
-})
+});
+
+User.hasMany(Notifications, {
+    as: 'receivedNotifications', // Notificaciones donde este usuario es el objetivo
+    foreignKey: 'user_target'
+});
+
+Notifications.belongsTo(User, {
+    as: 'sender', // El usuario que envió/generó la notificación
+    foreignKey: 'user_id'
+});
+
+Notifications.belongsTo(User, {
+    as: 'targetUser', // El usuario objetivo (el que recibe la acción)
+    foreignKey: 'user_target'
+});
 
 Notifications.belongsTo(User, {
     as: 'notifications',
@@ -208,17 +264,17 @@ Message.belongsTo(Chat, {
 
 User.hasMany(Message, {
     as: 'user_messages',
-    key: 'message_user_id'
-})
+    foreignKey: 'message_user_id' // Cambié 'key' por 'foreignKey'
+});
 
 Message.belongsTo(User, {
     as: 'message_user',
-    key: 'id'
-})
+    foreignKey: 'message_user_id' // Cambié 'key' por 'foreignKey'
+});
 
 
 
-
+// Relación de post con videos
 
 
 module.exports = { User, Post, Comment, Likes, Followers, Friends, FriendRequest, Video, Chat};

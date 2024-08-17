@@ -2,7 +2,7 @@
   <header>
     <h1>Profile Settings</h1>
   </header>
-<!-- COMMIT AND PUSH VERIFICATION FOR GIT -->
+
   <div class="container">
     <div class="user-details-section">
       <div class="profile-picture">
@@ -13,9 +13,9 @@
         </div>
       </div>
 
-      <div @click="handlePhotoOpen()" class="banner">
+      <div @click="handleBannerOpen" class="banner">
         <h4>Your Banner</h4>
-        <input @change="handleFileChanges($event, 'profile_banner')" type="file">
+        <input @change="handleFileChanges($event, 'profile_banner')" style="display: none;" type="file" id="profileBannerInput">
         <div class="banner-img">
           <img :src="userNewData.profile_banner">
         </div>
@@ -24,38 +24,30 @@
       <div class="bio">
         <h4>Your Bio</h4>
         <div class="bio-inputs">
-          <div class="bio-inp-flex-dir-column">
-            <div class="bio-input">
-              <input @input="setUserData($event, 'bio')" type="text" placeholder="Set BIO">
-            </div>
-            <div class="bio-submit">
-              <button @click="saveAllChanges">SET AS BIO</button>
-            </div>
-          </div>
+          <input @input="setUserData($event, 'bio')" type="text" placeholder="Set BIO">
+        </div>
+        <div class="bio-submit">
+          <button @click="saveAllChanges">SET AS BIO</button>
         </div>
       </div>
 
       <div class="native-city">
         <h4>Your Native City</h4>
         <div class="native-city-inputs">
-          <div class="native-city-inp">
-            <input @input="setUserData($event, 'native_city')" type="text" placeholder="Enter Your Native City">
-          </div>
-          <div class="native-city-btn">
-            <button @click="saveAllChanges">Set As Native City</button>
-          </div>
+          <input @input="setUserData($event, 'native_city')" type="text" placeholder="Enter Your Native City">
+        </div>
+        <div class="native-city-btn">
+          <button @click="saveAllChanges">Set As Native City</button>
         </div>
       </div>
 
       <div class="ubication">
         <h4>Your Ubication</h4>
         <div class="ubication-inputs">
-          <div class="ubication-inp">
-            <input @input="setUserData($event, 'ubication')" type="text" placeholder="Enter Your Ubication">
-          </div>
-          <div class="ubication-btn">
-            <button @click="saveAllChanges">Save</button>
-          </div>
+          <input @input="setUserData($event, 'ubication')" type="text" placeholder="Enter Your Ubication">
+        </div>
+        <div class="ubication-btn">
+          <button @click="saveAllChanges">Save</button>
         </div>
       </div>
 
@@ -69,6 +61,28 @@
           </select>
         </div>
       </div>
+
+      <div class="gender">
+        <h4>Your Gender</h4>
+        <div class="gender-select">
+          <select v-model="userNewData.gender">
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+            <option value="Prefer not to say">Prefer not to say</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="job">
+        <h4>Your Job</h4>
+        <div class="job-inputs">
+          <input @input="setUserData($event, 'job')" type="text" placeholder="Enter Your Job Title">
+        </div>
+        <div class="job-btn">
+          <button @click="saveAllChanges">Set As Job</button>
+        </div>
+      </div>
     </div>
 
     <div class="save-button">
@@ -76,7 +90,6 @@
     </div>
   </div>
 </template>
-
 
 <script>
 export default {
@@ -89,55 +102,49 @@ export default {
         bio: "",                // User biography
         native_city: "",        // User native city
         ubication: "",          // User location
-        civil_status: ""        // User civil status
+        civil_status: "",       // User civil status
+        gender: "",             // User gender
+        job: ""                 // User job
       },
       originalData: {}          // Original data to compare with
     };
   },
   methods: {
-    // Fetch user data and initialize form with existing data
     async getUserData() {
-      console.log('profile details user mixin', this.usuario);
       this.originalData = {
         profile_pic: this.usuario.profilePicture,
         profile_banner: this.usuario.banner,
         bio: this.usuario.bio,
         native_city: this.usuario.native_city,
         ubication: this.usuario.ubication,
-        civil_status: this.usuario.civil_status
+        civil_status: this.usuario.civil_status,
+        gender: this.usuario.gender,
+        job: this.usuario.job
       };
       this.userNewData = { ...this.originalData };
     },
-    
-    // Open file input dialog for profile photo
     handlePhotoOpen() {
       document.getElementById('profilePhotoInput').click();
     },
-    
-    // Update user data based on input field changes
+    handleBannerOpen() {
+      document.getElementById('profileBannerInput').click();
+    },
     setUserData(event, field) {
       this.userNewData[field] = event.target.value;
-      console.log('User New Data Object', this.userNewData);
     },
-    
-    // Handle file changes and update the corresponding data field
     handleFileChanges(event, target) {
       const file = event.target.files[0];
       if (file) {
         this.userNewData[target] = file; // Store the file directly
       }
     },
-    
-    // Save all changes to the server
     async saveAllChanges() {
       const changes = {};
-      // Collect changes that are different from original and not empty
       for (const key in this.userNewData) {
         if (this.userNewData[key] !== this.originalData[key] && this.userNewData[key] !== "") {
           changes[key] = this.userNewData[key];
         }
       }
-      console.log("Detected changes: ", changes);
 
       for (const key in changes) {
         try {
@@ -164,7 +171,7 @@ export default {
             case 'bio':
               response = await fetch('http://localhost:3000/api/sofi/set_bio', {
                 method: 'POST',
-                body: JSON.stringify({ bio: changes[key] }), // Cambiado aquí
+                body: JSON.stringify({ bio: changes[key] }),
                 headers: {
                   'Content-Type': 'application/json'
                 },
@@ -174,7 +181,7 @@ export default {
             case 'native_city':
               response = await fetch('http://localhost:3000/api/sofi/set_native_city', {
                 method: 'POST',
-                body: JSON.stringify({ native_city: changes[key] }), // Cambiado aquí
+                body: JSON.stringify({ native_city: changes[key] }),
                 headers: {
                   'Content-Type': 'application/json'
                 },
@@ -184,7 +191,7 @@ export default {
             case 'ubication':
               response = await fetch('http://localhost:3000/api/sofi/set_ubication', {
                 method: 'POST',
-                body: JSON.stringify({ ubication: changes[key] }), // Cambiado aquí
+                body: JSON.stringify({ ubication: changes[key] }),
                 headers: {
                   'Content-Type': 'application/json'
                 },
@@ -194,7 +201,27 @@ export default {
             case 'civil_status':
               response = await fetch('http://localhost:3000/api/sofi/set_civil_status', {
                 method: 'POST',
-                body: JSON.stringify({ civil_status: changes[key] }), // Cambiado aquí
+                body: JSON.stringify({ civil_status: changes[key] }),
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                credentials: 'include'
+              });
+              break;
+            case 'gender':
+              response = await fetch('http://localhost:3000/api/sofi/set_gender', {
+                method: 'POST',
+                body: JSON.stringify({ gender: changes[key] }),
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                credentials: 'include'
+              });
+              break;
+            case 'job':
+              response = await fetch('http://localhost:3000/api/sofi/set_job', {
+                method: 'POST',
+                body: JSON.stringify({ job: changes[key] }),
                 headers: {
                   'Content-Type': 'application/json'
                 },
@@ -221,7 +248,7 @@ export default {
     }
   },
   mounted() {
-    this.getUserData(); // Fetch user data when component is mounted
+    this.getUserData();
   }
 };
 </script>
@@ -266,15 +293,15 @@ header {
   max-width: 800px;
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 20px;
 }
 
-.profile-picture, .banner, .bio, .native-city, .ubication, .civil-status {
+.profile-picture, .banner, .bio, .native-city, .ubication, .civil-status, .gender, .job {
   padding: 10px;
   margin-bottom: 20px;
 }
 
-.profile-picture h4, .banner h4, .bio h4, .native-city h4, .ubication h4, .civil-status h4 {
+.profile-picture h4, .banner h4, .bio h4, .native-city h4, .ubication h4, .civil-status h4, .gender h4, .job h4 {
   margin-bottom: 10px;
   color: #007BFF;
 }
@@ -302,7 +329,7 @@ header {
   border: 2px solid #007BFF;
 }
 
-.bio-input input, .native-city-inp input[type="text"], .ubication-inp input {
+.bio-inputs input, .native-city-inputs input, .ubication-inputs input, .job-inputs input {
   width: 100%;
   height: 40px;
   padding: 10px;
@@ -310,7 +337,7 @@ header {
   border-radius: 5px;
 }
 
-.bio-submit button, .native-city-btn button, .ubication-btn button {
+.bio-submit button, .native-city-btn button, .ubication-btn button, .job-btn button {
   width: 100%;
   height: 40px;
   background: #007BFF;
@@ -321,11 +348,11 @@ header {
   transition: background-color 0.3s;
 }
 
-.bio-submit button:hover, .native-city-btn button:hover, .ubication-btn button:hover {
+.bio-submit button:hover, .native-city-btn button:hover, .ubication-btn button:hover, .job-btn button:hover {
   background-color: #0056b3;
 }
 
-.civil-status-select select {
+.civil-status-select select, .gender-select select {
   width: 100%;
   height: 40px;
   padding: 10px;

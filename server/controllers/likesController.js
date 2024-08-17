@@ -38,7 +38,7 @@ const likeVideo = async (jwt_token, video_id) => {
         }
         
         
-        const liked = await likesService.likeVideo(userDecoded, video_id)
+        const liked = await likesService.likeVideo(userDecoded, databaseVideo)
         return liked
         
     } catch(e) {
@@ -77,7 +77,7 @@ const likePost = async (jwt_token, post_id) => {
         } 
         
         const liked = await
-        likesService.likePost(userDecoded.user_id, post_id)
+        likesService.likePost(userDecoded, postExists)
         return liked
         
     } catch(e) {

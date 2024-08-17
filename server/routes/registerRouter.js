@@ -11,16 +11,31 @@ router.post('/register', [
 ], async (req, res) => {
     const { name, email, password } = req.body;
 
-    if (!name || !email || !password) {
-        return res.status(400).json({ message: 'Data Is Missing.' });
+    if (!name) {
+        return res.status(400).json({ error: "name_missing" });
+    }
+
+    if (!email) {
+        return res.status(400).json({ error: "email_missing" });
+    }
+
+    if (!password) {
+        return res.status(400).json({ error: "password_missing" });
     }
 
     try {
         await registerController.createUser(name, email, password);
         return res.status(201).json({ success: 'Welcome To Sofii!' });
     } catch (e) {
-        console.log(e);
-        return res.status(500).json({ error: e.message });
+        console.error('Error occurred:', e.message);
+        switch (e.message) {
+            case "username_exists":
+                return res.status(400).json({ error: "username_exists" });
+            case "email_exists":
+                return res.status(400).json({ error: "email_exists" });
+            default:
+                return res.status(500).json({ error: "internal_server_error" });
+        }
     }
 });
 

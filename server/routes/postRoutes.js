@@ -5,7 +5,7 @@ const { body } = require('express-validator');
 const createPostController = require('../controllers/createPostController');
 const tokenController = require('../controllers/tokenController');
 const Likes = require('../models/Likes')
-
+const Saved = require('../models/Saved')
 
 const router = express.Router();
 const postController = require('../controllers/postController')
@@ -45,7 +45,7 @@ router.post('/createPost', upload, [
         const postPicture = req.files.postPicture ? req.files.postPicture[0].path : null;
         const videoSource = req.files.videoSource ? req.files.videoSource[0].path : null;
 
-        await createPostController.createPost(req.body, user_id, user_name, user_img, postPicture, videoSource);
+        await createPostController.createPost(req.body,decoded, user_id, user_name, user_img, postPicture, videoSource);
         return res.status(201).json({ detail: 'Your Post Has Been Submitted To Our System.' });
     } catch (e) {
         console.log(e);
@@ -64,7 +64,7 @@ router.get('/posts', async (req, res) => {
         {
             model: User,
             as: 'user',
-            attributes: ['username', 'email', 'profilePicture']
+            attributes: ['username', 'profilePicture', 'id']
         },
         {
             model: Comment,
@@ -79,6 +79,10 @@ router.get('/posts', async (req, res) => {
         {
             model: Likes,
             as: 'postLikes'
+        },
+        {
+            model: Saved,
+            as: 'saved_post'
         }
     ]
 });
@@ -90,12 +94,38 @@ router.get('/posts', async (req, res) => {
     }
 });
 
-// Ruta para obtener un post específico por ID
 router.get('/post/:post_id', async (req, res) => {
     const post_id = req.params.post_id;
 
     try {
-        const post = await Post.findOne({ where: { id: post_id } });
+        const post = await Post.findOne({
+            where: { id: post_id },
+            include: [
+                {
+                    model: User,
+                    as: 'user'
+                },
+                {
+                    model: Comment,
+                    as: 'postComments',
+                    include: [
+                      {
+                          model: User,
+                          as: 'commentUser'
+                      }
+                    ]
+                },
+                {
+                     model: Likes,
+                     as: 'postLikes'
+                },
+                {
+                    model: Saved,
+                    as: 'saved_post'
+                }
+            ]
+        });
+        
         if (!post) {
             return res.status(404).json({ detail: 'Post Not Found.' });
         }

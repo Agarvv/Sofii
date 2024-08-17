@@ -1,55 +1,100 @@
 <template>
-     <div class="container">
-    <form @submit.prevent="handleLogin">
-      <h1>Welcome Back</h1>
-      
-  
-      <div id="first-inp" class="inp-box">
-        <label for="Enter Username">Enter Email</label>
-        <input v-model="email" type="text" placeholder="Email">
-        <i class="fa fa-envelope"></i>
-      </div>
-      
-      <div id="second-inp" class="inp-box">
-        <label for="Enter Username">Enter Password</label>
-        <input v-model="password" type="text" placeholder="Password">
-        <i class="fa fa-key"></i>
-      </div>
-   
-      
-              <div class="links-forgot-password">
-          <a href="">¿Forgot Your Password?</a>
-        </div>
 
-      
-       <div class="button">
-        <button @click="handleLogin">Login</button>
-      </div>
-      
-      
-      <div class="links">
+<div class="container">
+  
+<div class="wrapper">
+  
+  <div class="login-form">
+  
+    <h1 class="lf-h1">Welcome Back To Sofii</h1>
+    
+    <form @submit.prevent="handleLogin()">
         
+        <div v-if="error" class="error">
+            <p>{{error}}</p>
+        </div>
+        
+      <div class="inp-box">
+        <input v-model="email" placeholder="Enter Your Email" id="inp1" type="email" required>
+  
+        <font-awesome-icon icon="envelope" class="icon"/>
+      </div>
+      <div class="inp-box">
+        <input v-model="password" placeholder="Enter Your Password" id="inp2" type="password" required>
       
+        <font-awesome-icon icon="lock" class="icon"/>
       </div>
       
-      <div class="not-have-acc">
-        <a href="">Dont Have An Account</a>
+      <div class="remember-me">
+        <input v-model="rememberMe" type="checkbox">
+        <label for="Remember Me">Remember Me</label>
       </div>
       
-      <div class="separator">
-        <h4>OR</h4>
+      <div v-if="loading == false" class="btn-box">
+         <button>
+           Continue
+           <font-awesome-icon icon="arrowLeft"/>
+         </button>
       </div>
       
-      <div class="social">
-        <i id="google" class="fa fa-google"></i>
-        <i id="apple" class="fa fa-apple"></i>
-        <i id="facebook" class="fa fa-facebook"></i>
+     <div v-if="loading == true" class="btn-box">
+         <button>
+           Please Wait...
+           <font-awesome-icon icon="arrowLeft"/>
+         </button>
+      </div>
+      
+      <div class="form-links">
+        <div>
+          <a href="">Forgot Your Password?</a>
+        </div>
+        <div>
+          <a href="">Don't have an account?</a>
+        </div>
       </div>
       
       
     </form>
+    
   </div>
   
+  
+  <div class="login-social-media"> 
+  
+   
+    <div class="social-buttons">
+      
+      <div class="google">
+        <span>Continue With Google</span>
+                <i class="fa fa-google"></i>        
+      </div>
+      
+      <div class="facebook">
+
+        <span>Continue With Facebook</span>
+                <i class="fa fa-facebook"></i> 
+      </div>
+      
+      <div class="apple">
+        
+        <span>Continue With Apple</span>
+         <i class="fa fa-apple"></i> 
+      </div>
+      
+    </div>
+    
+  </div>
+
+
+
+
+  
+</div>
+  
+  
+</div>
+
+
 </template>
 
 <script>
@@ -58,31 +103,74 @@ export default {
     data() {
         return {
             email: "",
-            password: ""
+            password: "",
+            error: "",
+            loading: false,
+            rememberMe: false
         };
     },
     methods: {
         async handleLogin() {
             try {
+                if(this.error !== "") {
+                    this.error = ""
+                }
+                this.loading = true
                 const response = await fetch('http://localhost:3000/api/sofi/login', {
                     method: 'POST', // Agregué el método POST para enviar datos
                     headers: {
                         'Content-Type': 'application/json' // Corregí la forma de especificar el Content-Type
                     },
                     credentials: 'include',
-                    body: JSON.stringify({ // Convertí el objeto a JSON con JSON.stringify
-                        email: this.email, // Usé this.email para acceder a la propiedad email del componente
-                        password: this.password // Usé this.password para acceder a la propiedad password del componente
+                    body: JSON.stringify({
+                        email: this.email, 
+                        password: this.password,
+                        rememberMe: this.rememberMe
                     })
                 });
-
-                if (!response.ok) {
-                    console.log('Something Went Wrong.');
-                    return;
+                
+                const data = await response.json();
+                console.log('Login: ', data);
+                
+                if(!response.ok) {
+                    this.loading = false
+                    switch(data.error) {
+    case "password_not_match":
+        this.error = "The Password Does Not Match"
+        break;
+    case "email_not_found":
+        this.error = "That Email Does Not Exist In Our System."
+        break;
+    case "internal_server_error":
+        this.error = "Something Went Wrong On Our Servers, Try Again Later.."
+        break; // Aquí te faltaba este break
+    case "email_missing":
+        this.error = "The Email Is Missing."
+        break;
+    case "password_missing":
+        this.error = "The Password Is Missing"
+        break;
+    default:
+        this.error = "Internal Server Error..."
+}
+                    
+                    
+                    
+                
+                    
+                }
+                
+                
+                 if(response.ok) {
+                     
+                    setInterval(async() => {
+                        this.loading = false
+                        await this.$router.push('/')
+                        
+                    }, 3000)
                 }
 
-                const data = await response.json();
-                console.log(data);
+            
             } catch (error) {
                 console.error('Error:', error);
             }
@@ -92,148 +180,211 @@ export default {
 </script>
 
 <style scoped>
-    body {
-    font-family: 'Poppins', sans-serif;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);
-    color: white;
-}
-
-* {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
+    * {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
 }
 
 .container {
-    height: 100vh;
-    padding: 20px;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
 }
 
-.container form {
-    padding: 20px;
-    height: auto;
-    width: 100%;
-    max-width: 400px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid #DE504F;
-    border-radius: 30px;
-    background: white;
-    color: black;
+.container .wrapper {
+  width: 70%;
+  border: 1px solid #ccc; /* Color de borde más suave */
+  height: 100vh;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px; /* Bordes redondeados para el contenedor */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra suave */
 }
 
-.container form h1 {
-    margin-bottom: 20px;
+.wrapper .login-form, .login-social-media {
+  flex: 1;
+  width: 100%;
 }
 
-form .inp-box {
-    position: relative;
-    width: 100%;
-    height: 50px;
-    margin-bottom: 20px;
+.login-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: #f9f9f9; /* Fondo más suave */
+  height: 500px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
 }
 
-form .inp-box label {
-    display: block;
+.login-form h2 {
+  margin-bottom: 20px;
+  color: #333; /* Color del encabezado */
 }
 
-form .inp-box i {
-    font-size: 20px;
-    position: absolute;
-    top: 15px;
-    right: 10px;
-    color: gray;
+.login-form .inp-box {
+  width: 100%;
+  height: 50px;
+  margin-bottom: 20px;
+  position: relative;
 }
 
-form .inp-box input {
-    width: 100%;
-    height: 100%;
-    border: none;
-    border-bottom: 1px solid gray;
-    outline: none;
-    padding: 5px 10px;
+.inp-box .icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: gray;
 }
 
-form .button {
-    width: 100%;
-    height: 40px;
-    margin-bottom: 20px;
+.login-form .inp-box input {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  padding: 20px 20px;
+  border: 1px solid #ddd; /* Borde del input */
+  border-radius: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra suave */
 }
 
-form .button button {
-    width: 100%;
-    height: 100%;
-    border: none;
-    background: linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%, rgba(252,176,69,1) 100%);
-    border-radius: 15px;
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-    font-family: 'Poppins', sans-serif;
+.inp-box input::placeholder {
+  color: #aaa;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  position: absolute;
+  top: 10px;
+  left: 10px;
 }
 
-form .button button:hover {
-    background: #DE504F;
+.inp-box input:focus::placeholder,
+.inp-box input:not(:placeholder-shown)::placeholder {
+  top: 1px;
+  left: 10px;
 }
 
-.links-forgot-password {
-    width: 100%;
-    text-align: right;
-    padding: 5px;
-    margin-bottom: 10px;
+.login-form form {
+  width: 100%;
 }
 
-.links-forgot-password a {
-    text-decoration: none;
-    color: #DE504F;
+.btn-box {
+  width: 100%;
+  height: 50px;
 }
 
-.not-have-acc {
-    margin-bottom: 30px;
+.btn-box button {
+ width: 100%;
+ height: 100%;
+ border: none;
+ border-radius: 15px;
+ background-color: #007BFF; /* Color de fondo del botón */
+ color: white;
+ font-weight: bold;
+ box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra suave */
+ cursor: pointer;
 }
 
-.social {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
+.btn-box button:hover {
+  background-color: #0056b3; /* Color de fondo al pasar el mouse */
 }
 
-.social i {
+.login-social-media {
+  height: 500px;
+  background-color: #34495E;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
+.login-social-media h2 {
+  margin-bottom: 20px;
+}
+
+.login-social-media .social-buttons .google, .facebook, .apple {
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  font-weight: 700;
+  border-radius: 15px;
+}
+
+.social-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+  padding: 10px;
+}
+
+.social-buttons i {
+  font-size: 25px;
+}
+
+.social-buttons .google {
+  background: white;
+  color: black;
+  border: 1px solid #ddd; /* Borde de la tarjeta */
+}
+
+.social-buttons .google i {
+  color: #db4437; /* Color del ícono de Google */
+}
+
+.social-buttons .facebook {
+  background: #1877F2;
+  border: 1px solid #ddd; /* Borde de la tarjeta */
+}
+
+.social-buttons .apple {
+  background: #000;
+  border: 1px solid #ddd; /* Borde de la tarjeta */
+}
+
+form .remember-me {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 10px;
+  gap: 5px;
+}
+
+form .form-links {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+form .form-links div {
+  padding: 15px;
+}
+
+.lf-h1 {
+  padding: 15px;
+}
+
+.error {
+    background: #FF4C4C;
     padding: 10px;
-    border-radius: 50%;
+    border-radius: 10px;
+    margin-bottom: 10px;
     color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
-.social #google {
-    background-color: #EE3131;
+@media(max-width: 600px) {
+  .container .wrapper {
+    width: 100%;
+    flex-direction: column;
+  }
 }
-
-.social #apple {
-    background: black;
-}
-
-.social #facebook {
-    background: #2058FF;
-}
-
-.separator {
-    margin-bottom: 20px;
-    text-align: center;
-}
-
 
 </style>

@@ -1,7 +1,6 @@
-
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-
+const User = require('./User'); // Importa el modelo User
 
 const Video = sequelize.define('Video', {
     id: {
@@ -13,7 +12,7 @@ const Video = sequelize.define('Video', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'users',
+            model: User,  // Usa el modelo directamente
             key: 'id'
         }
     },
@@ -33,6 +32,8 @@ const Video = sequelize.define('Video', {
         type: DataTypes.STRING,
         allowNull: false
     }
-})
+}, {
+    tableName: 'videos' // Especifica el nombre de la tabla
+});
 
-module.exports = Video
+module.exports = Video;

@@ -27,7 +27,7 @@ router.get('/user/:userId', async (req, res) => {
 router.post('/set_profile_banner', upload.single('profile-banner'), async (req, res) => {
     try {
         console.log(req.file)
-        await userService.handleProfileDataChange('banner', req.file, req.cookies.jwt);
+        await userService.handleProfileDataChange('banner', req.file.path, req.cookies.jwt);
         return res.status(201).json({ success: 'Your Profile Banner Has Been Changed Successfully!' });
     } catch (e) {
         return res.status(500).json({ error: e.message });
@@ -98,5 +98,29 @@ router.post('/set_bio', async (req, res) => {
         return res.status(500).json({ error: e.message });
     }
 });
+
+router.post('/set_job', async (req, res) => {
+    try {
+        
+        console.log('job req.body', req.body)
+        await userService.handleProfileDataChange('job', req.body.job, req.cookies.jwt);
+        return res.status(201).json({ success: 'Your Profile Job Has Been Changed Successfully!', Job: req.body.job });
+        
+    } catch(e) {
+        return res.status(500).json({ error: 'Internal server error.'})
+    }
+})
+
+router.post('/set_gender', async (req, res) => {
+    try {
+        
+        console.log('gender req.body', req.body)
+        await userService.handleProfileDataChange('gender', req.body.gender, req.cookies.jwt);
+        return res.status(201).json({ success: 'Your Profile Gender Has Been Changed Successfully!', Gender: req.body.gender });
+        
+    } catch(e) {
+        return res.status(500).json({ error: 'Internal server error.'})
+    }
+})
 
 module.exports = router;

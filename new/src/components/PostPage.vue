@@ -9,10 +9,10 @@
         <div class="post-header">
           <div class="post-user">
             <div class="post-user-img">
-              <img :src="'http://localhost:3000/' + post.user_img" alt="Post User Image">
+              <img  :src="'http://localhost:3000/' + post.user.profilePicture">
             </div>
             <div class="post-username">
-              <h3>{{ post.user_name }}</h3>
+              <h3>{{ post.user.username }}</h3>
               <p style="color: gray">3h</p>
             </div>
           </div>
@@ -29,19 +29,19 @@
           <div class="like">
              <font-awesome-icon icon="heart"/>
              
-            <span>283</span>
+            <span>{{post.postLikes.length}}</span>
           </div>
-          <div class="comment">
+          <div style="border: none" class="comment">
             <font-awesome-icon icon="comments" />
-            <span>Comment</span>
+            <span>{{post.postComments.length}}</span>
           </div>
           <div class="share">
             <font-awesome-icon icon="share"/>
-            <span>Share</span>
+            
           </div>
           <div class="save">
             <font-awesome-icon icon="bookmark"/>
-            <span>Save</span>
+            <span>{{post.saved_post.length}}</span>
           </div>
         </div>
         
@@ -69,15 +69,15 @@
               
               
               
-            <div v-for="comment in comments" :key="comment.id" class="comment">
+            <div v-for="comment in post.postComments" :key="comment.id" class="comment">
                 
               <div class="comment-user-details">
                   
                 <div class="user-comment-img"> 
-                  <img :src="`http://localhost:3000/${comment.user_profile_picture}`" alt="User Picture">
+                  <img :src="`http://localhost:3000/${comment.commentUser.profilePicture}`" alt="User Picture">
                 </div>
                 <div class="user-comment-username">
-                  <h4>{{ comment.user_name }}</h4>
+                  <h4>{{ comment.commentUser.username }}</h4>
                 </div>
               </div>
               
@@ -131,12 +131,12 @@
                   <div class="comment-response-interact">
                       
                     <div class="like">
-                      <i class="fa fa-thumbs-up"></i>
+                      <font-awesome-icon icon="heart"/>
                       <span>{{ awnser.likes }}</span>
                     </div> 
                     
                     <div class="awnser">
-                      <i class="fa fa-comment"></i>
+                <font-awesome-icon icon="comment"/>
                       <span>Awnser</span>
                     </div>
                     
@@ -174,6 +174,12 @@
             
           </div>
         </div>
+        
+        
+        
+        
+        
+        
       </div>
     </div>
   </div>
@@ -190,8 +196,6 @@ export default {
   data() {
     return {
       post: {},
-      comments: {},
-      awnsers: [],
       postComment: "",
       user: {} 
     };
@@ -209,37 +213,14 @@ export default {
       const data = await response.json();
       console.log(data);
       this.post = data.post;
-
-      const commentsResponse = await fetch(`http://localhost:3000/api/sofi/postComments/${postId}`);
-      if (!commentsResponse.ok) {
-        console.log('Something Went Wrong..');
-        return;
-      }
-
-      const commentsData = await commentsResponse.json();
-      console.log(commentsData);
-      this.comments = commentsData.Comments
-      console.log('Comments from that post: ', commentsData.Comments)
+      console.log('this.post: ', this.post.user.username)
     },
-    
-    async getAwnsers(comment_id) {
-      const response = await fetch(`http://localhost:3000/api/sofi/commentAwnsers/${comment_id}`);
-      if (!response.ok) {
-        console.log('Something Went Wrong!');
-        return;
-      }
-
-      const data = await response.json();
-      console.log(data);
-      this.awnsers = data.awnsers;
-    },
-    
     
     async postAComment() {
       console.log('Post Comment Method Called', this.postComment);
       const response = await fetch('http://localhost:3000/api/sofi/comment_post', {
         method: 'POST',
-        body: JSON.stringify({ comment: this.postComment, post_id: this.$route.params.id}),
+        body: JSON.stringify({ comment: this.postComment, type: "POST", post_id: this.$route.params.id}),
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
@@ -257,7 +238,7 @@ export default {
       this.postComment = ""; // Limpiar el campo de entrada
     },
   },
-  async mounted() {
+  async created() {
     await this.getPost();
     this.user = this.usuario 
     console.log('User data passed to Mixin', this.user.user_picture)
@@ -277,6 +258,10 @@ export default {
     box-sizing: border-box;
     padding: 0;
     margin: 0;
+}
+
+img {
+    object-fit: cover;
 }
 
 header {
@@ -299,6 +284,7 @@ header {
 
 .post-user-img img {
     width: 70px;
+    height: 70px;
     border-radius: 50%;
 }
 
@@ -359,7 +345,8 @@ header {
 
 
 .upload-comment .user-picture img {
-    width: 40px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
 }
 
@@ -380,7 +367,8 @@ header {
 }
 
 .comment-user-details img {
-    width: 40px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
 }
 

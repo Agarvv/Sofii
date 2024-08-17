@@ -11,21 +11,27 @@ import SavedPage from './components/SavedPage.vue';
 import profileDetails from './components/profileDetails.vue'
 import VideosPage from './components/VideosPage.vue'
 import SingleVideoPage from './components/SingleVideoPage'
+import ChatBox from './components/ChatBox'
+import NotificationsComponent from './components/NotificationsComponent'
+import FriendsPage from './components/FriendsPage'
+
 
 const routes = [
-    { path: '/', component: HelloWorld },
-    { path: '/register', component: RegisterComponent },
-    { path: '/login', component: LoginComponent },
-    { path: '/post/:id', component: PostPage },
-    { path: '/create', component: CreatePost },
-    { path: '/chat/:receiver_id', component: ChatPage},
-    { path: '/search/:query', component: SearchPage, },
-    { path: '/user/:id', component: ProfilePage },
-    { path: '/userDetails', component: profileDetails},
+    { path: '/', component: HelloWorld, meta: { requiresAuth: true } },
+    { path: '/register', component: RegisterComponent }, // No requiere auth
+    { path: '/login', component: LoginComponent }, // No requiere auth
+    { path: '/post/:id', component: PostPage, meta: { requiresAuth: true } },
+    { path: '/create', component: CreatePost, meta: { requiresAuth: true } },
+    { path: '/chats', component: ChatPage, meta: { requiresAuth: true } },
+    { path: '/chat/:receiver_id', component: ChatBox, meta: { requiresAuth: true } }, 
+    { path: '/search/:query', component: SearchPage, meta: { requiresAuth: true } },
+    { path: '/user/:id', component: ProfilePage, meta: { requiresAuth: true } },
+    { path: '/userDetails', component: profileDetails, meta: { requiresAuth: true } },
     { path: '/saved', component: SavedPage, meta: { requiresAuth: true } },
-    { path: '/watch', component: VideosPage},
-    { path: '/watch/:video_id', component: SingleVideoPage }
-
+    { path: '/watch', component: VideosPage, meta: { requiresAuth: true } },
+    { path: '/watch/:video_id', component: SingleVideoPage, meta: { requiresAuth: true } },
+    { path: '/notifications', component: NotificationsComponent, meta: { requiresAuth: true } },
+    { path: '/friends', component: FriendsPage, meta: { requiresAuth: true } }
 ];
 
 const router = createRouter({
@@ -49,10 +55,11 @@ router.beforeEach(async (to, from, next) => {
                 
             } else {
               console.log('repsones not ok')
+              router.push('/login')
             }
         } catch (e) {
             console.log('Error.', e);
-           
+         
         }
     } else {
         next(); // Permitir la navegación si no se requiere autenticación

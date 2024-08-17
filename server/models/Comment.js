@@ -16,7 +16,7 @@ const Comment = sequelize.define('comment', {
   },
   user_name: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: true
   },
   user_profile_picture: {
     type: DataTypes.STRING,

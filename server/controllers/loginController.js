@@ -4,19 +4,25 @@ const loginService = require('../services/loginService');
 
 const handleLogin = async (email, password) => {
     try {
-        const user = await findByEmail(email);
-        if (!user) {
-            throw new Error('Not User Found With That Email.');
+        
+        const userExists = await
+        User.findOne({
+            where: {
+                email: email
+            }
+        })
+        
+        if(!userExists) {
+            throw new Error("email_not_found")
         }
 
-        console.log('User ', user);
-
-        const token = await loginService.makeLogin(user, password);
+        const token = await loginService.makeLogin(userExists, password);
+        
         return token;
-    } catch (e) {
-        console.log(e);
-        throw e;
-    }
+    }catch (e) {
+    console.error('Error during login process:', e);
+    throw e; // Esto es importante para que el error llegue al router
+}
 };
 
 module.exports = {

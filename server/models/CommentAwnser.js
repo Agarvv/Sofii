@@ -1,44 +1,27 @@
-const sequelize = require('../config/database')
+const sequelize = require('../config/database'); // Asegúrate de que la ruta sea correcta
 const { DataTypes } = require('sequelize');
-const { Sequelize } = require('sequelize')
 
-const CommentAnswer = Sequelize.define('comment_awnsers', {
-  post_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false
-  },
-  answer_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    autoIncrement: true,
-    primaryKey: true
-  },
-  user_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false
-  },
-  user_name: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
-  user_profile_picture: {
-    type: DataTypes.STRING,
-    allowNull: true,
-    validate: {
-      isUrl: true
+// Definición del modelo CommentAnswer (nombre corregido)
+const CommentAnswer = sequelize.define('CommentAnswer', {
+    post_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    comment_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    answer_content: { // Cambio: 'awnser_content' a 'answer_content'
+        type: DataTypes.STRING,
+        allowNull: false
     }
-  },
-  answer_content: {
-    type: DataTypes.TEXT,
-    allowNull: false
-  },
-  likes: {
-    type: DataTypes.INTEGER,
-    defaultValue: 0,
-    allowNull: false
-  }
 }, {
-  tableName: 'comment_answers'
+    tableName: 'comment_answers', // Nombre de la tabla en la base de datos
+    timestamps: true // Incluye createdAt y updatedAt automáticamente
 });
 
 module.exports = CommentAnswer;

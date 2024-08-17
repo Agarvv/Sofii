@@ -2,6 +2,8 @@ const User = require('../models/User')
 const tokenController = require('../controllers/tokenController')
 const Post = require('../models/Post')
 const FriendRequest = require('../models/FriendRequest')
+const Comment = require('../models/Comment')
+const Likes = require('../models/Likes')
 
 const handleProfileDataChange = async (field, value, token) => {
     try {
@@ -41,7 +43,20 @@ const findUserById = async (user_id) => {
                 {
                     model: Post,
                     as: 'posts',
-                    attributes: ['description']
+                    include: [
+                    {
+                      model: User,
+                      as: 'user'
+                    },
+                    {
+                        model: Comment,
+                        as: 'postComments'
+                    },
+                    {
+                        model: Likes,
+                        as: 'postLikes'
+                    }
+                   ]
                 },
                 {
                     model: FriendRequest,

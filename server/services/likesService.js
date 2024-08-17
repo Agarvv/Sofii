@@ -1,28 +1,35 @@
 const VideoLikes = require('../models/VideoLikes')
 const Likes = require('../models/Likes')
+const NotificationService = require('../services/NotificationService')
 
-const likeVideo = async (user, video_id) => {
+const likeVideo = async (user, video) => {
     try {
-        await VideoLikes.create({
-            video_id: video_id,
+       const newLike = await VideoLikes.create({
+            video_id: video.id,
             user_id: user.user_id
         })
-        const liked = "succes while liking video"
-        return liked
+        
+        if(newLike) {
+            await NotificationService.sendNotificationToSingleUser(video.video_user_id, user, 'VIDEO_LIKED')
+            return 
+        }
+        
         
     } catch(e) {
         throw new Error(e)
     }
 }
 
-const likePost = async (user_id, post_id) => {
+const likePost = async (user, post) => {
     try {
-        await Likes.create({
-            post_id: post_id,
-            user_id: user_id
+       const newLike =  await Likes.create({
+            post_id: post.id,
+            user_id: user.user_id
         })
-        const liked = "succes while liking post"
-        return liked
+        if(newLike) {
+            await NotificationService.sendNotificationToSingleUser(post.user_id, user, 'POST_LIKED')
+            return 
+        }
         
     } catch(e) {
         throw new Error(e)

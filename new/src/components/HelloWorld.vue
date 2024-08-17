@@ -1,3 +1,4 @@
+
 <template>
   <div id="app">
     <header>
@@ -5,18 +6,18 @@
         <h1>Sofii</h1>
       </div>
       <div class="icons">
-        <font-awesome-icon id="open-search" icon="search" />
-        <font-awesome-icon id="open-sidebar" icon="bars" />
+        <font-awesome-icon @click="openSearch()" id="open-search" icon="search" />
+        <font-awesome-icon @click="openSidebar()"id="open-sidebar" icon="bars" />
         <div class="user-img">
-          <img src="logo.png" alt="User Image">
+          <img >
         </div>
       </div>
               
     </header>
 
-    <div id="search" class="search-box">
+    <div v-show="showSearchBox" id="search" class="search-box">
       <div class="search-icons">
-        <font-awesome-icon id="close-search" icon="fas fa-arrow-left" />
+        <font-awesome-icon @click="closeSearch()" id="close-search" icon="close" />
       </div>
       <div class="input">
         <input v-model="searchQ" type="search" placeholder="Search">
@@ -55,10 +56,10 @@
 
       <main>
         <div class="main-header">
-          <div class="friends"><font-awesome-icon icon="user-friends" /><p>Friends</p></div>
-          <div class="watch"><font-awesome-icon icon="tv" /><p>Watch</p></div>
-          <div class="create"><font-awesome-icon icon="plus" /><p>Create</p></div>
-          <div class="notifications"><font-awesome-icon icon="bell" /><p>Notifications</p></div>
+          <div @click="goToFriends()" class="friends"><font-awesome-icon icon="user-friends" /><p>Friends</p></div>
+          <div @click="goToWatch()" class="watch"><font-awesome-icon icon="tv" /><p>Watch</p></div>
+          <div @click="goToCreate()" class="create"><font-awesome-icon icon="plus" /><p>Create</p></div>
+          <div @click="goToNotifications()"  class="notifications"><font-awesome-icon icon="bell" /><p>Notifications</p></div>
         </div>
         
         
@@ -67,8 +68,8 @@
               
               
             <div class="post-header">
-              <div class="post-user-img">
-                <img style="width: 50px; border-radius: 50%" :src="'http://localhost:3000/' + post.user.profilePicture" alt="Post User Image">
+              <div @click="goToUserPage(post.user.id)" class="post-user-img">
+                <img style="width: 50px; height: 50px; border-radius: 50%" :src="'http://localhost:3000/' + post.user.profilePicture" alt="Post User Image">
               </div>
               <div class="post-user-detail">
                 <h4>{{ post.user.username }}</h4>
@@ -83,13 +84,13 @@
                 <p>{{ post.description }}</p>
               </div>
               <div @click="goToPostPage(post.id)" class="post-image">
-                <img :src="'http://localhost:3000/' + post.postPicture" alt="Post Image">
+                <img loading="lazy":src="'http://localhost:3000/' + post.postPicture" alt="Post Image">
               </div>
             </div>
             <div class="post-interactions">
               <div @click="likePost(post.id)" class="like"><font-awesome-icon icon="fas fa-thumbs-up" /> <span>{{post.postLikes.length}}</span>   </div>
               <div @click="goToPostPage(post.id)"class="comment"><font-awesome-icon icon="fas fa-comment" /> <span>{{post.postComments.length}}</span></div>
-              <div @click="savePost(post.id)" class="save"><font-awesome-icon icon="fas fa-bookmark" /></div>
+              <div @click="savePost(post.id)" class="save"><font-awesome-icon icon="fas fa-bookmark" /> <span>{{post.saved_post.length}}</span> </div>
               <div class="share"><font-awesome-icon icon="fas fa-share" /></div>
             </div>
             
@@ -118,7 +119,9 @@ export default {
   data() {
     return {
       posts: [],
-      searchQ: ""
+      searchQ: "",
+      showSearchBox: false,
+      showSidebar: false
     };
   },
   methods: {
@@ -173,6 +176,30 @@ export default {
      })
      const data = await response.json()
      console.log('server data save: ', data)
+    },
+    goToFriends() {
+        this.$router.push('/friends')
+    },
+    goToWatch() {
+        this.$router.push('/watch')
+    },
+    goToCreate() {
+        this.$router.push('/create')
+    },
+    goToNotifications() {
+        this.$router.push('/notifications')
+    },
+    openSearch() {
+        this.showSearchBox = true
+    },
+    closeSearch() {
+        this.showSearchBox = false
+    },
+    openSidebar() {
+        
+    },
+    goToUserPage(user_id) {
+        this.$router.push('/user/' + user_id)
     }
   },
   created() {
@@ -194,6 +221,10 @@ html, body {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+}
+
+img {
+    object-fit: cover;
 }
 
 header {
@@ -492,3 +523,5 @@ aside .aside-logo i {
 
 
 </style>
+
+me gustaria tambien que no se toquen los src y esas cosas del template.
