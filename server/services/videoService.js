@@ -2,6 +2,8 @@ const Video = require('../models/Video')
 const User = require('../models/User')
 const VideoComments = require('../models/VideoComments')
 const VideoLikes = require('../models/VideoLikes')
+const SavedVideo = require('../models/SavedVideo')
+
 
 const getVideos = async () => {
     try {
@@ -29,6 +31,10 @@ const getVideos = async () => {
             model: VideoLikes,
             as: 'video_likes',  // Likes en el video
 
+        },
+        {
+            model: SavedVideo,
+            as: 'videos_saved'
         }
     ]
 });

@@ -28,6 +28,8 @@ router.post('/awnser_to_comment',  [
     ], async (req, res) => {
     try {
         
+        console.log('req.body', req.body)
+        
         const jwtToken = req.cookies.jwt 
         
         
@@ -40,7 +42,7 @@ router.post('/awnser_to_comment',  [
             case "POST":
                 const post_id = req.body.post_id
                 const comment_id = req.body.comment_id 
-                const awnser_content = req.body.awnser_content 
+                const awnser_content = req.body.awnser_content
                 
                 if(!post_id) {
                     return res.status(400).json({
@@ -68,7 +70,7 @@ router.post('/awnser_to_comment',  [
                 break;
             case "VIDEO":
                 const video_id = req.body.video_id
-                const awnserContent = req.body.awnserContent 
+                const awnserContent = req.body.awnser_content
                 const video_comment_id = req.body.comment_id 
                 
                 if(!video_id) {

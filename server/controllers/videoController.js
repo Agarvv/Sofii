@@ -3,7 +3,18 @@ const tokenController = require('../controllers/tokenController')
 const Video = require('../models/Video')
 const User = require('../models/User')
 const VideoComments = require('../models/VideoComments')
+const VideoCommentAwnser = require('../models/VideoCommentAwnser')
 const VideoLikes = require('../models/VideoLikes')
+
+
+const SavedVideo = require('../models/SavedVideo')
+const VideoCommentLikes = require('../models/VideoCommentLikes')
+const VideoCommentDislikes = require('../models/VideoCommentDislikes')
+const VideoCommentAwnsersLikes = require('../models/VideoCommentAwnsersLikes')
+const VideoCommentAwnsersDislikes = require('../models/VideoCommentAwnsersDislikes')
+
+
+
 
 const handleVideoCreation = async (jwt_token, video, data) => {
     try {
@@ -39,12 +50,44 @@ const findVideoById = async (videoId) => {
                         {
                             model: User,
                             as: 'video_comment_user'  // Asegúrate de que este alias coincida con la definición en relations.js
+                        },
+                        {
+                            model: VideoCommentLikes,
+                            as: 'comment_likes'
+                        },
+                        {
+                            model: VideoCommentDislikes,
+                            as: 'comment_dislikes'
+                        }, 
+                        {
+                            model: VideoCommentAwnser,
+                            as: 'awnsers',
+                            include: [
+                            
+                            {
+                                model: User,
+                                as: 'comment_awnser_user'
+                            },
+                            {
+                                model: VideoCommentAwnsersLikes,
+                                as: 'awnser_likes'
+                            },
+                            {
+                                model: VideoCommentAwnsersDislikes,
+                                as: 'awnser_dislikes'
+                            }
+                            
+                            ]
                         }
                     ]
                 },
                 {
                     model: VideoLikes,
                     as: 'video_likes'
+                },
+                {
+                    model: SavedVideo,
+                    as: 'videos_saved'
                 }
             ]
         });

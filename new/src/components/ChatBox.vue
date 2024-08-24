@@ -1,4 +1,8 @@
+
 <template>
+    
+    
+<div class="container"> 
   <main>
     <div class="main-header">
       <div class="user-details">
@@ -20,10 +24,10 @@
     <div class="main-chatbox">
         
       <div class="messages">
-        <div v-for="message in messages" :key="message.id" :class="getMessageClass(message)">
+        <div v-for="message in messages" :key="message.id" class="message" :class="getMessageClass(message)">
             
           <div class="message-user-img">
-            <img style="width: 60px; border-radius: 50%">
+            <img :src="'http://localhost:3000/' + message.message_user.profilePicture" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%">
           </div>
           <p>{{ message.message_content }}</p>
         </div>
@@ -33,10 +37,12 @@
 
     <div class="main-footer">
       <div class="footer-buttons">
-        <div class="video">
+        <div @click="handleFiles('video')" class="video">
+            <input @change="handleFilesChanges('video')" ref='videoInp' type="file" style="display: none">
           <font-awesome-icon icon="video"></font-awesome-icon>
         </div>
-        <div class="image">
+        <div @click="handleFiles('image')" class="image">
+         <input @change="handleFilesChanges()" ref='imageInp' type="file" style="display: none">
           <font-awesome-icon icon="image"></font-awesome-icon>
         </div>
         <div class="micro">
@@ -44,6 +50,7 @@
         </div>
       </div>
       <div class="footer-message-input">
+          <img  ref="demoImage" src="">
         <input v-model="message" id="inp" type="text" placeholder="Send a message...">
         <div @click="sendMessage" class="footer-send-message-button">
           <font-awesome-icon icon="paper-plane"></font-awesome-icon>
@@ -51,6 +58,8 @@
       </div>
     </div>
   </main>
+ </div>
+ 
 </template>
 
 <script>
@@ -104,8 +113,51 @@ export default {
     handleChatConnection(chat_id) {
       console.log('Connecting to chat:', chat_id);
       this.$socket.emit('joinRoom', chat_id);
+    },
+    handleFiles(type, event) {
+      switch(type) {
+        case "image":
+          this.$refs.imageInp.click();
+          break;
+        case "video":
+          this.$refs.videoInp.click();
+          break;
+        default:
+          return;
+      }
+    },
+    handleFilesChanges(event) {
+    console.log('changes');
+
+    const file = event.target.files[0]; // Accedemos al archivo
+    if (file) {
+        const reader = new FileReader();
+        
+        reader.onload = (e) => {
+            console.log('src', e.target.result); // Verificar que se obtiene el resultado
+            if (this.$refs.demoImage) {
+                this.$refs.demoImage.src = e.target.result; // Actualizamos el src
+            } else {
+                console.error('Referencia demoImage no encontrada');
+            }
+        };
+
+        reader.onerror = (error) => {
+            console.error('Error al leer el archivo:', error);
+        };
+
+        reader.readAsDataURL(file); // Esto es lo que lee el archivo
+    } else {
+        console.error('No se ha seleccionado ningún archivo');
     }
-  },
+}
+      
+      
+      
+ 
+      
+    },
+ 
   async created() {
     try {
       const response = await fetch('http://localhost:3000/api/sofi/chat', {
@@ -139,20 +191,28 @@ export default {
     this.$socket.on('chatMessage', (message) => {
       this.messages.push(message);
     });
-    // Eliminar la función `handleChatConnection` vacía en `mounted` ya que está en `methods`
   }
 };
 </script>
 
 <style scoped>
+
+.container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 main {
   display: flex;
+  width: 70%;
   flex-direction: column;
   height: 100vh;
 }
 
 .main-header, .main-footer {
-  border: 1px solid #ddd;
+
   background: white;
   z-index: 1;
 }
@@ -160,24 +220,34 @@ main {
 .main-header {
   display: flex;
   justify-content: space-between;
-  padding: 10px;
-  position: fixed;
+  position: sticky;
   top: 0;
   left: 0;
+  right: 0;
   width: 100%;
   align-items: center;
+}
+
+.main-header .user-details {
+    display: flex;
+  
+    gap: 10px;
 }
 
 .main-footer {
   height: 80px;
   display: flex;
+  gap: 10px;
   align-items: center;
+  justify-content: center;
   padding: 10px;
   position: fixed;
   bottom: 0;
   left: 0;
+  right: 0;
   width: 100%;
   background: #f0f0f0;
+ 
 }
 
 .main-chatbox {
@@ -195,21 +265,31 @@ main {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  padding: 10px;
 }
 
 .messages .message {
   display: flex;
-  flex-wrap: wrap;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+   flex-wrap: wrap;
   padding: 10px;
   border-radius: 10px;
   word-wrap: break-word;
   overflow-wrap: break-word;
+  
 }
 
 .messages .message.friend {
   align-self: flex-end;
   background: #42445A;
   color: white;
+ 
+}
+
+.message.friend img {
+    display: none;
 }
 
 .messages .message.user {
@@ -233,6 +313,7 @@ main {
   padding: 5px;
 }
 
+
 .footer-message-input input {
   width: 100%;
   padding: 10px;
@@ -243,8 +324,14 @@ main {
 }
 
 .footer-send-message-button {
-  margin-left: 10px;
-  font-size: 24px;
+  padding-right: 10px;
+  font-size: 25px;
   cursor: pointer;
+}
+
+@media(max-width: 600px) {
+    main {
+        width: 100%;
+    }
 }
 </style>

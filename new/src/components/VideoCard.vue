@@ -24,10 +24,14 @@
     </div>
     <div class="video-interactions">
       <div @click="likeVideo(video.id)" class="like"><font-awesome-icon icon="fas fa-thumbs-up" /> 
-                   
+        <span>{{video.video_likes.length}}</span>
       </div>
-      <div @click="goToVideoPage(video.id)" class="comment"><font-awesome-icon icon="fas fa-comment" /></div>
-      <div @click="saveVideo(video.id)" class="save"><font-awesome-icon icon="fas fa-bookmark" /></div>
+      <div @click="goToVideoPage(video.id)" class="comment"><font-awesome-icon icon="fas fa-comment" />  
+      <span>{{video.video_comments.length}}</span>
+      </div>
+      <div @click="saveVideo(video.id)" class="save"><font-awesome-icon icon="fas fa-bookmark" />
+      <span>{{video.videos_saved.length}}</span>
+      </div>
     </div>
     
     

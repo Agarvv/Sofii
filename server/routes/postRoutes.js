@@ -6,11 +6,16 @@ const createPostController = require('../controllers/createPostController');
 const tokenController = require('../controllers/tokenController');
 const Likes = require('../models/Likes')
 const Saved = require('../models/Saved')
-
+const  CommentAnswer  = require('../models/CommentAwnser'); // Importa el
 const router = express.Router();
 const postController = require('../controllers/postController')
 const { User, Post, Comment
 } = require('../models/relations')
+const CommentLikes = require('../models/CommentLikes')
+const CommentDislikes = require('../models/CommentDislikes')
+const CommentAwnsersLikes = require('../models/CommentAwnsersLikes')
+const CommentAwnsersDislikes = require('../models/CommentAwnsersDislikes')
+
 
 
 const storage = multer.diskStorage({
@@ -71,9 +76,10 @@ router.get('/posts', async (req, res) => {
             as: 'postComments',
             attributes: ['comment_content'],
             include: {
+                
                 model: User,
-                as: 'commentUser',
-                attributes: ['username']
+                as: 'commentUser'
+                
             }
         },
         {
@@ -112,6 +118,33 @@ router.get('/post/:post_id', async (req, res) => {
                       {
                           model: User,
                           as: 'commentUser'
+                      },
+                      {
+                          model: CommentLikes,
+                          as: 'comment_likes'
+                      }, 
+                      {
+                          model: CommentDislikes,
+                          as: 'comment_dislikes'
+                      }, 
+                    
+                      {
+                          model: CommentAnswer,
+                    as: 'awnsers',
+                        include: [
+                            {
+                                model: User,
+                                as: 'awnser_user'
+                            },
+                            {
+                                model: CommentAwnsersLikes,
+                                as: 'awnser_likes'
+                            },
+                            {
+                                model: CommentAwnsersDislikes,
+                                as: 'awnser_dislikes'
+                            }
+                        ]
                       }
                     ]
                 },

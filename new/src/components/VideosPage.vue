@@ -1,18 +1,36 @@
 <template>
-  <div>
+    
+    <HeaderComponent :activePage="'watch'" :user="usuario"/>
+    
+  <div class="container">
+      
+  <div class="videos-wrapper"> 
     <div v-for="video in videos" :key="video.id" class="videos">
       <VideoCard :video="video" /> <!-- Cambié :videos="videos" a :video="video" -->
     </div>
+    
+    <div v-if="videos.length > 1" class="end-videos">
+        <p>There Are No More Videos...</p>
+    </div>
+    
+  </div>
+    
   </div>
 </template>
 
 <script>
 import VideoCard from './VideoCard.vue';
+import HeaderComponent from './HeaderComponent'
+import userMixin from '../mixins/userMixin'
+
+
 
 export default {
   components: {
-    VideoCard
+    VideoCard,
+    HeaderComponent
   },
+  mixins: [userMixin],
   data() {
     return {
       videos: [] // Inicialmente vacío, se llenará con datos
@@ -41,5 +59,31 @@ export default {
 </script>
 
 <style scoped>
-/* Agrega estilos específicos si los necesitas */
+
+.container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.videos-wrapper {
+    width: 70%;
+}
+
+.end-videos {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+   color: gray;
+}
+
+@media(max-width: 600px) {
+    .videos-wrapper {
+        width: 100%;
+    }
+}
+
 </style>

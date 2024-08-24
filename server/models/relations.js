@@ -2,7 +2,7 @@ const User = require('./User');
 const Post = require('./Post');
 const Comment = require('./Comment');
 const Likes = require('./Likes');
-const Followers = require('./Followers');
+const Follower = require('./Followers');
 const Friends = require('./Friends');  
 const FriendRequest = require('./FriendRequest')
 const Notifications = require('./Notifications')
@@ -15,7 +15,15 @@ const Message = require('./Message')
 const Saved = require('./Saved')
 // Relación de usuario con posts
 const VideoCommentAwnser = require('./VideoCommentAwnser')
-
+const CommentAnswer = require('./CommentAwnser'); // Importa el
+const CommentLikes = require('./CommentLikes')
+const CommentDislikes = require('./CommentDislikes')
+const CommentAwnsersLikes = require('./CommentAwnsersLikes')
+const CommentAwnsersDislikes = require('./CommentAwnsersDislikes')
+const VideoCommentLikes = require('./VideoCommentLikes')
+const VideoCommentDislikes = require('./VideoCommentDislikes')
+const VideoCommentAwnsersLikes = require('./VideoCommentAwnsersLikes')
+const VideoCommentAwnsersDislikes = require('./VideoCommentAwnsersDislikes')
 
 User.hasMany(Post, { 
   as: 'posts', 
@@ -36,7 +44,6 @@ Comment.belongsTo(User, {
   foreignKey: 'user_id'
 });
 
-// Relación de post con comentarios
 Post.hasMany(Comment, {
   as: 'postComments',
   foreignKey: 'post_id'
@@ -45,6 +52,36 @@ Comment.belongsTo(Post, {
   as: 'commentPost',
   foreignKey: 'post_id'
 });
+
+Comment.hasMany(CommentAnswer, {
+    foreignKey: 'comment_id',
+    as: 'awnsers'
+})
+
+CommentAnswer.belongsTo(Comment, {
+    foreignKey: 'comment_id',
+    as: 'comment'
+})
+
+Post.hasMany(CommentAnswer, {
+    as: 'comment_awnsers',
+    foreignKey: 'post_id'
+})
+
+CommentAnswer.belongsTo(Post, {
+    as: 'comment_awnser_post',
+    foreignKey: 'post_id'
+})
+
+User.hasMany(CommentAnswer, {
+    as: 'answers',
+    foreignKey: 'user_id'
+})
+
+CommentAnswer.belongsTo(User, {
+    as: 'awnser_user',
+    foreignKey: 'user_id'
+})
 
 Video.hasMany(VideoCommentAwnser, {
     as: 'comments_awnsers',
@@ -65,6 +102,18 @@ VideoCommentAwnser.belongsTo(User, {
     as: 'comment_awnser_user',
     foreignKey: 'user_id'
 })
+
+
+VideoComments.hasMany(VideoCommentAwnser, {
+    as: 'awnsers',
+    foreignKey: 'comment_id'
+})
+
+VideoCommentAwnser.belongsTo(VideoComments, {
+    as: 'comment',
+    foreignKey: 'comment_id'
+})
+
 
 // Relación de post con likes
 Post.hasMany(Likes, {
@@ -89,17 +138,20 @@ Saved.belongsTo(Post, {
 
 // Relación de seguidores y siguiendo
 User.belongsToMany(User, {
-  through: Followers,
-  as: 'followers',
-  foreignKey: 'following_id',
+  through: Follower, // Usamos el nombre del modelo, que es "Follower"
+  as: 'followers',  // Alias para los que siguen al usuario
+  foreignKey: 'following_id', 
   otherKey: 'follower_id'
 });
+
 User.belongsToMany(User, {
-  through: Followers,
-  as: 'following',
+  through: Follower, // Usamos el nombre del modelo, que es "Follower"
+  as: 'following',  // Alias para los que el usuario sigue
   foreignKey: 'follower_id',
   otherKey: 'following_id'
 });
+
+
 
 // Relación de amistad
 // Relación de amistad (Asegúrate de que el alias coincida)
@@ -272,9 +324,88 @@ Message.belongsTo(User, {
     foreignKey: 'message_user_id' // Cambié 'key' por 'foreignKey'
 });
 
+Comment.hasMany(CommentLikes, {
+    foreignKey: 'comment_id',
+    as: 'comment_likes'
+})
+
+CommentLikes.belongsTo(Comment, {
+    foreignKey: 'comment_id',
+    as: 'comment'
+})
+
+Comment.hasMany(CommentDislikes, {
+    foreignKey: 'comment_id',
+    as: 'comment_dislikes'
+})
+
+CommentDislikes.belongsTo(Comment, {
+    foreignKey: 'comment_id',
+    as: 'comment'
+})
+
+CommentAnswer.hasMany(CommentAwnsersLikes, {
+    foreignKey: 'awnser_id',
+    as: 'awnser_likes'
+})
+
+CommentAwnsersLikes.belongsTo(CommentAnswer, {
+    foreignKey: 'awnser_id',
+    as: 'awnser_like'
+})
+
+CommentAnswer.hasMany(CommentAwnsersDislikes, {
+    foreignKey: 'awnser_id',
+    as: 'awnser_dislikes'
+})
+
+CommentAwnsersDislikes.belongsTo(CommentAnswer, {
+    foreignKey: 'awnser_id',
+    as: 'awnser_dislike'
+})
 
 
-// Relación de post con videos
+
+VideoComments.hasMany(VideoCommentLikes, {
+    foreignKey: 'comment_id',
+    as: 'comment_likes'
+})
+
+VideoCommentLikes.belongsTo(VideoComments, {
+    foreignKey: 'comment_id',
+    as: 'comment'
+})
+
+VideoComments.hasMany(VideoCommentDislikes, {
+    foreignKey: 'comment_id',
+    as: 'comment_dislikes'
+})
+
+VideoCommentDislikes.belongsTo(VideoComments, {
+    foreignKey: 'comment_id',
+    as: 'comment'
+})
+
+VideoCommentAwnser.hasMany(VideoCommentAwnsersLikes, {
+    foreignKey: 'awnser_id',
+    as: 'awnser_likes'
+})
+
+VideoCommentAwnsersLikes.belongsTo(VideoCommentAwnser, {
+    foreignKey: 'awnser_id',
+    as: 'awnser_like'
+})
+
+VideoCommentAwnser.hasMany(VideoCommentAwnsersDislikes, {
+    foreignKey: 'awnser_id',
+    as: 'awnser_dislikes'
+})
+
+VideoCommentAwnsersDislikes.belongsTo(VideoCommentAwnser, {
+    foreignKey: 'awnser_id',
+    as: 'awnser_dislike'
+})
 
 
-module.exports = { User, Post, Comment, Likes, Followers, Friends, FriendRequest, Video, Chat};
+
+module.exports = { User, Post, Comment, Likes, Follower, Friends, FriendRequest, Video, Chat};

@@ -25,6 +25,14 @@ const socket = io('http://localhost:3000', {
 });
 
 const app = createApp(App);
+
+
+app.config.errorHandler = () => {
+  
+}
+
+
+
 app.use(router);
 app.mixin(userMixin);
 

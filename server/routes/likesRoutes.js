@@ -1,59 +1,219 @@
-
 const express = require('express');
 const router = express.Router();
 const likesController = require('../controllers/likesController');
-const Video = require('../models/Video'); // Esta línea parece no estar en uso, podrías eliminarla si no la necesitas
-const Post = require('../models/Post'); // Supongo que querías importar el modelo de Post aquí
 
 router.post('/like_content', async (req, res) => {
     try {
-        console.log('like req.body ', req.body);
-        
         const type = req.body.type;
         const token = req.cookies.jwt;
-         
+
         if (!type) {
-            return res.status(400).json({ error: 'Data is missing' }); // Cambié 404 a 400 para un error de solicitud incorrecta
+            return res.status(400).json({ error: 'Data is missing' });
         }
-        
+
+        let data;
         switch (type) {
-            case "VIDEO": { // Corregí la sintaxis del case
+            case "VIDEO":
                 if (!req.body.video_id) {
-                    return res.status(400).json({ error: 'Something is wrong with the video that you want to like.' }); // Cambié 404 a 400
+                    return res.status(400).json({ error: 'Video ID is missing.' });
                 }
-                await likesController.likeVideo(token, req.body.video_id, (liked, unliked) => {
-                    if (liked) {
-                        return res.status(201).json({ detail: 'Video liked.' }); // Cambié "Liked" a "liked" para mantener consistencia
-                    }
-                    if (unliked) {
-                        return res.status(201).json({ detail: 'Video unliked.' }); // Cambié "Unliked" a "unliked"
-                    }
-                });
-                break; // Añadí el break para salir del case
-            }
-            case "POST": { // Corregí la sintaxis del case
+                data = await likesController.likeVideo(token, req.body.video_id);
+                break;
+            case "POST":
                 if (!req.body.post_id) {
-                    return res.status(400).json({ error: 'Something is wrong with the post that you want to like.' }); // Cambié 404 a 400
+                    return res.status(400).json({ error: 'Post ID is missing.' });
                 }
-                await likesController.likePost(token, req.body.post_id, (liked, unliked) => {
-                    if (liked) {
-                        return res.status(201).json({ detail: 'Post liked.' }); // Cambié "liked" a "liked" para consistencia
-                    }
-                    if (unliked) {
-                        return res.status(201).json({ detail: 'Post unliked.' }); // Cambié "unliked" a "unliked"
-                    }
-                });
-                break; // Añadí el break para salir del case
-            }
-            default: {
-                return res.status(400).json({ error: 'Invalid type provided.' }); // Añadí un caso por defecto para manejar tipos inválidos
-            }
+                data = await likesController.likePost(token, req.body.post_id);
+                break;
+            case "COMMENT":
+                if (!req.body.post_id || !req.body.comment_id) {
+                    return res.status(400).json({ error: 'Post ID or Comment ID is missing.' });
+                }
+                data = await likesController.likeComment(token, req.body.post_id, req.body.comment_id);
+                break;
+            case "COMMENT_AWNSER":
+                if (!req.body.post_id || !req.body.comment_id || !req.body.awnser_id) {
+                    return res.status(400).json({ error: 'Post ID, Comment ID, or Answer ID is missing.' });
+                }
+                data = await likesController.likeCommentAnswer(token, req.body.post_id, req.body.comment_id, req.body.awnser_id);
+                break;
+            case "VIDEO_COMMENT":
+                if (!req.body.video_id || !req.body.comment_id) {
+                    return res.status(400).json({ error: 'Video ID or Comment ID is missing.' });
+                }
+                data = await likesController.likeVideoComment(token, req.body.video_id, req.body.comment_id);
+                break;
+            case "VIDEO_COMMENT_AWNSER":
+                if (!req.body.video_id || !req.body.comment_id || !req.body.awnser_id) {
+                    return res.status(400).json({ error: 'Video ID, Comment ID, or Answer ID is missing.' });
+                }
+                data = await likesController.likeVideoCommentAnswer(token, req.body.video_id, req.body.comment_id, req.body.awnser_id);
+                break;
+            default:
+                return res.status(400).json({ error: 'Invalid type provided.' });
         }
-    
+
+        if (data.liked) {
+            return res.status(201).json({ detail: `${type} liked successfully.` });
+        } else if (data.unliked) {
+            return res.status(201).json({ detail: `${type} unliked successfully.` });
+        }
+
     } catch (e) {
         console.log(e);
-        return res.status(500).json({ error: e.message }); // Mejoré la respuesta del error para mostrar el mensaje del error
+        return res.status(500).json({ error: e.message });
     }
 });
+
+router.post('/dislike_content', async (req, res) => {
+    try {
+        let data;
+        const jwt_token = req.cookies.jwt 
+        
+        
+        const type = req.body.type
+        if(!type) {
+            return res.status(400).json({
+                error: "internal_server_error"
+            })
+        }
+        
+        switch(type) {
+            case "COMMENT":
+                if(!req.body.post_id) {
+                    return res.status(400).json({
+                        error: "post_id_missing"
+                    })
+                }
+                
+                if(!req.body.comment_id) {
+                    return res.status(400).json({
+                        error: "comment_id_missing"
+                    })
+                }
+            
+                 data = await likesController.dislikeComment(jwt_token, req.body.post_id, req.body.comment_id)
+                if(data.disliked) {
+                    return res.status(201).json({
+                        detail: "comment_disliked"
+                    })
+                }
+                
+                if(data.unDisliked) {
+                    return res.status(201).json({
+                        detail: "comment unDisliked"
+                    })
+                }
+                
+                break;
+            
+            case "COMMENT_AWNSER":
+                if(!req.body.comment_id) {
+                    return res.status(400).json({
+                        error: "comment_id_missing"
+                    })
+                }
+                
+                if(!req.body.post_id) {
+                    return res.status(400).json({
+                        error: "post_id_missing"
+                    })
+                }
+                
+                if(!req.body.awnser_id) {
+                    return res.status(400).json({
+                        error: "awnser_id_missing"
+                    })
+                }
+                
+                 data = await likesController.dislikeCommentAwnser(jwt_token, req.body.post_id, req.body.comment_id, req.body.awnser_id)
+                
+                if(data.disliked) {
+                    return res.status(201).json({
+                        detail: "awnser comment disliked"
+                    })
+                }
+                
+                if(data.unDisliked) {
+                    return res.status(201).json({
+                        detail: "awnser comment undisliked"
+                    })
+                }
+                
+                break;
+            
+            case "VIDEO_COMMENT":
+                if(!req.body.video_id) {
+                    return res.status(400).json({
+                        error: "video_id_missing"
+                    })
+                }
+                
+                if(!req.body.comment_id) {
+                    return res.status(400).json({
+                        error: "comment_id_missing"
+                    })
+                }
+                
+                 data = await likesController.dislikeVideoComment(jwt_token, req.body.video_id, req.body.comment_id)
+                if(data.disliked) {
+                    return res.status(200).json({
+                        detail: "comment video disliked"
+                    })
+                }
+                
+                if(data.unDisliked) {
+                    return res.status(200).json({
+                        detail: "video comment undisliled"
+                    })
+                }
+                
+                break;
+            
+            case "VIDEO_COMMENT_AWNSER":
+                
+                if(!req.body.video_id) {
+                    return res.status(400).json({
+                        error: "video_id_missing"
+                    })
+                }
+                
+                if(!req.body.comment_id) {
+                    return res.status(400).json({
+                        error: "comment_id_missing"
+                    })
+                }
+                
+                if(!req.body.awnser_id) {
+                    return res.status(400).json({
+                        error: "awnser_id_missing"
+                    })
+                }
+                
+               data =   await likesController.dislikeVideoCommentAwnser( jwt_token, req.body.video_id, req.body.comment_id, req.body.awnser_id)
+              if(data.disliked) {
+                  return res.status(201).json({
+                      detail: "video comment awnser disliked"
+                  })
+              }
+              
+              if(data.unDisliked) {
+                  return res.status(201).json({
+                      detail: "video awnser comment undislikes"
+                  })
+              }
+                
+               
+            
+        }
+        
+    } catch(e) {
+        console.log(e)
+        return res.status(500).json({
+            error: "internal_serv_err"
+        })
+    }
+})
+
 
 module.exports = router;

@@ -1,18 +1,22 @@
 <template>
-    <header>
-  <h1>Sofii</h1>
-</header>
 
+<HeaderComponent :activePage="'notifications'" :user="usuario"/>
+    
 
 
 
 <div class="container"> 
   
   <div class="notifications">
+      
     
-    <div class="notifications-header">
+    <div v-if="notifications.length > 0" class="notifications-header">
       <h2>Your Notifications</h2>
     </div>
+    
+      <div class="empty-notifications" v-if="notifications.length == 0">
+          <h4>You Do Not Have Notifications...</h4>
+      </div>
     
     <div v-for="notification in notifications" :key="notification.id" class="notification">
       
@@ -49,7 +53,15 @@
 </template>
 
 <script>
+import HeaderComponent from './HeaderComponent'
+import userMixin from '../mixins/userMixin'
+
+
     export default {
+        mixins: [userMixin],
+        components: {
+            HeaderComponent
+        }, 
         name: 'NotificationsComponent',
         data() {
             return {
@@ -194,6 +206,15 @@ header {
 
 .notification-close i:hover {
   color: #e74c3c;
+}
+
+.empty-notifications {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: gray;
+    
 }
 
 @media (max-width: 600px) {

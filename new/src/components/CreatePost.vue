@@ -1,16 +1,8 @@
 <template>
-  <div id="app">
-    <header>
-      <div>
-        <font-awesome-icon icon="arrowLeft" />
-      </div>
-      <div>
-        <h1>{{ username }}</h1>
-      </div>
-      <div>
-        <img style="width: 50px; border-radius: 50%;" :src="profileImage" />
-      </div>
-    </header>
+  <div>
+      
+      <HeaderComponent :activePage="'create'" :user="usuario"/>
+    
     <div class="container">
       <div class="form">
         <form @submit.prevent="submitForm">
@@ -62,7 +54,15 @@
 </template>
 
 <script>
+import HeaderComponent from './HeaderComponent'
+import userMixin from '../mixins/userMixin'
+
 export default {
+    components: {
+        HeaderComponent
+    }, 
+    mixins: [userMixin], 
+    
   data() {
     return {
       username: 'Sofii',

@@ -37,7 +37,7 @@ const unsaveVideo = async (user_id, video_id) => {
         await SavedVideo.destroy({
             where: {
                 user_id: user_id,
-                video_: video_id
+                video_id: video_id
             }
         })
         const unsaved = "video unsaved sucesfully"

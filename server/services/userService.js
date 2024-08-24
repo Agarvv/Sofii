@@ -4,6 +4,10 @@ const Post = require('../models/Post')
 const FriendRequest = require('../models/FriendRequest')
 const Comment = require('../models/Comment')
 const Likes = require('../models/Likes')
+const Follower = require('../models/Followers')
+
+const Saved = require('../models/Saved')
+
 
 const handleProfileDataChange = async (field, value, token) => {
     try {
@@ -44,29 +48,41 @@ const findUserById = async (user_id) => {
                     model: Post,
                     as: 'posts',
                     include: [
-                    {
-                      model: User,
-                      as: 'user'
-                    },
-                    {
-                        model: Comment,
-                        as: 'postComments'
-                    },
-                    {
-                        model: Likes,
-                        as: 'postLikes'
-                    }
-                   ]
+                        {
+                            model: User,
+                            as: 'user'
+                        },
+                        {
+                            model: Comment,
+                            as: 'postComments'
+                        },
+                        {
+                            model: Likes,
+                            as: 'postLikes'
+                        },
+                        {
+                            model: Saved,
+                            as: 'saved_post'
+                        }
+                    ]
                 },
                 {
                     model: FriendRequest,
                     as: 'sentRequests',
-                    attributes: ['id', 'friend_target'] // Incluye los atributos relevantes
+                    attributes: ['id', 'friend_target']
                 },
                 {
                     model: FriendRequest,
                     as: 'receivedRequests',
-                    attributes: ['id', 'request_sender_id'] // Incluye los atributos relevantes
+                    attributes: ['id', 'request_sender_id']
+                },
+                {
+                    model: User,
+                    as: 'followers'  // Cambiamos aquí el alias a 'followers'
+                },
+                {
+                    model: User,
+                    as: 'following'  // Y aquí a 'following'
                 }
             ]
         });
@@ -81,11 +97,6 @@ const findUserById = async (user_id) => {
         console.log(e);
         throw new Error(e);
     }
-};
-
-module.exports = {
-    handleProfileDataChange,
-    findUserById
 };
 
 

@@ -1,19 +1,8 @@
 
 <template>
   <div id="app">
-    <header>
-      <div class="logo">
-        <h1>Sofii</h1>
-      </div>
-      <div class="icons">
-        <font-awesome-icon @click="openSearch()" id="open-search" icon="search" />
-        <font-awesome-icon @click="openSidebar()"id="open-sidebar" icon="bars" />
-        <div class="user-img">
-          <img >
-        </div>
-      </div>
-              
-    </header>
+     
+    <HeaderComponent :activePage="'home'" :user="usuario" />
 
     <div v-show="showSearchBox" id="search" class="search-box">
       <div class="search-icons">
@@ -31,44 +20,20 @@
     </div>
 
     <div class="container">
-      <aside id="aside">
-        <div class="aside-logo">
-          <font-awesome-icon id="close-sidebar" icon="fas fa-bars" />
-          <h1>Sofii</h1>
-        </div>
-        <div class="aside-links">
-          <ul class="f-row">
-            <li><font-awesome-icon icon="home" /><span>Home</span></li>
-            <li><font-awesome-icon icon="comment-alt" /><span>Messages</span></li>
-            <li><font-awesome-icon icon="user-friends" /><span>Friends</span></li>
-            <li><font-awesome-icon icon="hashtag" /><span>Explore</span></li>
-            <li><font-awesome-icon icon="bookmark" /><span>Saved</span></li>
-            <li><font-awesome-icon icon="user" /><span>Profile</span></li>
-          </ul>
-          <div class="second-row">
-            <ul class="s-row">
-              <li><font-awesome-icon icon="fas fa-gear" /><span>Settings</span></li>
-              <li><font-awesome-icon icon="fas fa-info" /><span>Info</span></li>
-            </ul>
-          </div>
-        </div>
-      </aside>
-
-      <main>
-        <div class="main-header">
-          <div @click="goToFriends()" class="friends"><font-awesome-icon icon="user-friends" /><p>Friends</p></div>
-          <div @click="goToWatch()" class="watch"><font-awesome-icon icon="tv" /><p>Watch</p></div>
-          <div @click="goToCreate()" class="create"><font-awesome-icon icon="plus" /><p>Create</p></div>
-          <div @click="goToNotifications()"  class="notifications"><font-awesome-icon icon="bell" /><p>Notifications</p></div>
-        </div>
         
+        
+     <SidebarComponent />
+      
+      
+      <main>
+         
         
         <div class="posts">
-          <div v-for="post in posts" :key="post.id" class="post" >
+          <div  v-for="post in posts" :key="post.id" class="post" >
               
               
             <div class="post-header">
-              <div @click="goToUserPage(post.user.id)" class="post-user-img">
+              <div @click="goToPage('/user/' + post.user.id)">
                 <img style="width: 50px; height: 50px; border-radius: 50%" :src="'http://localhost:3000/' + post.user.profilePicture" alt="Post User Image">
               </div>
               <div class="post-user-detail">
@@ -114,8 +79,20 @@
 </template>
 
 <script>
+import HeaderComponent from './HeaderComponent'
+import SidebarComponent from './SidebarComponent'
+import userMixin from '../mixins/userMixin'
+import goToRoute from '../helpers/goToRoute'
+
+
 export default {
+  mixins: [userMixin], 
+  
   name: 'HelloWorld',
+  components: {
+      HeaderComponent,
+      SidebarComponent
+  }, 
   data() {
     return {
       posts: [],
@@ -141,10 +118,9 @@ export default {
         console.error(e);
       }
     },
-    goToPostPage(post_id) {
-      console.log(post_id);
-      this.$router.push('/post/' + post_id);
-    },
+    goToPage(route) {
+        goToRoute(this.$router, route)
+    }, 
     handleSearch() {
       console.log('Handle Search Method Called.', this.searchQ);
       this.$router.push('/search/' + this.searchQ);
@@ -177,30 +153,6 @@ export default {
      const data = await response.json()
      console.log('server data save: ', data)
     },
-    goToFriends() {
-        this.$router.push('/friends')
-    },
-    goToWatch() {
-        this.$router.push('/watch')
-    },
-    goToCreate() {
-        this.$router.push('/create')
-    },
-    goToNotifications() {
-        this.$router.push('/notifications')
-    },
-    openSearch() {
-        this.showSearchBox = true
-    },
-    closeSearch() {
-        this.showSearchBox = false
-    },
-    openSidebar() {
-        
-    },
-    goToUserPage(user_id) {
-        this.$router.push('/user/' + user_id)
-    }
   },
   created() {
     this.getPosts();
@@ -225,35 +177,6 @@ html, body {
 
 img {
     object-fit: cover;
-}
-
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #333;
-    padding: 15px;
-    color: white;
-    position: relative;
-    top: 0;
-    left: 0;
-    width: 100%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
-}
-
-header .icons i {
-    font-size: 30px;
-}
-
-header .icons {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-header .icons .user-img img {
-    width: 40px;
-    border-radius: 50%;
 }
 
 .search-box {
@@ -524,4 +447,3 @@ aside .aside-logo i {
 
 </style>
 
-me gustaria tambien que no se toquen los src y esas cosas del template.

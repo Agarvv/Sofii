@@ -15,16 +15,16 @@
             <h1>{{ user.username }}</h1>
           </div>
           
-          <div class="followers" style="margin-bottom: 20px">
-            <p style="font-weight: 700;">500 Followers</p>
-            <p style="color: gray">120 Following</p>
-          </div>
+<div class="followers" style="margin-bottom: 20px">
+  <p style="font-weight: 700;">{{user.followers?.length || 0}} Followers</p>
+  <p style="color: gray">{{user.following?.length || 0}} Following</p>
+</div>
 
           <div v-if="isSelfUser" class="isSelfUserDiv">
 
            <div class="buttons">
              <div>
-             <button>Edit Your Account</button>
+             <button @click="goToEditProfile()">Edit Your Account</button>
              </div>
            </div>
 
@@ -33,6 +33,9 @@
           <div v-else class="interact-buttons">
             <button @click="sendChat(user.id)" style="background: gray;"> <font-awesome-icon :icon="['fas', 'comment']" />Chat</button>
             <button @click="sendFriendRequest(user.id)" style="background: #007bff;"> <font-awesome-icon :icon="['fas', 'user-plus']" />Friend Request</button>
+            <button style="background: black; color: white; padding: 15px">
+                <font-awesome-icon icon="user-plus"/>
+            </button>
           </div>
         </div>
       </div>
@@ -124,9 +127,19 @@
       </aside>
 
       <main>
-             <div class="posts">
+          
+
+          
+          <h4 style="width: 100%;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           font-size: 20px;
+           padding: 10px;
+           color: gray" v-if="userPosts.length == 0">This User Does Not Have Posts...</h4>
+             <div v-if="userPosts.length > 0" class="posts">
                  
-          <div v-for="post in userPosts" :key="post.id" class="post" >
+          <div  v-for="post in userPosts" :key="post.id" class="post" >
               
               
             <div class="post-header">
@@ -150,9 +163,11 @@
               </div>
             </div>
             <div class="post-interactions">
-              <div @click="likePost(post.id)" class="like"><font-awesome-icon icon="fas fa-thumbs-up" /> <span>Likes</span>   </div>
-              <div @click="goToPostPage(post.id)"class="comment"><font-awesome-icon icon="fas fa-comment" /> <span>Likes</span></div>
-              <div @click="savePost(post.id)" class="save"><font-awesome-icon icon="fas fa-bookmark" /></div>
+              <div @click="like('POST', post.id)" class="like"><font-awesome-icon icon="fas fa-thumbs-up" /> <span>{{post.postLikes.length}}</span>   </div>
+              <div @click="goToPostPage(post.id)"class="comment"><font-awesome-icon icon="fas fa-comment" /> <span>{{post.postComments.length}}</span></div>
+              <div @click="savePost(post.id)" class="save"><font-awesome-icon icon="fas fa-bookmark" />
+              <span>{{post.saved_post.length}}</span>
+              </div>
               <div class="share"><font-awesome-icon icon="fas fa-share" /></div>
             </div>
             
@@ -171,9 +186,12 @@
 </template>
 
 <script>
+
 import userMixin from '../mixins/userMixin';
+import { like, dislike } from '../composables/usePostActions';
+
 export default {
- mixins: [userMixin], // Asegúrate de incluir el mixin aquí
+  mixins: [userMixin],
   data() {
     return {
       user: {},
@@ -191,63 +209,76 @@ export default {
         const data = await response.json();
         console.log(data.user);
         this.user = data.user;
-        this.userPosts = data.user.posts
-         
-         console.log('ghi usuario id: ', this.usuario.user_id)
-         console.log('thi usu 73 d', this.user.id)
-        if(this.user.id == this.usuario.user_id) {
-          this.isSelfUser = true
-        } else {
-          this.isSelfUser = false
-        }
+        this.userPosts = data.user.posts;
         
-       
+        if (this.user.id == this.usuario.user_id) {
+          this.isSelfUser = true;
+        } else {
+          this.isSelfUser = false;
+        }
       } catch (error) {
         console.error('Error fetching user:', error);
       }
     },
+    
     async sendFriendRequest(friend_target) {
-    console.log('Send friend request method called, ', friend_target);
-    const response = await fetch('http://localhost:3000/api/sofi/send_friend_request', {
+      console.log('Send friend request method called, ', friend_target);
+      const response = await fetch('http://localhost:3000/api/sofi/send_friend_request', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({ friend_target }),
         credentials: 'include'
-    });
-    
-    if (!response.ok) {
+      });
+      
+      if (!response.ok) {
         console.log('Response not ok');
-    }
-    
-    const data = await response.json();
-    console.log('Server friend request data: ', data);
-},
+      }
+      
+      const data = await response.json();
+      console.log('Server friend request data: ', data);
+    },
 
-async sendChat(user_id) {
-    const response = await fetch('http://localhost:3000/api/sofi/chat', {
+    async sendChat(user_id) {
+      const response = await fetch('http://localhost:3000/api/sofi/chat', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ user_id: user_id }),
+        body: JSON.stringify({ user_id }),
         credentials: 'include'
-    })
-    const data = await response.json()
-    console.log('Server data chat; ', data)
-    if(data.chat.message == "Chat already exists") {
-        return this.$router.push('/chat/' + user_id)
-    } else if(data.chat.message = "chatDoesNotExist") {
-        console.log('This is your first conversation with this person, enjoy !')
-        this.$router.push('/chat/' + user_id)
+      });
+      const data = await response.json();
+      console.log('Server data chat; ', data);
+      if (data.chat.message == "Chat already exists") {
+        return this.$router.push('/chat/' + user_id);
+      } else if (data.chat.message === "chatDoesNotExist") {
+        console.log('This is your first conversation with this person, enjoy !');
+        this.$router.push('/chat/' + user_id);
+      }
+    },
+
+    async like(type, post_id) {
+        console.log('like method called: ', post_id)
+      try {
+        const response = await like(type, { post_id: post_id });
+        console.log('Like response:', response);
+        // Puedes manejar la respuesta aquí si es necesario
+      } catch (error) {
+        console.error('Error liking post:', error);
+      }
+    },
+    
+    goToEditProfile() {
+      this.$router.push('/userDetails');
     }
-}
   },
   async mounted() {
-    await this.getUser(); // Corregir llamada a método
+    await this.getUser();
   }
 };
+
 </script>
 
 
@@ -263,11 +294,12 @@ html, body {
     box-sizing: border-box;
     padding: 0;
     margin: 0 0 0 0;
+    
 }
 
 header {
     position: relative;
-    border: 1px solid red;
+   border-bottom: 1px solid black;
 }
 
 header .profile-banner {
@@ -306,7 +338,6 @@ header .profile-banner img {
 
 .posts .post {
     padding: 15px;
-    border-bottom: 1px solid #eee; /* Línea más ligera */
     display: flex;
     flex-direction: column;
     background: #fff; /* Fondo blanco para los posts */
@@ -387,7 +418,6 @@ main {
 }
 
 main .posts {
-    border: 1px solid black;
     height: 100%;
     padding: 15px;
     display: flex;
@@ -403,7 +433,7 @@ main .posts .post {
 }
 
 main .posts .post .post-header {
-  border: 1px solid black;
+ 
   gap: 10px;
 }
 
@@ -412,12 +442,6 @@ main .posts .post .post-header .user-information {
   align-items: center;
   gap: 10px;
   padding: 5px;
-}
-
-.post {
-  
-    padding: 10px;
-    border-radius: 15px;
 }
 
 
@@ -471,7 +495,7 @@ main .posts .post .post-header .user-information {
 
 .interact-buttons {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr .1fr;
   grid-gap: 10px;
   height: 30px;
   margin-top: 5px;
@@ -482,11 +506,17 @@ main .posts .post .post-header .user-information {
   border: .3px solid gray;
   color: white;
   border-radius: 10px;
-  
+  height: 40px;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
 }
 
 .post-header img {
-  width: 70px;
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
   border-radius: 50%;
 }
 
@@ -536,6 +566,14 @@ aside .description {
     gap: 20px;
     
 }
+
+
+.r-info div {
+    display: flex;
+    gap: 5px;
+}
+
+
 
 @media (max-width: 600px) {
     aside {

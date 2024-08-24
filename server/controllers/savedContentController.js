@@ -42,7 +42,8 @@ const saveVideo = async (jwt_token, video_id) => {
          return saved
          
     } catch(e) {
-        throw new Error(e)
+        console.log('error from controller: ', e)
+        throw e
     }
 }
 

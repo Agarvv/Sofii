@@ -12,25 +12,21 @@
 <div class="container">
   
   <aside>
-    
-    <div class="aside-header">
-      <h1>Your Friends</h1>
-      <font-awesome-icon icon="search"/> 
-    </div>
+
     
     <div class="aside-content">
       
-      <div class="only-friends">
+      <div @click="toggleSelectedOption('friends')" class="only-friends">
      
        <font-awesome-icon icon="userFriends"/> 
         <h4>Only My Friends</h4>
-        <input type="radio">
+    
       </div>
        
-      <div class="pending-requests">
+      <div @click="toggleSelectedOption('friend_requests')" class="pending-requests">
         <font-awesome-icon icon="userPlus"/>
         <h4>Pending requests</h4>
-        <input type="radio">
+       
       </div>
       
       
@@ -40,36 +36,54 @@
   </aside>
   
   <main>
+      
 
     <div class="responsive-main-header">
       
-      <div class="rmh-only-friends">
+      <div @click="toggleSelectedOption('friends')" class="rmh-only-friends">
         <font-awesome-icon icon="userFriends"/> 
       
         <h4>Only My Friends</h4>
         
-        <input type="radio">
+        
       </div>
-      <div class="rmh-pending-requests">
+      <div @click="toggleSelectedOption('friend_requests')"class="rmh-pending-requests">
 
        <font-awesome-icon icon="userPlus"/> 
 
         <h4>Pending requests</h4>
         
-        <input type="radio">
+       
         
         
       </div>
     
     </div>
     
-    <div class="friends-requests">
-      <h4>Your Friend Requests</h4>
+          <h4 style="width: 100%;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           font-size: 20px;
+           padding: 10px;
+           color: gray" v-if="friends.length == 0 && friend_requests.length == 0">You Do Not Have Friends And Friend Request Yet</h4>
+    
+    <div v-if="selectedOption === 'friend_requests' || selectedOption === null" class="friends-requests">
+      <h4 v-if="friend_requests.length > 0">Your Friend Requests</h4>
+      
+      <h4 style="width: 100%;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           font-size: 20px;
+           padding: 10px;
+           color: gray" v-if="selectedOption === 'friend_requests' && friend_requests.length === 0">You Do Not Have Pending Friend Requests</h4>
+     
       <div v-for="request in friend_requests" :key="request.id" class="friend">
         
         <div class="friend-details">
           
-          <div class="friend-img">
+          <div @click="goToUserPage(request.sender.id)" class="friend-img">
             <img style="width: 80px; border-radius: 50%" :src="'http://localhost:3000/' + request.sender.profilePicture">
           </div>
           
@@ -94,10 +108,21 @@
       
     </div>
     
-    <div class="friends"> 
-    <h4>Your Friends</h4>
+    <div v-if="selectedOption == 'friends' || selectedOption == null" class="friends"> 
+    <h4 v-if="friends.length > 0">Your Friends</h4>
+    
+          <h4 style="width: 100%;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           font-size: 20px;
+           padding: 10px;
+           color: gray" v-if="selectedOption === 'friends' && friends.length === 0">You Do Not Have Friends Yet</h4>
+
       
-      <div v-for="friend in friends" :key="friend.friendToDisplayInfo.id"class="friend">
+      <div  v-for="friend in friends" :key="friend.friendToDisplayInfo.id"class="friend" @click="goToUserPage(friend.friendToDisplayInfo.id)">
+          
+          
         
         <div class="friend-details">
            
@@ -143,8 +168,9 @@ export default {
     name: 'FriendsPage',
     data() {
         return {
-            friends: [], // Cambiado de {} a [] porque es una lista/array de amigos.
-            friend_requests: []
+            friends: [],
+            friend_requests: [],
+            selectedOption: null
         };
     },
     methods: {
@@ -221,6 +247,17 @@ async declineRequest(request_id) {
     } catch (error) {
         console.error('Error declining friend request:', error);
     }
+},
+
+goToUserPage(user_id) {
+    this.$router.push('/user/' + user_id)
+},
+toggleSelectedOption(option) {
+    if(this.friends.length == 0 && this.friend_requests.length == 0) {
+        return 
+    }
+    this.selectedOption = option
+  
 }
 
 

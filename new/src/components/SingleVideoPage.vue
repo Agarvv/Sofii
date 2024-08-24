@@ -8,11 +8,10 @@
      <div class="comments">
             
             
-            
           <div class="upload-comment">
               
             <div class="user-picture">
-              <img alt="User Picture">
+              <img style="object-fit: cover; height: 50px; width: 50px;" :src="'http://localhost:3000/' + usuario.user_picture" alt="User Picture">
             </div>
             
             <div class="input">
@@ -29,12 +28,13 @@
               
               
               
-            <div v-for="comment in video.video_comments" class="comment">
+            <div v-for="(comment, index) in video.video_comments" class="comment">
                 
               <div class="comment-user-details">
                   
+                  
                 <div class="user-comment-img"> 
-                  <img :src="'http://localhost:3000/' + comment.video_comment_user.profilePicture" alt="User Picture">
+                  <img style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;" :src="'http://localhost:3000/' + comment.video_comment_user.profilePicture" alt="User Picture">
                 </div>
                 <div class="user-comment-username">
                   <h4>{{comment.video_comment_user.username}}</h4>
@@ -44,83 +44,84 @@
               
               <div class="user-comment">
                 <p>{{comment.comment_content}}</p>
+               
               </div>
               
               
               <div class="comment-interacts">
-                <div class="like">
-                  <i class="fa fa-thumbs-up"></i>
-                  <p>Likes</p>
+                <div @click="like('COMMENT', comment.id)" class="like">
+                  <font-awesome-icon icon="thumbs-up"/>
+                  <p>{{comment.comment_likes.length}}</p>
                 </div>
-                <div class="awnser">
-                  <i class="fa fa-comments"></i>
-                  <p>Awnser</p>
+                <div @click="toggleAwnserInp(index)" class="awnser">
+                  <font-awesome-icon icon="share"/>
+                  <p>{{comment.awnsers.length}}</p>
                 </div>
-                <div class="dislike">
-                  <i class="fa fa-thumbs-down"></i>
-                  <p>Don't Like</p>
+                <div @click="dislike('COMMENT', comment.id)" class="dislike">
+                  <font-awesome-icon icon="thumbs-down"/>
+                  <p>{{comment.comment_dislikes.length}}</p>
                 </div>
               </div>
               
-              
-              <div class="view-responses-button">
-                <p>See Responses</p>
-                <i class="fa fa-angle-down"></i>
-              </div>
-              
-              
-              <div style="display: none;" class="comment-responses">
+              <div v-show="comment.showAwnserInp" class="comment-awnser-input">
                   
-                <div class="response">
+                  <div class="comment-awnser-input-userImg">
+                      <img style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;" :src="'http://localhost:3000/' + usuario.user_picture">
+                  </div>
+                  
+                  <div class="comment-awnser-input-inp">
+                      <input v-model="comment_awnser" type="text" placeholder="Awnser To This Comment">
+                      
+                  </div>
+                  
+                  <div @click="awnserToComment(comment.id)">
+                      <font-awesome-icon icon="paper-plane" />
+                  </div>
+                  
+              </div>
+              
+              
+              <div v-if="comment.awnsers.length > 0" @click="toggleAwnsers(index)" class="view-responses-button">
+                <p>{{!comment.showAwnsers ? 'Show Awnsers' : 'Close Awnsers'}}</p>
+                <font-awesome-icon :icon="!comment.showAwnsers ? 'angle-down' : 'angle-up'"/>
+              </div>
+              
+              
+              <div v-show="comment.showAwnsers" class="comment-responses">
+                  
+                <div v-for="awnser in comment.awnsers" :key="awnser.id" class="response">
                     
                   <div class="response-user">
                     <div class="response-user-img">
-                      <img >
+                      <img :src="'http://localhost:3000/' + awnser.comment_awnser_user.profilePicture">
                     </div>
                     
                     <div class="response-username">
-                      <h3></h3>
+                      <h3>{{awnser.comment_awnser_user.username}}</h3>
                     </div>
                     
                   </div>
                   
                   <div class="response-content">
-                    <p></p>
+                    <p>{{awnser.awnser_content}}</p>
                   </div>
                   
                   <div class="comment-response-interact">
                       
-                    <div class="like">
-                      <i class="fa fa-thumbs-up"></i>
-                      <span></span>
+                    <div @click="like('AWNSER', comment.id, awnser.id)" class="like">
+                      <font-awesome-icon icon="thumbs-up"/>
+                      <span>{{awnser.awnser_likes.length}}</span>
                     </div> 
                     
-                    <div class="awnser">
-                      <i class="fa fa-comment"></i>
-                      <span>Awnser</span>
-                    </div>
                     
-                    <div class="dislike">
-                      <i class="fa fa-thumbs-down"></i>
-                      <span>Dislike</span>
+                    <div @click="dislike('AWNSER', comment.id, awnser.id)" class="dislike">
+                      <font-awesome-icon icon="thumbs-down"/>
+                      <span>{{awnser.awnser_dislikes.length}}</span>
                       
                     </div>
                     
                   </div>
                   
-                  <div class="comment-response-response-awnser">
-                    <div class="user-img">
-                      <img src="invict-victory-edp.jpg" style="width: 40px; border-radius: 50%;">
-                    </div>
-                    <div class="response-inp">
-                      <input type="text" placeholder="Awnser To @lebeau">
-                    </div>
-                    <div class="response-send-button">
-                      <i class="fa fa-share"></i>
-                    </div>
-                    
-                    
-                  </div>
                   
                   
                 </div> <!-- <-- END OF AWNSERS FOR -->
@@ -141,8 +142,10 @@
 
 <script>
 import VideoCard from './VideoCard.vue';
+import userMixin from '../mixins/userMixin'
 
     export default {
+        mixins: [userMixin],
         name: 'SingleVideoPage',
         components: {
             VideoCard
@@ -150,7 +153,8 @@ import VideoCard from './VideoCard.vue';
         data() {
             return {
                 video: {},
-                comment: ""
+                comment: "",
+                comment_awnser: ""
             }
         },
         methods: {
@@ -181,10 +185,150 @@ import VideoCard from './VideoCard.vue';
 
     const data = await response.json();
     console.log('comment posted: ', data);
+},
+async awnserToComment(comment_id) {
+    console.log('awnser to commdnt: method', comment_id)
+    
+    const response = await fetch('http://localhost:3000/api/sofi/awnser_to_comment', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            type: "VIDEO",
+            video_id: this.video.id,
+            awnser_content: this.comment_awnser,
+            comment_id: comment_id
+        }),
+        credentials: 'include'
+    })
+    
+    const data = await response.json()
+    console.log('server data awnser comment: ', data)
+    
+},
+
+async like(type, comment_id, awnser_id) {
+    let response;
+    let data; 
+    
+    switch(type) {
+        
+        case "COMMENT":
+             response = await 
+            fetch('http://localhost:3000/api/sofi/like_content', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    type: "VIDEO_COMMENT",
+                    video_id: this.video.id,
+                    comment_id: comment_id
+                }),
+                credentials: 'include'
+            })
+            
+            data = await response.json()
+            console.log('server data like video comment: ', data)
+            break;
+        
+        case "AWNSER":
+            response = await fetch('http://localhost:3000/api/sofi/like_content', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    type: "VIDEO_COMMENT_AWNSER",
+                    video_id: this.video.id,
+                    comment_id: comment_id,
+                    awnser_id: awnser_id
+                }),
+                credentials: 'include'
+            })
+            
+            data = await 
+            response.json()
+            console.log('server data like video comment awnser: ', data)
+            
+            break; 
+            
+            
+        default:
+             return 
+    }
+},
+
+async dislike(type, comment_id, awnser_id) {
+    let response;
+    let data; 
+    
+    switch(type) {
+        
+        case "COMMENT":
+             response = await 
+            fetch('http://localhost:3000/api/sofi/dislike_content', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    type: "VIDEO_COMMENT",
+                    video_id: this.video.id,
+                    comment_id: comment_id
+                }),
+                credentials: 'include'
+            })
+            
+            data = await response.json()
+            console.log('server data dislike video comment: ', data)
+            break;
+        
+        case "AWNSER":
+            response = await fetch('http://localhost:3000/api/sofi/dislike_content', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    type: "VIDEO_COMMENT_AWNSER",
+                    video_id: this.video.id,
+                    comment_id: comment_id,
+                    awnser_id: awnser_id
+                }),
+                credentials: 'include'
+            })
+            
+            data = await 
+            response.json()
+            console.log('server data dislike video comment awnser: ', data)
+            
+            break; 
+            
+            
+        default:
+             return 
+    }
+},
+toggleAwnserInp(index) {
+   this.video.video_comments[index].showAwnserInp = !this.video.video_comments[index].showAwnserInp;
+},
+toggleAwnsers(index) {
+    this.video.video_comments[index].showAwnsers = !this.video.video_comments[index].showAwnsers
 }
         },
         async created() {
             this.getVideo()
+            console.log(this.usuario)
+        },
+        async mounted() {
+            console.log('mounted video', this.video)
+            this.video.video_comments.forEach((comment) => {
+                comment.showAwnserInp = false
+                comment.showAwnsers = false
+            })
+            
         }
     }
 </script>
@@ -205,14 +349,18 @@ import VideoCard from './VideoCard.vue';
 
 .upload-comment {
     display: grid;
-    grid-template-columns: 1fr 9fr 1fr;
+    grid-template-columns: .1fr 1fr .1fr;
     grid-gap: 10px;
     padding: 10px;
     background: white;
     border-bottom: 1px solid #ccc;
-    position: sticky;
-    top: 0;
-    z-index: 1;
+  
+}
+
+.upload-comment div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .post .send-button {
@@ -231,7 +379,7 @@ import VideoCard from './VideoCard.vue';
 
 .upload-comment input {
     width: 100%;
-    height: 100%;
+    
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 20px;
@@ -293,11 +441,13 @@ import VideoCard from './VideoCard.vue';
 
 .comment-responses .response {
     padding: 10px;
-    border-top: 1px solid #ccc;
+   
 }
 
 .response-user-img img {
     width: 30px;
+    height: 30px;
+    object-fit: cover;
     border-radius: 50%;
 }
 
@@ -309,7 +459,7 @@ import VideoCard from './VideoCard.vue';
 
 .comment-response-interact {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     margin-bottom: 10px;
 }
 
@@ -358,4 +508,28 @@ import VideoCard from './VideoCard.vue';
     align-items: center;
     justify-content: center;
 }
+
+.comment-awnser-input {
+    display: grid;
+    grid-template-columns: .1fr 1fr .1fr;
+    grid-gap: 10px;
+  
+    padding: 10px;
+}
+
+.comment-awnser-input div {
+   
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.comment-awnser-input-inp input {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    border: .1px solid black;
+   
+}
+
 </style>

@@ -9,7 +9,7 @@
         <div class="post-header">
           <div class="post-user">
             <div class="post-user-img">
-              <img  :src="'http://localhost:3000/' + post.user.profilePicture">
+              <img :src="'http://localhost:3000/' + post.user.profilePicture">
             </div>
             <div class="post-username">
               <h3>{{ post.user.username }}</h3>
@@ -27,17 +27,15 @@
         
         <div class="post-interactions">
           <div class="like">
-             <font-awesome-icon icon="heart"/>
-             
+            <font-awesome-icon icon="heart"/>
             <span>{{post.postLikes.length}}</span>
           </div>
           <div style="border: none" class="comment">
-            <font-awesome-icon icon="comments" />
+            <font-awesome-icon icon="comments"/>
             <span>{{post.postComments.length}}</span>
           </div>
           <div class="share">
             <font-awesome-icon icon="share"/>
-            
           </div>
           <div class="save">
             <font-awesome-icon icon="bookmark"/>
@@ -46,11 +44,7 @@
         </div>
         
         <div class="comments">
-            
-            
-            
           <div class="upload-comment">
-              
             <div class="user-picture">
               <img :src="`http://localhost:3000/${user.user_picture}`" alt="User Picture">
             </div>
@@ -61,18 +55,11 @@
             <div @click="postAComment()" class="send-button">
               <font-awesome-icon icon="paper-plane"/>
             </div>
-            
-            
           </div>
           
           <div class="comment-section">
-              
-              
-              
-            <div v-for="comment in post.postComments" :key="comment.id" class="comment">
-                
+            <div v-for="(comment, index) in post.postComments" :key="comment.id" class="comment">
               <div class="comment-user-details">
-                  
                 <div class="user-comment-img"> 
                   <img :src="`http://localhost:3000/${comment.commentUser.profilePicture}`" alt="User Picture">
                 </div>
@@ -81,111 +68,80 @@
                 </div>
               </div>
               
-              
               <div class="user-comment">
                 <p>{{ comment.comment_content }}</p>
               </div>
               
-              
               <div class="comment-interacts">
-                <div class="like">
-                  <i class="fa fa-thumbs-up"></i>
-                  <p>{{ comment.likes }}</p>
+                <div @click="likeComment(comment.id)" class="like">
+                  <font-awesome-icon icon="thumbs-up"/>
+                  <p>{{ comment.comment_likes.length }}</p>
                 </div>
-                <div class="awnser">
-                  <i class="fa fa-comments"></i>
-                  <p>Awnser</p>
+                <div @click="toggleShowAwnserInp(index)" class="awnser">
+                  <font-awesome-icon icon="share"/>
+                  <p>{{comment.awnsers.length}}</p>
                 </div>
-                <div class="dislike">
-                  <i class="fa fa-thumbs-down"></i>
-                  <p>Don't Like</p>
+                <div @click="dislike('COMMENT', comment.id)" class="dislike">
+                  <font-awesome-icon icon="thumbs-down"/>
+                  <p>{{comment.comment_dislikes.length}}</p>
                 </div>
               </div>
               
-              
-              <div class="view-responses-button">
-                <p>See Responses</p>
-                <i class="fa fa-angle-down"></i>
+              <div v-if="comment.showAwnserInp" class="comment-awnser">
+                <div class="comment-awnser-user">
+                  <div class="comment-awnswer-user-img">
+                    <img style="border-radius: 50%; width: 50px; height: 50px; object-fit: cover" :src="`http://localhost:3000/${user.user_picture}`" alt="User Picture">
+                  </div>
+                </div>
+                
+                <div class="comment-awnser-input">
+                  <input v-model="comment_awnser" placeholder="Answer To This Comment.">
+                </div>
+                
+                <div @click="awnserToComment(comment.id)" class="comment-awnser-send-button">
+                  <font-awesome-icon icon="paper-plane"/>
+                </div>
               </div>
               
+              <div class="view-responses-button" @click="toggleResponses(index)">
+                <p>{{ comment.showResponses ? 'Hide Responses' : 'See Responses' }}</p>
+                <font-awesome-icon :icon="comment.showResponses ? 'chevron-up' : 'chevron-down'"/>
+              </div>
               
-              <div style="display: none;" class="comment-responses">
-                  
-                <div v-for="(awnser, idx) in awnsers" :key="idx" class="response">
-                    
+              <div v-if="comment.showResponses" class="comment-responses">
+                <div v-for="awnser in comment.awnsers" :key="awnser.id" class="response">
                   <div class="response-user">
                     <div class="response-user-img">
-                      <img :src="awnser.user_img">
+                      <img style="width: 40px; height: 40px; border-radius: 50%" :src="'http://localhost:3000/' + awnser.awnser_user.profilePicture">
                     </div>
-                    
                     <div class="response-username">
-                      <h3>{{ awnser.user_name }}</h3>
+                      <h3>{{awnser.awnser_user.username}}</h3>
                     </div>
-                    
                   </div>
                   
                   <div class="response-content">
-                    <p>{{ awnser.content }}</p>
+                    <p>{{awnser.answer_content}}</p>
                   </div>
                   
                   <div class="comment-response-interact">
-                      
-                    <div class="like">
+                    <div @click="likeCommentAwnser(awnser.id, comment.id)" class="like">
                       <font-awesome-icon icon="heart"/>
-                      <span>{{ awnser.likes }}</span>
+                      <span>{{awnser.awnser_likes.length}}</span>
                     </div> 
-                    
-                    <div class="awnser">
-                <font-awesome-icon icon="comment"/>
-                      <span>Awnser</span>
+                    <div @click="dislike('AWNSER', comment.id, awnser.id)" class="dislike">
+                      <font-awesome-icon icon="thumbs-down"/>
+                      <span>{{awnser.awnser_dislikes.length}}</span>
                     </div>
-                    
-                    <div class="dislike">
-                      <i class="fa fa-thumbs-down"></i>
-                      <span>Dislike</span>
-                      
-                    </div>
-                    
                   </div>
-                  
-                  <div class="comment-response-response-awnser">
-                    <div class="user-img">
-                      <img src="invict-victory-edp.jpg" style="width: 40px; border-radius: 50%;">
-                    </div>
-                    <div class="response-inp">
-                      <input type="text" placeholder="Awnser To @lebeau">
-                    </div>
-                    <div class="response-send-button">
-                      <i class="fa fa-share"></i>
-                    </div>
-                    
-                    
-                  </div>
-                  
-                  
                 </div> <!-- <-- END OF AWNSERS FOR -->
-                
-                
               </div>
-              
-              
-            </div> <!-- <-- END OF COMMEMTS FOR -->
-            
-            
+            </div> <!-- <-- END OF COMMENTS FOR -->
           </div>
         </div>
-        
-        
-        
-        
-        
-        
       </div>
     </div>
   </div>
 </template>
-
-
 
 <script>
 import userMixin from '@/mixins/userMixin';
@@ -195,9 +151,12 @@ export default {
   mixins: [userMixin],
   data() {
     return {
-      post: {},
+      post: {
+        postComments: []
+      },
       postComment: "",
-      user: {} 
+      comment_awnser: "",
+      user: {}
     };
   },
   methods: {
@@ -206,21 +165,29 @@ export default {
       const response = await fetch(`http://localhost:3000/api/sofi/post/${postId}`);
 
       if (!response.ok) {
-        console.log('Something Went Wrong.');
+        console.log('Something went wrong.');
         return;
       }
 
       const data = await response.json();
-      console.log(data);
       this.post = data.post;
-      console.log('this.post: ', this.post.user.username)
+       
+       console.log('post server', data)
+      // Inicializa showResponses en false para cada comentario
+      this.post.postComments.forEach(comment => {
+        comment.showResponses = false;
+        comment.showAwnserInp = false;
+      });
     },
-    
+
     async postAComment() {
-      console.log('Post Comment Method Called', this.postComment);
       const response = await fetch('http://localhost:3000/api/sofi/comment_post', {
         method: 'POST',
-        body: JSON.stringify({ comment: this.postComment, type: "POST", post_id: this.$route.params.id}),
+        body: JSON.stringify({
+          comment: this.postComment,
+          type: "POST",
+          post_id: this.$route.params.id
+        }),
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
@@ -228,23 +195,174 @@ export default {
       });
 
       if (!response.ok) {
-        console.log('Response Not Ok.');
+        console.log('Response not OK.');
         return;
       }
 
       const data = await response.json();
-      console.log('Response data', data);
-      this.comments.push(data.comment); // Agregar el nuevo comentario a la lista de comentarios
+      this.post.postComments.push(data.comment); // Agregar el nuevo comentario a la lista de comentarios
       this.postComment = ""; // Limpiar el campo de entrada
     },
+
+    async awnserToComment(comment_id) {
+      const response = await fetch('http://localhost:3000/api/sofi/awnser_to_comment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          type: "POST",
+          post_id: this.post.id,
+          comment_id: comment_id,
+          awnser_content: this.comment_awnser
+        }),
+        credentials: 'include'
+      });
+
+      if (!response.ok) {
+        console.log('Response not OK.');
+        return;
+      }
+
+      const data = await response.json();
+      console.log('Server data post answer:', data);
+    },
+
+    async likeComment(comment_id) {
+      console.log('Like comment method called:', comment_id);
+
+      const response = await fetch('http://localhost:3000/api/sofi/like_content', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          type: "COMMENT",
+          comment_id: comment_id,
+          post_id: this.$route.params.id
+        }),
+        credentials: 'include'
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        console.log('Response is OK comment like:', data);
+        this.updateCommentLikeStatus(comment_id, data.liked); // Actualiza el estado del like
+      } else {
+        console.log('Response not OK comment like');
+      }
+    },
+    
+    async dislike(type, comment_id, awnser_id) {
+        let response;
+        let data; 
+        
+        switch(type) {
+            case "COMMENT":
+                response = await
+                fetch('http://localhost:3000/api/sofi/dislike_content', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        type: "COMMENT",
+                        comment_id: comment_id,
+                        post_id: this.$route.params.id
+                    }),
+                    credentials: 'include'
+                })
+                
+                 data = await response.json()
+                console.log('server data comment dislie', data)
+                break;
+            case "AWNSER":
+                console
+                 response = await
+                fetch('http://localhost:3000/api/sofi/dislike_content', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        type: "COMMENT_AWNSER",
+                        post_id: this.$route.params.id,
+                       comment_id: comment_id,
+                       awnser_id: awnser_id
+                    }),
+                    credentials: 'include'
+                })
+                
+                 data = await response.json()
+                console.log('server data sialike awnse r', data)
+        }
+    },
+
+    async likeCommentAwnser(awnser_id, comment_id) {
+      console.log(`Like comment answer method called, comment_id: ${comment_id}, awnser_id: ${awnser_id}`);
+
+      const response = await fetch('http://localhost:3000/api/sofi/like_content', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          type: "COMMENT_AWNSER",
+          awnser_id: awnser_id,
+          comment_id: comment_id,
+          post_id: this.$route.params.id
+        }),
+        credentials: 'include'
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        console.log('Like answer comment:', data);
+        this.updateCommentAnswerLikeStatus(comment_id, awnser_id, data.liked); // Actualiza el estado del like en la respuesta
+      } else {
+        console.log('Response not OK comment answer like');
+      }
+    },
+
+    updateCommentLikeStatus(comment_id, liked) {
+      // Encuentra el comentario correspondiente y actualiza su estado de like
+      const comment = this.post.postComments.find(comment => comment.id === comment_id);
+      if (comment) {
+        comment.liked = liked;
+      }
+    },
+
+    updateCommentAnswerLikeStatus(comment_id, awnser_id, liked) {
+      // Encuentra el comentario correspondiente y luego la respuesta dentro de él, y actualiza su estado de like
+      const comment = this.post.postComments.find(comment => comment.id === comment_id);
+      if (comment && comment.answers) {
+        const answer = comment.answers.find(answer => answer.id === awnser_id);
+        if (answer) {
+          answer.liked = liked;
+        }
+      }
+    },
+
+    toggleResponses(index) {
+      this.post.postComments[index].showResponses = !this.post.postComments[index].showResponses;
+    },
+
+    toggleShowAwnserInp(index) {
+      this.post.postComments[index].showAwnserInp = !this.post.postComments[index].showAwnserInp;
+    }
   },
+
   async created() {
     await this.getPost();
-    this.user = this.usuario 
-    console.log('User data passed to Mixin', this.user.user_picture)
+    this.user = this.usuario;
   },
 };
 </script>
+
+
+
+
+
 
 <style scoped>
     html, body {
@@ -431,7 +549,7 @@ header {
 
 .comment-response-interact {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     margin-bottom: 10px;
 }
 
@@ -448,9 +566,8 @@ header {
 }
 
 .comment-response-response-awnser {
-    display: grid;
-    grid-template-columns: 0.2fr 3fr 0.2fr;
-    grid-gap: 10px;
+    border: 3px solid red;
+    display: flex;
 }
 
 .comment-response-response-awnser .user-img {
@@ -458,6 +575,8 @@ header {
     align-items: center;
     justify-content: flex-end;
 }
+
+
 
 .comment-response-response-awnser .response-inp input[type="text"] {
     width: 100%;
@@ -477,6 +596,31 @@ header {
     margin-bottom: 10px;
     display: flex;
     gap: 5px;
+    align-items: center;
+    justify-content: center;
+}
+
+.comment-awnser {
+    display: grid;
+    align-items: center;
+    grid-gap: 10px;
+    grid-template-columns: .1fr 1fr .1fr;
+    margin-bottom: 15px;
+}
+
+.comment-awnser-input {
+    height: 35px;
+}
+.comment-awnser-input input {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    border: .3px solid gray;
+    padding: 10px;
+}
+
+.comment-awnser-send-button {
+    display: flex;
     align-items: center;
     justify-content: center;
 }
