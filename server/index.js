@@ -60,25 +60,48 @@ io.on('connection', (socket) => {
     })
 
     socket.on('chatMessage', async (data) => {
+        
+        console.log('message received', data)
         const { message, chat_id } = data;
-        console.log('Chat Message received from the frontend!', message, chat_id);
+        
+        console.log('socket io data: ', data)
+        
         socket.join(chat_id)
         
+        
+        
+        
         try {
-            console.log(`After sending message. MESSAGE: ${message}, CHAT_ID: ${chat_id}`)
-            const newMessage = await ChatController.handleMessageSending(jwtToken, message, chat_id);
-            if(newMessage) {
-                console.log('Message intercepted: ', newMessage)
-                io.to(chat_id).emit('chatMessage', newMessage)
-            } else {
-                console.log('Could not send message..')
-                io.to(chat_id).emit('error', 'something went wrong while sending message')
+            
+            switch(data.type) {
+                case "single_message":
+                    console.log('Single Message')
+                    break;
+                case "image":
+                    console.log('Image')
+                    break;
+                case "text-image":
+                    console.log(data.type)
+                    console.log('Text image')
+                    break;
+                case "video":
+                    console.log('Video')
+                    break;
+                case "text-video":
+                    console.log('Text video')
+                    break;
+                
+                default:
+                     console.log('Unknown Type')
+                     return 
             }
             
         } catch (e) {
             console.log(e)
-            socket.emit('error', 'Something went wrong!'); // Emitir el error al socket específico
+            throw e
         }
+        
+        
     });
 });
 

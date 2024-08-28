@@ -1,65 +1,85 @@
-
 <template>
-    
-    
-<div class="container"> 
-  <main>
-    <div class="main-header">
-      <div class="user-details">
-        <div class="user-img">
-          <img :src="userProfilePicture" style="width: 60px; border-radius: 50%;">
-        </div>
-        <div class="user-username">
-          <h4>{{ user.username }}</h4>
-          <p style="color: green">Connected</p>
-        </div>
-      </div>
-      <div class="header-interact">
-        <div class="options">
-          <font-awesome-icon icon="bars"></font-awesome-icon>
-        </div>
-      </div>
-    </div>
-
-    <div class="main-chatbox">
-        
-      <div class="messages">
-        <div v-for="message in messages" :key="message.id" class="message" :class="getMessageClass(message)">
-            
-          <div class="message-user-img">
-            <img :src="'http://localhost:3000/' + message.message_user.profilePicture" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%">
+  <div class="container">
+    <main>
+      <div class="main-header">
+        <div class="user-details">
+          <div class="user-img">
+            <img :src="userProfilePicture" class="profile-img">
           </div>
-          <p>{{ message.message_content }}</p>
+          <div class="user-username">
+            <h4>{{ user.username }}</h4>
+            <p class="status">Connected</p>
+          </div>
+        </div>
+        <div class="header-interact">
+          <div class="options">
+            <font-awesome-icon icon="bars"></font-awesome-icon>
+          </div>
         </div>
       </div>
-      
-    </div>
 
-    <div class="main-footer">
-      <div class="footer-buttons">
-        <div @click="handleFiles('video')" class="video">
-            <input @change="handleFilesChanges('video')" ref='videoInp' type="file" style="display: none">
-          <font-awesome-icon icon="video"></font-awesome-icon>
-        </div>
-        <div @click="handleFiles('image')" class="image">
-         <input @change="handleFilesChanges()" ref='imageInp' type="file" style="display: none">
-          <font-awesome-icon icon="image"></font-awesome-icon>
-        </div>
-        <div class="micro">
-          <font-awesome-icon icon="microphone"></font-awesome-icon>
-        </div>
-      </div>
-      <div class="footer-message-input">
-          <img  ref="demoImage" src="">
-        <input v-model="message" id="inp" type="text" placeholder="Send a message...">
-        <div @click="sendMessage" class="footer-send-message-button">
-          <font-awesome-icon icon="paper-plane"></font-awesome-icon>
+      <div class="main-chatbox">
+        <div class="messages">
+          <div
+            v-for="message in messages"
+            :key="message.id"
+            class="message"
+            :class="getMessageClass(message)"
+          >
+            <div class="message-user-img">
+              <img :src="getMessageUserProfilePicture(message)" class="message-img">
+            </div>
+            <p>{{ message.message_content }}</p>
+          </div>
         </div>
       </div>
-    </div>
-  </main>
- </div>
- 
+        
+      <div class="demo-content">
+        <div class="preview-container" v-if="imageSrc || videoSrc">
+          <img ref="demoImage" v-if="imageSrc" :src="imageSrc" class="preview-image">
+          <video ref="demoVideo" v-if="videoSrc" controls class="preview-video">
+            <source :src="videoSrc">
+          </video>
+          <div class="cancel-preview" @click="cancelPreview">
+            <font-awesome-icon icon="times-circle"></font-awesome-icon>
+          </div>
+        </div>
+      </div>
+
+      <div class="main-footer">
+        <div v-if="isRecording" class="recording-ui">
+          <div class="timer">{{ formatTime(recordingTime) }}</div>
+          <button @click="stopRecording" class="stop-button">
+            <font-awesome-icon icon="stop"></font-awesome-icon>
+          </button>
+        </div>
+        <div v-else class="footer-buttons">
+          <div @click="handleFiles('video')" class="video">
+            <input @change="handleFilesChanges" ref="videoInp" type="file" accept="video/*" hidden>
+            <font-awesome-icon icon="video"></font-awesome-icon>
+          </div>
+          <div @click="handleFiles('image')" class="image">
+            <input @change="handleFilesChanges" ref="imageInp" type="file" accept="image/*" hidden>
+            <font-awesome-icon icon="image"></font-awesome-icon>
+          </div>
+          <div @click="startRecording" class="micro">
+            <font-awesome-icon icon="microphone"></font-awesome-icon>
+          </div>
+        </div>
+        <div class="footer-message-input">
+          <input
+            v-model="message"
+            id="inp"
+            type="text"
+            placeholder="Send a message..."
+          >
+          <div @click="sendMessage" class="footer-send-message-button">
+            <font-awesome-icon icon="paper-plane"></font-awesome-icon>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
 </template>
 
 <script>
@@ -72,92 +92,183 @@ export default {
       message: "",
       error: "",
       chat: {},
-      chat_id: null
+      chat_id: null,
+      videoSrc: "",
+      imageSrc: "",
+      isRecording: false,
+      mediaRecorder: null,
+      audioChunks: [],
+      recordingTime: 0,
+      recordingInterval: null,
+      image: null,
+      video: null
     };
   },
   computed: {
     userProfilePicture() {
       return this.user.profilePicture 
         ? `http://localhost:3000/${this.user.profilePicture}`
-        : 'default_image_path_here'; // Ruta por defecto si no hay imagen
+        : 'default_image_path_here'; 
     }
   },
   methods: {
     async sendMessage() {
-      if (!this.message.trim()) {
-        this.error = "You cannot send an empty message.";
-        return;
-      }
+    // Inicializar el tipo y datos
+    let type = 'text';
+    let data = {};
 
-      try {
-        this.$socket.emit('chatMessage', {
-          message: this.message,
-          chat_id: this.chat_id // Se corrigió `this.chat.chat_id` por `this.chat_id`
-        });
+    // Verificar el estado de los datos de entrada
+    console.log('Preparing to send message...');
+    console.log('imageSrc:', this.imageSrc);
+    console.log('videoSrc:', this.videoSrc);
+    console.log('message:', this.message);
+    console.log('chat_id:', this.chat.chat_id);
 
-        this.message = ""; // Limpiar el campo de entrada después de enviar
-      } catch (error) {
-        console.error("Error sending message:", error);
-        this.error = "Failed to send the message.";
-      }
-    },
+    // Verificar si hay una imagen
+    if (this.imageSrc) {
+        console.log('Detected image');
+        type = this.message ? 'text-image' : 'image';
+        data = {
+            type: type,
+            image: this.$refs.demoImage.src,
+            message: this.message,
+            chat_id: this.chat.chat_id
+        };
+    }
+
+    // Verificar si hay un video
+    if (this.videoSrc) {
+        console.log('Detected video');
+        type = this.message ? 'text-video' : 'video';
+        data = {
+            type: type,
+            video: this.videoSrc,
+            message: this.message,
+            chat_id: this.chat.chat_id
+        };
+    }
+
+    // Verificar si es un mensaje de texto solo
+    if (!this.imageSrc && !this.videoSrc && this.message) {
+        console.log('Single message detected');
+        data = {
+            type: 'single_message',
+            message: this.message,
+            chat_id: this.chat.chat_id
+        };
+    }
+
+    // Log final de tipo y datos
+    console.log('Final type:', type);
+    console.log('Final data being sent:', data);
+
+    // Emitir el mensaje a través del socket
+    try {
+        console.log('Emitting chatMessage...');
+        this.$socket.emit('chatMessage', data);
+        console.log('Message emitted successfully');
+    } catch (error) {
+        console.error('Error emitting chatMessage:', error);
+    }
+},
+
+
+
+
     getMessageClass(message) {
-      if (!message.message_user || !this.user) return ''; // Protección extra contra indefinidos
+      if (!message.message_user || !this.user) return ''; 
       return message.message_user.id === this.user.id ? 'user' : 'friend';
     },
     getMessageUserProfilePicture(message) {
       return message.message_user?.profilePicture 
         ? `http://localhost:3000/${message.message_user.profilePicture}`
-        : 'default_image_path_here'; // Ruta por defecto si no hay imagen
+        : 'default_image_path_here'; 
     },
-    handleChatConnection(chat_id) {
-      console.log('Connecting to chat:', chat_id);
-      this.$socket.emit('joinRoom', chat_id);
-    },
-    handleFiles(type, event) {
-      switch(type) {
-        case "image":
-          this.$refs.imageInp.click();
-          break;
-        case "video":
-          this.$refs.videoInp.click();
-          break;
-        default:
-          return;
+    handleFiles(type) {
+      if (type === "image") {
+        this.$refs.imageInp.click();
+      } else if (type === "video") {
+        this.$refs.videoInp.click();
       }
     },
-    handleFilesChanges(event) {
-    console.log('changes');
-
-    const file = event.target.files[0]; // Accedemos al archivo
+ handleFilesChanges(event) {
+    const file = event.target.files[0]; // Obtiene el primer archivo
     if (file) {
-        const reader = new FileReader();
-        
+        const reader = new FileReader(); // Crea un nuevo FileReader
+
         reader.onload = (e) => {
-            console.log('src', e.target.result); // Verificar que se obtiene el resultado
-            if (this.$refs.demoImage) {
-                this.$refs.demoImage.src = e.target.result; // Actualizamos el src
-            } else {
-                console.error('Referencia demoImage no encontrada');
+            // Verifica si es una imagen
+            if (file.type.startsWith("image/")) {
+                this.imageSrc = e.target.result; // Asigna el Data URL a imageSrc
+                console.log('new src::', this.imageSrc);
+                this.image = file; // Almacena el archivo para otros usos
+            } 
+            // Verifica si es un video
+            else if (file.type.startsWith("video/")) {
+                this.videoSrc = e.target.result; // Asigna el Data URL a videoSrc
+                console.log('new video src::', this.videoSrc);
+                this.video = file; // Almacena el archivo para otros usos
             }
         };
 
         reader.onerror = (error) => {
-            console.error('Error al leer el archivo:', error);
+            console.error('Error reading file:', error);
         };
 
-        reader.readAsDataURL(file); // Esto es lo que lee el archivo
-    } else {
-        console.error('No se ha seleccionado ningún archivo');
+        reader.readAsDataURL(file); // Lee el archivo como Data URL
     }
-}
-      
-      
-      
- 
-      
+},
+    
+    
+    cancelPreview() {
+      this.imageSrc = "";
+      this.videoSrc = "";
     },
- 
+    formatTime(seconds) {
+      const minutes = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+    },
+    startRecording() {
+      this.isRecording = true;
+      this.recordingTime = 0;
+
+      navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+        this.mediaRecorder = new MediaRecorder(stream);
+        this.mediaRecorder.ondataavailable = (event) => {
+          this.audioChunks.push(event.data);
+        };
+        this.mediaRecorder.start();
+
+        this.recordingInterval = setInterval(() => {
+          this.recordingTime++;
+        }, 1000);
+      }).catch(error => {
+        console.error('Error accessing microphone:', error);
+      });
+    },
+    stopRecording() {
+      this.isRecording = false;
+      clearInterval(this.recordingInterval);
+      this.mediaRecorder.stop();
+
+      this.mediaRecorder.onstop = () => {
+        const audioBlob = new Blob(this.audioChunks, { type: 'audio/webm' });
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+          this.$socket.emit('chatMessage', {
+            type: 'audio',
+            content: e.target.result,
+            chat_id: this.chat_id
+          });
+        };
+
+        reader.readAsDataURL(audioBlob);
+        this.audioChunks = [];
+      };
+    }
+  },
   async created() {
     try {
       const response = await fetch('http://localhost:3000/api/sofi/chat', {
@@ -170,14 +281,13 @@ export default {
       });
 
       const data = await response.json();
-      console.log('Server data chat:', data);
-
+      console.log('data: ', data)
       if (response.ok) {
         this.chat = data.chat;
-        this.chat_id = data.chat.chat_id; // Guardar el `chat_id`
-        this.handleChatConnection(this.chat_id);
+        this.chat_id = data.chat.chat_id;
         this.messages = data.chat.messages;
         this.user = data.userToDisplayInfo;
+        this.$socket.emit('joinRoom', this.chat_id);
       } else {
         console.error("Error fetching chat data:", data);
         this.error = "Failed to fetch chat data.";
@@ -196,23 +306,24 @@ export default {
 </script>
 
 <style scoped>
-
 .container {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
 }
+
 main {
   display: flex;
   width: 70%;
   flex-direction: column;
   height: 100vh;
+  padding-bottom: 80px;
 }
 
 .main-header, .main-footer {
-
   background: white;
   z-index: 1;
 }
@@ -220,18 +331,29 @@ main {
 .main-header {
   display: flex;
   justify-content: space-between;
-  position: sticky;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
   width: 100%;
   align-items: center;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .main-header .user-details {
-    display: flex;
-  
-    gap: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile-img {
+  width: 60px;
+  border-radius: 50%;
+}
+
+.status {
+  color: green;
 }
 
 .main-footer {
@@ -239,99 +361,138 @@ main {
   display: flex;
   gap: 10px;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   padding: 10px;
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  width: 100%;
-  background: #f0f0f0;
- 
-}
-
-.main-chatbox {
-  flex: 1;
-  overflow-y: auto;
-  padding: 10px;
-  background: #fcfcfc;
-  margin-top: 70px;
-  margin-bottom: 80px;
-  display: flex;
-  flex-direction: column;
-}
-
-.messages {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 10px;
-}
-
-.messages .message {
-  display: flex;
-  gap: 5px;
-  align-items: center;
-  justify-content: center;
-   flex-wrap: wrap;
-  padding: 10px;
-  border-radius: 10px;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  
-}
-
-.messages .message.friend {
-  align-self: flex-end;
-  background: #42445A;
-  color: white;
- 
-}
-
-.message.friend img {
-    display: none;
-}
-
-.messages .message.user {
-  align-self: flex-start;
-  background: #02CCFF;
-  color: white;
-  text-align: right;
+  background: white;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .footer-buttons {
   display: flex;
-  gap: 10px;
-  font-size: 24px;
-  align-items: center;
+  gap: 15px;
 }
 
 .footer-message-input {
+  flex-grow: 1;
   display: flex;
-  align-items: center;
-  flex: 1;
-  padding: 5px;
+  gap: 10px;
 }
-
 
 .footer-message-input input {
   width: 100%;
   padding: 10px;
+  border-radius: 20px;
   border: 1px solid #ccc;
-  border-radius: 5px;
-  outline: none;
-  font-size: 16px;
 }
 
 .footer-send-message-button {
-  padding-right: 10px;
-  font-size: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  background-color: #4CAF50;
+  border-radius: 50%;
+  color: white;
+}
+
+.footer-send-message-button:hover {
+  background-color: #45a049;
+}
+
+.video, .image, .micro {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  background-color: #f1f1f1;
+  border-radius: 50%;
   cursor: pointer;
 }
 
-@media(max-width: 600px) {
-    main {
-        width: 100%;
-    }
+.preview-container {
+  position: relative;
+  max-height: 300px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.preview-image, .preview-video {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.cancel-preview {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+
+.recording-ui {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.timer {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.stop-button {
+  padding: 10px;
+  background-color: red;
+  border-radius: 50%;
+  color: white;
+}
+
+.messages {
+  padding-top: 80px;
+  padding-bottom: 90px;
+  overflow-y: auto;
+}
+
+.message {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.message.friend {
+  justify-content: flex-start;
+}
+
+.message.user {
+  justify-content: flex-end;
+  flex-direction: row-reverse;
+}
+
+.message-user-img {
+  width: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.message-img {
+  width: 100%;
+  height: auto;
+  border-radius: 50%;
+}
+
+.message p {
+  background-color: #f1f1f1;
+  padding: 10px;
+  border-radius: 20px;
+  max-width: 70%;
+}
+
+.user p {
+  background-color: #4CAF50;
+  color: white;
 }
 </style>
