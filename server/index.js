@@ -127,7 +127,7 @@ setupRoutes(app);
  sequelize.authenticate().then(() => {
    console.log('Database Working Fine');
       sequelize.sync();
- }).catch((e) => {
+ }).catch((e) => { 
      console.log(e);
  });
 

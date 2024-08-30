@@ -126,31 +126,42 @@ export default {
 
     // Verificar si hay una imagen
     if (this.imageSrc) {
-        console.log('Detected image');
-        type = this.message ? 'text-image' : 'image';
-        data = {
+     let type;
+     type = this.message ? 'image-text' : 'image'
+
+        const response = await fetch('http://localost:3000/api/sofi/upload_media', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+ 
+          }),
+          credentials: 'include'
+        })
+
+        const data = await response.json()
+        console.log('upload media: ', data)
+
+        if(response.ok) {
+          this.$socket.emit('chatMessage', {
             type: type,
-            image: this.$refs.demoImage.src,
             message: this.message,
-            chat_id: this.chat.chat_id
-        };
+            image: data.image
+          })
+        } else {
+          console.error('Something went wrong...')
+        }
     }
 
     // Verificar si hay un video
     if (this.videoSrc) {
-        console.log('Detected video');
-        type = this.message ? 'text-video' : 'video';
-        data = {
-            type: type,
-            video: this.videoSrc,
-            message: this.message,
-            chat_id: this.chat.chat_id
-        };
+        
     }
 
     // Verificar si es un mensaje de texto solo
     if (!this.imageSrc && !this.videoSrc && this.message) {
-        console.log('Single message detected');
+        console.log('Single message detected')
         data = {
             type: 'single_message',
             message: this.message,
