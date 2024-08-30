@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div>
     <header>
       <div class="profile-banner">
         <img :src="'http://localhost:3000/' + user.banner" alt="Profile Banner">

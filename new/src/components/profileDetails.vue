@@ -1,15 +1,23 @@
 <template>
+
+<div v-if="success" class="success-header">
+<p>{{successMessage}}</p> 
+</div>
+
+
   <header>
     <h1>Profile Settings</h1>
   </header>
 
+<div class="wrapper">
   <div class="container">
     <div class="user-details-section">
       <div class="profile-picture">
         <h4>Your Profile Picture</h4>
         <div @click="handlePhotoOpen" id="profile-picture-photo">
           <input @change="handleFileChanges($event, 'profile_pic')" style="display: none;" type="file" id="profilePhotoInput">
-          <img :src="userNewData.profile_pic" id="profile-photo">
+        <img :src="userNewData.profile_pic ? userNewData.profile_pic : 'http://localhost:3000/' + usuario.user_picture" id="profile-photo">
+
         </div>
       </div>
 
@@ -17,14 +25,14 @@
         <h4>Your Banner</h4>
         <input @change="handleFileChanges($event, 'profile_banner')" style="display: none;" type="file" id="profileBannerInput">
         <div class="banner-img">
-          <img :src="userNewData.profile_banner">
+          <img :src="userNewData.profile_banner ? userNewData.profile_banner : 'http://localhost:3000/' + usuario.user_banner">
         </div>
       </div>
 
       <div class="bio">
         <h4>Your Bio</h4>
         <div class="bio-inputs">
-          <input @input="setUserData($event, 'bio')" type="text" placeholder="Set BIO">
+          <input :value="usuario.user_bio" @input="setUserData($event, 'bio')" type="text" placeholder="Set BIO">
         </div>
         <div class="bio-submit">
           <button @click="saveAllChanges">SET AS BIO</button>
@@ -34,7 +42,7 @@
       <div class="native-city">
         <h4>Your Native City</h4>
         <div class="native-city-inputs">
-          <input @input="setUserData($event, 'native_city')" type="text" placeholder="Enter Your Native City">
+          <input :value="usuario.user_native_city" @input="setUserData($event, 'native_city')" type="text" placeholder="Enter Your Native City">
         </div>
         <div class="native-city-btn">
           <button @click="saveAllChanges">Set As Native City</button>
@@ -44,7 +52,7 @@
       <div class="ubication">
         <h4>Your Ubication</h4>
         <div class="ubication-inputs">
-          <input @input="setUserData($event, 'ubication')" type="text" placeholder="Enter Your Ubication">
+          <input :value="usuario.user_ubication" @input="setUserData($event, 'ubication')" type="text" placeholder="Enter Your Ubication">
         </div>
         <div class="ubication-btn">
           <button @click="saveAllChanges">Save</button>
@@ -54,7 +62,7 @@
       <div class="civil-status">
         <h4>Your Civil Status</h4>
         <div class="civil-status-select">
-          <select v-model="userNewData.civil_status">
+          <select :value="usuario.user_civil_status" v-model="userNewData.civil_status">
             <option value="In couple">In Couple</option>
             <option value="Married">Married</option>
             <option value="Single">Single</option>
@@ -65,7 +73,7 @@
       <div class="gender">
         <h4>Your Gender</h4>
         <div class="gender-select">
-          <select v-model="userNewData.gender">
+          <select :value="usuario.user_gender" v-model="userNewData.gender">
             <option value="Male">Male</option>
             <option value="Female">Female</option>
             <option value="Other">Other</option>
@@ -77,7 +85,7 @@
       <div class="job">
         <h4>Your Job</h4>
         <div class="job-inputs">
-          <input @input="setUserData($event, 'job')" type="text" placeholder="Enter Your Job Title">
+          <input :value="usuario.user_job" @input="setUserData($event, 'job')" type="text" placeholder="Enter Your Job Title">
         </div>
         <div class="job-btn">
           <button @click="saveAllChanges">Set As Job</button>
@@ -86,13 +94,17 @@
     </div>
 
     <div class="save-button">
-      <button @click="saveAllChanges">Guardar</button>
+      <button @click="saveAllChanges">Save All</button>
     </div>
+  </div>
+
   </div>
 </template>
 
 <script>
+import userMixin from '../mixins/userMixin'
 export default {
+  mixins: [userMixin],
   name: 'profileDetails',
   data() {
     return {
@@ -106,7 +118,9 @@ export default {
         gender: "",             // User gender
         job: ""                 // User job
       },
-      originalData: {}          // Original data to compare with
+      originalData: {} ,
+      success: null,
+      successMessage: ""
     };
   },
   methods: {
@@ -234,6 +248,9 @@ export default {
           }
 
           if (response.ok) {
+            this.successMessage = `Your ${key} Has Been Changed !`
+            this.success = true 
+          
             console.log(`Change for ${key} saved successfully`);
             const data = await response.json();
             console.log(data);
@@ -275,9 +292,18 @@ header {
   margin-bottom: 50px;
 }
 
-.container {
+.wrapper {
   width: 100%;
+  height: 100%;
   display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.container {
+  width: 80%;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 20px;
@@ -379,6 +405,21 @@ header {
 
 .save-button button:hover {
   background-color: #218838;
+}
+
+.success-header {
+  background: rgb(15, 221, 15);
+  color: white;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  width: 100%;
+  padding: 15px;
 }
 
 @media (max-width: 600px) {

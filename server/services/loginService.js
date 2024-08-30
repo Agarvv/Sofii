@@ -14,7 +14,14 @@ const makeLogin = async (user, userPassword) => {
             user_id: user.id,
             username: user.username,
             email: user.email,
-            user_picture: user.profilePicture
+            user_picture: user.profilePicture,
+            user_banner: user.banner,
+            user_bio: user.bio,
+            user_civil_status: user.civil_status,
+            user_gender: user.gender,
+            user_native_city: user.native_city,
+            user_ubication: user.ubication,
+            user_job: user.job
         };
         
        
