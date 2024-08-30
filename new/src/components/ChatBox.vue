@@ -26,20 +26,56 @@
             class="message"
             :class="getMessageClass(message)"
           >
-            <div class="message-user-img">
+            
+              
+         <div class="msg_content"> 
+            <div v-if="message.message_content.length > 0" class="message-user-img">
               <img :src="getMessageUserProfilePicture(message)" class="message-img">
             </div>
-            <p>{{ message.message_content }}</p>
+            <p v-if="message.message_content.length > 0">{{ message.message_content }}</p>
+        </div>
+            
+            
+          <div v-if="message.withFile">
+              <img v-if="message.fileType === 'image' || message.fileType === 'text-image' " style="width: 200px; height: 200px; object-fit: cover;" :src="
+              'http://localhost:3000/' + message.fileSource
+              ">
+              
+              <video controls v-if="message.fileType === 'video' || message.fileType === 'text-video'">
+                  
+                  <source :src="'http://localhost:3000/' + message.fileSource">
+              </video>
+              
+             <audio v-if="message.fileType == 'audio'" ref="audioDemo" controls>
+               <source :src="'http://localhost:3000/' + message.fileSource" type="audio/webm">
+            </audio>
           </div>
+          
+         
+          
+          
+          
+          
+          
+            
+          </div>
+         
+          
         </div>
       </div>
+      
+      
         
       <div class="demo-content">
         <div class="preview-container" v-if="imageSrc || videoSrc">
           <img ref="demoImage" v-if="imageSrc" :src="imageSrc" class="preview-image">
+          
+          
           <video ref="demoVideo" v-if="videoSrc" controls class="preview-video">
             <source :src="videoSrc">
           </video>
+          
+          
           <div class="cancel-preview" @click="cancelPreview">
             <font-awesome-icon icon="times-circle"></font-awesome-icon>
           </div>
@@ -65,6 +101,8 @@
           <div @click="startRecording" class="micro">
             <font-awesome-icon icon="microphone"></font-awesome-icon>
           </div>
+          
+          
         </div>
         <div class="footer-message-input">
           <input
@@ -95,6 +133,7 @@ export default {
       chat_id: null,
       videoSrc: "",
       imageSrc: "",
+      audioSrc: "",
       isRecording: false,
       mediaRecorder: null,
       audioChunks: [],
@@ -112,7 +151,7 @@ export default {
     }
   },
   methods: {
-    async sendMessage() {
+async sendMessage() {
     // Inicializar el tipo y datos
     let type = 'text';
     let data = {};
@@ -159,11 +198,52 @@ export default {
         
     }
 
-    // Verificar si es un mensaje de texto solo
     if (!this.imageSrc && !this.videoSrc && this.message) {
         console.log('Single message detected')
         data = {
             type: 'single_message',
+            message: this.message,
+            chat_id: this.chat.chat_id
+        };
+    }
+
+    // Función para manejar la subida de medios (imágenes o videos)
+    const uploadMedia = async (file, mediaType) => {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const response = await fetch('http://localhost:3000/api/sofi/upload_media', {
+            method: 'POST',
+            body: formData,
+            credentials: 'include'
+        });
+
+        const serverData = await response.json();
+        console.log(`Upload data for ${mediaType}: `, serverData);
+        return serverData.path;
+    };
+
+    // Caso de imagen
+    if (this.imageSrc) {
+        const imagePath = await uploadMedia(this.image, 'image');
+        console.log('Detected image');
+        type = this.message ? 'text-image' : 'image';
+        data = {
+            type: type,
+            file: imagePath,
+            message: this.message,
+            chat_id: this.chat.chat_id
+        };
+    }
+
+    // Caso de video
+    if (this.videoSrc) {
+        const videoPath = await uploadMedia(this.video, 'video');
+        console.log('Detected video');
+        type = this.message ? 'text-video' : 'video';
+        data = {
+            type: type,
+            file: videoPath,
             message: this.message,
             chat_id: this.chat.chat_id
         };
@@ -178,10 +258,12 @@ export default {
         console.log('Emitting chatMessage...');
         this.$socket.emit('chatMessage', data);
         console.log('Message emitted successfully');
+        this.message = ""
     } catch (error) {
         console.error('Error emitting chatMessage:', error);
     }
 },
+
 
 
 
@@ -211,7 +293,7 @@ export default {
             // Verifica si es una imagen
             if (file.type.startsWith("image/")) {
                 this.imageSrc = e.target.result; // Asigna el Data URL a imageSrc
-                console.log('new src::', this.imageSrc);
+                
                 this.image = file; // Almacena el archivo para otros usos
             } 
             // Verifica si es un video
@@ -258,27 +340,55 @@ export default {
         console.error('Error accessing microphone:', error);
       });
     },
-    stopRecording() {
-      this.isRecording = false;
-      clearInterval(this.recordingInterval);
-      this.mediaRecorder.stop();
+  
+    
+    
+    async stopRecording() {
+    this.isRecording = false;
+    clearInterval(this.recordingInterval);
+    this.mediaRecorder.stop();
 
-      this.mediaRecorder.onstop = () => {
+    this.mediaRecorder.onstop = async () => {
+        // Creamos un Blob a partir de los chunks de audio grabados
         const audioBlob = new Blob(this.audioChunks, { type: 'audio/webm' });
-        const reader = new FileReader();
 
-        reader.onload = (e) => {
-          this.$socket.emit('chatMessage', {
-            type: 'audio',
-            content: e.target.result,
-            chat_id: this.chat_id
-          });
-        };
+        // Creamos un FormData y agregamos el archivo Blob con un nombre de archivo
+        const formData = new FormData();
+        formData.append('file', audioBlob, 'recording.webm');
 
-        reader.readAsDataURL(audioBlob);
-        this.audioChunks = [];
-      };
-    }
+        try {
+            // Enviamos el FormData al servidor usando fetch
+            const response = await fetch('http://localhost:3000/api/sofi/upload_media', {
+                method: 'POST',
+                body: formData,
+                credentials: 'include'
+            });
+
+            // Verificamos la respuesta del servidor
+            if (!response.ok) {
+                throw new Error('Failed to upload audio');
+            }
+
+            const data = await response.json();
+            console.log('server data audio:', data);
+
+            // Emitimos el mensaje a través del socket con la ruta del archivo
+            this.$socket.emit('chatMessage', {
+                type: 'audio',
+                file: data.path,
+                message: this.message,
+                chat_id: this.chat.chat_id
+            });
+
+            // Limpiamos los chunks de audio
+            this.audioChunks = [];
+        } catch (error) {
+            console.error('Error uploading audio:', error);
+        }
+    };
+}
+    
+    
   },
   async created() {
     try {
@@ -311,6 +421,7 @@ export default {
   mounted() {
     this.$socket.on('chatMessage', (message) => {
       this.messages.push(message);
+      console.log('message received from the server !', message)
     });
   }
 };
@@ -398,6 +509,10 @@ main {
   padding: 10px;
   border-radius: 20px;
   border: 1px solid #ccc;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .footer-send-message-button {
@@ -467,20 +582,33 @@ main {
   overflow-y: auto;
 }
 
-.message {
+.messages .message {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: flex-end; /* Alinea los mensajes a la derecha */
+}
+
+.message.friend {
+  align-items: flex-start; /* Mensajes de amigos a la izquierda */
+  flex-direction: row-reverse;
+ 
+}
+
+.message.friend .message-img {
+    display: none;
+}
+
+.message.user {
+    display: flex;
+    flex-direction: row;
+}
+
+.message .msg_content {
   margin-bottom: 15px;
   display: flex;
   align-items: center;
   gap: 10px;
-}
-
-.message.friend {
-  justify-content: flex-start;
-}
-
-.message.user {
-  justify-content: flex-end;
-  flex-direction: row-reverse;
 }
 
 .message-user-img {
@@ -500,10 +628,52 @@ main {
   padding: 10px;
   border-radius: 20px;
   max-width: 70%;
+  word-wrap: break-word;
+  word-break: break-word;
+  margin: 0;
 }
 
-.user p {
+.message.user p {
   background-color: #4CAF50;
   color: white;
+  text-align: left;
+}
+
+.message.friend p {
+  background-color: #E0E0E0;
+  color: black;
+  text-align: left;
+}
+
+.message-wrapper {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.message-wrapper.user {
+  border-color: #4CAF50;
+}
+
+.message-wrapper.friend {
+  border-color: #E0E0E0;
+}
+
+@media(max-width: 600px) {
+  main {
+    width: 100%;
+  }
+
+  .message p {
+    max-width: 85%;
+  }
+
+  .footer-message-input input {
+    padding: 5px;
+  }
+
+  .messages {
+    padding-top: 60px;
+    padding-bottom: 70px;
+  }
 }
 </style>
