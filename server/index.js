@@ -72,24 +72,38 @@ io.on('connection', (socket) => {
         
         
         try {
-            
+            let newMessage;
             switch(data.type) {
                 case "single_message":
-                    console.log('Single Message')
+                   newMessage = await ChatController.handleSindleMessage(jwtToken, data)
+                    io.to(chat_id).emit('chatMessage', newMessage)
                     break;
                 case "image":
                     console.log('Image')
+                    newMessage = await 
+                    ChatController.handleMessageWithFile(jwtToken, data, 'image')
+                    io.to(chat_id).emit('chatMessage', newMessage)
                     break;
                 case "text-image":
                     console.log(data.type)
-                    console.log('Text image')
+                    newMessage = await 
+                    ChatController.handleMessageWithFile(jwtToken, data, 'text-image')
+                    io.to(chat_id).emit('chatMessage', newMessage)
                     break;
                 case "video":
-                    console.log('Video')
+                    newMessage = await 
+                    ChatController.handleMessageWithFile(jwtToken, data, 'video')
+                    io.to(chat_id).emit('chatMessage', newMessage)
                     break;
                 case "text-video":
-                    console.log('Text video')
+                    newMessage = await 
+                    ChatController.handleMessageWithFile(jwtToken, data, 'text-video')
+                    io.to(chat_id).emit('chatMessage', newMessage)
                     break;
+                case "audio":
+                    newMessage = await 
+                    ChatController.handleMessageWithFile(jwtToken, data, 'audio')
+                    io.to(chat_id).emit('chatMessage', newMessage)
                 
                 default:
                      console.log('Unknown Type')

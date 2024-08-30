@@ -3,6 +3,70 @@ const Message = require('../models/Message')
 const { Op } = require('sequelize');
 const User = require('../models/User')
 
+
+const handleSindleMessage = async (user, data) => {
+    try {
+        const createdMessage = await Message.create({
+            message_room_id: data.chat_id,
+            message_user_id: user.user_id,
+            message_content: data.message
+        })
+        const newMessage = await
+        Message.findOne({
+            where: {
+                id: createdMessage.id
+            }, 
+            include: [
+               {
+                   model: User,
+                   as: 'message_user'
+               }
+            ]
+        })
+        
+        return newMessage
+        
+    } catch(e) {
+        throw e
+    }
+}
+
+const handleMessageWithFile = async (user, data, fileType) => {
+    try {
+        const createdMessage = await
+        Message.create({
+            message_room_id: data.chat_id,
+            message_user_id: user.user_id,
+            message_content: data.message,
+            withFile: true,
+            fileType: fileType,
+            fileSource: data.file
+        })
+        
+        const newMessage = await
+        Message.findOne({
+            where: {
+                id: createdMessage.id
+            }, 
+            include: [
+               {
+                   model: User,
+                   as: 'message_user'
+               }
+            ]
+        })
+        
+        return newMessage
+    } catch(e) {
+        console.log(e)
+        throw e
+    }
+}
+
+
+
+
+
 const createChat = async (sender_id, receiver_id) => {
     try {
         console.log("")
@@ -19,21 +83,6 @@ const createChat = async (sender_id, receiver_id) => {
     }
 };
 
-const handleMessageSending = async ( user, message, chat_id) => {
-    try {
-       const newMessage =  await Message.create({
-            message_room_id: chat_id,
-            message_user_id: user.user_id,
-            message_content: message
-        })
-        
-        return newMessage
-        
-        
-    } catch(e) {
-        throw new Error(e)
-    }
-}
 
 const getUserChats = async (user_id) => {
     try {
@@ -88,6 +137,7 @@ const getUserChats = async (user_id) => {
 
 module.exports = { 
     createChat,
-    handleMessageSending,
+    handleSindleMessage,
+    handleMessageWithFile,
     getUserChats
 };

@@ -6,6 +6,56 @@ const Message = require('../models/Message')
 const { Op } = require('sequelize');
 
 
+
+
+const handleSindleMessage = async (jwtToken, data) => {
+    try {
+        
+        const userDecoded = await
+        tokenController.verifyJwtToken(jwtToken)
+        
+        const isAuthorized = await checkIfAuthorized(userDecoded, data.chat_id)
+        
+        if(isAuthorized) {
+             const newMessage = await ChatService.handleSindleMessage(userDecoded, data)
+             return newMessage
+        } else {
+            throw new Error("not_authorized_err")
+        }
+         
+    } catch(e) {
+        console.log(e)
+        throw e
+    }
+}
+
+
+const handleMessageWithFile = async (jwtToken, data, fileType) => {
+    try {
+        const userDecoded = await
+        tokenController.verifyJwtToken(jwtToken)
+        
+        const isAuthorized = await checkIfAuthorized(userDecoded, data.chat_id)
+        
+        if(isAuthorized) {
+           const newMessage = await ChatService.handleMessageWithFile(userDecoded, data, fileType)
+           
+             return newMessage
+        } else {
+            throw new Error("not_authorized_err")
+        }
+        
+    } catch(e) {
+        throw e
+    }
+}
+
+
+
+
+
+
+
 const handleChat = async (jwt_token, user_id) => {
     try {
         const userDecoded = await tokenController.verifyJwtToken(jwt_token);
@@ -74,40 +124,10 @@ const handleChat = async (jwt_token, user_id) => {
 };
 
 
-const handleMessageSending = async (jwt_token, message, chat_id) => {
-    try {
-        
-        const userDecoded = await
-        tokenController.verifyJwtToken(jwt_token)
-        
-        const chatDoesExists = await
-        Chat.findOne({
-            where: { chat_id: chat_id }
-        })
-        
-        if(!chatDoesExists) {
-            throw new Error("Your conversation does not exist, Try again...")
-        }
-        
-        console.log(`Data to compare: UserId: ${userDecoded.user_id}, chat sender id: ${chatDoesExists.sender_id}, chat sender id: ${chatDoesExists.receiver_id}`)
-        
-        if(
-        userDecoded.user_id !== chatDoesExists.sender_id && userDecoded.user_id !== chatDoesExists.receiver_id
-        ) {
-            throw new Error("Not authorized to send messages here")
-        }
-        
-       const newMessage =  await ChatService.handleMessageSending(userDecoded, message, chat_id)
-       return newMessage
-        
-    } catch(e) {
-        throw new Error(e)
-    }
-}
 
-const checkIfAuthorized = async (jwtToken, room_id) => {
+const checkIfAuthorized = async (user, room_id) => {
     try {
-        const userDecoded = await tokenController.verifyJwtToken(jwtToken)
+        
         
         const userChat = await Chat.findOne({
             where: { chat_id: room_id }
@@ -117,10 +137,10 @@ const checkIfAuthorized = async (jwtToken, room_id) => {
             throw new Error("The conversation that you are looking for does not exist...")
         }
         
-        if(userChat.sender_id !== userDecoded.user_id && userChat.receiver_id !== userDecoded.user_id ) {
+        if(userChat.sender_id !== user.user_id && userChat.receiver_id !== user.user_id ) {
             throw new Error("You are not authorized to connect on this chat.")
-        } else if(userChat.sender_id == userDecoded.user_id || userChat.receiver_id == userDecoded.user_id) {
-            return isAuthorized = true
+        } else if(userChat.sender_id == user.user_id || userChat.receiver_id == user.user_id) {
+            return true
         }
     
     } catch(e) {
@@ -196,7 +216,8 @@ const findUserChatById = async (jwtToken, chat_id) => {
 
 module.exports = { 
     handleChat,
-    handleMessageSending,
+    handleSindleMessage,
+    handleMessageWithFile,
     checkIfAuthorized,
     getUserChats,
     findUserChatById
