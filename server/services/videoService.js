@@ -5,6 +5,32 @@ const VideoLikes = require('../models/VideoLikes')
 const SavedVideo = require('../models/SavedVideo')
 
 
+const handleVideoCreation = async (user, videoPath, data) => {
+    try {
+        
+        await Video.create({
+            video_user_id: user.user_id,
+            video_description: data.description,
+            video_content: videoPath
+        })
+        
+        const success = "success video creation"
+        return success
+        
+    } catch(e) {
+        throw new Error(e)
+    }
+}
+
+const deleteVideo = async (video, user) => {
+    try {
+        const deletedVideo = await video.destroy()
+        return deletedVideo
+    } catch(e) {
+        throw e
+    }
+}
+
 const getVideos = async () => {
     try {
         
@@ -45,24 +71,9 @@ const getVideos = async () => {
     }
 };
 
-const handleVideoCreation = async (user, videoPath, data) => {
-    try {
-        
-        await Video.create({
-            video_user_id: user.user_id,
-            video_description: data.description,
-            video_content: videoPath
-        })
-        
-        const success = "success video creation"
-        return success
-        
-    } catch(e) {
-        throw new Error(e)
-    }
-}
 
 module.exports = {
     handleVideoCreation,
-    getVideos
+    getVideos,
+    deleteVideo
 }

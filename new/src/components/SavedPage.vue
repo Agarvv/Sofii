@@ -7,13 +7,13 @@
     <div class="container">
         <h4 style="font-size: 25px">Saved</h4>
 
-        <div class="container-header">
-            <div class="posts-s">
+        <div  class="container-header">
+            <div @click="toggleContentToShow('posts')" class="posts-s">
                 <h4>Posts</h4>
                 <i class="fa fa-image"></i>
             </div>
 
-            <div class="videos-s">
+            <div @click="toggleContentToShow('videos')" class="videos-s">
                 <h4>Videos</h4>
                 <i class="fa fa-camera"></i>
             </div>
@@ -21,7 +21,12 @@
 
         <div class="saved">
 
-            <div  class="saved-posts">
+            <div v-if="contentToDisplay == 'posts'"  class="saved-posts">
+                            <div class="content_length_zero" v-if="posts.length == 0">
+                    <p>You Do Not Have Posts Saved, <a href="/">Go And Explore !</a></p>
+                </div>
+                
+                
                 <div v-for="post in posts" key="post.saved_post.id" class="post">
                     
                     <div class="post-header">
@@ -60,6 +65,56 @@
                     </div>
                 </div>
             </div>
+            
+                <div v-if="contentToDisplay == 'videos'"  class="saved-videos">
+                    
+                                    <div class="content_length_zero" v-if="videos.length == 0">
+                    <p>You Do Not Have Videos Saved, <a href="/watch">Go And Explore !</a></p>
+                </div>
+                
+                <div v-for="video in videos" :key="video.video_id" class="post">
+                    
+                    <div class="post-header">
+                        <div class="post-user-details">
+                            <div class="post-user-img">
+                                <img style="border-radius: 50%; width: 60px" :src="'http://localhost:3000/' + video.saved_video_video.user_video.profilePicture">
+                            </div>
+                            <div class="post-username">
+                                <h4>{{ video.saved_video_video.user_video.username }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="post-description">
+                        <p>{{ video.saved_video_video.description }}</p>
+                    </div>
+                    <div class="post-video">
+                        <video style="width: 100%; height: 100%; object-fit: cover;" controls> 
+                        
+                            <source :src="'http://localhost:3000/' + video.saved_video_video.video_content">
+                        </video>
+                    </div>
+                    <div class="post-footer">
+                        <div class="like">
+                            <font-awesome-icon icon="heart"/>
+                            <span>{{video.saved_video_video.video_likes.length}}</span>
+                        </div>
+                        <div class="comment">
+                                                         <font-awesome-icon icon="comments"/>
+                            <span>{{ video.saved_video_video.video_comments.length }}</span>
+                        </div>
+                        <div class="share">
+                                                        <font-awesome-icon icon="share"/>
+                            
+                        </div>
+                        <div class="save">
+                                                         <font-awesome-icon icon="bookmark"/>
+                                                      <span>{{ video.saved_video_video.videos_saved.length }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            
 
 
 
@@ -74,11 +129,12 @@ export default {
     data() {
     return {
         posts: [
-            { saved_post: { user: { profilePicture: 'default.jpg', username: 'User1' }, description: 'Post description', postPicture: 'default.jpg', postLikes: [], postComments: [], saved_post: [] } }
+            
         ],
         videos: [
-            { saved_video_video: { user: { username: 'VideoUser' }, video_description: 'Video description', video_content: 'default.mp4', video_likes: [], video_comments: [], videos_saved: [] } }
-        ]
+        
+        ],
+        contentToDisplay: 'posts'
     };
 },
     methods: {
@@ -96,6 +152,10 @@ export default {
                     console.warn('Unknown content type:', type); // Manejo para tipos no reconocidos
                 }
             }
+        },
+        toggleContentToShow(type) {
+            this.contentToDisplay = type
+          
         }
     },
     async created() {
@@ -257,6 +317,18 @@ header {
     font-size: 14px;
     color: #333;
 }
+
+.content_length_zero {
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: gray;
+}
+
+
 
 @media(max-width: 600px) {
     .container {

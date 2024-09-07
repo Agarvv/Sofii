@@ -5,25 +5,28 @@
         <h2>Sofii</h2>
       </div>
       <div class="search-input">
-        <input type="search" v-model="searchQ" />
+        <input v-model="searchQ" type="search"/>
       </div>
       <div class="icons">
-        <font-awesome-icon icon="search" />
+        <font-awesome-icon icon="search" @click="search"/>
         <font-awesome-icon icon="microphone" />
-        <font-awesome-icon icon="filter" />
+        <font-awesome-icon icon="filter" @click="toggleFiltersButton" 
+        
+        />
       </div>
     </header>
-
-    <div class="container">
-      <aside>
-        <div class="aside-header">
-          <div class="logo">
-            <h1>Sofii</h1>
+    
+    
+                  
+     <div v-show="showFiltersButton" class="filter-div">
+          
+          <div @click="toggleFiltersButton" class="close-filters">
+            <i style="color: gray"class="fa fa-close"></i>
+            <font-awesome-icon icon="close"/>
           </div>
-        </div>
-        <nav>
-          <div class="aside-users">
-            <div>
+          
+          <div @click="showFilters('users')" class="aside-users">
+            <div @click="toggleUsers">
               <font-awesome-icon icon="user" />
               <span>Users</span>
             </div>
@@ -32,23 +35,157 @@
             </div>
           </div>
 
-          <div class="hidden-users" :style="{ display: showUsers ? 'block' : 'none' }">
+          <div v-show="showUsersFilters" class="hidden-users">
             <div class="order-by-son">
               <div class="following">
                 <label>Following</label>
-                <input type="checkbox" />
+                <input type="checkbox" v-model="filters.users.following" />
               </div>
               <div class="friend">
                 <label>Friend</label>
-                <input type="checkbox" />
+                <input type="checkbox" v-model="filters.users.friend" />
               </div>
-              <div class="blocked">
-                <label>Blocked</label>
-                <input type="checkbox" />
+              <div class="followers">
+                <label>Popular</label>
+                <input type="checkbox" v-model="filters.users.followers" />
+              </div>
+            </div>
+          </div>
+
+          <div @click="showFilters('posts')" class="aside-posts">
+            <div>
+              <font-awesome-icon icon="newspaper" />
+              <span>Posts</span>
+            </div>
+            <div>
+              <font-awesome-icon icon="caret-down" />
+            </div>
+          </div>
+
+          <div class="hidden-posts" v-show="showPostsFilters">
+            <div class="sort-options">
+                
+                <div class="most-liked">
+                    <label>Most Liked</label>
+                    <input type="checkbox" v-model="filters.posts.most_liked">
+                </div>
+                
+                <div class="most-saved">
+                    <label>Most Saved</label>
+                    <input type="checkbox" v-model="filters.posts.most_saved">
+                </div>
+                
+                <div class="most-commented">
+                    <label>Most Commented</label>
+                    <input type="checkbox" v-model="filters.posts.most_commented">
+                </div>
+                
+                <div class="liked">
+                    <label>Liked</label>
+                    <input type="checkbox" v-model="filters.posts.liked">
+                </div>
+                
+                
+              <div class="latest">
+                <label>Latest</label>
+                <input type="checkbox" name="sort-posts" v-model="filters.latest" />
+              </div>
+              <div class="popular">
+                <label>Popular</label>
+                <input type="checkbox" name="sort-posts" value="popular" v-model="filters.posts.popular" />
+              </div>
+              <div class="trending">
+                <label>Trending</label>
+                <input type="checkbox" name="sort-posts" value="trending" v-model="filters.posts.trending" />
+              </div>
+            </div>
+          </div>
+          
+          <div class="hidden-videos" @click="showFilters('videos')">
+              <div>
+                  <span>Videos</span>
+              </div>
+              <div>
+                  <font-awesome-icon icon="caret-down"/>
+              </div>
+          </div>
+          
+          <div class="hidden-videos" v-show="showVideosFilters">
+              <div class="sort-options">
+                  
+                  <div class="most-liked">
+                      <label>Most Liked</label>
+                      <input type="checkbox" v-model="filters.videos.most_liked">
+                  </div>
+                  
+                  <div class="most_saved">
+                     <label>Most Saved</label>
+                     <input type="checkbox" v-model="filters.videos.most_saved">
+                  </div>
+                      
+                      
+                  <div class="most_commented">
+                    <label>Most Commented</label>
+                    <input type="checkbox" v-model="filters.videos.most_commented">
+                  </div>
+                      
+                  <div class="trending">
+                    <label>Trending</label>
+                    <input type="checkbox" v-model="filters.videos.trending">
+                  </div>
+                  
+                  <div class="liked">
+                      <label>Liked</label>
+                      <input type="checkbox" v-model="filters.videos.liked">
+                  </div>
+                      
+              </div>
+          </div>
+
+           <div class="show_filters_button_div">
+         <button @click="applyFilters">Apply Filters</button>
+           </div>
+          
+          
+        </div>
+        
+  
+  
+        
+
+    <div class="container">
+      <aside>
+        <div class="aside-header">
+          <div class="logo">
+            <h1>Sofii</h1>
+          </div>
+        </div>
+        
+        
+        <nav>
+          <div class="aside-users">
+            <div @click="toggleUsers">
+              <font-awesome-icon icon="user" />
+              <span>Users</span>
+            </div>
+            <div>
+              <font-awesome-icon icon="caret-down" />
+            </div>
+          </div>
+
+          <div class="hidden-users" >
+            <div class="order-by-son">
+              <div class="following">
+                <label>Following</label>
+                <input type="checkbox" v-model="filters.users.following" />
+              </div>
+              <div class="friend">
+                <label>Friend</label>
+                <input type="checkbox" v-model="filters.users.friend" />
               </div>
               <div class="followers">
                 <label>Followers</label>
-                <input type="number" />
+                <input type="number" v-model="filters.users.followers" />
               </div>
             </div>
           </div>
@@ -63,151 +200,410 @@
             </div>
           </div>
 
-          <div class="hidden-posts" :style="{ display: showPosts ? 'block' : 'none' }">
+          <div class="hidden-posts" v-show="showPostsFilters">
             <div class="sort-options">
               <div class="latest">
                 <label>Latest</label>
-                <input type="radio" name="sort-posts" />
+                <input type="checkbox" name="sort-posts" v-model="filters.latest" />
               </div>
               <div class="popular">
                 <label>Popular</label>
-                <input type="radio" name="sort-posts" />
+                <input type="checkbox" name="sort-posts" value="popular" v-model="filters.posts.popular" />
               </div>
               <div class="trending">
                 <label>Trending</label>
-                <input type="radio" name="sort-posts" />
+                <input type="checkbox" name="sort-posts" value="trending" v-model="filters.posts.trending" />
               </div>
             </div>
           </div>
+
+          <button @click="applyFilters">Apply Filters</button>
         </nav>
+        
+        
       </aside>
 
       <div class="content">
-        <div v-for="user in content.users" :key="user.id" class="users">
+        <div v-if="!filteredContent.posts.length && !filteredContent.users.length && !filteredContent.videos.length" class="zero_content_found">
+          <h4>No Content Found...</h4>
+        </div>
+
+        <div v-if="filteredContent.users.length > 0 && content_to_show == 'all' || content_to_show == 'users'" class="users">
           <h4>Users</h4>
-          <div  class="user">
-            <div class="user-details">
-              <div class="user-img">
-                <img :src="'http://localhost:3000/' + user.profilePicture" />
-              </div>
-              <div class="user-info">
-                <h3>{{ user.username }}</h3>
-                <p>{{ user.bio }}</p>
-              </div>
-            </div>
-            <div class="follow-btn">
-              <button @click="followUser(user.id)">Follow</button>
-            </div>
+          <div v-for="user in filteredContent.users" :key="user.id" class="user">
+            
+             <UserCard :user="user"/>
+            
           </div>
         </div>
 
-        <div v-for="post in content.posts" :key="post.id" class="posts">
-          <h4>Posts</h4>
-          <div @click="goToPostPage(post.id)" class="post">
-            <div class="post-user">
-              <div class="post-user-img">
-                <img :src="'http://localhost:3000/' + post.user_img" />
-              </div>
-              <div class="post-user-details">
-                <h3>{{ post.user_name }}</h3>
-              </div>
-            </div>
-            <div class="post-info">
-              <div class="post-details">
-                <p>{{ post.description }}</p>
-              </div>
-              <div class="post-img">
-                <img :src="'http://localhost:3000/' + post.postPicture" />
-              </div>
-            </div>
-            <div class="post-interactions">
-              <div class="like">
-                <font-awesome-icon icon="heart"/>
-                <p>167</p>
-              </div>
-              <div class="comment">
-                <font-awesome-icon icon="comments"/>
-                <p>12</p>
-              </div>
-              <div class="share">
-                 <font-awesome-icon icon="share"/>
-                <p>0</p>
-              </div>
-              <div class="save">
-                <font-awesome-icon icon="bookmark"/>
-                <p>4</p>
-              </div>
-            </div>
+        <div class="posts" v-if="filteredContent.posts.length > 0 && content_to_show == 'posts' || content_to_show == 'all' ">
+          <h4 v-if="content.posts.length > 0">Posts</h4>
+          <div v-for="post in filteredContent.posts" :key="post.id" class="post" @click="goToPostPage(post.id)">
+            <PostCard :post="post"/>
           </div>
         </div>
+
+        <div class="videos" v-if="filteredContent.videos.length > 0 && content_to_show == 'videos' || content_to_show == 'all'">
+          <div v-for="video in filteredContent.videos" :key="video.id" class="video">
+            <VideoCard :video="video" />
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import VideoCard from './VideoCard';
+import UserCard from './UserCard'
+import PostCard from './PostCard'
+
+import userMixin from '../mixins/userMixin'
+
+
 export default {
-  data() {
-    return {
-      searchQ: "",
-      content: {},
-      showUsers: false,
-      showPosts: false,
-    };
-  },
-  methods: {
-    toggleUsers() {
-      this.showUsers = !this.showUsers;
+    mixins: [userMixin], 
+    
+    components: {
+        VideoCard,
+        UserCard,
+        PostCard
+    }, 
+    data() {
+        return {
+            searchQ: "",
+            content: {
+                users: [],
+                posts: [],
+                videos: [],
+            },
+            filteredContent: {
+                users: [],
+                posts: [],
+                videos: []
+            },
+            showUsers: true,
+            showPosts: true,
+            content_to_show: "all",
+            filters: {
+                users: {
+                    following: false,
+                    friend: false,
+                    blocked: false,
+                    popular: false,
+                    followers: 0,
+                },
+                posts: {
+                   most_liked: false,
+                   latest: false,
+                   popular: false,
+                   trending: false,
+                   liked: false,
+                   most_commented: false,
+                   most_saved: false
+                },
+                videos: {
+                    most_liked: false,
+                    liked: false,
+                    trending: false,
+                    popular: false,
+                    most_commented: false,
+                    most_saved: false,
+                }
+            },
+            showPostsFilters: false,
+            showUsersFilters: false,
+            showVideosFilters: false,
+            showFiltersButton: false
+        };
     },
-    togglePosts() {
-      this.showPosts = !this.showPosts;
-    },
-    goToUserPage(user_id) {
-      this.$router.push('/user/' + user_id)
-  }, 
-  goToPostPage(post_id) {
-      this.$router.push('/post/' + post_id)
-  }, 
-  async followUser(following_id) {
-    console.log('Follow user method called, ', following_id);
-    const response = await fetch('http://localhost:3000/api/sofi/follow', {
-        body: JSON.stringify({ following_id }), // Asegúrate de enviar un objeto con la clave adecuada
-        method: 'POST',
-        credentials: 'include',
-        headers: { // Asegúrate de usar 'headers' en lugar de 'Content-Type' directamente
-            'Content-Type': 'application/json'
-        }
-    });
-    if (!response.ok) {
-        console.log('response not ok');
+    methods: {
+        
+        search() {
+          
+            this.$router.push('/search/' + this.searchQ)
+        }, 
+        
+        
+        toggleFiltersButton() {
+            
+            this.showFiltersButton = !this.showFiltersButton
+            
+        }, 
+        
+        showFilters(type) {
+            switch(type) {
+                case "users":
+                this.showUsersFilters = !this.showUsersFilters
+                break;
+            case "posts":
+               
+                this.showPostsFilters = !this.showPostsFilters
+
+                break;
+            case "videos":
+                this.showVideosFilters = !this.showVideosFilters
+                break;
+            }
+        }, 
+    
+        
+        goToUserPage(user_id) {
+            this.$router.push('/user/' + user_id);
+        }, 
+        goToPostPage(post_id) {
+            this.$router.push('/post/' + post_id);
+        },
+      
+        async followUser(following_id) {
+            console.log('Follow user method called, ', following_id);
+            const response = await fetch('http://localhost:3000/api/sofi/follow', {
+                body: JSON.stringify({ following_id }),
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (!response.ok) {
+                console.log('response not ok');
+            }
+
+            const data = await response.json();
+            console.log('follow server data', data);
+        },
+      
+      applyFilters() {
+    alert('Filter method called');
+
+    // Inicializamos filteredContent con una copia de los usuarios originales.
+    this.content_to_show = 'all'
+    this.filteredContent.users = [...this.content.users];
+    this.filteredContent.posts = [...this.content.posts];
+    this.filteredContent.videos = [...this.content.videos]
+
+    // FILTROS DE USUARIOS
+    if (this.filters.users.following) {
+        this.content_to_show = 'users'
+        
+        
+        console.log('Applying following filter...', this.content.users);
+        
+        const filteredUsers = this.filteredContent.users.filter(user => user.following === true);
+        this.filteredContent.users = filteredUsers;
+
+        console.log('FilteredContent users after applying following filter:', this.filteredContent.users);
     }
 
-    const data = await response.json();
-    console.log('follow server data', data);
-}
+    if (this.filters.users.friend) {
+        this.content_to_show = 'users'
+        const filteredFriends = this.filteredContent.users.filter(user => user.isYourFriend === true);
+        this.filteredContent.users = filteredFriends;
+    }
+
+    if (this.filters.users.followers) {
+        this.content_to_show = 'users'
+        const filteredFollowers = this.filteredContent.users.sort((a, b) => b.followers.length - a.followers.length)
+        this.filteredContent.users = filteredFollowers;
+    }
+
+    // FILTROS DE POSTS
+    if (this.filters.posts.popular) {
+        this.content_to_show = 'posts'
+        
+        const filteredPosts = this.filteredContent.posts.filter(post => post.postLikes.length > 100);
+        this.filteredContent.posts = filteredPosts;
+    }
+
+    if (this.filters.posts.latest) {
+        this.content_to_show = 'posts'
+        this.filteredContent.posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    }
+
+    if (this.filters.posts.trending) {
+        this.content_to_show = 'posts'
+        console.log('Posts avant filtter: ', this.filteredContent.posts)
+        const filteredTrendingPosts = this.filteredContent.posts.filter(post => post.postLikes.length > 100 && post.postComments.length > 100 && post.saved_post.length > 100);
+        this.filteredContent.posts = filteredTrendingPosts;
+        console.log('Filtered content pists fusjd ', filteredTrendingPosts)
+        console.log('filtered content new post: ', this.filteredContent.posts)
+    }
+    
+    if(this.filters.posts.most_liked) {
+        this.content_to_show = 'posts'
+        let filteredMostLikedPosts = this.filteredContent.posts.sort((a, b) => b.postLikes.length - a.postLikes.length)
+        
+        console.log('filtered most liked posts: ', filteredMostLikedPosts)
+        this.filteredContent.posts = filteredMostLikedPosts
+    }
+    
+    if(this.filters.posts.most_saved) {
+        this.content_to_show = 'posts'
+        let filteredMostSavedPosts = this.filteredContent.posts.sort((a, b) => b.saved_post.length - a.saved_post.length)
+        
+        console.log('Most saved posts: ', filteredMostSavedPosts)
+        
+        this.filteredContent.posts = filteredMostSavedPosts
+    }
+    
+    if(this.filters.posts.most_commented) {
+        this.content_to_show = 'posts'
+        let filteredMostCommentedPosts = this.filteredContent.posts.sort((a, b) => b.postComments.length - a.postComments.length)
+        
+        console.log('Filtered mosy commented post: ', filteredMostCommentedPosts)
+        
+        this.filteredContent.posts = filteredMostCommentedPosts
+    }
+    
+    if(this.filters.posts.liked) {
+        this.content_to_show = 'posts'
+        let filteredLikedPosts = this.filteredContent.posts.filter(post => post.isLiked == true)
+        console.log('filteredLikedPosts', filteredLikedPosts)
+        this.filteredContent.posts = filteredLikedPosts
+        
+    }
+    
+    //VIDEOS 
+    
+    
+    if(this.filters.videos.most_liked) {
+        this.content_to_show = 'videos'
+        let filteredVideosMostLiked = this.filteredContent.videos.sort((a, b) => b.video_likes.length - a.video_likes.length)
+        console.log('filtered videos likes: ', filteredVideosMostLiked)
+        this.filteredContent.videos = filteredVideosMostLiked
+    }
+    
+    if(this.filters.videos.most_saved) {
+        this.content_to_show = 'videos'
+        let filteredVideosMostSaved = this.filteredContent.videos.sort((a, b) => b.videos_saved.length - a.videos_saved.length)
+        console.log('filtered videos saveds: ', filteredVideosMostSaved)
+        this.filteredContent.videos = filteredVideosMostSaved
+    }
+    
+    if(this.filters.videos.most_commented) {
+        this.content_to_show = 'videos'
+        let filteredVideosMostCommented = this.filteredContent.videos.sort((a, b) => b.video_comments.length - a.video_comments.length)
+        console.log('filtered videos comments: ', filteredVideosMostCommented)
+        this.filteredContent.videos = filteredVideosMostCommented
+    }
+    
+    if(this.filters.videos.trending) {
+        this.content_to_show = 'videos'
+        let filteredVideosTreding = this.filteredContent.videos.filter(video => video.video_likes.length > 100 && video.video_saved.length > 100 && video.video_comments.length > 100)
+        this.filteredContent.videos = filteredVideosTreding
+    }
+    
+    if(this.filters.videos.liked) {
+        this.content_to_show = 'videos'
+        let filteredVideosLiked = this.filteredContent.videos.filter(video => video.isLiked == true)
+        console.log('filtered video liked: ', filteredVideosLiked)
+        this.filteredContent.videos = filteredVideosLiked
+    }
+    
+    console.log('Filtered content users:', this.filteredContent.users);
+    console.log('Filtered content posts:', this.filteredContent.posts);
+    console.log('Filtered content videos:', this.filteredContent.videos);
   
-  },
-  async mounted() {
-    this.searchQ = this.$route.params.query;
+  
+}
+        
+    },
+    
+    async mounted() {
+        this.searchQ = this.$route.params.query
     try {
-      const response = await fetch('http://localhost:3000/api/sofi/search/' + this.$route.params.query, {
-        method: 'POST',
-      });
+        const response = await fetch('http://localhost:3000/api/sofi/search/' + this.$route.params.query, {
+            method: 'POST',
+            credentials: 'include'
+        });
 
-      if (!response.ok) {
-        console.error('Something went wrong!');
-        return;
-      }
+        if (!response.ok) {
+            console.error('Something went wrong!');
+            return;
+        }
 
-      const data = await response.json();
-      this.content = data.results.results;
-      console.log('Server data', this.content.posts);
+        const data = await response.json();
+console.log('srvr data: ', data)
+        // Asignar atributos extra al contenido original
+data.results.results.users.forEach(user => {
+    
+    user.followers.forEach((follower) => {
+        console.log('recorriendo follower', follower)
+        if(follower.follower.follower_id == this.usuario.user_id) {
+            user.following = true
+        } else {
+            user.following = false
+        }
+    })
+    
+    user.friends.forEach((friend) => {
+       if(friend.friend_one_id == this.usuario.id || friend.friend_two_id == this.usuario.id) {
+           user.isYourFriend = true
+       } else {
+           user.isYourFriend = false
+       }
+    })
+});
+        
+        data.results.results.posts.forEach(post => {
+            post.postLikes.forEach((like) => {
+                if(like.user_id == this.usuario.user_id) {
+                    post.isLiked = true
+                } else {
+                    post.isLiked = false
+                }
+            })
+            
+            post.saved_post.forEach((saved) => {
+                if(saved.user_id == this.usuario.user_id) {
+                    post.isSaved = true
+                } else {
+                    post.isSaved = false
+                }
+            })
+        });
+        
+        
+        
+        data.results.results.videos.forEach((video) => {
+            video.video_likes.forEach((like) => {
+                if(like.user_id == this.usuario.user_id) {
+                    video.isLiked = true
+                } else {
+                    video.isLiked = false
+                }
+            })
+            
+            video.videos_saved.forEach((saved) => {
+                if(saved.user_id == this.usuario.user_id) {
+                    video.isSaved = true
+                } else {
+                    video.isSaved = false
+                }
+            })
+        })
+
+        this.content = data.results.results;
+        this.filteredContent = { ...this.content };
+
+        console.log('Final filteredContent:', this.filteredContent);
     } catch (error) {
-      console.error('Fetch error:', error);
+        console.error('Fetch error:', error);
     }
-  },
+},
+    
+    
+    
+    async created() {
+        
+    
+}
+    
 };
 </script>
+
 
 <style scoped>
     html, body {
@@ -220,6 +616,7 @@ export default {
 * {
     box-sizing: border-box;
 }
+
 
 /* Header */
 header {
@@ -305,14 +702,6 @@ aside .menu-item:hover {
     background-color: #e0e0e0;
 }
 
-aside .sub-menu {
-    padding: 10px;
-    display: none;
-}
-
-aside .menu-item.active .sub-menu {
-    display: block;
-}
 
 aside i {
     font-size: 20px;
@@ -334,210 +723,112 @@ aside i {
     padding: 10px;
 }
 
-.user {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    background: #42445A;
-    color: white;
-    border-radius: 20px;
-}
 
-.user img {
-    width: 60px;
-    border-radius: 50%;
-}
-
-.user .user-details {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.user .follow-btn {
-    width: 20%;
-    height: 30px;
-}
-
-.user .follow-btn button {
-    width: 100%;
-    height: 100%;
-    border: none;
-    background: #ff6347;
-    border-radius: 10px;
-    color: white;
-}
-
-.posts {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.post {
-    border: 1px solid black;
-    padding: 10px;
-    border-radius: 15px;
-}
-
-.post-user-img img {
-    width: 60px;
-    border-radius: 50%;
-}
-
-.post-user {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-.post-img img {
-    width: 100%;
-}
-
-.post-interactions {
-    display: flex;
-    justify-content: space-between;
-    padding: 15px;
-}
-
-.post-interactions div {
-    flex-grow: 1;
+.zero_content_found {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 5px;
-}
-
-/* Estilos para el nav */
-nav {
-    background-color: #f0f0f0;
     padding: 10px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    font-weight: 700;
+    color: gray;
 }
 
-nav .menu-item {
+.close-filters {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+
+.filter-div {
+    position: fixed;
+    top: 0;
+    right: 0;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    max-width: 320px; /* Ajuste para pantallas pequeñas */
+    margin: auto; /* Centrado en la página */
+}
+
+.filter-div > div {
+    margin-bottom: 15px;
+    cursor: pointer;
+    background-color: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 5px;
+    padding: 10px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.filter-div > div:hover {
+    background-color: #e2e6ea;
+    transform: translateY(-2px);
+}
+
+.filter-div .aside-users, 
+.filter-div .aside-posts, 
+.filter-div .hidden-videos {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px;
-    border-bottom: 1px solid #ccc;
+}
+
+.filter-div span {
+    font-weight: bold;
+    font-size: 1em;
+    color: #495057;
+}
+
+.filter-div label {
+    font-size: 0.9em;
+    color: #495057;
+}
+
+.filter-div input[type="checkbox"],
+.filter-div input[type="number"] {
+    margin-left: 10px;
+    transform: scale(1.2);
+}
+
+.hidden-users, .hidden-posts, .hidden-videos {
+    padding-left: 15px;
+}
+
+.show_filters_button_div {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.show_filters_button_div button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
     cursor: pointer;
+    font-weight: bold;
     transition: background-color 0.3s ease;
 }
 
-nav .menu-item:hover {
-    background-color: #e0e0e0;
+.show_filters_button_div button:hover {
+    background-color: #0056b3;
 }
 
-nav .sub-menu {
-    padding: 10px;
-    display: none;
-}
-
-nav .menu-item.active .sub-menu {
-    display: block;
-}
-
-nav i {
-    font-size: 20px;
-}
-
-/* Estilos adicionales para las secciones del nav */
-.aside-posts,
-.aside-stories,
-.aside-groups,
-.aside-trends {
-    border: 1px solid black;
+.hidden-videos {
     display: flex;
     justify-content: space-between;
-    padding: 10px;
 }
 
-.aside-posts:hover,
-.aside-stories:hover,
-.aside-groups:hover,
-.aside-trends:hover,
-.aside-users:hover {
-    background: black;
-    color: white;
-}
+ @media (max-width: 768px) { 
+    .filter-div {
+        width: 90%; /* Ajuste para pantallas pequeñas 
+        margin-top: 10px; */
+   }
+} 
 
-.hidden-posts,
-.hidden-stories,
-.hidden-groups,
-.hidden-trends {
-    border: 1px solid black;
-    position: relative;
-}
 
-.hidden-posts .sort-by,
-.hidden-stories .view-options,
-.hidden-groups .membership,
-.hidden-trends .trending-now {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
-    align-items: center;
-}
-
-.hidden-posts .sort-options,
-.hidden-stories .view-options-choices,
-.hidden-groups .membership-options,
-.hidden-trends .trending-items {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.hidden-posts .sort-options div,
-.hidden-stories .view-options-choices div,
-.hidden-groups .membership-options div,
-.hidden-trends .trending-items div {
-    display: flex;
-    gap: 5px;
-}
-
-.hidden-posts .sort-options input[type="radio"],
-.hidden-stories .view-options-choices input[type="radio"],
-.hidden-groups .membership-options input[type="radio"] {
-    margin-top: 5px;
-}
-
-.hidden-trends .trending-items .item {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-.hidden-trends .trending-items .item span {
-    background-color: #ff6347;
-    color: white;
-    padding: 5px;
-    border-radius: 5px;
-}
-
-.aside-users {
-  display: flex;
-  justify-content: space-between;
-  border: 1px solid black;
-  padding: 10px;
-}
-
-.hidden-users .order-by-son {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 15px;
-}
-
-.hidden-users .order-by-son div {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
 
 /* Media queries */
 @media (max-width: 600px) {
@@ -557,4 +848,7 @@ nav i {
     }
 }
 
-</style>
+
+
+</style> 
+<!-- 949 LINES OF CODE -->

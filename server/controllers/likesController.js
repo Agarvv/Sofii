@@ -64,7 +64,7 @@ const likePost = async (jwt_token, post_id) => {
         });
 
         if (isLiked) {
-            await likesService.unlikePost(userDecoded.user_id, post_id);
+            await likesService.unlikePost(userDecoded.user_id, isLiked);
             return { liked: false, unliked: true };
         }
 

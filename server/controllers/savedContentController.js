@@ -33,7 +33,7 @@ const saveVideo = async (jwt_token, video_id) => {
          
          if(isVideoSaved) {
              const unsaved = await
-             savedContentService.unsaveVideo(userDecoded.user_id, video_id)
+             savedContentService.unsaveVideo(userDecoded.user_id, isVideoSaved)
              return unsaved
          }
          
@@ -73,7 +73,7 @@ const savePost = async (token, post_id) => {
         
         if(isPostSaved) {
             const unsaved = await
-            savedContentService.unsavePost(userDecoded.user_id, post_id)
+            savedContentService.unsavePost(userDecoded.user_id, isPostSaved)
             return unsaved
         }
         

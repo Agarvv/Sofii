@@ -1,13 +1,14 @@
 
 <template>
   <div id="app">
-     
     <HeaderComponent :activePage="'home'" :user="usuario" />
-
+    
     <div v-show="showSearchBox" id="search" class="search-box">
+        
       <div class="search-icons">
         <font-awesome-icon @click="closeSearch()" id="close-search" icon="close" />
       </div>
+      
       <div class="input">
         <input v-model="searchQ" type="search" placeholder="Search">
         <div class="input-icons">
@@ -17,54 +18,18 @@
           <font-awesome-icon icon="fas fa-microphone" />
         </div>
       </div>
+      
     </div>
 
     <div class="container">
-        
-        
      <SidebarComponent />
-      
-      
       <main>
-         
-        
         <div class="posts">
           <div  v-for="post in posts" :key="post.id" class="post" >
-              
-              
-            <div class="post-header">
-              <div @click="goToPage('/user/' + post.user.id)">
-                <img style="width: 50px; height: 50px; border-radius: 50%" :src="'http://localhost:3000/' + post.user.profilePicture" alt="Post User Image">
-              </div>
-              <div class="post-user-detail">
-                <h4>{{ post.user.username }}</h4>
-                <p style="color: gray">{{ post.userHandle }}</p>
-              </div>
-              <div class="post-button-ellipsis">
-                <font-awesome-icon icon="fas fa-ellipsis-h" />
-              </div>
-            </div>
-            <div class="post-content">
-              <div class="post-description">
-                <p>{{ post.description }}</p>
-              </div>
-              <div @click="goToPostPage(post.id)" class="post-image">
-                <img loading="lazy":src="'http://localhost:3000/' + post.postPicture" alt="Post Image">
-              </div>
-            </div>
-            <div class="post-interactions">
-              <div @click="likePost(post.id)" class="like"><font-awesome-icon icon="fas fa-thumbs-up" /> <span>{{post.postLikes.length}}</span>   </div>
-              <div @click="goToPostPage(post.id)"class="comment"><font-awesome-icon icon="fas fa-comment" /> <span>{{post.postComments.length}}</span></div>
-              <div @click="savePost(post.id)" class="save"><font-awesome-icon icon="fas fa-bookmark" /> <span>{{post.saved_post.length}}</span> </div>
-              <div class="share"><font-awesome-icon icon="fas fa-share" /></div>
-            </div>
-            
-            
-            
+              <PostCard :post="post"/> 
           </div>
+          
         </div>
-        
-        
       </main>
 
       <div class="right-aside">
@@ -81,81 +46,154 @@
 <script>
 import HeaderComponent from './HeaderComponent'
 import SidebarComponent from './SidebarComponent'
+import PostCard from './PostCard'
 import userMixin from '../mixins/userMixin'
 import goToRoute from '../helpers/goToRoute'
-
+import { getPosts, checkIfUserLikedPost, checkIfUserSavedPost } from '../services/postService'
 
 export default {
   mixins: [userMixin], 
-  
   name: 'HelloWorld',
   components: {
       HeaderComponent,
-      SidebarComponent
+      SidebarComponent,
+      PostCard
   }, 
   data() {
     return {
       posts: [],
       searchQ: "",
       showSearchBox: false,
-      showSidebar: false
+      showSidebar: false,
+      error: "",
+      postsById: {} // Inicializamos como vacío
     };
   },
   methods: {
-    async getPosts() {
+    async servePage() {
       try {
-        const response = await fetch('http://localhost:3000/api/sofi/posts', {
-          method: 'GET'
-        });
-        if (!response.ok) {
-          console.error('Oops, Something Went Down Here!');
-          return;
-        }
-        const data = await response.json();
-        this.posts = data.posts;
-        console.log(data.posts);
-      } catch (e) {
-        console.error(e);
+          console.log('antes de llamar al metodo: ', this.usuario);
+          const data = await getPosts(this.usuario);
+          this.posts = data.posts;
+          
+          // Creamos el índice `postsById` después de cargar los posts
+          this.postsById = {};
+          this.posts.forEach(post => {
+            this.postsById[post.id] = post;
+          });
+
+          console.log('Posts From Method: ', data);
+      } catch(e) {
+          this.error = "¡Oops! Something Went Wrong !";
       }
     },
     goToPage(route) {
-        goToRoute(this.$router, route)
+        goToRoute(this.$router, route);
     }, 
     handleSearch() {
-      console.log('Handle Search Method Called.', this.searchQ);
       this.$router.push('/search/' + this.searchQ);
-    },
-    async likePost(post_id) {
-      try {
-        const response = await fetch('http://localhost:3000/api/sofi/like_content', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ type: 'POST', post_id: post_id }),
-          credentials: 'include'
-        });
-        const data = await response.json();
-        console.log('Server like post data:', data);
-      } catch (e) {
-        console.error(e);
+    }
+  },
+  watch: {
+    usuario(newValue) {
+      if (newValue) {
+        this.servePage(); // Llama a servePage cuando usuario se establece
       }
-    },
-    async savePost(post_id) {
-     const response = await fetch('http://localhost:3000/api/sofi/save_content', {
-         method: 'POST',
-         headers: {
-            'Content-Type': 'application/json'
-          },
-         body: JSON.stringify({ type: 'POST', post_id: post_id }),
-         credentials: 'include'
-     })
-     const data = await response.json()
-     console.log('server data save: ', data)
-    },
+    }
   },
   created() {
-    this.getPosts();
+    // Evento para nuevos posts creados
+    this.$socket.on('createdPost', async newPost => {
+        newPost.isLiked = await checkIfUserLikedPost(newPost) ? true : false;
+        newPost.isSaved = await checkIfUserSavedPost(newPost) ? true : false;
+
+        // Agregamos el post y actualizamos el índice
+        this.posts.push({ ...newPost });
+        this.postsById[newPost.id] = newPost;
+    });
+    
+    
+
+this.$socket.on('likePost', newLike => {
+    console.log('Like Recibido!', newLike);
+    
+
+    const postTarget = this.postsById[newLike.post_id];
+
+    if (postTarget) {
+        console.log('post target: ', postTarget);
+        console.log('new liker: ', newLike);
+        console.log('likes from post:', postTarget.postLikes);
+        
+
+        postTarget.postLikes.push({ ...newLike });
+
+
+    } else {
+        console.warn(`Post con ID ${newLike.post_id} no encontrado.`);
+    }
+});
+
+
+    // Evento para unlikes recibidos
+    this.$socket.on('unlikePost', like => {
+        console.log('Unlike Recibido!', like);
+
+        // Encontramos el post en cuestión
+        const postTarget = this.postsById[like.post_id];
+
+        if (postTarget) {
+            // Filtramos el like que corresponde al unlike
+            postTarget.postLikes = postTarget.postLikes.filter(l => l.id !== like.id);
+        } else {
+            console.warn(`Post con ID ${like.post_id} no encontrado.`);
+        }
+    });
+    
+    
+    this.$socket.on('savedPost', saved => {
+    console.log('Saved Received!', saved);
+
+    const postTarget = this.postsById[saved.post_id];
+
+    if (postTarget) {
+        // Verificamos si el usuario ya guardó el post (comparamos con el saved.post_id)
+        const alreadySaved = postTarget.saved_post.some(
+            s => s.user_id == this.usuario.id && s.post_id == saved.post_id
+        );
+
+        if (!alreadySaved) {
+            // Si no está guardado, lo agregamos correctamente
+            postTarget.saved_post.push({
+                saved
+            });
+            console.log('Post guardado con éxito');
+        } else {
+            alert('Este post ya fue guardado.');
+        }
+    }
+});
+
+this.$socket.on('unsavedPost', saved => {
+    const postTarget = this.postsById[saved.post_id];
+    
+    if (postTarget) {
+        console.log('Unsaved recibido:', saved);
+        console.log('Estructura actual de saved_post antes de eliminar:', postTarget.saved_post);
+
+        // Eliminamos el post guardado comparando por user_id y post_id
+        postTarget.saved_post = postTarget.saved_post.filter(s => 
+            !(s.user_id === saved.user_id && s.post_id === saved.post_id)
+        );
+
+        console.log('Estructura de saved_post después de eliminar:', postTarget.saved_post);
+    } else {
+        console.warn('No se encontró el post');
+    }
+});
+    
+    
+    
   }
 };
 </script>

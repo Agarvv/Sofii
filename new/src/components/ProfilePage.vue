@@ -20,6 +20,30 @@
   <p style="color: gray">{{user.following?.length || 0}} Following</p>
 </div>
 
+<div v-if="!isSelfUser" class="active-inactive">
+    
+    <div v-if="user.active" class="user-active">
+        <div style="
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: green;
+        "></div>
+        <p style="color: green">Active</p>
+    </div>
+    
+    <div v-if="!user.active" class="user-inactive">
+        <div style="
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: gray;
+        "></div>
+        <p style="color: gray">Inactive</p>
+    </div>
+    
+</div>
+
           <div v-if="isSelfUser" class="isSelfUserDiv">
 
            <div class="buttons">
@@ -31,7 +55,7 @@
           </div>
           
           <div v-else class="interact-buttons">
-            <button @click="sendChat(user.id)" style="background: gray;"> <font-awesome-icon :icon="['fas', 'comment']" />Chat</button>
+            <button @click="sendChat(user.id)" style="background: purple;"> <font-awesome-icon :icon="['fas', 'comment']" />Chat</button>
             <button @click="sendFriendRequest(user.id)" style="background: #007bff;"> <font-awesome-icon :icon="['fas', 'user-plus']" />Friend Request</button>
             <button style="background: black; color: white; padding: 15px">
                 <font-awesome-icon icon="user-plus"/>
@@ -196,7 +220,7 @@ export default {
     return {
       user: {},
       userPosts: [],
-      isSelfUser: false
+      isSelfUser: null
     };
   },
   methods: {
@@ -573,6 +597,18 @@ aside .description {
     gap: 5px;
 }
 
+
+.active-inactive {
+   
+    width: 100%;
+    padding-bottom: 5px;
+}
+
+.active-inactive div {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
 
 
 @media (max-width: 600px) {

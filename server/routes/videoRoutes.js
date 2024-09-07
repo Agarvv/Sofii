@@ -4,6 +4,7 @@ const Video = require('../models/Video');
 const videoController = require('../controllers/videoController');
 const videoService = require('../services/videoService');
 const multer = require('multer');
+const { body } = require('express-validator')
 
 // Configuración de Multer
 const storage = multer.diskStorage({
@@ -52,6 +53,21 @@ router.post('/add_video', upload.single('video'), async (req, res) => {
         return res.status(500).json({ error: e });
     }
 });
+
+router.post('/destroy_video', [
+    body("video_id").isNumeric().withMessage('The Video Id Should Be An Number, Not An Text String')
+    ], async (req, res) => {
+    try {
+        const jwtToken = req.cookies.jwt 
+        const deletedVideo = await videoController.deleteVideo(req.body.video_id, jwtToken)
+        return deletedVideo
+    } catch(e) {
+        console.log(e)
+        return res.status(500).json({
+            error: "Internal Server Error"
+        })
+    }
+})
 
 router.get('/video/:video_id', async (req, res) => {
     try {

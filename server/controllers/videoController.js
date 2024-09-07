@@ -33,6 +33,28 @@ const handleVideoCreation = async (jwt_token, video, data) => {
     }
 }
 
+const deleteVideo = async (video_id, jwtToken) => {
+    try {
+        const userDecoded = await tokenController.verifyJwtToken(jwtToken)
+        
+        const videoExists = await Video.findOne({
+            where: {
+                id: video_id,
+                video_user_id: userDecoded.user_id
+            }
+        })
+        
+        if(videoExists) {
+            const deletedVideo = await videoService.deleteVideo(videoExists, userDecoded)
+            return deletedVideo
+        } else {
+            throw new Error("Something Is Wrong With The Video That You Want To Delete, Maybe Its Deleted Or Is Not Yours.")
+        }
+    } catch(e) {
+        throw e
+    }
+}
+
 
 const findVideoById = async (videoId) => {
     try {
@@ -104,5 +126,6 @@ const findVideoById = async (videoId) => {
 
 module.exports = {
     handleVideoCreation,
-    findVideoById
+    findVideoById,
+    deleteVideo
 }

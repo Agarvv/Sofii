@@ -10,15 +10,20 @@ const CommentAwnsersDislikes = require('../models/CommentAwnsersDislikes')
 
 const VideoCommentDislikes = require('../models/VideoCommentDislikes')
 const VideoCommentAwnsersDislikes = require('../models/VideoCommentAwnsersDislikes')
+const websocket = require('../websocket')
 
 
 
 const likeVideo = async (user, video) => {
     try {
-        await VideoLikes.create({
+       const newLike = await VideoLikes.create({
             user_id: user.user_id,
             video_id: video.id
         });
+        
+        const io = websocket.getIO()
+        io.emit('videoLiked', newLike)
+        
     } catch (e) {
         throw e;
     }
@@ -26,12 +31,15 @@ const likeVideo = async (user, video) => {
 
 const unlikeVideo = async (user_id, video_id) => {
     try {
-        await VideoLikes.destroy({
+        const like = await VideoLikes.destroy({
             where: {
                 user_id: user_id,
                 video_id: video_id
             }
         });
+        
+        const io = websocket.getIO()
+        io.emit('unlikeVideo', like)
     } catch (e) {
         throw e;
     }
@@ -39,23 +47,26 @@ const unlikeVideo = async (user_id, video_id) => {
 
 const likePost = async (user, post) => {
     try {
-        await Likes.create({
+       const newLike = await Likes.create({
             user_id: user.user_id,
             post_id: post.id
         });
+        
+        const io = websocket.getIO()
+        io.emit('likePost', newLike)
+        
     } catch (e) {
         throw e;
     }
 };
 
-const unlikePost = async (user_id, post_id) => {
+const unlikePost = async (user_id, like) => {
     try {
-        await Likes.destroy({
-            where: {
-                user_id: user_id,
-                post_id: post_id
-            }
-        });
+    
+        await like.destroy(); 
+    
+        const io = websocket.getIO();
+        io.emit('unlikePost', like); // Emitimos el objeto completo del "like" eliminado
     } catch (e) {
         throw e;
     }
@@ -63,11 +74,15 @@ const unlikePost = async (user_id, post_id) => {
 
 const likeComment = async (user, comment, post) => {
     try {
-        await CommentLikes.create({
+        const newLike = await CommentLikes.create({
             user_id: user.user_id,
             comment_id: comment.id,
             post_id: post.id
         });
+        
+        const io = websocket.getIO()
+        io.emit('likeComment', newLike)
+        
     } catch (e) {
         throw e;
     }
@@ -75,12 +90,15 @@ const likeComment = async (user, comment, post) => {
 
 const likeCommentAnswer = async (user, post, comment, answer) => {
     try {
-        await CommentAwnsersLikes.create({
+        const newLike = await CommentAwnsersLikes.create({
             user_id: user.user_id,
             post_id: post.id,
             comment_id: comment.id,
             awnser_id: answer.id
         });
+        
+        const io = websocket.getIO()
+        io.emit('likeCommentAwnser', newLike)
     } catch (e) {
         throw e;
     }
@@ -88,11 +106,14 @@ const likeCommentAnswer = async (user, post, comment, answer) => {
 
 const likeVideoComment = async (user, video, comment) => {
     try {
-        await VideoCommentLikes.create({
+        const newLike = await VideoCommentLikes.create({
             user_id: user.user_id,
             video_id: video.id,
             comment_id: comment.id
         });
+        
+        const io = websocket.getIO()
+        io.emit('likeVideoComment', newLike)
     } catch (e) {
         throw e;
     }
@@ -100,12 +121,15 @@ const likeVideoComment = async (user, video, comment) => {
 
 const likeVideoCommentAnswer = async (user, video, comment, answer) => {
     try {
-        await VideoCommentAwnsersLikes.create({
+       const newLike = await VideoCommentAwnsersLikes.create({
             user_id: user.user_id,
             video_id: video.id,
             comment_id: comment.id,
             awnser_id: answer.id
         });
+        
+        const io = websocket.getIO()
+        io.emit('likeVideoCommentAnswer', newLike)
     } catch (e) {
         throw e;
     }
@@ -114,13 +138,14 @@ const likeVideoCommentAnswer = async (user, video, comment, answer) => {
 const dislikeComment = async (user, post, comment) => {
     try {
         
-        await CommentDislikes.create({
+       const like = await CommentDislikes.create({
             user_id: user.user_id,
             comment_id: comment.id,
             post_id: post.id
         })
         
-        return 
+        const io = websocket.getIO()
+        io.emit('unlikeComment', like)
         
         
     } catch(e) {
@@ -131,14 +156,15 @@ const dislikeComment = async (user, post, comment) => {
 const dislikeCommentAwnser = async (user, post, comment, awnser) => {
     try {
         
-        await CommentAwnsersDislikes.create({
+       const like = await CommentAwnsersDislikes.create({
             user_id: user.user_id,
             comment_id: comment.id,
             awnser_id: awnser.id,
             post_id: post.id
         })
         
-        return 
+        const io = websocket.getIO()
+        io.emit('unlikeCommentAwnser', like)
         
     } catch(e) {
         throw e
@@ -148,13 +174,14 @@ const dislikeCommentAwnser = async (user, post, comment, awnser) => {
 const dislikeVideoComment = async (user, video, comment) => {
     try {
         
-        await VideoCommentDislikes.create({
+       const like = await VideoCommentDislikes.create({
             user_id: user.user_id,
             video_id: video.id,
             comment_id: comment.id
         })
         
-        return 
+        const io = websocket.getIO()
+        io.emit('unlikeVideoComment', like)
         
         
     } catch(e) {
@@ -164,14 +191,15 @@ const dislikeVideoComment = async (user, video, comment) => {
 
 const dislikeVideoCommentAwnser = async (user, video, comment, awnser) => {
     try {
-        await VideoCommentAwnsersDislikes.create({
+         const like = await VideoCommentAwnsersDislikes.create({
             user_id: user.user_id,
             video_id: video.id,
             comment_id: comment.id,
             awnser_id: awnser.id
         })
         
-        return 
+        const io = websocket.getIO()
+        io.emit('unlikeVideoCommentAwnser', like)
         
         
     } catch(e) {

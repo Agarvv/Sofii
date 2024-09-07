@@ -103,6 +103,7 @@
 
 <script>
 import userMixin from '../mixins/userMixin'
+
 export default {
   mixins: [userMixin],
   name: 'profileDetails',
@@ -118,9 +119,10 @@ export default {
         gender: "",             // User gender
         job: ""                 // User job
       },
-      originalData: {} ,
+      originalData: {},
       success: null,
-      successMessage: ""
+      successMessage: "",
+      changes: []  // Array para guardar los cambios realizados
     };
   },
   methods: {
@@ -154,6 +156,8 @@ export default {
     },
     async saveAllChanges() {
       const changes = {};
+      this.changes = []; // Reiniciamos el array de cambios
+
       for (const key in this.userNewData) {
         if (this.userNewData[key] !== this.originalData[key] && this.userNewData[key] !== "") {
           changes[key] = this.userNewData[key];
@@ -248,12 +252,7 @@ export default {
           }
 
           if (response.ok) {
-            this.successMessage = `Your ${key} Has Been Changed !`
-            this.success = true 
-          
-            console.log(`Change for ${key} saved successfully`);
-            const data = await response.json();
-            console.log(data);
+            this.changes.push(key); // Añadimos el campo al array de cambios
           } else {
             const errorData = await response.json();
             console.error(`Error saving ${key}: ${response.statusText}`, errorData);
@@ -261,6 +260,14 @@ export default {
         } catch (error) {
           console.error(`Error saving ${key}: `, error);
         }
+      }
+
+      // Construir el mensaje de éxito
+      if (this.changes.length > 0) {
+        const changesList = this.changes.join(', ');
+        this.successMessage = `Your ${changesList} has been changed successfully.`;
+        this.success = true;
+        console.log(this.successMessage);
       }
     }
   },
@@ -425,6 +432,10 @@ header {
 @media (max-width: 600px) {
   .user-details-section {
     width: 100%;
+  }
+  
+  .container {
+      width: 100%;
   }
 }
 </style>

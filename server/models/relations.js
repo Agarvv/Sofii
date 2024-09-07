@@ -151,6 +151,15 @@ User.belongsToMany(User, {
   otherKey: 'following_id'
 });
 
+User.belongsToMany(User, {
+  through: Friends, // Usamos el nombre del modelo, que es "Follower"
+  as: 'friends',  // Alias para los que siguen al usuario
+  foreignKey: 'friend_one_id', 
+  otherKey: 'friend_two_id'
+});
+
+
+
 
 
 // Relación de amistad

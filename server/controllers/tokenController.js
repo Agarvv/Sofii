@@ -2,6 +2,9 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User')
 
 const verifyJwtToken = (token) => {
+    if(!token) {
+        throw new Error("token_not_provided")
+    }
     return new Promise((resolve, reject) => {
         jwt.verify(token, 'secret', async (err, decoded) => {
             if (err) {

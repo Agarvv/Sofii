@@ -93,6 +93,11 @@ const User = sequelize.define('User', {
   banner: {
       type: DataTypes.STRING,
       allowNull: true
+  },
+  active: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true,
+      defaultValue: false
   }
 }, {
   tableName: 'users'

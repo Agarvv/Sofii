@@ -4,11 +4,14 @@
       <div class="main-header">
         <div class="user-details">
           <div class="user-img">
-            <img :src="userProfilePicture" class="profile-img">
+            <img style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;" :src="userProfilePicture" class="profile-img">
           </div>
           <div class="user-username">
+            
             <h4>{{ user.username }}</h4>
-            <p class="status">Connected</p>
+            <p v-if="isUserTyping">{{user.username}} Is Typing...</p>
+             <p  style="color: green;" v-if=" !isUserTyping && user.active" class="status">Online</p>
+            <p style="color: gray" v-if=" !isUserTyping && !user.active">Offline</p>
           </div>
         </div>
         <div class="header-interact">
@@ -33,6 +36,11 @@
               <img :src="getMessageUserProfilePicture(message)" class="message-img">
             </div>
             <p v-if="message.message_content.length > 0">{{ message.message_content }}</p>
+           <font-awesome-icon 
+  icon="check" 
+  size="1x" 
+  :style="{ color: message.readed ? '#1DA1F2' : '#000000' }" 
+   class="msgIcon"/>
         </div>
             
             
@@ -106,6 +114,7 @@
         </div>
         <div class="footer-message-input">
           <input
+            @input="broadcastTyping"
             v-model="message"
             id="inp"
             type="text"
@@ -121,7 +130,12 @@
 </template>
 
 <script>
+import userMixin from '../mixins/userMixin'
+
+
 export default {
+  mixins: [userMixin], 
+  
   name: 'ChatBox',
   data() {
     return {
@@ -140,7 +154,8 @@ export default {
       recordingTime: 0,
       recordingInterval: null,
       image: null,
-      video: null
+      video: null,
+      isUserTyping: false
     };
   },
   computed: {
@@ -266,8 +281,6 @@ async sendMessage() {
 
 
 
-
-
     getMessageClass(message) {
       if (!message.message_user || !this.user) return ''; 
       return message.message_user.id === this.user.id ? 'user' : 'friend';
@@ -386,7 +399,12 @@ async sendMessage() {
             console.error('Error uploading audio:', error);
         }
     };
+},
+
+broadcastTyping() {
+    this.$socket.emit('typing', this.chat_id)
 }
+
     
     
   },
@@ -417,12 +435,62 @@ async sendMessage() {
       console.error("Error during fetch:", error);
       this.error = "Failed to fetch chat data.";
     }
+    
+    
+    
+    
+    const unreadMessages = this.messages.filter(message => message.readed === false)
+      unreadMessages.forEach((message) => {
+          
+          console.log('usuaerio id: ', this.usuario.user_id)
+          
+          console.log('unreaded message: ', message)
+          
+          
+          if(message.message_user_id !== this.usuario.user_id) {
+              this.$socket.emit('readMessage', {
+              message: message,
+              chat_id: this.chat_id
+            })
+          }
+          
+      })
+    
+    
+    
   },
+  
+  
   mounted() {
+     
+      
+      
     this.$socket.on('chatMessage', (message) => {
       this.messages.push(message);
       console.log('message received from the server !', message)
     });
+    
+    this.$socket.on('typing', () => {
+    this.isUserTyping = true;
+    
+    console.log('Se recibió el evento typing');
+
+
+     this.$socket.on('readMessage', (message) => {
+    console.log('Message readed Received From Server!', message);
+    // Buscar el mensaje original por ID y marcarlo como leído
+    const originalMessage = this.messages.find(msg => msg.id === message.id);
+    if (originalMessage) {
+        alert('message found')
+        originalMessage.readed = true;
+    } else {
+        alert('message not found')
+    }
+});
+
+
+});
+    
   }
 };
 </script>
@@ -602,6 +670,10 @@ main {
 .message.user {
     display: flex;
     flex-direction: row;
+}
+
+.message.user .msgIcon {
+    display: none;
 }
 
 .message .msg_content {

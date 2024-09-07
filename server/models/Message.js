@@ -29,6 +29,11 @@ const Message = sequelize.define('messages', {
   fileSource: {
     type: DataTypes.TEXT,       // Asumí que esto es un TEXT, cámbialo si necesitas algo más específico
     allowNull: true
+  },
+  readed: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true,
+      defaultValue: false
   }
 }, {
   tableName: 'messages'

@@ -11,6 +11,8 @@ const { Op } = require('sequelize');
 const handleSindleMessage = async (jwtToken, data) => {
     try {
         
+        console.log('verifing jwt token: ', jwtToken)
+        
         const userDecoded = await
         tokenController.verifyJwtToken(jwtToken)
         
@@ -139,6 +141,8 @@ const checkIfAuthorized = async (user, room_id) => {
         
         if(userChat.sender_id !== user.user_id && userChat.receiver_id !== user.user_id ) {
             throw new Error("You are not authorized to connect on this chat.")
+            
+            
         } else if(userChat.sender_id == user.user_id || userChat.receiver_id == user.user_id) {
             return true
         }
@@ -214,11 +218,44 @@ const findUserChatById = async (jwtToken, chat_id) => {
     }
 };
 
+const readMessage = async (message, user) => {
+    try {
+        
+        const dbMessage = await
+        Message.findOne({
+            where: {
+                id: message.id
+            }
+        })
+        
+        if(dbMessage) {
+            
+            console.log('dbMessage: ', dbMessage.message_user_id)
+            console.log('user: ', user)
+            
+            
+                dbMessage.readed = true 
+                await dbMessage.save()
+                return dbMessage
+            
+            
+        } else {
+            throw new Error("msg_not_found")
+        }
+        
+    } catch(e) {
+        throw e
+    }
+} 
+
+
+
 module.exports = { 
     handleChat,
     handleSindleMessage,
     handleMessageWithFile,
     checkIfAuthorized,
     getUserChats,
-    findUserChatById
+    findUserChatById,
+    readMessage
 };

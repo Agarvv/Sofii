@@ -7,15 +7,22 @@ const Likes = require('../models/Likes')
 const VideoLikes = require('../models/VideoLikes')
 const Comment = require('../models/Comment')
 const VideoComments = require('../models/VideoComments')
+const websocket = require('../websocket')
+
 
 const saveVideo = async (user, video_id) => {
   try {
-      await SavedVideo.create({
+      
+      const saved = await SavedVideo.create({
           user_id: user.user_id,
           video_id: video_id
       })
-      const success = "video saved sucessfully"
-      return success
+      
+      const io = websocket.getIO()
+      io.emit('savedVideo', saved)
+      
+      return { saved: true, unsaved: false }
+      
   } catch(e) {
       throw new Error(e)
   }
@@ -23,40 +30,44 @@ const saveVideo = async (user, video_id) => {
 
 const savePost = async (user, post_id) => {
     try {
-        await Saved.create({
+        const saved = await Saved.create({
             user_id: user.user_id,
             post_id: post_id
         })
+        
+        const io = websocket.getIO()
+        io.emit('savedPost', saved)
+        
+        return { saved: true, unsaved: false }
+        
     } catch(e) {
         throw new Error(e)
     }
 }
 
-const unsaveVideo = async (user_id, video_id) => {
+const unsaveVideo = async (user_id, saved) => {
     try {
-        await SavedVideo.destroy({
-            where: {
-                user_id: user_id,
-                video_id: video_id
-            }
-        })
-        const unsaved = "video unsaved sucesfully"
-        return unsaved 
+        await saved.destroy()
+        
+        const io = websocket.getIO()
+        io.emit('unsavedVideo', saved)
+        
+        return { saved: false, unsaved: true }
+        
     } catch(e) {
         throw new Error(e)
     }
 }
 
-const unsavePost = async (user_id, post_id) => {
+const unsavePost = async (user_id, saved) => {
     try {
-        await Saved.destroy({
-            where: {
-                user_id: user_id,
-                post_id: post_id
-            }
-        })
-        const unsaved = "post unsaved sucesfully"
-        return unsaved 
+        
+       await saved.destroy()
+       const io = websocket.getIO()
+       io.emit('unsavedPost', saved)
+       
+       return { saved: false, unsaved: true }
+       
     } catch(e) {
         throw new Error(e)
     }

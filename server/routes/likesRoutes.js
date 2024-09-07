@@ -54,9 +54,9 @@ router.post('/like_content', async (req, res) => {
         }
 
         if (data.liked) {
-            return res.status(201).json({ detail: `${type} liked successfully.` });
+            return res.status(201).json({ liked: true });
         } else if (data.unliked) {
-            return res.status(201).json({ detail: `${type} unliked successfully.` });
+            return res.status(201).json({ unliked: true });
         }
 
     } catch (e) {

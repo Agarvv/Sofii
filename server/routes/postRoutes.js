@@ -2,7 +2,6 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const { body } = require('express-validator');
-const createPostController = require('../controllers/createPostController');
 const tokenController = require('../controllers/tokenController');
 const Likes = require('../models/Likes')
 const Saved = require('../models/Saved')
@@ -50,7 +49,7 @@ router.post('/createPost', upload, [
         const postPicture = req.files.postPicture ? req.files.postPicture[0].path : null;
         const videoSource = req.files.videoSource ? req.files.videoSource[0].path : null;
 
-        await createPostController.createPost(req.body,decoded, user_id, user_name, user_img, postPicture, videoSource);
+        await postController.createPost(req.body,decoded, user_id, user_name, user_img, postPicture, videoSource);
         return res.status(201).json({ detail: 'Your Post Has Been Submitted To Our System.' });
     } catch (e) {
         console.log(e);
@@ -58,10 +57,32 @@ router.post('/createPost', upload, [
     }
 });
 
+router.post('/destroy_post', async (req, res) => {
+    try {
+        
+        const jwtToken = req.cookies.jwt 
+        const deletedPost = await postController.deletePost(req.body.post_id, jwtToken)
+        if(deletedPost) {
+            return res.status(201).json({
+                post: deletedPost
+            })
+        } else {
+            return res.status(500).json({
+                error: "Internal Server Error"
+            })
+        }
+        
+    }catch(e) {
+        console.log(e)
+        return res.status(500).json({
+            error: "Internal Server Error"
+        })
+    }
+})
+
 
 router.get('/posts', async (req, res) => {
     try {
-        
         
         const posts = await Post.findAll({
     where: { private: false },

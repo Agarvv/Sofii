@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import { findVideos } from '../services/videoService'
 import VideoCard from './VideoCard.vue';
 import HeaderComponent from './HeaderComponent'
 import userMixin from '../mixins/userMixin'
@@ -33,27 +34,29 @@ export default {
   mixins: [userMixin],
   data() {
     return {
-      videos: [] // Inicialmente vacío, se llenará con datos
+      videos: [], // Empty
+      error: ""
     };
   },
   methods: {
     async getVideos() {
-      const url = "http://localhost:3000/api/sofi/videos";
       try {
-        const response = await fetch(url, { method: 'GET' });
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        console.log('Server data videos: ', data);
-        this.videos = data.videos; // Asigna los datos recibidos al array videos
-      } catch (error) {
-        console.error('Fetch error: ', error);
+          const data = await findVideos(this.usuario) 
+          this.videos = data.videos
+      } catch(e) {
+          this.error = "Internal Server Error"
       }
     }
   },
+  watch: {
+      usuario(newValue) {
+          if(newValue) {
+              this.getVideos()
+          }
+      }
+  }, 
   created() {
-    this.getVideos(); // Llama a la función para obtener los videos al crear el componente
+    
   }
 }
 </script>

@@ -2,13 +2,16 @@
   <div  class="video">
     <div class="video-header">
       <div @click="goToUserPage(video.user_video.id)" class="video-user-img">
-        <img :src="'http://localhost:3000/' + video.user_video.profilePicture" alt="Video User Image">
+        <img style="width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                object-fit: cover;" :src="'http://localhost:3000/' + video.user_video.profilePicture" alt="Video User Image">
       </div>
       <div class="video-user-detail">
         <h4>{{ video.user_video.username }}</h4>
       </div>
-      <div class="video-button-ellipsis">
-        <font-awesome-icon icon="fas fa-ellipsis-h" />
+      <div @click="deleteAVideo(video.id)" class="video-button-delete">
+        <font-awesome-icon icon="fas fa-close" />
       </div>
     </div>
     <div class="video-content">
@@ -23,14 +26,26 @@
       </div>
     </div>
     <div class="video-interactions">
-      <div @click="likeVideo(video.id)" class="like"><font-awesome-icon icon="fas fa-thumbs-up" /> 
-        <span>{{video.video_likes.length}}</span>
+      <div @click="likeAVideo(video.id)" class="like">
+          <font-awesome-icon icon="fas fa-thumbs-up" :style="{color: video.isLiked ? 'blue' : ''}"/> 
+        <span 
+        :style="{
+        color: video.isLiked ? 'blue' : ''
+        }"
+        >{{video.video_likes.length}}</span>
       </div>
       <div @click="goToVideoPage(video.id)" class="comment"><font-awesome-icon icon="fas fa-comment" />  
       <span>{{video.video_comments.length}}</span>
       </div>
-      <div @click="saveVideo(video.id)" class="save"><font-awesome-icon icon="fas fa-bookmark" />
-      <span>{{video.videos_saved.length}}</span>
+      <div @click="saveAVideo(video.id)" class="save">
+          <font-awesome-icon icon="fas fa-bookmark"
+          :style="{
+          color: video.isSaved ? 'blue' : ''
+          }"
+          />
+      <span :style="{
+      color: video.isSaved ? 'blue' : ''
+      }">{{video.videos_saved.length}}</span>
       </div>
     </div>
     
@@ -42,6 +57,10 @@
 </template>
 
 <script>
+import { likeVideo } from '../services/videoService'
+import { saveVideo } from '../services/videoService'
+import { deleteVideo } from '../services/videoService'
+
 export default {
   name: 'VideoCard',
   props: {
@@ -52,37 +71,37 @@ export default {
   },
   data() {
     return {
-      comment: ""
+      comment: "",
+      error: ""
     };
   },
   methods: {
-    async likeVideo(video_id) {
-      const type = "VIDEO";
-      
-      const response = await fetch('http://localhost:3000/api/sofi/like_content', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ video_id, type }),
-        credentials: 'include'
-      });
-      const data = await response.json();
-      console.log('Server data for likes: ', data);
+    async likeAVideo(video_id) {
+      try {
+          const data = await likeVideo(video_id)
+          console.log('Data received from method!', data)
+      } catch(e) {
+          this.error = "Internal Server Error !"
+          console.log(e)
+      }
     },
-    async saveVideo(video_id) {
-      const type = "VIDEO";
-      
-      const response = await fetch('http://localhost:3000/api/sofi/save_content', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ video_id, type }),
-        credentials: 'include'
-      });
-      const data = await response.json();
-      console.log('Server data save videos: ', data);
+    async saveAVideo(video_id) {
+      try {
+          const data = await saveVideo(video_id)
+          console.log('Data received from method! sage', data)
+      } catch(e) {
+          this.error = "Internal Server Error !"
+          console.log(e)
+      }
+    },
+    async deleteAVideo(video_id) {
+        try {
+          const data = await deleteVideo(video_id)
+          console.log('Data received from method!', data)
+      } catch(e) {
+          this.error = "Internal Server Error !"
+          console.log(e)
+      }
     },
     goToVideoPage(video_id) {
       this.$router.push('/watch/' + video_id);

@@ -27,9 +27,7 @@ const createForFriendNotification = async (user) => {
                     notification: `${user.username} Created A New Post`
                 });
             }));
-        } else {
-            throw new Error("You do not have friends")
-        }
+        } 
 
     } catch (e) {
         throw new Error(e.message);  // Mejor manejo de errores para obtener un mensaje más útil.
