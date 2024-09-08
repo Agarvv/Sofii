@@ -9,29 +9,13 @@ export async function findVideos(user) {
         if(response.ok) {
             const data = await response.json()
             
-            data.videos.forEach((video) => {
-                if(video.video_user_id == user.user_id) {
-                    video.isOwnVideo = true
-                } else {
-                    video.isOwnVideo = false
-                }
-                
-                video.video_likes.forEach((like) => {
-                    if(like.user_id == user.user_id) {
-                        video.isLiked = true
-                    } else {
-                        video.isLiked = false
-                    }
+            
+                data.videos.forEach((video) => {
+                    console.log('Video fjsj: ', video)
+                    video.isLiked = video.video_likes.some(like => like.user_id == user.user_id)
+                    
+                    video.isSaved = video.videos_saved.some(saved => saved.user_id == user.user_id)
                 })
-                
-                video.videos_saved.forEach((saved) => {
-                    if(saved.user_id == user.user_id) {
-                        video.isSaved = true
-                    } else {
-                        video.isSaved = false
-                    }
-                })
-            })
             
             console.log('Filters passed: ', data.videos)
             
@@ -44,6 +28,7 @@ export async function findVideos(user) {
         }
         
     } catch (e) {
+        console.log('error: ', e)
         throw e; 
     }
 }

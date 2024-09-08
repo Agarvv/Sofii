@@ -27,10 +27,10 @@
     </div>
     <div class="video-interactions">
       <div @click="likeAVideo(video.id)" class="like">
-          <font-awesome-icon icon="fas fa-thumbs-up" :style="{color: video.isLiked ? 'blue' : ''}"/> 
+          <font-awesome-icon icon="fas fa-thumbs-up" :style="{color: isLiked ? 'blue' : ''}"/> 
         <span 
         :style="{
-        color: video.isLiked ? 'blue' : ''
+        color: isLiked ? 'blue' : ''
         }"
         >{{video.video_likes.length}}</span>
       </div>
@@ -40,11 +40,11 @@
       <div @click="saveAVideo(video.id)" class="save">
           <font-awesome-icon icon="fas fa-bookmark"
           :style="{
-          color: video.isSaved ? 'blue' : ''
+          color: isSaved ? 'blue' : ''
           }"
           />
       <span :style="{
-      color: video.isSaved ? 'blue' : ''
+      color: isSaved ? 'blue' : ''
       }">{{video.videos_saved.length}}</span>
       </div>
     </div>
@@ -72,7 +72,9 @@ export default {
   data() {
     return {
       comment: "",
-      error: ""
+      error: "",
+      isLiked: this.video.isLiked,
+      isSaved: this.video.isSaved
     };
   },
   methods: {
@@ -80,6 +82,13 @@ export default {
       try {
           const data = await likeVideo(video_id)
           console.log('Data received from method!', data)
+          
+          if(data.liked) {
+          this.isLiked = true
+          } else {
+              this.isLiked = false
+          }
+          
       } catch(e) {
           this.error = "Internal Server Error !"
           console.log(e)
@@ -89,6 +98,11 @@ export default {
       try {
           const data = await saveVideo(video_id)
           console.log('Data received from method! sage', data)
+          if(data.saved) {
+              this.isSaved = true 
+          } else {
+              this.isSaved = false
+          }
       } catch(e) {
           this.error = "Internal Server Error !"
           console.log(e)
@@ -110,8 +124,8 @@ export default {
       this.$router.push('/user/' + user_id);
     }
   },
-  mounted() {
-    console.log('Video:', this.video); 
+  created() {
+      console.log('video prop: ', this.video)
   }
 };
 </script>

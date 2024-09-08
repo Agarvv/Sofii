@@ -1,3 +1,7 @@
+import fetchUrl from '../helpers/fetchUrl'
+
+
+
 export async function getPosts(user) {
     console.log('Method called ¡')
     const response = await fetch(process.env.VUE_APP_API_URL + '/api/sofi/posts', {
@@ -13,14 +17,7 @@ export async function getPosts(user) {
             
             post.isLiked = post.postLikes.some((like) => like.user_id == user.user_id);
             
-            post.saved_post.forEach((saved) => {
-                if(saved.user_id == user.user_id) {
-                    post.isSaved = true
-                } else {
-                    post.isSaved = false
-                    console.log('User Not Liked That Post.')
-                }
-             })
+            post.isSaved = post.saved_post.some(saved => saved.user_id == user.user_id )
             
         })
         return data 
@@ -127,3 +124,49 @@ export async function checkIfUserSavedPost(post, user)  {
     })
 }
 
+
+export async function getPost(post_id) {
+      
+      const response = await fetchUrl(process.env.VUE_APP_API_URL + `/api/sofi/post/${postId}`, null, 'GET')
+      if(response.ok) {
+          const data = await response.json()
+          return data.post
+      } else {
+          throw new Error("intern_serv_err")
+      }
+      
+      
+}
+
+export async function postComment(post_id, type, comment_content) => {
+        
+        const response = await fetchUrl(process.env.VUE_APP_API_URL + '/api/sofi/comment_post', {
+            comment: comment_content,
+            type: type,
+            post_id: post_id
+        }, 'POST')
+        
+        if(response.ok) {
+            return data
+        } else {
+            throw new Error("intern_serv_err")
+        }
+      
+}
+
+export async function awnserToComment(post_id, comment_id, awnser_content) {
+    const response = await fetchUrl(process.env.VUE_APP_API_URL + '/api/sofi/awnser_to_comment', 
+    {
+        post_id: post_id,
+        comment_id: comment_id:
+        awnser_content: awnser_content
+    },
+    'POST'
+    )
+
+    if(response.ok) {
+        return data
+    } else {
+        throw new Error("internal_serv_err")
+    }
+}

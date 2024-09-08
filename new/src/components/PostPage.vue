@@ -98,7 +98,7 @@
                   <input v-model="comment_awnser" placeholder="Answer To This Comment.">
                 </div>
                 
-                <div @click="awnserToComment(comment.id)" class="comment-awnser-send-button">
+                <div @click="awnserToAComment(comment.id)" class="comment-awnser-send-button">
                   <font-awesome-icon icon="paper-plane"/>
                 </div>
               </div>
@@ -145,6 +145,9 @@
 
 <script>
 import userMixin from '@/mixins/userMixin';
+import { getPost } from '../services/postService'
+import { postComment } from '../services/postService'
+import { awnserToComment } from '../services/postService'
 
 export default {
   name: 'PostPage',
@@ -156,76 +159,37 @@ export default {
       },
       postComment: "",
       comment_awnser: "",
-      user: {}
+      user: {},
+      error: ""
     };
   },
   methods: {
     async getPost() {
-      const postId = this.$route.params.id;
-      const response = await fetch(`http://localhost:3000/api/sofi/post/${postId}`);
-
-      if (!response.ok) {
-        console.log('Something went wrong.');
-        return;
+      try {
+          const post = await getPost(this.$route.params.id)
+          this.post = post
+      } catch(e) {
+          this.error = "Internal Server Error"
       }
-
-      const data = await response.json();
-      this.post = data.post;
-       
-       console.log('post server', data)
-      // Inicializa showResponses en false para cada comentario
-      this.post.postComments.forEach(comment => {
-        comment.showResponses = false;
-        comment.showAwnserInp = false;
-      });
     },
 
     async postAComment() {
-      const response = await fetch('http://localhost:3000/api/sofi/comment_post', {
-        method: 'POST',
-        body: JSON.stringify({
-          comment: this.postComment,
-          type: "POST",
-          post_id: this.$route.params.id
-        }),
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        console.log('Response not OK.');
-        return;
-      }
-
-      const data = await response.json();
-      this.post.postComments.push(data.comment); // Agregar el nuevo comentario a la lista de comentarios
-      this.postComment = ""; // Limpiar el campo de entrada
+     try {
+        const data = await postComment(this.$route.params.id, "POST", this.postComment)
+        console.log('All ok, ', data)
+     } catch(e) {
+         this.error = "Internal Server Error"
+         console.log('error: ', e)
+     }
     },
 
-    async awnserToComment(comment_id) {
-      const response = await fetch('http://localhost:3000/api/sofi/awnser_to_comment', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          type: "POST",
-          post_id: this.post.id,
-          comment_id: comment_id,
-          awnser_content: this.comment_awnser
-        }),
-        credentials: 'include'
-      });
-
-      if (!response.ok) {
-        console.log('Response not OK.');
-        return;
-      }
-
-      const data = await response.json();
-      console.log('Server data post answer:', data);
+    async awnserToAComment(comment_id) {
+        try {
+            const data = await awnserToComment(this.$route.params.id, comment_id, this.comment_awnser)
+            console.log('al ok,', data)
+        } catch(e) {
+            this.error = "Internal Server Error"
+        }
     },
 
     async likeComment(comment_id) {

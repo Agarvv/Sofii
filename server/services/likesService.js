@@ -24,19 +24,16 @@ const likeVideo = async (user, video) => {
         const io = websocket.getIO()
         io.emit('videoLiked', newLike)
         
+      
     } catch (e) {
         throw e;
     }
 };
 
-const unlikeVideo = async (user_id, video_id) => {
+const unlikeVideo = async (user_id, like) => {
     try {
-        const like = await VideoLikes.destroy({
-            where: {
-                user_id: user_id,
-                video_id: video_id
-            }
-        });
+        
+        await like.destroy()
         
         const io = websocket.getIO()
         io.emit('unlikeVideo', like)

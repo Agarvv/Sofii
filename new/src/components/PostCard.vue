@@ -83,20 +83,17 @@ export default {
                 this.error = "Oops, Something Went Wrong!"
             }
         },
+       
        async saveAPost(post_id) {
-    try {
-        let action = this.isSaved ? 'UNSAVE' : 'SAVE'; // Decide si guardar o desguardar
-        const data = await savePost(post_id, action);  // Pasa la acción al servicio
-        
-        if (data.saved && action === 'SAVE') {
-            this.isSaved = true;
-        } else if (data.saved && action === 'UNSAVE') {
-            this.isSaved = false;
-        }
-    } catch (e) {
-        this.error = "Oops, algo salió mal!";
-    }
-},
+           const data = await savePost(post_id)
+           
+           if(data.saved) {
+               this.isSaved = true
+           } else {
+               this.isSaved = false
+           }
+       },
+       
         async deleteAPost(post_id) {
             try {
                 const data = await deletePost(post_id)

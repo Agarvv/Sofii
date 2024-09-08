@@ -35,7 +35,7 @@ const likeVideo = async (jwt_token, video_id) => {
         });
 
         if (isLiked) {
-            await likesService.unlikeVideo(userDecoded.user_id, video_id);
+            await likesService.unlikeVideo(userDecoded.user_id, isLiked);
             return { liked: false, unliked: true };
         }
 

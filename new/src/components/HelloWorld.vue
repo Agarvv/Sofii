@@ -66,7 +66,7 @@ export default {
       showSearchBox: false,
       showSidebar: false,
       error: "",
-      postsById: {} // Inicializamos como vacío
+      postsById: {} 
     };
   },
   methods: {
@@ -151,47 +151,39 @@ this.$socket.on('likePost', newLike => {
     });
     
     
-    this.$socket.on('savedPost', saved => {
+ 
+this.$socket.on('savedPost', saved => {
     console.log('Saved Received!', saved);
 
     const postTarget = this.postsById[saved.post_id];
 
     if (postTarget) {
-        // Verificamos si el usuario ya guardó el post (comparamos con el saved.post_id)
-        const alreadySaved = postTarget.saved_post.some(
-            s => s.user_id == this.usuario.id && s.post_id == saved.post_id
-        );
-
-        if (!alreadySaved) {
-            // Si no está guardado, lo agregamos correctamente
-            postTarget.saved_post.push({
-                saved
-            });
-            console.log('Post guardado con éxito');
-        } else {
-            alert('Este post ya fue guardado.');
+        // Verificar si el evento pertenece al usuario actual
+        if (saved.user_id === this.usuario.id) {
+            postTarget.isSaved = true;  // Solo actualizamos isSaved si es para el usuario actual
         }
+        postTarget.saved_post.push(saved);
     }
 });
+
 
 this.$socket.on('unsavedPost', saved => {
     const postTarget = this.postsById[saved.post_id];
     
     if (postTarget) {
         console.log('Unsaved recibido:', saved);
-        console.log('Estructura actual de saved_post antes de eliminar:', postTarget.saved_post);
 
-        // Eliminamos el post guardado comparando por user_id y post_id
+        // Eliminar el guardado del usuario específico
         postTarget.saved_post = postTarget.saved_post.filter(s => 
             !(s.user_id === saved.user_id && s.post_id === saved.post_id)
         );
 
-        console.log('Estructura de saved_post después de eliminar:', postTarget.saved_post);
-    } else {
-        console.warn('No se encontró el post');
+        // Si el evento es para el usuario actual, actualizamos el estado `isSaved`
+        if (saved.user_id === this.usuario.id) {
+            postTarget.isSaved = false;
+        }
     }
 });
-    
     
     
   }
