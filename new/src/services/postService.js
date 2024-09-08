@@ -115,28 +115,23 @@ export async function checkIfUserSavedPost(post, user) {
 
 
 export async function getPost(post_id) {
-      
-      
-      const response = await fetchUrl(process.env.VUE_APP_API_URL + `/api/sofi/post/${postId}`, null, 'GET')
+      const response = await fetchUrl(process.env.VUE_APP_API_URL + `/api/sofi/post/${post_id}`, null, 'GET')
       const data = await response.json()
-      console.log('post id: ', data)
 
-      
       if(response.ok) {
-          console.log('respond ol: ',)
           return data.post
       } else {
           console.log('not ok')
           throw new Error("intern_serv_err")
       }
-      
-      
+    
 }
 
 
-export async function awnserToComment(post_id, comment_id, awnser_content) {
+export async function awnserToComment(type, post_id, comment_id, awnser_content) {
     const response = await fetchUrl(process.env.VUE_APP_API_URL + '/api/sofi/awnser_to_comment', 
     {
+        type: type,
         post_id: post_id,
         comment_id: comment_id,
         awnser_content: awnser_content

@@ -18,13 +18,7 @@ const websocket = require('./websocket')
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server, {
-    cors: {
-        origin: 'http://localhost:5000',
-        methods: ['GET', 'POST'],
-        credentials: true
-    }
-});
+
 
 
 // INIT WEBSOCKET SERVER

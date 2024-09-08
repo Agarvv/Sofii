@@ -2,6 +2,7 @@
   <div>
     <header>
       <i class="fa fa-arrow-left"></i>
+     
     </header>
     
     <div class="container"> 
@@ -26,9 +27,13 @@
         </div>
         
         <div class="post-interactions">
-          <div class="like">
-            <font-awesome-icon icon="heart"/>
-            <span>{{post.postLikes.length}}</span>
+          <div @click="likeAPost(post.id)" class="like">
+            <font-awesome-icon icon="thumbs-up"
+            :style="{color: isLiked ? 'blue' : ''}"
+            />
+            <span
+            :style="{color: isLiked ? 'blue' : ''}"
+            >{{post.postLikes.length}}</span>
           </div>
           <div style="border: none" class="comment">
             <font-awesome-icon icon="comments"/>
@@ -37,25 +42,19 @@
           <div class="share">
             <font-awesome-icon icon="share"/>
           </div>
-          <div class="save">
-            <font-awesome-icon icon="bookmark"/>
-            <span>{{post.saved_post.length}}</span>
+          <div @click="saveAPost(post.id)" class="save">
+            <font-awesome-icon icon="bookmark"
+            :style="{color: isSaved ? 'blue' : ''}"
+            />
+            <span
+            :style="{color: isSaved ? 'blue' : ''}"
+            >{{post.saved_post.length}}</span>
           </div>
         </div>
         
         <div class="comments">
-          <div class="upload-comment">
-            <div class="user-picture">
-              <img :src="`http://localhost:3000/${user.user_picture}`" alt="User Picture">
-            </div>
-            
-            <div class="input">
-              <input v-model="postComment" type="text" placeholder="Upload A Comment">
-            </div>
-            <div @click="postAComment()" class="send-button">
-              <font-awesome-icon icon="paper-plane"/>
-            </div>
-          </div>
+
+         <UploadComment :id="$route.params.id" :type="POST"/>
           
           <div class="comment-section">
             <div v-for="(comment, index) in post.postComments" :key="comment.id" class="comment">
@@ -125,8 +124,12 @@
                   
                   <div class="comment-response-interact">
                     <div @click="likeCommentAwnser(awnser.id, comment.id)" class="like">
-                      <font-awesome-icon icon="heart"/>
-                      <span>{{awnser.awnser_likes.length}}</span>
+                      <font-awesome-icon icon="thumbs-up"
+                  
+                      />
+                      <span
+      
+                       >{{awnser.awnser_likes.length}}</span>
                     </div> 
                     <div @click="dislike('AWNSER', comment.id, awnser.id)" class="dislike">
                       <font-awesome-icon icon="thumbs-down"/>
@@ -145,6 +148,8 @@
 
 <script>
 import userMixin from '@/mixins/userMixin';
+import { likePost } from '../services/postService'
+import { savePost } from '../services/postService'
 import { getPost } from '../services/postService'
 import { postComment } from '../services/postService'
 import { awnserToComment } from '../services/postService'
@@ -152,10 +157,14 @@ import { likeComment } from '../services/postService'
 import { likeCommentAwnser } from '../services/postService'
 import { dislikeComment } from '../services/postService'
 import { dislikeCommentAwnser } from '../services/postService'
-
+import { checkIfUserLikedPost, checkIfUserSavedPost } from '../services/postService'
+import UploadComment from './UploadComment'
 
 export default {
   name: 'PostPage',
+  components: {
+    UploadComment
+  },
   mixins: [userMixin],
   data() {
     return {
@@ -165,30 +174,60 @@ export default {
       postComment: "",
       comment_awnser: "",
       user: {},
-      error: ""
+      error: "",
+      isLiked: false,
+      isSaved: false
     };
   },
+  computed: {
+     
+  }, 
   methods: {
     async getPost() {
-      const response = await fetch('http://localhost:3000/api/sofi/post/' + this.$route.params.id)
-      const data = await response.json()
-      console.log('data post: ', data)
-      this.post = data.post
+      const post = await getPost(this.$route.params.id)
+      this.post = post
+      this.post.isLiked = await checkIfUserLikedPost(post, this.usuario)
+      this.post.isSaved = await checkIfUserSavedPost(post, this.usuario)
+      this.isLiked = this.post.isLiked
+      this.isSaved = this.post.isSaved
+      console.log('final post n:', this.post)
     },
 
-    async postAComment() {
-     try {
-        const data = await postComment(this.$route.params.id, "POST", this.postComment)
-        console.log('All ok, ', data)
-     } catch(e) {
-         this.error = "Internal Server Error"
-         console.log('error: ', e)
-     }
-    },
+     async likeAPost(post_id) {
+            try {
+                const data = await likePost(post_id)
+                console.log('Like Post Method: ', data)
+                
+                console.log('server data from like service xd', data)
+                
+                if(data.liked) {
+                    this.isLiked = true
+                } else {
+                    this.isLiked = false
+                }
+                
+                
+            } catch(e) {
+                alert(e)
+                this.error = "Oops, Something Went Wrong!"
+            }
+        },
+       
+
+       async saveAPost(post_id) {
+           const data = await savePost(post_id)
+           
+           if(data.saved) {
+               this.isSaved = true
+           } else {
+               this.isSaved = false
+           }
+       },
+
 
     async awnserToAComment(comment_id) {
         try {
-            const data = await awnserToComment(this.$route.params.id, comment_id, this.comment_awnser)
+            const data = await awnserToComment("POST", this.$route.params.id, comment_id, this.comment_awnser)
             console.log('al ok,', data)
         } catch(e) {
             this.error = "Internal Server Error"
@@ -262,9 +301,6 @@ export default {
   },
 
   async created() {
-    await this.getPost();
-    console.log(this.post)
-    this.user = this.usuario;
     
     this.$socket.on('likePost', newLike => {
     console.log('Like Recibido!', newLike);
@@ -342,6 +378,13 @@ this.$socket.on('unsavedPost', saved => {
 
 
   },
+  watch: {
+    usuario(newValue, oldValue) {
+      if(newValue) {
+         this.getPost()
+      }
+    }
+  }
 };
 </script>
 
@@ -427,39 +470,11 @@ header {
     position: relative;
 }
 
-.upload-comment {
-    display: grid;
-    grid-template-columns: 1fr 9fr 1fr;
-    grid-gap: 10px;
-    padding: 10px;
-    background: white;
-    border-bottom: 1px solid #ccc;
-    position: sticky;
-    top: 0;
-    z-index: 1;
-}
-
 .post .send-button {
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 20px;
-}
-
-
-
-.upload-comment .user-picture img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-}
-
-.upload-comment input {
-    width: 100%;
-    height: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 20px;
 }
 
 .comment-section {

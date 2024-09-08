@@ -1,5 +1,5 @@
 <template>
-     <div @click="goToPost(post.id)" class="post" >
+     <div  class="post" >
             <div class="post-header">
               <div>
                 <img style="width: 50px; height: 50px; border-radius: 50%" :src="'http://localhost:3000/' + post.user.profilePicture" alt="Post User Image">
@@ -16,7 +16,7 @@
               <div class="post-description">
                 <p>{{ post.description }}</p>
               </div>
-              <div @click="goToPostPage(post.id)" class="post-image">
+              <div @click="goToPost(post.id)" class="post-image">
                 <img loading="lazy":src="'http://localhost:3000/' + post.postPicture" alt="Post Image">
               </div>
             </div>
