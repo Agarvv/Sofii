@@ -148,6 +148,11 @@ import userMixin from '@/mixins/userMixin';
 import { getPost } from '../services/postService'
 import { postComment } from '../services/postService'
 import { awnserToComment } from '../services/postService'
+import { likeComment } from '../services/postService'
+import { likeCommentAwnser } from '../services/postService'
+import { dislikeComment } from '../services/postService'
+import { dislikeCommentAwnser } from '../services/postService'
+
 
 export default {
   name: 'PostPage',
@@ -165,12 +170,10 @@ export default {
   },
   methods: {
     async getPost() {
-      try {
-          const post = await getPost(this.$route.params.id)
-          this.post = post
-      } catch(e) {
-          this.error = "Internal Server Error"
-      }
+      const response = await fetch('http://localhost:3000/api/sofi/post/' + this.$route.params.id)
+      const data = await response.json()
+      console.log('data post: ', data)
+      this.post = data.post
     },
 
     async postAComment() {
@@ -193,99 +196,41 @@ export default {
     },
 
     async likeComment(comment_id) {
-      console.log('Like comment method called:', comment_id);
-
-      const response = await fetch('http://localhost:3000/api/sofi/like_content', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          type: "COMMENT",
-          comment_id: comment_id,
-          post_id: this.$route.params.id
-        }),
-        credentials: 'include'
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        console.log('Response is OK comment like:', data);
-        this.updateCommentLikeStatus(comment_id, data.liked); // Actualiza el estado del like
-      } else {
-        console.log('Response not OK comment like');
+      try {
+          const data = await likeComment("COMMENT", comment_id, this.$route.params.id)
+      
+          console.log('allvok: ', data)
+      } catch(e) {
+          this.error = "Internal Server Error"
       }
     },
     
-    async dislike(type, comment_id, awnser_id) {
-        let response;
-        let data; 
-        
-        switch(type) {
-            case "COMMENT":
-                response = await
-                fetch('http://localhost:3000/api/sofi/dislike_content', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        type: "COMMENT",
-                        comment_id: comment_id,
-                        post_id: this.$route.params.id
-                    }),
-                    credentials: 'include'
-                })
-                
-                 data = await response.json()
-                console.log('server data comment dislie', data)
-                break;
-            case "AWNSER":
-                console
-                 response = await
-                fetch('http://localhost:3000/api/sofi/dislike_content', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        type: "COMMENT_AWNSER",
-                        post_id: this.$route.params.id,
-                       comment_id: comment_id,
-                       awnser_id: awnser_id
-                    }),
-                    credentials: 'include'
-                })
-                
-                 data = await response.json()
-                console.log('server data sialike awnse r', data)
+    async likeCommentAwnser(awnser_id, comment_id) {
+      try {
+          const data = await likeCommentAwnser("COMMENT_AWNSER", comment_id, awnser_id, this.$route.params.id)
+          console.log('all ok: ', data)
+      } catch(e) {
+          this.error = "Internal Server Error"
+      }
+    },
+    
+    
+    async dislikeComment(comment_id) {
+        try {
+            const data = await dislikeComment("COMMENT", comment_id, this.$route.params.id)
+            console.log('all ok: ', data)
+        } catch(e) {
+            this.error = "Internal Server Error"
         }
     },
-
-    async likeCommentAwnser(awnser_id, comment_id) {
-      console.log(`Like comment answer method called, comment_id: ${comment_id}, awnser_id: ${awnser_id}`);
-
-      const response = await fetch('http://localhost:3000/api/sofi/like_content', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          type: "COMMENT_AWNSER",
-          awnser_id: awnser_id,
-          comment_id: comment_id,
-          post_id: this.$route.params.id
-        }),
-        credentials: 'include'
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        console.log('Like answer comment:', data);
-        this.updateCommentAnswerLikeStatus(comment_id, awnser_id, data.liked); // Actualiza el estado del like en la respuesta
-      } else {
-        console.log('Response not OK comment answer like');
-      }
+    
+    async dislikeCommentAwnser(comment_id, awnser_id) {
+        try {
+            const data = await dislikeCommentAwnser("COMMENT_AWNSER", comment_id, awnser_id, this.$route.params.id)
+            console.log('all ol: ', data)
+        } catch(e) {
+            this.error = "Internal Server Error"
+        }
     },
 
     updateCommentLikeStatus(comment_id, liked) {
@@ -318,7 +263,84 @@ export default {
 
   async created() {
     await this.getPost();
+    console.log(this.post)
     this.user = this.usuario;
+    
+    this.$socket.on('likePost', newLike => {
+    console.log('Like Recibido!', newLike);
+    
+
+    const postTarget = this.post
+
+    if (postTarget) {
+        console.log('post target: ', postTarget);
+        console.log('new liker: ', newLike);
+        console.log('likes from post:', postTarget.postLikes);
+        
+
+        postTarget.postLikes.push({ ...newLike });
+
+
+    } else {
+        console.warn(`Post con ID ${newLike.post_id} no encontrado.`);
+    }
+});
+
+
+this.$socket.on('unlikePost', like => {
+        console.log('Unlike Recibido!', like);
+
+        // Encontramos el post en cuestión
+        const postTarget = this.post
+
+        if (postTarget) {
+            // Filtramos el like que corresponde al unlike
+            postTarget.postLikes = postTarget.postLikes.filter(l => l.id !== like.id);
+        } else {
+            console.warn(`Post con ID ${like.post_id} no encontrado.`);
+        }
+  });
+
+
+this.$socket.on('savedPost', saved => {
+    console.log('Saved Received!', saved);
+
+    const postTarget = this.post
+
+    if (postTarget) {
+        // Verificar si el evento pertenece al usuario actual
+        if (saved.user_id === this.usuario.id) {
+            postTarget.isSaved = true;  // Solo actualizamos isSaved si es para el usuario actual
+        }
+        postTarget.saved_post.push(saved);
+    }
+});
+
+
+this.$socket.on('unsavedPost', saved => {
+    const postTarget = this.post
+    
+    if (postTarget) {
+        console.log('Unsaved recibido:', saved);
+
+        // Eliminar el guardado del usuario específico
+        postTarget.saved_post = postTarget.saved_post.filter(s => 
+            !(s.user_id === saved.user_id && s.post_id === saved.post_id)
+        );
+
+        // Si el evento es para el usuario actual, actualizamos el estado `isSaved`
+        if (saved.user_id === this.usuario.id) {
+            postTarget.isSaved = false;
+        }
+    }
+});
+
+
+
+
+
+
+
   },
 };
 </script>

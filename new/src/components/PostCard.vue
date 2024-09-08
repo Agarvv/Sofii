@@ -1,5 +1,5 @@
 <template>
-     <div class="post" >
+     <div @click="goToPost(post.id)" class="post" >
             <div class="post-header">
               <div>
                 <img style="width: 50px; height: 50px; border-radius: 50%" :src="'http://localhost:3000/' + post.user.profilePicture" alt="Post User Image">
@@ -101,6 +101,9 @@ export default {
             } catch(e) {
                 this.error = "Internal Server Error"
             }
+        },
+        goToPost(id) {
+            this.$router.push('/post/' + id)
         }
     },
     created() {

@@ -123,7 +123,7 @@ router.get('/posts', async (req, res) => {
 
 router.get('/post/:post_id', async (req, res) => {
     const post_id = req.params.post_id;
-
+    console.log('post called:')
     try {
         const post = await Post.findOne({
             where: { id: post_id },
@@ -183,6 +183,8 @@ router.get('/post/:post_id', async (req, res) => {
         if (!post) {
             return res.status(404).json({ detail: 'Post Not Found.' });
         }
+        
+        console.log('post: ', post)
         return res.status(200).json({ post });
     } catch (e) {
         return res.status(500).json({ error: e.message });
