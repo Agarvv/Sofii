@@ -57,7 +57,9 @@
          <UploadComment :id="$route.params.id" :type="POST"/>
           
           <div class="comment-section">
+
             <div v-for="(comment, index) in post.postComments" :key="comment.id" class="comment">
+
               <div class="comment-user-details">
                 <div class="user-comment-img"> 
                   <img :src="`http://localhost:3000/${comment.commentUser.profilePicture}`" alt="User Picture">
@@ -139,6 +141,9 @@
                 </div> <!-- <-- END OF AWNSERS FOR -->
               </div>
             </div> <!-- <-- END OF COMMENTS FOR -->
+
+
+
           </div>
         </div>
       </div>
@@ -290,6 +295,10 @@ export default {
         }
       }
     },
+
+
+
+
 
     toggleResponses(index) {
       this.post.postComments[index].showResponses = !this.post.postComments[index].showResponses;

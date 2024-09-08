@@ -30,7 +30,7 @@
                <span :style="{ color: isLiked ? 'blue' : '' }">{{ post.postLikes.length }}</span>
               
               </div>
-              <div class="comment"><font-awesome-icon icon="fas fa-comment" /> <span>{{post.postComments.length}}</span></div>
+              <div class="comment"> <font-awesome-icon icon="fas fa-comment" /> <span>{{post.postComments.length}}</span></div>
               
               <div @click="saveAPost(post.id)" class="save">
                   <font-awesome-icon icon="fas fa-bookmark"
