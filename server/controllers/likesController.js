@@ -99,7 +99,7 @@ const likeComment = async (jwt_token, post_id, comment_id) => {
         });
 
         if (isLiked) {
-            await isLiked.destroy();
+            await likesService.unlikeComment(isLiked, userDecoded)
             return { liked: false, unliked: true };
         }
 
@@ -140,7 +140,7 @@ const likeCommentAnswer = async (jwt_token, post_id, comment_id, answer_id) => {
         });
 
         if (isLiked) {
-            await isLiked.destroy();
+            await likesService.unlikeCommentAwnser(isLiked)
             return { liked: false, unliked: true };
         }
 
@@ -268,7 +268,7 @@ const dislikeComment = async (jwtToken, post_id, comment_id) => {
         })
         
         if(isDisliked) {
-            await isDisliked.destroy()
+            await likesService.undislikeComment(isDisliked)
             return { disliked: false, unDisliked: true }
         }
         
@@ -335,7 +335,7 @@ const dislikeCommentAwnser  = async (jwtToken, post_id, comment_id, awnser_id) =
         })
         
         if(isDisliked) {
-            await isDisliked.destroy()
+            await likesService.undislikeCommentAwnser(isDisliked)
             return { disliked: false, unDisliked: true }
         }
         

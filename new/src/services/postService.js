@@ -89,7 +89,10 @@ export async function deletePost(post_id) {
     }
 }
 
+
+
 export async function postComment(post_id, type, comment_content) {
+    console.log('typddb: ', type)
     const response = await fetchUrl(process.env.VUE_APP_API_URL + '/api/sofi/comment_post', {
         post_id: post_id,
         type: type,
@@ -197,13 +200,16 @@ export async function dislikeComment(type, comment_id, post_id) {
     }
 }
 
+
+
 export async function dislikeCommentAwnser(type, comment_id, awnser_id, post_id) {
+    console.log('Methld called: ', type, comment_id, awnser_id, post_id)
     const response = await fetchUrl(process.env.VUE_APP_API_URL + '/api/sofi/dislike_content', {
         type: type,
         comment_id: comment_id,
         awnser_id: awnser_id,
         post_id: post_id
-    })
+    }, 'POST')
     
     const data = await response.json()
     

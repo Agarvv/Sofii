@@ -85,6 +85,12 @@ const likeComment = async (user, comment, post) => {
     }
 };
 
+const unlikeComment = async (like, user) => {
+    await like.destroy()
+    const io = websocket.getIO()
+    io.emit('unlikeComment', like)
+}
+
 const likeCommentAnswer = async (user, post, comment, answer) => {
     try {
         const newLike = await CommentAwnsersLikes.create({
@@ -100,6 +106,12 @@ const likeCommentAnswer = async (user, post, comment, answer) => {
         throw e;
     }
 };
+
+const unlikeCommentAwnser = async(awnser) => {
+    await awnser.destroy()
+    const io = websocket.getIO()
+    io.emit('unlikeCommentAwnser', awnser)
+}
 
 const likeVideoComment = async (user, video, comment) => {
     try {
@@ -142,12 +154,18 @@ const dislikeComment = async (user, post, comment) => {
         })
         
         const io = websocket.getIO()
-        io.emit('unlikeComment', like)
+        io.emit('dislikeComment', like)
         
         
     } catch(e) {
         throw e
     }
+}
+
+const undislikeComment = async (dislike) => {
+    await dislike.destroy()
+    const io = websocket.getIO()
+    io.emit('undislikeComment', dislike)
 }
 
 const dislikeCommentAwnser = async (user, post, comment, awnser) => {
@@ -161,11 +179,17 @@ const dislikeCommentAwnser = async (user, post, comment, awnser) => {
         })
         
         const io = websocket.getIO()
-        io.emit('unlikeCommentAwnser', like)
+        io.emit('dislikeCommentAwnser', like)
         
     } catch(e) {
         throw e
     }
+}
+
+const undislikeCommentAwnser = async (dislike)=> {
+    await dislike.destroy()
+    const io = websocket.getIO()
+    io.emit('undislikeCommentAwnser', dislike)
 }
 
 const dislikeVideoComment = async (user, video, comment) => {
@@ -211,11 +235,15 @@ module.exports = {
     likePost,
     unlikePost,
     likeComment,
+    unlikeComment,
     likeCommentAnswer,
+    unlikeCommentAwnser,
+    dislikeCommentAwnser,
+    undislikeCommentAwnser,
     likeVideoComment,
     likeVideoCommentAnswer,
     dislikeComment,
-    dislikeCommentAwnser,
+    undislikeComment,
     dislikeVideoComment,
     dislikeVideoCommentAwnser
 };

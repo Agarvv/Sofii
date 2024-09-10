@@ -15,15 +15,21 @@
               
               <div class="comment-interacts">
                 <div @click="likeComment(comment.id)" class="like">
-                  <font-awesome-icon icon="thumbs-up"/>
-                  <p>{{ comment.comment_likes.length }}</p>
+                  <font-awesome-icon icon="thumbs-up"
+                  :style="{color: isLiked ? 'blue' : ''}"
+                  />
+                  <p
+                 :style="{color: isLiked ? 'blue' : ''}"
+                  >{{ comment.comment_likes.length }}</p>
                 </div>
                 <div @click="toggleShowAwnserInp(index)" class="awnser">
                   <font-awesome-icon icon="share"/>
                   <p>{{comment.awnsers.length}}</p>
                 </div>
-                <div @click="dislike('COMMENT', comment.id)" class="dislike">
-                  <font-awesome-icon icon="thumbs-down"/>
+                <div @click="dislikeComment(comment.id)" class="dislike">
+                  <font-awesome-icon icon="thumbs-down"
+                   :style="{color: isDisliked ? 'blue' : ''}"
+                  />
                   <p>{{comment.comment_dislikes.length}}</p>
                 </div>
               </div>
@@ -31,12 +37,12 @@
               <div v-if="comment.showAwnserInp" class="comment-awnser">
                 <div class="comment-awnser-user">
                   <div class="comment-awnswer-user-img">
-                    <img style="border-radius: 50%; width: 50px; height: 50px; object-fit: cover" :src="`http://localhost:3000/${user.user_picture}`" alt="User Picture">
+                    <img style="border-radius: 50%; width: 50px; height: 50px; object-fit: cover" :src="`http://localhost:3000/${usuario.user_picture}`" alt="User Picture">
                   </div>
                 </div>
                 
                 <div class="comment-awnser-input">
-                  <input v-model="comment_awnser" placeholder="Answer To This Comment.">
+                  <input v-model="commentAwnser" placeholder="Answer To This Comment.">
                 </div>
                 
                 <div @click="awnserToAComment(comment.id)" class="comment-awnser-send-button">
@@ -52,72 +58,205 @@
               </div>
               
               <div v-if="comment.showResponses" class="comment-responses">
+                  
                 <div v-for="awnser in comment.awnsers" :key="awnser.id" class="response">
                 
-                  <div class="response-user">
-                    <div class="response-user-img">
-                      <img style="width: 40px; height: 40px; border-radius: 50%" :src="'http://localhost:3000/' + awnser.awnser_user.profilePicture">
-                    </div>
-                    <div class="response-username">
-                      <h3>{{awnser.awnser_user.username}}</h3>
-                    </div>
-                  </div>
-                  
-                  <div class="response-content">
-                    <p>{{awnser.answer_content}}</p>
-                  </div>
-                  
-                  <div class="comment-response-interact">
-                    <div @click="likeCommentAwnser(awnser.id, comment.id)" class="like">
-                      <font-awesome-icon icon="thumbs-up"
-                  
-                      />
-                      <span
-      
-                       >{{awnser.awnser_likes.length}}</span>
-                    </div> 
-                    <div @click="dislike('AWNSER', comment.id, awnser.id)" class="dislike">
-                      <font-awesome-icon icon="thumbs-down"/>
-                      <span>{{awnser.awnser_dislikes.length}}</span>
-                    </div>
-                  </div>
+                 
+                 
+                 <AwnserCard :awnser="awnser"/>
 
                 </div> <!-- <-- END OF AWNSERS FOR -->
 
 
               </div>
 
-
      </div> <!-- <-- END OF COMMENTS FOR -->
 </template>
 
 <script>
+import {
+    likeComment,
+    dislikeComment,
+    likeCommentAwnser,
+    dislikeCommentAwnser,
+    awnserToComment,
+    
+    
+} from '../services/postService'
+
+
 import userMixin from '../mixins/userMixin'
+import AwnserCard from './AwnserCard'
 export default {
+    components: {
+        AwnserCard
+    }, 
     mixins: [userMixin],
     name: 'CommentCard',
     data() {
         return {
-
+           newComment: "",
+           commentAwnser: "",
+           isLiked: this.comment.isLiked,
+           isDisliked: this.comment.isDisliked
         }
     },
     props: {
-       comment: {}
+       comment: {
+           showResponses: false,  // Inicializa como un objeto con la propiedad necesaria
+            showAwnserInp: false   // Igualmente aquí
+       }
     },
     methods: {
-    toggleResponses(index) {
-      this.post.postComments[index].showResponses = !this.post.postComments[index].showResponses;
+        
+    async likeComment(comment_id) {
+      try {
+          const data = await likeComment("COMMENT", comment_id, this.$route.params.id)
+      
+          console.log('allvok: ', data)
+          
+          if(this.isLiked == true) {
+              this.isLiked = false
+          } else {
+              this.isLiked = true
+          }
+      } catch(e) {
+          this.error = "Internal Server Error"
+      }
+    },
+    
+    async dislikeComment(comment_id) {
+        try {
+            const data = await dislikeComment("COMMENT", comment_id, this.$route.params.id)
+            console.log('all ok: ', data)
+            if(this.isDisliked == true) {
+              this.isDisliked = false
+          } else {
+              this.isDisliked = true
+          }
+        } catch(e) {
+            this.error = "Internal Server Error"
+        }
+    },
+    
+    async awnserToAComment(comment_id) {
+        try {
+            const data = await awnserToComment("POST", this.$route.params.id, comment_id, this.commentAwnser)
+            console.log('al ok,', data)
+        } catch(e) {
+            this.error = "Internal Server Error"
+        }
     },
 
-    toggleShowAwnserInp(index) {
-      this.post.postComments[index].showAwnserInp = !this.post.postComments[index].showAwnserInp;
-    }
+        
+        
+        
+    
+    toggleResponses(index) {
+    this.comment.showResponses = !this.comment.showResponses;
+  },
 
-
+  toggleShowAwnserInp(index) {
+    this.comment.showAwnserInp = !this.comment.showAwnserInp;
+  }
+  
+  
+  
+  
+    
     }
 }
 </script>
 
 <style scoped>
+.comment {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 15px;
+}
+
+.comment-user-details {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.comment-user-details img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-comment-username h4 {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.user-comment p {
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.comment-interacts {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.comment-interacts div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.comment-awnser {
+    display: grid;
+    grid-template-columns: 50px 1fr 50px;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.comment-awnser-input input {
+    width: 100%;
+    height: 35px;
+    padding: 10px;
+    border-radius: 10px;
+    border: 0.3px solid gray;
+}
+
+.comment-awnser-send-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.view-responses-button {
+    font-size: 16px;
+    color: gray;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.comment-responses {
+    padding-left: 20px;
+    margin-top: 10px;
+}
+
+.response {
+    padding: 10px;
+    border-top: 1px solid #ccc;
+}
 
 </style>

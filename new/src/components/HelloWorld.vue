@@ -1,6 +1,6 @@
 
 <template>
-  <div id="app">
+  <div >
     <HeaderComponent :activePage="'home'" :user="usuario" />
     
     <div v-show="showSearchBox" id="search" class="search-box">

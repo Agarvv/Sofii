@@ -1,7 +1,8 @@
 <template>
    <div class="upload-comment">
+       
             <div class="user-picture">
-              <img :src="`http://localhost:3000/${usuario.user_picture}`" alt="User Picture">
+              <img :src="`http://localhost:3000/${type}}`" alt="User Picture">
             </div>
             
             <div class="input">
@@ -31,6 +32,7 @@ export default {
     },
     methods: {
       async postAComment() {
+          alert('hola')
         const data = await postComment(this.id, this.type, this.comment)
       }
     }

@@ -60,8 +60,6 @@ const awnserToPostComment = async (jwtToken, post_id, comment_id, awnser_content
         tokenController.verifyJwtToken(jwtToken)
         
         
-        
-        
         const postExists = await
         Post.findOne({
             where: {

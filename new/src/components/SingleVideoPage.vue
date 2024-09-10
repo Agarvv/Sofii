@@ -1,32 +1,19 @@
 <template> 
-
-
  <div class="wrapper">
   <div class="container"> 
 
     <VideoCard :video="video"/>
+    
+    
      <div class="comments">
             
-            
-          <div class="upload-comment">
-              
-            <div class="user-picture">
-              <img style="object-fit: cover; height: 50px; width: 50px;" :src="'http://localhost:3000/' + usuario.user_picture" alt="User Picture">
-            </div>
-            
-            <div class="input">
-              <input v-model="comment" type="text" placeholder="Upload A Comment">
-            </div>
-            <div  @click="commentPost()" class="send-button">
-              <font-awesome-icon icon="paper-plane"/>
-            </div>
-            
-            
-          </div>
+          <!-- UPLOAD COMMENT SECTION -->
           
+          <!-- END OF UPLOAD COMMENT SECTION -->
+          
+          
+          <!-- COMMENT SECTION -->
           <div class="comment-section">
-              
-              
               
             <div v-for="(comment, index) in video.video_comments" class="comment">
                 

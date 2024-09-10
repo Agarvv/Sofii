@@ -52,97 +52,17 @@
           </div>
         </div>
         
+        <UploadComment :id="$route.params.id" type="POST"/>
+        
         <div class="comments">
 
-         <UploadComment :id="$route.params.id" :type="POST"/>
-          
+       
           <div class="comment-section">
 
             <div v-for="(comment, index) in post.postComments" :key="comment.id" class="comment">
-
-              <div class="comment-user-details">
-                <div class="user-comment-img"> 
-                  <img :src="`http://localhost:3000/${comment.commentUser.profilePicture}`" alt="User Picture">
-                </div>
-                <div class="user-comment-username">
-                  <h4>{{ comment.commentUser.username }}</h4>
-                </div>
-              </div>
-              
-              <div class="user-comment">
-                <p>{{ comment.comment_content }}</p>
-              </div>
-              
-              <div class="comment-interacts">
-                <div @click="likeComment(comment.id)" class="like">
-                  <font-awesome-icon icon="thumbs-up"/>
-                  <p>{{ comment.comment_likes.length }}</p>
-                </div>
-                <div @click="toggleShowAwnserInp(index)" class="awnser">
-                  <font-awesome-icon icon="share"/>
-                  <p>{{comment.awnsers.length}}</p>
-                </div>
-                <div @click="dislike('COMMENT', comment.id)" class="dislike">
-                  <font-awesome-icon icon="thumbs-down"/>
-                  <p>{{comment.comment_dislikes.length}}</p>
-                </div>
-              </div>
-              
-              <div v-if="comment.showAwnserInp" class="comment-awnser">
-                <div class="comment-awnser-user">
-                  <div class="comment-awnswer-user-img">
-                    <img style="border-radius: 50%; width: 50px; height: 50px; object-fit: cover" :src="`http://localhost:3000/${user.user_picture}`" alt="User Picture">
-                  </div>
-                </div>
-                
-                <div class="comment-awnser-input">
-                  <input v-model="comment_awnser" placeholder="Answer To This Comment.">
-                </div>
-                
-                <div @click="awnserToAComment(comment.id)" class="comment-awnser-send-button">
-                  <font-awesome-icon icon="paper-plane"/>
-                </div>
-              </div>
-              
-              <div class="view-responses-button" @click="toggleResponses(index)">
-                <p>{{ comment.showResponses ? 'Hide Responses' : 'See Responses' }}</p>
-                <font-awesome-icon :icon="comment.showResponses ? 'chevron-up' : 'chevron-down'"/>
-              </div>
-              
-              <div v-if="comment.showResponses" class="comment-responses">
-                <div v-for="awnser in comment.awnsers" :key="awnser.id" class="response">
-                  <div class="response-user">
-                    <div class="response-user-img">
-                      <img style="width: 40px; height: 40px; border-radius: 50%" :src="'http://localhost:3000/' + awnser.awnser_user.profilePicture">
-                    </div>
-                    <div class="response-username">
-                      <h3>{{awnser.awnser_user.username}}</h3>
-                    </div>
-                  </div>
-                  
-                  <div class="response-content">
-                    <p>{{awnser.answer_content}}</p>
-                  </div>
-                  
-                  <div class="comment-response-interact">
-                    <div @click="likeCommentAwnser(awnser.id, comment.id)" class="like">
-                      <font-awesome-icon icon="thumbs-up"
-                  
-                      />
-                      <span
-      
-                       >{{awnser.awnser_likes.length}}</span>
-                    </div> 
-                    <div @click="dislike('AWNSER', comment.id, awnser.id)" class="dislike">
-                      <font-awesome-icon icon="thumbs-down"/>
-                      <span>{{awnser.awnser_dislikes.length}}</span>
-                    </div>
-                  </div>
-                </div> <!-- <-- END OF AWNSERS FOR -->
-              </div>
-            </div> <!-- <-- END OF COMMENTS FOR -->
-
-
+               <CommentCard :comment="comment"/>
+                 
+            </div> 
 
           </div>
         </div>
@@ -164,11 +84,13 @@ import { dislikeComment } from '../services/postService'
 import { dislikeCommentAwnser } from '../services/postService'
 import { checkIfUserLikedPost, checkIfUserSavedPost } from '../services/postService'
 import UploadComment from './UploadComment'
+import CommentCard from './CommentCard'
 
 export default {
   name: 'PostPage',
   components: {
-    UploadComment
+    UploadComment,
+    CommentCard
   },
   mixins: [userMixin],
   data() {
@@ -181,7 +103,9 @@ export default {
       user: {},
       error: "",
       isLiked: false,
-      isSaved: false
+      isSaved: false,
+      commentsById: {},
+      awnsersById: {}
     };
   },
   computed: {
@@ -228,88 +152,15 @@ export default {
                this.isSaved = false
            }
        },
-
-
-    async awnserToAComment(comment_id) {
-        try {
-            const data = await awnserToComment("POST", this.$route.params.id, comment_id, this.comment_awnser)
-            console.log('al ok,', data)
-        } catch(e) {
-            this.error = "Internal Server Error"
-        }
-    },
-
-    async likeComment(comment_id) {
-      try {
-          const data = await likeComment("COMMENT", comment_id, this.$route.params.id)
-      
-          console.log('allvok: ', data)
-      } catch(e) {
-          this.error = "Internal Server Error"
-      }
-    },
-    
-    async likeCommentAwnser(awnser_id, comment_id) {
-      try {
-          const data = await likeCommentAwnser("COMMENT_AWNSER", comment_id, awnser_id, this.$route.params.id)
-          console.log('all ok: ', data)
-      } catch(e) {
-          this.error = "Internal Server Error"
-      }
-    },
-    
-    
-    async dislikeComment(comment_id) {
-        try {
-            const data = await dislikeComment("COMMENT", comment_id, this.$route.params.id)
-            console.log('all ok: ', data)
-        } catch(e) {
-            this.error = "Internal Server Error"
-        }
-    },
-    
-    async dislikeCommentAwnser(comment_id, awnser_id) {
-        try {
-            const data = await dislikeCommentAwnser("COMMENT_AWNSER", comment_id, awnser_id, this.$route.params.id)
-            console.log('all ol: ', data)
-        } catch(e) {
-            this.error = "Internal Server Error"
-        }
-    },
-
-    updateCommentLikeStatus(comment_id, liked) {
-      // Encuentra el comentario correspondiente y actualiza su estado de like
-      const comment = this.post.postComments.find(comment => comment.id === comment_id);
-      if (comment) {
-        comment.liked = liked;
-      }
-    },
-
-    updateCommentAnswerLikeStatus(comment_id, awnser_id, liked) {
-      // Encuentra el comentario correspondiente y luego la respuesta dentro de él, y actualiza su estado de like
-      const comment = this.post.postComments.find(comment => comment.id === comment_id);
-      if (comment && comment.answers) {
-        const answer = comment.answers.find(answer => answer.id === awnser_id);
-        if (answer) {
-          answer.liked = liked;
-        }
-      }
-    },
-
-
-
-
-
-    toggleResponses(index) {
-      this.post.postComments[index].showResponses = !this.post.postComments[index].showResponses;
-    },
-
-    toggleShowAwnserInp(index) {
-      this.post.postComments[index].showAwnserInp = !this.post.postComments[index].showAwnserInp;
-    }
   },
 
   async created() {
+      
+          console.log('comments by id: ', this.commentsById)
+          console.log('awnsers by id: ', this.awnsersById)
+          
+          
+
     
     this.$socket.on('likePost', newLike => {
     console.log('Like Recibido!', newLike);
@@ -380,13 +231,135 @@ this.$socket.on('unsavedPost', saved => {
     }
 });
 
+this.$socket.on('likeComment', like => {
 
+    const commentTarget = this.commentsById[like.comment_id]
+    if(commentTarget) {
+      
+        commentTarget.comment_likes.push(like)
+    } else {
+        return
+    }
+})
+
+this.$socket.on('unlikeComment', like => {
+   
+    const commentTarget = this.commentsById[like.comment_id]
+    if(commentTarget) {
+        commentTarget.comment_likes = commentTarget.comment_likes.filter(l => l.id !== like.id)
+    }
+})
+
+this.$socket.on('dislikeComment', dislike => {
+    
+    const commentTarget = this.commentsById[dislike.comment_id]
+    if(commentTarget) {
+        commentTarget.comment_dislikes.push(dislike)
+    } else {
+        return
+        
+    }
+})
+
+this.$socket.on('undislikeComment', dislike => {
+    
+    const commentTarget = this.commentsById[dislike.comment_id]
+    if(commentTarget) {
+        commentTarget.comment_dislikes = commentTarget.comment_dislikes.filter(d => d.id !== dislike.id)
+    }
+})
+
+this.$socket.on('likeCommentAwnser', newLike => {
+       alert('jwjf')
+        const targetAwnser = 
+        this.awnsersById[newLike.awnser_id]
+        
+        if(targetAwnser) {
+            alert('ok')
+            targetAwnser.awnser_likes.push(newLike)
+        } else {
+            alert('not ok')
+        }
+ })
+        
+this.$socket.on('unlikeCommentAwnser', newLike => {
+    const targetAwnser = 
+        this.awnsersById[newLike.awnser_id]
+        
+        if(targetAwnser) {
+            targetAwnser.awnser_likes = targetAwnser.awnser_likes.filter(l => l.id !== newLike.id)
+        }
+})
+
+this.$socket.on('dislikeCommentAwnser', dislike => {
+        const targetAwnser = 
+        this.awnsersById[dislike.awnser_id]
+        
+        if(targetAwnser) {
+            targetAwnser.awnser_dislikes.push(dislike)
+        }
+        
+       
+ })
+        
+this.$socket.on('undislikeCommentAwnser', dislike => {
+    const targetAwnser = 
+        this.awnsersById[dislike.awnser_id]
+        
+        if(targetAwnser) {
+            targetAwnser.awnser_dislikes = targetAwnser.awnser_dislikes.filter(l => l.id !== dislike.id)
+          
+        }
+        
+    
+})
+
+this.$socket.on('newComment', newComment => {
+    this.post.postComments.push(newComment)
+    this.commentsById[newComment.id] = newComment;
+})
+
+this.$socket.on('newCommentAwnser', newAwnser => {
+    alert('new awnser')
+    console.log('commemta wnser received: ', newAwnser)
+    const commentTarget = this.commentsById[newAwnser.comment_id]
+    if(commentTarget) {
+        commentTarget.awnsers.push(newAwnser)
+        this.awnsersById[newAwnser.id] = newAwnser
+    }
+})
 
 
 
 
 
   },
+  mounted() {
+      console.log('this post: ', this.post)
+      this.post.postComments.forEach(comment => {
+            this.commentsById[comment.id] = comment;
+            comment.isLiked = comment.comment_likes.some(like => like.user_id == this.usuario.user_id)
+            
+            comment.isDisliked = comment.comment_dislikes.some(dislike => dislike.user_id == this.usuario.user_id)
+            
+            
+         
+            comment.awnsers.forEach(awnser => {
+            this.awnsersById[awnser.id] = awnser; 
+            
+            awnser.isLiked = awnser.awnser_likes.some(like => like.user_id == this.usuario.user_id)
+            
+            awnser.isDisliked = awnser.awnser_dislikes.some(dislike => dislike.user_id == this.usuario.user_id)
+            
+            
+          });
+          
+          console.log('final comment: ', comment)
+          
+         });
+          
+          
+  }, 
   watch: {
     usuario(newValue, oldValue) {
       if(newValue) {
