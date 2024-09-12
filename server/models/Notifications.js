@@ -26,6 +26,10 @@ const Notifications = sequelize.define('Notifications', {
     notification: {
         type: DataTypes.TEXT,
         allowNull: false
+    },
+    type_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
     }
 }, {
     timestamps: true // Añade automáticamente los campos createdAt y updatedAt

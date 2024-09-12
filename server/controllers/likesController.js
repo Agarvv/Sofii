@@ -35,7 +35,8 @@ const likeVideo = async (jwt_token, video_id) => {
         });
 
         if (isLiked) {
-            await likesService.unlikeVideo(userDecoded.user_id, isLiked);
+         
+          await likesService.unlikeVideo(userDecoded, isLiked);
             return { liked: false, unliked: true };
         }
 
@@ -175,7 +176,7 @@ const likeVideoComment = async (jwt_token, video_id, comment_id) => {
         });
 
         if (isLiked) {
-            await isLiked.destroy();
+            await likesService.unlikeVideoComment(isLiked)
             return { liked: false, unliked: true };
         }
 
@@ -216,7 +217,7 @@ const likeVideoCommentAnswer = async (jwt_token, video_id, comment_id, answer_id
         });
 
         if (isLiked) {
-            await isLiked.destroy();
+            await likesService.unlikeVideoCommentAwnser(isLiked)
             return { liked: false, unliked: true };
         }
 
@@ -389,7 +390,7 @@ const dislikeVideoComment = async (jwtToken, video_id, comment_id) => {
         })
         
         if(isDisliked) {
-            await isDisliked.destroy()
+            await likesService.undislikeVideoComment(isDisliked)
             return { disliked: false, unDisliked: true }
         }
         
@@ -451,7 +452,7 @@ const dislikeVideoCommentAwnser = async (jwt_token, video_id, comment_id, awnser
         })
         
         if(isDisliked) {
-            await isDisliked.destroy()
+            await likesService.undislikeVideoCommentAwnser(isDisliked)
             return { disliked: false, unDisliked: true }
         }
         

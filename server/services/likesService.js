@@ -11,7 +11,7 @@ const CommentAwnsersDislikes = require('../models/CommentAwnsersDislikes')
 const VideoCommentDislikes = require('../models/VideoCommentDislikes')
 const VideoCommentAwnsersDislikes = require('../models/VideoCommentAwnsersDislikes')
 const websocket = require('../websocket')
-
+const { sendNotificationToSingleUser } = require('../services/NotificationService');
 
 
 const likeVideo = async (user, video) => {
@@ -21,10 +21,16 @@ const likeVideo = async (user, video) => {
             video_id: video.id
         });
         
+        console.log('conyroler udrr: ', user)
+
+        console.log(user); // Para verificar que user es lo que esperamos
+        
+        
+        await sendNotificationToSingleUser(video.user_id, user, video, 'VIDEO_LIKED')
+
         const io = websocket.getIO()
         io.emit('videoLiked', newLike)
-        
-      
+
     } catch (e) {
         throw e;
     }
@@ -42,12 +48,15 @@ const unlikeVideo = async (user_id, like) => {
     }
 };
 
+
 const likePost = async (user, post) => {
     try {
        const newLike = await Likes.create({
             user_id: user.user_id,
             post_id: post.id
         });
+        
+        await sendNotificationToSingleUser(post.user_id, user, post, 'POST_LIKED')
         
         const io = websocket.getIO()
         io.emit('likePost', newLike)
@@ -128,6 +137,12 @@ const likeVideoComment = async (user, video, comment) => {
     }
 };
 
+const unlikeVideoComment = async (like) => {
+    await like.destroy()
+    const io = websocket.getIO()
+    io.emit('unlikedVideoComment', like)
+}
+
 const likeVideoCommentAnswer = async (user, video, comment, answer) => {
     try {
        const newLike = await VideoCommentAwnsersLikes.create({
@@ -143,6 +158,12 @@ const likeVideoCommentAnswer = async (user, video, comment, answer) => {
         throw e;
     }
 };
+
+const unlikeVideoCommentAwnser = async (like) => {
+    await like.destroy()
+    const io = websocket.getIO()
+    io.emit('unlikedVideoCommentAwnser', like)
+}
 
 const dislikeComment = async (user, post, comment) => {
     try {
@@ -202,7 +223,7 @@ const dislikeVideoComment = async (user, video, comment) => {
         })
         
         const io = websocket.getIO()
-        io.emit('unlikeVideoComment', like)
+        io.emit('dislikeVideoComment', like)
         
         
     } catch(e) {
@@ -210,6 +231,12 @@ const dislikeVideoComment = async (user, video, comment) => {
     }
 }
 
+const undislikeVideoComment = async (dislike) => {
+    await dislike.destroy()
+    const io = websocket.getIO()
+    io.emit('undislikedVideoComment', dislike)
+}
+ 
 const dislikeVideoCommentAwnser = async (user, video, comment, awnser) => {
     try {
          const like = await VideoCommentAwnsersDislikes.create({
@@ -220,12 +247,18 @@ const dislikeVideoCommentAwnser = async (user, video, comment, awnser) => {
         })
         
         const io = websocket.getIO()
-        io.emit('unlikeVideoCommentAwnser', like)
+        io.emit('dislikeVideoCommentAwnser', like)
         
         
     } catch(e) {
         throw e
     }
+}
+
+const undislikeVideoCommentAwnser = async (dislike) => {
+    await dislike.destroy()
+    const io = websocket.getIO()
+    io.emit('undislikedVideoCommentAwnser', dislike)
 }
 
 
@@ -241,9 +274,13 @@ module.exports = {
     dislikeCommentAwnser,
     undislikeCommentAwnser,
     likeVideoComment,
+    unlikeVideoComment,
     likeVideoCommentAnswer,
+    unlikeVideoCommentAwnser,
     dislikeComment,
     undislikeComment,
     dislikeVideoComment,
-    dislikeVideoCommentAwnser
+    undislikeVideoComment,
+    dislikeVideoCommentAwnser,
+    undislikeVideoCommentAwnser
 };

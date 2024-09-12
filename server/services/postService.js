@@ -59,7 +59,7 @@ const createPost = async (post, userId, userDecoded, username, userImg, postImg)
                }
                
                 const createdPostNotification = await 
-                NotificationService.createForFriendNotification(userId)  
+                NotificationService.createForFriendNotification(userId, socialPost)  
                  return fullPost
                 
             } else {

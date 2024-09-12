@@ -32,6 +32,8 @@ module.exports = {
             }
     
             const userDecoded = await tokenController.verifyJwtToken(jwtToken);
+            socket.join(userDecoded.user_id)
+            console.log('User joined: ', userDecoded.user_id)
     
             // Evento para unirse a una sala
             socket.on('joinRoom', async (room_id) => {

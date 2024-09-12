@@ -2,7 +2,7 @@
    <div class="upload-comment">
        
             <div class="user-picture">
-              <img :src="`http://localhost:3000/${type}}`" alt="User Picture">
+              <img :src="" alt="User Picture">
             </div>
             
             <div class="input">
@@ -17,6 +17,10 @@
 <script>
 import userMixin from '../mixins/userMixin'
 import { postComment } from '../services/postService'
+import {
+    uploadVideoComment
+} from '../services/videoService'
+
 
 export default {
     mixins: [userMixin],
@@ -32,8 +36,21 @@ export default {
     },
     methods: {
       async postAComment() {
-          alert('hola')
-        const data = await postComment(this.id, this.type, this.comment)
+          let data;
+          switch(this.type) {
+              
+              
+              case "POST":
+                  data = await postComment(this.id, this.type, this.comment)
+                  console.log('akdk: ', data)
+                  break;
+              case "VIDEO":
+                  data = await uploadVideoComment("VIDEO", this.id, this.comment)
+                  console.log('data drom metjod', data)
+                  break;
+              default:
+                  return
+          }
       }
     }
 }
@@ -42,14 +59,22 @@ export default {
 <style scoped>
 .upload-comment {
     display: grid;
+    align-items: center;
     grid-template-columns: 1fr 9fr 1fr;
-    grid-gap: 10px;
+    grid-gap: 15px;
     padding: 10px;
     background: white;
     border-bottom: 1px solid #ccc;
     position: sticky;
     top: 0;
     z-index: 1;
+}
+
+.upload-comment div {
+   
+    display: flex;
+    align-items: center;
+    
 }
 
 .post .send-button {

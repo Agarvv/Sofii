@@ -105,3 +105,103 @@ export async function deleteVideo(video_id) {
         throw e
     }
 }
+
+export async function uploadVideoComment(type, video_id,comment_content) {
+    
+    const response = await fetchUrl(process.env.VUE_APP_API_URL + '/api/sofi/comment_post', {
+        type: type,
+        video_id: video_id,
+        comment: comment_content
+    }, 'POST')
+    
+    const data = await response.json()
+    if(response.ok) {
+        return data 
+    } else {
+        throw new Error("Something Went Wrong")
+    }
+    
+}
+
+export async function awnserToVideoComment(comment_id, post_id, awnser, type)
+  {
+      console.log('method calle')
+     const response = await fetchUrl(process.env.VUE_APP_API_URL + '/api/sofi/awnser_to_comment', {
+         comment_id: comment_id,
+         video_id: post_id,
+         awnser_content: awnser,
+         type: type
+     }, 'POST')
+     const data = await response.json()
+   
+     if(response.ok) {
+         return data
+     } else {
+         console.error('ERROR!', data)
+         throw new Error("Something Went Wrong")
+     }
+ }
+ 
+ 
+export async function likeVideoComment(comment_id, video_id, type) {
+    const response = await fetchUrl(process.env.VUE_APP_API_URL + '/api/sofi/like_content', {
+        comment_id: comment_id,
+        video_id: video_id,
+        type: type
+    }, 'POST')
+    
+    const data = await response.json()
+    if(response.ok) {
+        return data
+    } else {
+        throw new Error("Something Went Wrong")
+    }
+}
+
+export async function dislikeVideoComment(comment_id, video_id, type) {
+    const response = await fetchUrl(process.env.VUE_APP_API_URL + '/api/sofi/dislike_content', {
+        comment_id: comment_id,
+        video_id: video_id,
+        type: type
+    }, 'POST')
+    
+    const data = await response.json()
+    if(response.ok) {
+        return data
+    } else {
+        throw new Error("Something Went Wrong")
+    }
+}
+
+export async function likeVideoCommentAwnser(comment_id, awnser_id, video_id, type) {
+    const response = await fetchUrl(process.env.VUE_APP_API_URL + '/api/sofi/like_content', {
+        comment_id: comment_id,
+        awnser_id: awnser_id,
+        video_id: video_id,
+        type: type
+    }, 'POST')
+    
+    const data = await response.json()
+    if(response.ok) {
+        return data
+    } else {
+        throw new Error("Something Went Wrong")
+    }
+}
+
+export async function dislikeVideoCommentAwnser(comment_id, awnser_id, video_id, type) {
+    const response = await fetchUrl(process.env.VUE_APP_API_URL + '/api/sofi/dislike_content', {
+        comment_id: comment_id,
+        awnser_id: awnser_id,
+        video_id: video_id,
+        type: type
+    }, 'POST')
+    
+    const data = await response.json()
+    if(response.ok) {
+        return data
+    } else {
+        throw new Error("Something Went Wrong")
+    }
+}
+

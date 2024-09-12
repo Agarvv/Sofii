@@ -1,6 +1,11 @@
 
 <template>
   <div >
+      
+      <div v-if="showNotification" class="notification">
+          <NotificationCard :notification="notification"/>
+      </div>
+    
     <HeaderComponent :activePage="'home'" :user="usuario" />
     
     <div v-show="showSearchBox" id="search" class="search-box">
@@ -47,9 +52,11 @@
 import HeaderComponent from './HeaderComponent'
 import SidebarComponent from './SidebarComponent'
 import PostCard from './PostCard'
+import NotificationCard from './NotificationCard'
 import userMixin from '../mixins/userMixin'
 import goToRoute from '../helpers/goToRoute'
 import { getPosts, checkIfUserLikedPost, checkIfUserSavedPost } from '../services/postService'
+
 
 export default {
   mixins: [userMixin], 
@@ -57,7 +64,8 @@ export default {
   components: {
       HeaderComponent,
       SidebarComponent,
-      PostCard
+      PostCard,
+      NotificationCard
   }, 
   data() {
     return {
@@ -66,7 +74,9 @@ export default {
       showSearchBox: false,
       showSidebar: false,
       error: "",
-      postsById: {} 
+      postsById: {},
+      showNotification: false,
+      notification: {}
     };
   },
   methods: {
@@ -184,6 +194,23 @@ this.$socket.on('unsavedPost', saved => {
         }
     }
 });
+
+this.$socket.on('newNotification', notification => {
+   this.notification = notification
+   alert('works')
+   console.log('Notification received', notification.targetUser)
+   this.showNotification = true
+   
+
+   //if (this.hideNotificationInterval) {
+       clearInterval(this.hideNotificationInterval)
+   //}
+
+   //this.hideNotificationInterval = setTimeout(() => {
+   //    this.showNotification = false
+  // }, 5000)
+   
+})
     
     
   }
@@ -472,6 +499,11 @@ aside .aside-logo i {
   display: flex;
   gap: 10px;
   align-items: center;
+}
+
+.notification {
+    width: 100%;
+    border: 1px solid black;
 }
 
 

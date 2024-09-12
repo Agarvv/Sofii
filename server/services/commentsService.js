@@ -47,7 +47,7 @@ const createComment = async (type, resource, user, comment_content) => {
 
                     if (fullComment) {
                         const io = websocket.getIO();
-                        await NotificationService.sendNotificationToSingleUser(resource.user_id, user, 'POST_COMMENT');
+                        await NotificationService.sendNotificationToSingleUser(resource.user_id, user,comment,  'POST_COMMENT');
                         io.emit('newComment', fullComment);
                         return;
                     } else {
@@ -87,7 +87,7 @@ const createComment = async (type, resource, user, comment_content) => {
                     if (fullComment) {
                         const io = websocket.getIO();
                         io.emit('newVideoComment', fullComment);
-                        await NotificationService.sendNotificationToSingleUser(resource.video_user_id, user, 'VIDEO_COMMENT');
+                        await NotificationService.sendNotificationToSingleUser(resource.video_user_id, user, comment, 'VIDEO_COMMENT');
                     }
                 }
                 break;
@@ -159,7 +159,7 @@ const awnserToVideoComment = async (user, video_id, comment, awnser_content) => 
         const fullAwnser = await VideoCommentAwnser.findOne({
             where: { id: awnser.id },
             include: [
-                { model: User, as: 'awnser_user' },
+                { model: User, as: 'comment_awnser_user' },
                 { model: VideoCommentAwnsersLikes, as: 'awnser_likes' },
                 { model: VideoCommentAwnsersDislikes, as: 'awnser_dislikes' }
             ]
