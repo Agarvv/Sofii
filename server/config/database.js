@@ -1,10 +1,10 @@
 const { Sequelize } = require('sequelize')
 
 
-const sequelize = new Sequelize('sofi', 'root', 'root', {
+const sequelize = new Sequelize('sofi', 'root', '', {
     host: 'localhost',
     dialect: 'mysql',
-    logging: console.log
+    logging: false
 })
 
 module.exports = sequelize

@@ -2,9 +2,11 @@
 <template>
   <div >
       
-      <div v-if="showNotification" class="notification">
-          <NotificationCard :notification="notification"/>
-      </div>
+    <div v-if="showNotification" class="notification">
+      <!-- Escuchamos el evento `notificationClosed` desde el hijo -->
+      <NotificationCard :notification="notification" @notificationClosed="hideNotification"/>
+    </div>
+
     
     <HeaderComponent :activePage="'home'" :user="usuario" />
     
@@ -102,6 +104,9 @@ export default {
     }, 
     handleSearch() {
       this.$router.push('/search/' + this.searchQ);
+    },
+    hideNotification() {
+      this.showNotification = false
     }
   },
   watch: {
@@ -197,6 +202,7 @@ this.$socket.on('unsavedPost', saved => {
 
 this.$socket.on('newNotification', notification => {
    this.notification = notification
+   this.showNotification = true
    alert('works')
    console.log('Notification received', notification.targetUser)
    this.showNotification = true
@@ -503,7 +509,10 @@ aside .aside-logo i {
 
 .notification {
     width: 100%;
-    border: 1px solid black;
+    position: fixed;
+    top: 0;
+    left: 0;
+  
 }
 
 

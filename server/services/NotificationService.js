@@ -110,8 +110,10 @@ const sendNotificationToSingleUser = async (target, user, content, type) => {
                 break;
                 
             case 'POST_COMMENT':
+                console.log('commentfklfmggjgjgjergjergljegklrejgklejrgkjegk:jegkejgk:jefgkj', content.user_id)
                originalNotification = await Notifications.create({
                     user_id: target,
+                    // user target is like the sender of the notification
                     user_target: user.user_id,
                     notification_type: 'POST_COMMENT',
                     notification: `${user.username} Commented On Your Post: "${content.comment_content}"`,
@@ -130,7 +132,7 @@ const sendNotificationToSingleUser = async (target, user, content, type) => {
                     ]
                 })
                 
-                io.to(content.user_id).emit('newNotification', fullNotification)
+                io.to(target).emit('newNotification', fullNotification)
                 
                 break; 
                 
@@ -155,10 +157,106 @@ const sendNotificationToSingleUser = async (target, user, content, type) => {
                     ]
                 })
                 
-                io.to(content.user_id).emit('newNotification', fullNotification)
+                io.to(target).emit('newNotification', fullNotification)
                 
                 break;
-                
+
+            case "COMMENT_LIKED":
+                originalNotification = await Notifications.create({
+                    user_id: target,
+                    user_target: user.user_id,
+                    notification_type: 'COMMENT_LIKED',
+                    notification: `${user.username} Liked Your Comment: "${content.comment_content}"`,
+                    type_id: content.post_id
+                })
+
+                fullNotification = await Notifications.findOne({
+                    where: {
+                        id: originalNotification.id
+                    },
+                    include: [
+                      {
+                          model: User,
+                          as: 'targetUser'
+                      }
+                    ]
+                })
+
+                io.to(target).emit('newNotification', fullNotification)
+                break;
+            case "COMMENT_AWNSER":
+                originalNotification = await Notifications.create({
+                    user_id: target,
+                    user_target: user.user_id,
+                    notification_type: 'COMMENT_AWNSER_LIKED',
+                    notification: `${user.username} Liked Your Comment Awnser: "${content.awnser_content}"`,
+                    type_id: content.post_id
+                })
+
+                fullNotification = await Notifications.findOne({
+                    where: {
+                        id: originalNotification.id
+                    },
+                    include: [
+                      {
+                          model: User,
+                          as: 'targetUser'
+                      }
+                    ]
+                })
+
+                io.to(target).emit('newNotification', fullNotification)
+                break;
+            
+            case "VIDEO_COMMENT_LIKED":
+                 originalNotification = await Notifications.create({
+                    user_id: target,
+                    user_target: user.user_id,
+                    notification_type: 'VIDEO_COMMENT_LIKED',
+                    notification: `${user.username} Liked Your Comment In A Video: "${content.comment_content}"`,
+                    type_id: content.video_id
+                })
+
+                fullNotification = await Notifications.findOne({
+                    where: {
+                        id: originalNotification.id
+                    },
+                    include: [
+                      {
+                          model: User,
+                          as: 'targetUser'
+                      }
+                    ]
+                })
+
+                io.to(target).emit('newNotification', fullNotification)
+                break;
+            
+            case "VIDEO_COMMENT_AWNSER_LIKED":
+                originalNotification = await Notifications.create({
+                    user_id: target,
+                    user_target: user.user_id,
+                    notification_type: 'VIDEO_COMMENT_AWNSER_LIKED',
+                    notification: `${user.username} Liked Your Comment Awnser In A Video: "${content.awnser_content}"`,
+                    type_id: content.video_id
+                })
+
+                fullNotification = await Notifications.findOne({
+                    where: {
+                        id: originalNotification.id
+                    },
+                    include: [
+                      {
+                          model: User,
+                          as: 'targetUser'
+                      }
+                    ]
+                })
+
+                io.to(target).emit('newNotification', fullNotification)
+                break;
+            
+            
             default:
                 throw new Error('Unknown notification type');
         }

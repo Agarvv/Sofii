@@ -1,5 +1,5 @@
 <template>
-  <div @click="goToNTarget(notification.type_id)" class="notification-card">
+  <div  @click="goToNTarget(notification.type_id)" class="notification-card">
     <div class="profile">
         <img :src="'http://localhost:3000/' + notification.targetUser.profilePicture" class="profile-pic">
     </div>
@@ -8,47 +8,53 @@
         <p class="notification-text">{{notification.notification}}</p>
         <p class="date">Now</p>
     </div>
-    <div class="notification-close">
+    <!-- Asegúrate de que el @click del botón de cerrar no se propague -->
+    <div @click.stop="hideNotification" class="notification-close">
       <font-awesome-icon icon="close"/>
     </div>
-    
- </div>
+  </div>
 </template>
 
 <script>
-    export default {
-        name: 'NotificationCard',
-        props: {
-            notification: {
-                type: Object,
-                required: true
-            }
-        },
-        methods: {
-            goToNTarget(c_id) {
-                let route = '';
-                switch (this.notification.type) {
-                    case "CREATED_POST":
-                    case "POST_LIKED":
-                    case "POST_COMMENT":
-                        route = `/post/${c_id}`;
-                        break;
-                    case "VIDEO_LIKED":
-                    case "VIDEO_COMMENT":
-                        route = `/watch/${c_id}`;
-                        break;
-                    default:
-                        console.error("Unknown notification type");
-                        return;
-                }
-                this.$router.push(route);
-            }
-        },
-        async mounted() {
-            console.log('notification prop: ', this.notification);
-        }
+export default {
+  name: 'NotificationCard',
+  props: {
+    notification: {
+      type: Object,
+      required: true
     }
+  },
+  methods: {
+    goToNTarget(c_id) {
+      let route = '';
+      switch (this.notification.type) {
+        case "CREATED_POST":
+        case "POST_LIKED":
+        case "POST_COMMENT":
+          route = `/post/${c_id}`;
+          break;
+        case "VIDEO_LIKED":
+        case "VIDEO_COMMENT":
+          route = `/watch/${c_id}`;
+          break;
+        default:
+          console.error("Unknown notification type");
+          return;
+      }
+      this.$router.push(route);
+    },
+    hideNotification() {
+      this.showNotification = false;
+      // Emitimos un evento al padre para que sepa que la notificación fue cerrada
+      this.$emit('notificationClosed');
+    }
+  },
+  async mounted() {
+    console.log('notification prop: ', this.notification);
+  }
+}
 </script>
+
 
 <style scoped>
     .notification-card {
@@ -99,5 +105,10 @@
 .date {
     font-size: 12px;
     color: #aaa;
+}
+
+.notification-close {
+    flex: 1;
+    text-align: right;
 }
 </style>
