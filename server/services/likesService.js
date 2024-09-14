@@ -85,6 +85,9 @@ const likeComment = async (user, comment, post) => {
             comment_id: comment.id,
             post_id: post.id
         });
+
+        await sendNotificationToSingleUser(awnser.user_id, user, awnser, 'COMMENT_LIKED')
+        
         
         const io = websocket.getIO()
         io.emit('likeComment', newLike)
@@ -100,6 +103,8 @@ const unlikeComment = async (like, user) => {
     io.emit('unlikeComment', like)
 }
 
+
+
 const likeCommentAnswer = async (user, post, comment, answer) => {
     try {
         const newLike = await CommentAwnsersLikes.create({
@@ -108,7 +113,9 @@ const likeCommentAnswer = async (user, post, comment, answer) => {
             comment_id: comment.id,
             awnser_id: answer.id
         });
-        
+
+        await sendNotificationToSingleUser(awnser.user_id, user, awnser, "COMMENT_AWNSER_LIKED")
+
         const io = websocket.getIO()
         io.emit('likeCommentAwnser', newLike)
     } catch (e) {
@@ -122,6 +129,8 @@ const unlikeCommentAwnser = async(awnser) => {
     io.emit('unlikeCommentAwnser', awnser)
 }
 
+
+
 const likeVideoComment = async (user, video, comment) => {
     try {
         const newLike = await VideoCommentLikes.create({
@@ -129,6 +138,10 @@ const likeVideoComment = async (user, video, comment) => {
             video_id: video.id,
             comment_id: comment.id
         });
+        
+
+        await sendNotificationToSingleUser(comment.user_id, user, comment, "VIDEO_COMMENT_LIKED")
+        
         
         const io = websocket.getIO()
         io.emit('likeVideoComment', newLike)
@@ -143,6 +156,8 @@ const unlikeVideoComment = async (like) => {
     io.emit('unlikedVideoComment', like)
 }
 
+
+
 const likeVideoCommentAnswer = async (user, video, comment, answer) => {
     try {
        const newLike = await VideoCommentAwnsersLikes.create({
@@ -151,6 +166,8 @@ const likeVideoCommentAnswer = async (user, video, comment, answer) => {
             comment_id: comment.id,
             awnser_id: answer.id
         });
+
+        await sendNotificationToSingleUse4r(answer.user_id, user, answe4r, "VIDEO_COMMENT_AWNSER_LIKED")
         
         const io = websocket.getIO()
         io.emit('likeVideoCommentAnswer', newLike)

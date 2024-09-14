@@ -14,6 +14,7 @@ const VideoCommentAwnser = require('../models/VideoCommentAwnser');
 const VideoCommentAwnsersLikes = require('../models/VideoCommentAwnsersLikes');
 const VideoCommentAwnsersDislikes = require('../models/VideoCommentAwnsersDislikes');
 const websocket = require('../websocket');
+const { sendNotificationToSingleUser } = require('../services/NotificationService');
 
 const createComment = async (type, resource, user, comment_content) => {
     try {
@@ -130,8 +131,9 @@ const awnserToPostComment = async (user, post_id, comment, awnser_content) => {
                     { model: CommentAwnsersDislikes, as: 'awnser_dislikes' }
                 ]
             });
-
+    
             if (fullComment) {
+                await sendNotificationToSingleUser(comment.user_id, user, newCommentAwnser, "AWNSERED_COMMENT")
                 const io = websocket.getIO();
                 io.emit('newCommentAwnser', fullComment);
                 return;
@@ -165,7 +167,11 @@ const awnserToVideoComment = async (user, video_id, comment, awnser_content) => 
             ]
         });
 
+        // const sendNotificationToSingleUser = async (target, user, content, type) => {
+
         if (fullAwnser) {
+            await sendNotificationToSingleUser(comment.user_id, user, awnser, "VIDEO_COMMENT_AWNSERED")
+
             const io = websocket.getIO();
             io.emit('newVideoCommentAwnser', fullAwnser);
             return;

@@ -56,10 +56,16 @@ const sendNotificationToSingleUser = async (target, user, content, type) => {
     try {
         const io = websocket.getIO()
         console.log(`data: TARGET: ${target}, USER: ${user}, CONTENT: ${content}, type: ${type}`)
-        
+        // TARGET MEANS THE USER THAT IS GONNA RECEIVE THE NOTIFICATION
+        // USER MEANS THE USER THAT "CREATED" THE NOTIFICATION
+        // CONTENT MEANS THE CONTENT ASSOCIATED TO THE NOTIFICATION. EX: IF USER LIKED A COMMENT THEN THE CONTENT IS EQUAL TO THAT COMMENT.
+        // TYPE MEANS THE TYPE OF THE NOTIFICATION. EX: IF USER LIKED A POST 'POST_LIKED'. THIS WILL BE USED ON THE FRONTEND FOR COMPARATIONS.
+
+
         let originalNotification;
         let fullNotification;
         switch(type) {
+            // WHEN A POST IS LIKED
             case 'POST_LIKED':
                originalNotification = await Notifications.create({
                     user_id: target,
@@ -83,7 +89,8 @@ const sendNotificationToSingleUser = async (target, user, content, type) => {
                 
                 io.to(content.user_id).emit('newNotification', fullNotification)
                 break;
-                
+            
+            // WHEN A VIDEO IS LIKED
             case 'VIDEO_LIKED':
                originalNotification = await Notifications.create({
                     user_id: target,
@@ -108,7 +115,7 @@ const sendNotificationToSingleUser = async (target, user, content, type) => {
                 io.to(content.user_id).emit('newNotification', fullNotification)
                 
                 break;
-                
+            // WHEN A COMMENT IS POSTED
             case 'POST_COMMENT':
                 console.log('commentfklfmggjgjgjergjergljegklrejgklejrgkjegk:jegkejgk:jefgkj', content.user_id)
                originalNotification = await Notifications.create({
@@ -136,6 +143,7 @@ const sendNotificationToSingleUser = async (target, user, content, type) => {
                 
                 break; 
                 
+            // WHEN A VIDEO COMMENT IS POSTED
             case 'VIDEO_COMMENT':
                originalNotification = await Notifications.create({
                     user_id: target,
@@ -160,7 +168,8 @@ const sendNotificationToSingleUser = async (target, user, content, type) => {
                 io.to(target).emit('newNotification', fullNotification)
                 
                 break;
-
+            
+            // WHEN A COMMENT IS LIKED
             case "COMMENT_LIKED":
                 originalNotification = await Notifications.create({
                     user_id: target,
@@ -184,7 +193,9 @@ const sendNotificationToSingleUser = async (target, user, content, type) => {
 
                 io.to(target).emit('newNotification', fullNotification)
                 break;
-            case "COMMENT_AWNSER":
+
+            // WHEN A COMMENT AWNSER IS LIKED
+            case "COMMENT_AWNSER_LIKED":
                 originalNotification = await Notifications.create({
                     user_id: target,
                     user_target: user.user_id,
@@ -208,6 +219,7 @@ const sendNotificationToSingleUser = async (target, user, content, type) => {
                 io.to(target).emit('newNotification', fullNotification)
                 break;
             
+                // WHEN A VIDEO COMMENT IS LIKED
             case "VIDEO_COMMENT_LIKED":
                  originalNotification = await Notifications.create({
                     user_id: target,
@@ -232,6 +244,7 @@ const sendNotificationToSingleUser = async (target, user, content, type) => {
                 io.to(target).emit('newNotification', fullNotification)
                 break;
             
+                // WHEN A VIDEO COMMENT AWNSER IS LIKED
             case "VIDEO_COMMENT_AWNSER_LIKED":
                 originalNotification = await Notifications.create({
                     user_id: target,
@@ -256,6 +269,7 @@ const sendNotificationToSingleUser = async (target, user, content, type) => {
                 io.to(target).emit('newNotification', fullNotification)
                 break;
             
+                // WHEN A USER AWNSERS TO THE COMMENT OF A POST
             case "AWNSERED_COMMENT":
                 originalNotification = await Notifications.create({
                     user_id: target,
@@ -280,6 +294,7 @@ const sendNotificationToSingleUser = async (target, user, content, type) => {
                 io.to(target).emit('newNotification', fullNotification)
                 break;
             
+                // WHEN A USER AWNNSERS TO THE COMMENT OF A VIDEO
             case "VIDEO_COMMENT_AWNSERED":
                 originalNotification = await Notifications.create({
                     user_id: target,
@@ -304,13 +319,39 @@ const sendNotificationToSingleUser = async (target, user, content, type) => {
                 io.to(target).emit('newNotification', fullNotification)
                 break;
             
+                // WHEN A USER SENDS A FRIEND REQUEST
             case "FRIEND_REQUEST":
                 originalNotification = await Notifications.create({
                     user_id: target,
                     user_target: user.user_id,
                     notification_type: 'FRIEND_REQUEST',
                     notification: `${user.username} Sendt You A Friend Request!`,
-                    type_id: content.user_id // OR SENDER_ID
+                    type_id: content.request_sender_id 
+                })
+
+                fullNotification = await Notifications.findOne({
+                    where: {
+                        id: originalNotification.id
+                    },
+                    include: [
+                      {
+                          model: User,
+                          as: 'targetUser'
+                      }
+                    ]
+                })
+
+                io.to(target).emit('newNotification', fullNotification)
+                break;
+            
+                // WHEN A USER ACCEPTS A FRIEND REQUEST
+            case "ACCEPTED_FRIEND_REQUEST":
+                originalNotification = await Notifications.create({
+                    user_id: target,
+                    user_target: user.user_id,
+                    notification_type: 'ACCEPTED_FRIEND_REQUEST',
+                    notification: `${user.username} Acepted Your Friend Request!`,
+                    type_id: content.friend_one_id 
                 })
 
                 fullNotification = await Notifications.findOne({
@@ -328,6 +369,8 @@ const sendNotificationToSingleUser = async (target, user, content, type) => {
                 io.to(target).emit('newNotification', fullNotification)
                 break;
 
+              
+                // WHEN A USER SENDS A CHAT MESSAGE
             case "CHAT_MESSAGE":
                 originalNotification = await Notifications.create({
                     user_id: target,
@@ -351,11 +394,37 @@ const sendNotificationToSingleUser = async (target, user, content, type) => {
 
                 io.to(target).emit('newNotification', fullNotification)
                 break;
+               
 
+                // WHEN A USER SENDS A CHAT MESSAGE WITH FILE
+                case "CHAT_MESSAGE_WITH_FILE":
+                    originalNotification = await Notifications.create({
+                        user_id: target,
+                        user_target: user.user_id,
+                        notification_type: 'CHAT_MESSAGE_WITH_FILE',
+                        notification: `${user.username} Sendt A File`,
+                        type_id: content.sender_id == target ? content.receiver_id : content.sender_id
+                    })
+    
+                    fullNotification = await Notifications.findOne({
+                        where: {
+                            id: originalNotification.id
+                        },
+                        include: [
+                          {
+                              model: User,
+                              as: 'targetUser'
+                          }
+                        ]
+                    })
+    
+                    io.to(target).emit('newNotification', fullNotification)
+                    break;
 
             default:
                 throw new Error('Unknown notification type');
         }
+         // END
     } catch (e) {
         throw new Error(e);
     }

@@ -2,7 +2,7 @@ const Chat = require('../models/Chat');
 const Message = require('../models/Message')
 const { Op } = require('sequelize');
 const User = require('../models/User')
-
+const sendNotificationToSingleUser = require('../services/NotificationService')
 
 const handleSindleMessage = async (user, data) => {
     try {
@@ -23,7 +23,20 @@ const handleSindleMessage = async (user, data) => {
                }
             ]
         })
+
+        const chatRoom = await Chat.findOne({
+            where: {
+                chat_id: data.chat_id
+            }
+        })
+       
+        const notificationReceiver = chatRoom.sender_id == user.user_id ? chatRoom.receiver_id : chatRoom.sender_id
         
+       // IT IS NOT RECOMENDED TO DO THIS IF YOUR APPLICATION IS BIG. TRY OPTIMIZING THE MORE AS YOU CAN THE DATABASE QUERIES.
+
+
+     
+        await sendNotificationToSingleUser(notificationReceiver, user, chatRoom, "CHAT_MESSAGE")
         return newMessage
         
     } catch(e) {
@@ -55,7 +68,18 @@ const handleMessageWithFile = async (user, data, fileType) => {
                }
             ]
         })
+
+        const chatRoom = await Chat.findOne({
+            where: {
+                chat_id: data.chat_id
+            }
+        })
+
+        const notificationReceiver = chatRoom.sender_id == user.user_id ? chatRoom.receiver_id : chatRoom.sender_id
         
+           // // const sendNotificationToSingleUser = async (target, user, content, type) => {
+        await sendNotificationToSingleUser(notificationReceiver, user, chatRoom, "CHAT_MESSAGE_WITH_FILE")
+
         return newMessage
     } catch(e) {
         console.log(e)

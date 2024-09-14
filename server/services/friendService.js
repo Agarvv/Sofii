@@ -3,6 +3,8 @@ const User = require('../models/User')
 const Friends = require('../models/Friends')
 const {Op} = require('sequelize')
 
+const sendNotificationToSingleUser = require('../services/NotificationService')
+
 const getUserFriendsAndRequests = async (user) => {
     try {
         console.log('method user: ', user);
@@ -65,13 +67,16 @@ const getUserFriendsAndRequests = async (user) => {
 const handleFriendRequest = async (user, friend_target) => {
     try {
         
-        await FriendRequest.create({
+        const newRequest = await FriendRequest.create({
             friend_target: friend_target,
             request_sender_id: user.user_id
         })
+
+        await sendNotificationToSingleUser(friend_target, user, newRequest, "FRIEND_REQUEST")
+
+
         
-        const successMessage = "Request sendt sucesfully."
-        return successMessage
+        return
         
     } catch(e) {
         throw new Error(e)
@@ -108,13 +113,19 @@ const getFriendRequestsByUserId = async (user_id) => {
 };
 
 
+
 const acceptFriendRequest = async (user, friend_request) => {
     try {
+
+      
        const friendship =  await Friends.create({
             friend_one_id: user.user_id,
             friend_two_id: friend_request.request_sender_id
         })
-        
+
+        await friend_request.destroy()
+        await sendNotificationToSingleUser(request.friend_target, user, friendship, "ACCEPTED_FRIEND_REQUEST")
+
         return friendship
         
     } catch(e) {
