@@ -256,7 +256,103 @@ const sendNotificationToSingleUser = async (target, user, content, type) => {
                 io.to(target).emit('newNotification', fullNotification)
                 break;
             
+            case "AWNSERED_COMMENT":
+                originalNotification = await Notifications.create({
+                    user_id: target,
+                    user_target: user.user_id,
+                    notification_type: 'AWNSERED_COMMENT',
+                    notification: `${user.username} Awnsered To Your Comment: "${content.awnser_content}"`,
+                    type_id: content.post_id
+                })
+
+                fullNotification = await Notifications.findOne({
+                    where: {
+                        id: originalNotification.id
+                    },
+                    include: [
+                      {
+                          model: User,
+                          as: 'targetUser'
+                      }
+                    ]
+                })
+
+                io.to(target).emit('newNotification', fullNotification)
+                break;
             
+            case "VIDEO_COMMENT_AWNSERED":
+                originalNotification = await Notifications.create({
+                    user_id: target,
+                    user_target: user.user_id,
+                    notification_type: 'AWNSERED_VIDEO_COMMENT',
+                    notification: `${user.username} Awnsered To Your Comment In A Video: "${content.awnser_content}"`,
+                    type_id: content.video_id
+                })
+
+                fullNotification = await Notifications.findOne({
+                    where: {
+                        id: originalNotification.id
+                    },
+                    include: [
+                      {
+                          model: User,
+                          as: 'targetUser'
+                      }
+                    ]
+                })
+
+                io.to(target).emit('newNotification', fullNotification)
+                break;
+            
+            case "FRIEND_REQUEST":
+                originalNotification = await Notifications.create({
+                    user_id: target,
+                    user_target: user.user_id,
+                    notification_type: 'FRIEND_REQUEST',
+                    notification: `${user.username} Sendt You A Friend Request!`,
+                    type_id: content.user_id // OR SENDER_ID
+                })
+
+                fullNotification = await Notifications.findOne({
+                    where: {
+                        id: originalNotification.id
+                    },
+                    include: [
+                      {
+                          model: User,
+                          as: 'targetUser'
+                      }
+                    ]
+                })
+
+                io.to(target).emit('newNotification', fullNotification)
+                break;
+
+            case "CHAT_MESSAGE":
+                originalNotification = await Notifications.create({
+                    user_id: target,
+                    user_target: user.user_id,
+                    notification_type: 'CHAT_MESSAGE',
+                    notification: `${user.username} Sendt You A Message.`,
+                    type_id: content.sender_id == target ? content.receiver_id : content.sender_id
+                })
+
+                fullNotification = await Notifications.findOne({
+                    where: {
+                        id: originalNotification.id
+                    },
+                    include: [
+                      {
+                          model: User,
+                          as: 'targetUser'
+                      }
+                    ]
+                })
+
+                io.to(target).emit('newNotification', fullNotification)
+                break;
+
+
             default:
                 throw new Error('Unknown notification type');
         }
