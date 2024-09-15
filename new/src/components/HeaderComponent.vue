@@ -25,11 +25,13 @@
         <font-awesome-icon icon="comments" />
       </div>
       <div @click="goToPage('/user/' + user.user_id)">
-        <img
-          style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover"
-          :src="'http://localhost:3000/' + user.user_picture"
-          alt="Profile Picture"
-        />
+      <img 
+  style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover" 
+  :src="user.user_picture ? 'http://localhost:3000/' + user.user_picture : '/images/default.jpeg'" 
+  alt="Profile Picture"
+/>
+
+
       </div>
     </div>
 
@@ -59,26 +61,28 @@
 
 <script>
 import goToRoute from '../helpers/goToRoute'
-
+import { mapGetters } from 'vuex';
 
 export default {
   name: "HeaderComponent",
+  computed: {
+    ...mapGetters(['user'])
+  },
   props: {
     activePage: {
       type: String,
       required: false,
       default: "home"
-    },
-    user: {
-        type: Object,
-        required: true
     }
   },
   methods: {
       goToPage(route) {
           this.$router.push(route)
       }
-  }
+  },
+  mounted() {
+    console.log('use rstate', this.user)
+  },
 };
 </script>
 

@@ -6,9 +6,10 @@
       <!-- Escuchamos el evento `notificationClosed` desde el hijo -->
       <NotificationCard :notification="notification" @notificationClosed="hideNotification"/>
     </div>
-
+   
     
-    <HeaderComponent :activePage="'home'" :user="usuario" />
+  <HeaderComponent :activePage="'home'" />
+ 
     
     <div v-show="showSearchBox" id="search" class="search-box">
         
@@ -31,11 +32,14 @@
     <div class="container">
      <SidebarComponent />
       <main>
-        <div class="posts">
+        <div v-if="posts.length > 0" class="posts">
           <div  v-for="post in posts" :key="post.id" class="post" >
               <PostCard :post="post"/> 
+
           </div>
-          
+        </div>
+        <div class="no-content" v-if="posts.length == 0">
+            <p style="color: gray">There Is No Content Avaibable... <a href="/create">Create!</a></p>
         </div>
       </main>
 
@@ -55,13 +59,11 @@ import HeaderComponent from './HeaderComponent'
 import SidebarComponent from './SidebarComponent'
 import PostCard from './PostCard'
 import NotificationCard from './NotificationCard'
-import userMixin from '../mixins/userMixin'
 import goToRoute from '../helpers/goToRoute'
 import { getPosts, checkIfUserLikedPost, checkIfUserSavedPost } from '../services/postService'
-
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
-  mixins: [userMixin], 
   name: 'HelloWorld',
   components: {
       HeaderComponent,
@@ -69,6 +71,10 @@ export default {
       PostCard,
       NotificationCard
   }, 
+   computed: {
+    ...mapGetters(['user'])  // Mapea el getter a una propiedad computada
+  },
+
   data() {
     return {
       posts: [],
@@ -82,10 +88,11 @@ export default {
     };
   },
   methods: {
+     ...mapActions(['fetchUser']), 
     async servePage() {
       try {
-          console.log('antes de llamar al metodo: ', this.usuario);
-          const data = await getPosts(this.usuario);
+          console.log('antes de llamar al metodo: ', this.user);
+          const data = await getPosts(this.user);
           this.posts = data.posts;
           
           // Creamos el índice `postsById` después de cargar los posts
@@ -109,15 +116,14 @@ export default {
       this.showNotification = false
     }
   },
-  watch: {
-    usuario(newValue) {
-      if (newValue) {
-        this.servePage(); // Llama a servePage cuando usuario se establece
-      }
+  async created() {
+    await this.fetchUser() 
+    if(this.user) {
+      console.log('thi.user', this.user)
+      await this.servePage()
     }
-  },
-  created() {
-    // Evento para nuevos posts creados
+
+
     this.$socket.on('createdPost', async newPost => {
         newPost.isLiked = await checkIfUserLikedPost(newPost) ? true : false;
         newPost.isSaved = await checkIfUserSavedPost(newPost) ? true : false;
@@ -208,13 +214,13 @@ this.$socket.on('newNotification', notification => {
    this.showNotification = true
    
 
-   //if (this.hideNotificationInterval) {
+  if (this.hideNotificationInterval) {
        clearInterval(this.hideNotificationInterval)
-   //}
+   }
 
-   //this.hideNotificationInterval = setTimeout(() => {
-   //    this.showNotification = false
-  // }, 5000)
+   this.hideNotificationInterval = setTimeout(() => {
+      this.showNotification = false
+  }, 5000)
    
 })
     
@@ -515,6 +521,13 @@ aside .aside-logo i {
   
 }
 
+.no-content {
+  width: 100%;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 </style>
 

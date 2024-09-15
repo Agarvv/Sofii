@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const nodemailer = require('nodemailer')
 
 const makeLogin = async (user, userPassword) => {
     try {
@@ -8,6 +9,8 @@ const makeLogin = async (user, userPassword) => {
         if (!isMatch) {
             throw new Error("password_does_not_match")
         }
+
+        user.last_login = Date.now()
 
      
         const payload = {

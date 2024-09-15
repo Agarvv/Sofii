@@ -44,7 +44,7 @@ setupRoutes(app);
 
  sequelize.authenticate().then(() => {
    console.log('Database Working Fine');
-      sequelize.sync();
+      sequelize.sync({ force: false });
  }).catch((e) => { 
      console.log(e);
  });

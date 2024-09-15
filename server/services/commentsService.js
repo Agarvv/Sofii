@@ -119,7 +119,7 @@ const awnserToPostComment = async (user, post_id, comment, awnser_content) => {
             post_id: post_id,
             comment_id: comment.id,
             user_id: user.user_id,
-            answer_content: awnser_content
+         answer_content: awnser_content
         });
 
         if (newCommentAwnser) {

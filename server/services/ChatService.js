@@ -31,6 +31,8 @@ const handleSindleMessage = async (user, data) => {
                 chat_id: data.chat_id
             }
         })
+
+        chatRoom.last_message = data.message
        
         const notificationReceiver = chatRoom.sender_id == user.user_id ? chatRoom.receiver_id : chatRoom.sender_id
         
@@ -76,6 +78,8 @@ const handleMessageWithFile = async (user, data, fileType) => {
                 chat_id: data.chat_id
             }
         })
+
+        chatRoom.last_message = 'Sendt A File...'
 
         const notificationReceiver = chatRoom.sender_id == user.user_id ? chatRoom.receiver_id : chatRoom.sender_id
         

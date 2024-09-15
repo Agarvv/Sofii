@@ -48,7 +48,7 @@
         <div>
           <a href="">Forgot Your Password?</a>
         </div>
-        <div>
+        <div @click="goToRoute('/register')">
           <a href="">Don't have an account?</a>
         </div>
       </div>
@@ -174,6 +174,10 @@ export default {
             } catch (error) {
                 console.error('Error:', error);
             }
+        },
+
+        goToRoute(route) {
+          this.$router.push(route)
         }
     }
 }

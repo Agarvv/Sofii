@@ -8,6 +8,7 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import userStore from './stores/userStore'
 
 // Importar los estilos de Font Awesome
 import '@fortawesome/fontawesome-svg-core/styles.css';
@@ -30,6 +31,7 @@ const app = createApp(App);
 
 
 app.use(router);
+app.use(userStore)
 app.mixin(userMixin);
 
 // Registrar el componente de Font Awesome globalmente
