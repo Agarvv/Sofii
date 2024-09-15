@@ -86,7 +86,7 @@ const likeComment = async (user, comment, post) => {
             post_id: post.id
         });
 
-        await sendNotificationToSingleUser(awnser.user_id, user, awnser, 'COMMENT_LIKED')
+        await sendNotificationToSingleUser(comment.user_id, user, comment, 'COMMENT_LIKED')
         
         
         const io = websocket.getIO()
@@ -114,7 +114,7 @@ const likeCommentAnswer = async (user, post, comment, answer) => {
             awnser_id: answer.id
         });
 
-        await sendNotificationToSingleUser(awnser.user_id, user, awnser, "COMMENT_AWNSER_LIKED")
+        await sendNotificationToSingleUser(answer.user_id, user, answer, "COMMENT_AWNSER_LIKED")
 
         const io = websocket.getIO()
         io.emit('likeCommentAwnser', newLike)

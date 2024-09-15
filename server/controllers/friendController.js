@@ -4,7 +4,7 @@ const tokenController = require('../controllers/tokenController')
 const friendService = require('../services/friendService')
 const FriendRequest = require('../models/FriendRequest')
 const { Op } = require('sequelize')
-
+const sendNotificationToSingleUser = require('../services/NotificationService')
 
 
 const getUserFriendsAndRequests = async (jwt_token) => {
@@ -59,6 +59,7 @@ const handleFriendRequest = async (jwt_token, friend_target) => {
         return success
         
     } catch(e) {
+        console.log('ERRORORORO', e)
         throw new Error(e)
     }
 }

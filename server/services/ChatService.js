@@ -2,10 +2,12 @@ const Chat = require('../models/Chat');
 const Message = require('../models/Message')
 const { Op } = require('sequelize');
 const User = require('../models/User')
-const sendNotificationToSingleUser = require('../services/NotificationService')
+
+
 
 const handleSindleMessage = async (user, data) => {
     try {
+        const { sendNotificationToSingleUser } = require('./NotificationService');
         const createdMessage = await Message.create({
             message_room_id: data.chat_id,
             message_user_id: user.user_id,
@@ -36,7 +38,7 @@ const handleSindleMessage = async (user, data) => {
 
 
      
-        await sendNotificationToSingleUser(notificationReceiver, user, chatRoom, "CHAT_MESSAGE")
+        await sendNotificationToSingleUser(notificationReceiver, user, chatRoom, data.message, "CHAT_MESSAGE")
         return newMessage
         
     } catch(e) {

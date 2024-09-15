@@ -52,7 +52,7 @@ const createForFriendNotification = async (user, post) => {
     }
 };
 
-const sendNotificationToSingleUser = async (target, user, content, type) => {
+const sendNotificationToSingleUser = async (target, user, content, chat_message, type) => {
     try {
         const io = websocket.getIO()
         console.log(`data: TARGET: ${target}, USER: ${user}, CONTENT: ${content}, type: ${type}`)
@@ -60,20 +60,22 @@ const sendNotificationToSingleUser = async (target, user, content, type) => {
         // USER MEANS THE USER THAT "CREATED" THE NOTIFICATION
         // CONTENT MEANS THE CONTENT ASSOCIATED TO THE NOTIFICATION. EX: IF USER LIKED A COMMENT THEN THE CONTENT IS EQUAL TO THAT COMMENT.
         // TYPE MEANS THE TYPE OF THE NOTIFICATION. EX: IF USER LIKED A POST 'POST_LIKED'. THIS WILL BE USED ON THE FRONTEND FOR COMPARATIONS.
-
+        // CHAT MESSAGE WILL NOT BE NULL ON THE CHAT_MESSAGE NOTIFICATIONS,
+        // BUT IT SHOULD BE NULL IN OTHER TYPE OF NOTIFICATIONS.
 
         let originalNotification;
         let fullNotification;
         switch(type) {
             // WHEN A POST IS LIKED
             case 'POST_LIKED':
-               originalNotification = await Notifications.create({
+                originalNotification = await Notifications.create({
                     user_id: target,
                     user_target: user.user_id,
                     notification_type: type,
-                    notification: `${user.username} Liked Your Post`,
-                    type_id: content.id
+                    notification: `${user.username} Liked Your Post: "${content.description}"`,
+                    type_id: content.id // <-- Asegúrate de que haya una coma en la línea anterior.
                 });
+                
                 
                 fullNotification = await Notifications.findOne({
                     where: {
@@ -200,7 +202,7 @@ const sendNotificationToSingleUser = async (target, user, content, type) => {
                     user_id: target,
                     user_target: user.user_id,
                     notification_type: 'COMMENT_AWNSER_LIKED',
-                    notification: `${user.username} Liked Your Comment Awnser: "${content.awnser_content}"`,
+                    notification: `${user.username} Liked Your Comment Awnser: "${content.answer_content}"`,
                     type_id: content.post_id
                 })
 
@@ -275,11 +277,11 @@ const sendNotificationToSingleUser = async (target, user, content, type) => {
                     user_id: target,
                     user_target: user.user_id,
                     notification_type: 'AWNSERED_COMMENT',
-                    notification: `${user.username} Awnsered To Your Comment: "${content.awnser_content}"`,
+                    notification: `${user.username} Awnsered To Your Comment: "${content.answer_content}"`,
                     type_id: content.post_id
                 })
 
-                fullNotification = await Notifications.findOne({
+               fullNotification = await Notifications.findOne({
                     where: {
                         id: originalNotification.id
                     },
@@ -376,7 +378,7 @@ const sendNotificationToSingleUser = async (target, user, content, type) => {
                     user_id: target,
                     user_target: user.user_id,
                     notification_type: 'CHAT_MESSAGE',
-                    notification: `${user.username} Sendt You A Message.`,
+                    notification: `${user.username} Sendt You A Message: "${chat_message}"`,
                     type_id: content.sender_id == target ? content.receiver_id : content.sender_id
                 })
 
