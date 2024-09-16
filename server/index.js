@@ -20,7 +20,6 @@ const app = express();
 const server = http.createServer(app);
 
 
-
 // INIT WEBSOCKET SERVER
 websocket.init(server)
 
