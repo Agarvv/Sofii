@@ -8,7 +8,9 @@
     </div>
    
     
+
   <HeaderComponent :activePage="'home'" />
+
  
     
     <div v-show="showSearchBox" id="search" class="search-box">
@@ -30,7 +32,7 @@
     </div>
 
     <div class="container">
-     <SidebarComponent />
+     <SidebarComponent activePage="home"/>
       <main>
         <div v-if="posts.length > 0" class="posts">
           <div  v-for="post in posts" :key="post.id" class="post" >
@@ -47,6 +49,11 @@
         <div class="users-might-like">
           <div class="users-header">
             <h3>You Might Like</h3>
+          </div>
+          <div class="us-users">
+             <div class="us-user">
+                  
+             </div>
           </div>
         </div>
       </div>
@@ -94,8 +101,8 @@ export default {
           console.log('antes de llamar al metodo: ', this.user);
           const data = await getPosts(this.user);
           this.posts = data.posts;
+          console.log('data', data)
           
-          // Creamos el índice `postsById` después de cargar los posts
           this.postsById = {};
           this.posts.forEach(post => {
             this.postsById[post.id] = post;
@@ -114,6 +121,10 @@ export default {
     },
     hideNotification() {
       this.showNotification = false
+    },
+    showAside() {
+      alert('callekkfmoefm')
+      this.showSidebar = !this.showSidebar
     }
   },
   async created() {
@@ -251,6 +262,8 @@ img {
 .search-box {
     background: white;
 }
+
+
 
 .container {
     display: grid;

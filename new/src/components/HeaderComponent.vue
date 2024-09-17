@@ -2,55 +2,53 @@
   <header class="header">
     
    <div class="first-flex">
-     <div class="f-flex-logo">
+     <div @click="goToPage('/')" class="f-flex-logo">
        <p>Sofii</p>
      </div>
      <div class="f-flex-search">
-       <font-awesome-icon icon="search"/>
-       <i class="fa fa-search"></i>
-       <input type="search" placeholder="Search Users, Posts, Videos.....">
+       <font-awesome-icon @click="handeSearch" icon="search"/>
+       <input v-model="searchQ" type="search" placeholder="Search Users, Posts, Videos.....">
      </div>
    </div>
    
-   <div class="responsive-aside-open">
+   <div @click="showAside" class="responsive-aside-open">
      <div>
        <font-awesome-icon icon="bars"/>
-       <i class="fa fa-bars"></i>
      </div>
    </div>
    
     <div class="m-flex-nav-items">
-       <div id="iconDiv" class="home">
-         <i class="fa fa-home"></i>
+       <div @click="goToPage('/')" id="iconDiv" class="home">
          <font-awesome-icon icon="home"/>
        </div>
-        <div id="iconDiv" class="create">
-      <i class="fa fa-plus"></i>
-     <font-awesome-icon icon="plus"/>
+        <div @click="goToPage('/create')" id="iconDiv" class="create">
+         <font-awesome-icon icon="plus"/>
        </div>
 
      </div>
    
    <div class="second-flex">
      <div class="s-flex-user">
-       <div id="iconDiv" class="notifications">
+       <div @click="goToPage('/notifications')" id="iconDiv" class="notifications">
          <i class="fa fa-bell"></i>
          <font-awesome-icon icon="bell"/>
          <div class="not-readed">
            
          </div>
        </div>
-       <div id="iconDiv" class="chat">
+       <div @click="goToPage('/chats')" id="iconDiv" class="chat">
         <i class="fa fa-comment"></i>
         <font-awesome-icon icon="comment"/> 
        </div>
-       <div class="user-img">
+       <div @click="goToPage('/user/' + user.user_id)" class="user-img">
          <img style="
-         width: 50px;
-         height: 50px;
+         width: 45px;
+         height: 45px;
          border-radius: 50%;
          object-fit: cover;
-         " :src="'http://localhost:3000/media/images/' + user.user_picture">
+         " :src="user.user_picture ? 'http://localhost:3000/' + user.user_picture
+         : '/images/default.jpeg'
+         ">
        </div>
      </div>
    </div>
@@ -95,11 +93,22 @@ export default {
       type: String,
       required: false,
       default: "home"
+    },
+    data() {
+      return {
+        searchQ: ""
+      }
     }
   },
   methods: {
       goToPage(route) {
           this.$router.push(route)
+      },
+      handeSearch() {
+        this.$router.push('/search/' + this.searchQ)
+      },
+      showAside() {
+        this.$emit('showAside')
       }
   },
   mounted() {
@@ -118,12 +127,15 @@ export default {
 
 .header {
   background-color: #ffffff; /* Fondo blanco para el header */
-  border-radius: 10px; /* Bordes redondeados */
   padding: 15px;
   display: flex;
   justify-content: space-between;
   align-items: center; 
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para darle profundidad */
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  box-shadow: 5px 5px  6px rgba(0, 0, 0, 0.5);
 }
 
 .header .first-flex {

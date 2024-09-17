@@ -2,6 +2,16 @@ const postService = require('../services/postService')
 const Post = require('../models/Post')
 const tokenController = require('./tokenController')
 
+const serveHomePage = async (jwtToken) => {
+    try {
+        const userDecoded = await tokenController.verifyJwtToken(jwtToken)
+        const data = await postService.serveHomePage()
+        return data
+    } catch (e) {
+        throw e
+    }
+}
+
 
 const createPost = async (post, user_id, userDecoded, username, userImg, postImg) => {
         try {
@@ -38,6 +48,7 @@ const deletePost = async (post_id, jwtToken) => {
 }
 
 module.exports = {
+    serveHomePage,
     createPost,
     deletePost
 }

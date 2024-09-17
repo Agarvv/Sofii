@@ -424,7 +424,7 @@ const sendNotificationToSingleUser = async (target, user, content, chat_message,
                     break;
 
             default:
-                throw new Error('Unknown notification type');
+                throw new Error('Unknown notification type', type);
         }
          // END
     } catch (e) {

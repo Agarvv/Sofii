@@ -13,7 +13,8 @@ const { User, Post, Comment
 const CommentLikes = require('../models/CommentLikes')
 const CommentDislikes = require('../models/CommentDislikes')
 const CommentAwnsersLikes = require('../models/CommentAwnsersLikes')
-const CommentAwnsersDislikes = require('../models/CommentAwnsersDislikes')
+const CommentAwnsersDislikes = require('../models/CommentAwnsersDislikes');
+const sequelize = require('../config/database');
 
 
 
@@ -83,38 +84,11 @@ router.post('/destroy_post', async (req, res) => {
 
 router.get('/posts', async (req, res) => {
     try {
-        
-        const posts = await Post.findAll({
-    where: { private: false },
-    include: [
-        {
-            model: User,
-            as: 'user',
-            attributes: ['username', 'profilePicture', 'id']
-        },
-        {
-            model: Comment,
-            as: 'postComments',
-            attributes: ['comment_content'],
-            include: {
-                
-                model: User,
-                as: 'commentUser'
-                
-            }
-        },
-        {
-            model: Likes,
-            as: 'postLikes'
-        },
-        {
-            model: Saved,
-            as: 'saved_post'
-        }
-    ]
-});
-        
-        return res.status(200).json({ posts });
+        const data = await postController.serveHomePage(req.cookies.jwt)
+        return res.status(200).json({
+            posts: data.posts,
+            users: data.randomUsers
+        })
     } catch (e) {
         console.log(e)
         return res.status(500).json({ error: e.message });
