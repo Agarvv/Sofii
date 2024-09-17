@@ -5,7 +5,8 @@ const User = require('../models/User')
 const Friends = require('../models/Friends')
 const Notifications = require('../models/Notifications')
 const NotificationService = require('../services/NotificationService')
-
+const Follower = require('../models/Followers')
+const Friends = require('../models/Friends')
 const tokenController = require('../controllers/tokenController')
 const Post = require('../models/Post')
 const websocket = require('../websocket')
@@ -45,8 +46,19 @@ const serveHomePage = async (user) => {
         const randomUsers = await User.findAll({
             order: sequelize.random(),
             limit: 10,
-            attributes: ['username', 'id', 'profilePicture', 'job']
-        }) 
+            attributes: ['username', 'id', 'profilePicture', 'job'],
+            include: [
+                {
+                    model: User,
+                    as: 'followers',
+                },
+                {
+                    model: User,
+                    as: 'friends',
+                }
+            ]
+        });
+        
 
         return { posts, randomUsers }
     } catch (e) {

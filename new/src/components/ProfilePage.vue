@@ -15,10 +15,10 @@
             <h1>{{ user.username }}</h1>
           </div>
           
-<div class="followers" style="margin-bottom: 20px">
-  <p style="font-weight: 700;">{{user.followers?.length || 0}} Followers</p>
-  <p style="color: gray">{{user.following?.length || 0}} Following</p>
-</div>
+            <div class="followers" style="margin-bottom: 20px">
+               <p style="font-weight: 700;">{{user.followers?.length || 0}} Followers</p>
+               <p style="color: gray">{{user.following?.length || 0}} Following</p>
+            </div>
 
 <div v-if="!isSelfUser" class="active-inactive">
     
@@ -48,7 +48,7 @@
 
            <div class="buttons">
              <div>
-             <button @click="goToEditProfile()">Edit Your Account</button>
+             <button @click="goToPage('/userDetails')">Edit Your Account</button>
              </div>
            </div>
 
@@ -172,7 +172,6 @@
               </div>
               <div class="post-user-detail">
                 <h4>{{ post.user.username }}</h4>
-                <p style="color: gray">{{ post.userHandle }}</p>
               </div>
               <div class="post-button-ellipsis">
                 <font-awesome-icon icon="fas fa-ellipsis-h" />
@@ -198,12 +197,7 @@
             
             
           </div>
-        </div>
-        
-        
-        
-        
-        
+        </div> 
       </main>
     </div>
   </div>
@@ -213,89 +207,56 @@
 
 import userMixin from '../mixins/userMixin';
 import { like, dislike } from '../composables/usePostActions';
-
+import {
+  getUser,
+  sendFriendRequest
+} from '../services/usersService'
+import {
+  startChat
+} from '../services/chatService'
 export default {
   mixins: [userMixin],
   data() {
     return {
       user: {},
       userPosts: [],
-      isSelfUser: null
+      isSelfUser: null,
+      error: ""
     };
   },
   methods: {
     async getUser() {
       try {
-        const response = await fetch(`http://localhost:3000/api/sofi/user/${this.$route.params.id}`);
-        if (!response.ok) {
-          throw new Error('Something went wrong.');
-        }
-        const data = await response.json();
-        console.log(data.user);
-        this.user = data.user;
-        this.userPosts = data.user.posts;
-        
-        if (this.user.id == this.usuario.user_id) {
-          this.isSelfUser = true;
-        } else {
-          this.isSelfUser = false;
-        }
+       const data = await getUser(this.$route.params.id)
+       this.user = data.user
+       this.userPosts = data.user.posts
+      
       } catch (error) {
         console.error('Error fetching user:', error);
       }
     },
     
     async sendFriendRequest(friend_target) {
-      console.log('Send friend request method called, ', friend_target);
-      const response = await fetch('http://localhost:3000/api/sofi/send_friend_request', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ friend_target }),
-        credentials: 'include'
-      });
-      
-      if (!response.ok) {
-        console.log('Response not ok');
+      try {
+        const data = await sendFriendRequest(friend_target)
+        console.log('All Ok!', data)
+      } catch(e) { 
+        console.log(e)
+        this.error = "Internal Server Error..."
       }
-      
-      const data = await response.json();
-      console.log('Server friend request data: ', data);
     },
 
     async sendChat(user_id) {
-      const response = await fetch('http://localhost:3000/api/sofi/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ user_id }),
-        credentials: 'include'
-      });
-      const data = await response.json();
-      console.log('Server data chat; ', data);
-      if (data.chat.message == "Chat already exists") {
-        return this.$router.push('/chat/' + user_id);
-      } else if (data.chat.message === "chatDoesNotExist") {
-        console.log('This is your first conversation with this person, enjoy !');
-        this.$router.push('/chat/' + user_id);
-      }
+     try {
+          const data = await startChat(user_id)
+          console.log('Worked !', data)
+          this.$router.push('/chat/' + user_id)
+     } catch(e) {
+      this.error = "Oops, Something Went Down!"
+     }
     },
-
-    async like(type, post_id) {
-        console.log('like method called: ', post_id)
-      try {
-        const response = await like(type, { post_id: post_id });
-        console.log('Like response:', response);
-        // Puedes manejar la respuesta aquí si es necesario
-      } catch (error) {
-        console.error('Error liking post:', error);
-      }
-    },
-    
-    goToEditProfile() {
-      this.$router.push('/userDetails');
+    goToPage(route) {
+      this.$router.push(route);
     }
   },
   async mounted() {

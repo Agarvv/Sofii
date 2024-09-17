@@ -1,5 +1,5 @@
 import fetchUrl from '../helpers/fetchUrl'
-
+import checkIfUserIsFollowed from './usersService'
 
 
 export async function getPosts(user) {
@@ -11,14 +11,13 @@ export async function getPosts(user) {
     
     const data = await response.json()
     if(response.ok) {
-     console.log('response ok!', data)
-        data.posts.forEach((post) => {
-            console.log('recorriendo post: ', post)
-            
+        data.posts.forEach((post) => { 
             post.isLiked = post.postLikes.some((like) => like.user_id == user.user_id);
-            
             post.isSaved = post.saved_post.some(saved => saved.user_id == user.user_id )
-            
+        })
+        // IS FOLLOWING MEANS IF YOU AR FOLLOWING THIS USER.
+        data.users.forEach(otherUser => {
+            otherUser.isFollowing = checkIfUserIsFollowed(otherUser, user)
         })
         return data 
     } else {
