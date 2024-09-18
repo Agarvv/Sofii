@@ -136,6 +136,8 @@ Saved.belongsTo(Post, {
     foreignKey: 'post_id'
 })
 
+
+
 // Relación de seguidores y siguiendo
 User.belongsToMany(User, {
   through: Follower, // Usamos el nombre del modelo, que es "Follower"

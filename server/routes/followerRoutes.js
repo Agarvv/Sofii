@@ -5,22 +5,30 @@ const followerController = require('../controllers/followerController')
 const { body } = require('express-validator')
 
 
-router.post('/follow', async (req, res) => {
+router.post('/follow',[
+    body("following_id").isNumeric()
+], async (req, res) => {
     try {
-        console.log('follow req.body ', req.body)
          const userDecoded = 
          await tokenController.verifyJwtToken(req.cookies.jwt)
         if(!userDecoded) {
             throw new Error("Something went wrong")
         }
         
-        const follower_id = userDecoded.user_id 
         const following_id = req.body.following_id
         
-        await followerController.handleFollow(follower_id, following_id)
-        
-        return res.status(201).json({message: 'You Started Following User Nr: ', following_id})
-        
+        const data = await followerController.handleFollow(userDecoded, following_id)
+        // DATA SHOULD BE LIKE: { followed: true, unfollowed: false } IF TH-
+        // THE USER FOLLOWED.
+        //BUT IF HE FOLLOWS HIM ANOTHER TIME DATA SHOULD BE:
+        // { unfollowed: true, followed: false }
+        // LIKE THAT WE HAVE A TOGGLE-FOLLOW SYSTEM :P
+        if(data.followed && !data.unfollowed) {
+            return res.status(200).json(data)
+        } else if(data.unfollowed && !data.followed) {
+            return res.status(200).json(data)
+        }
+        // we are doing that to check if all its on correct format 
     } catch(e) {
         console.log(e)
         return res.status(500).json({error: e})

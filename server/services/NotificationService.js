@@ -345,6 +345,30 @@ const sendNotificationToSingleUser = async (target, user, content, chat_message,
 
                 io.to(target).emit('newNotification', fullNotification)
                 break;
+
+            case "NEW_FOLLOWER":
+                originalNotification = await Notifications.create({
+                    user_id: target,
+                    user_target: user.user_id,
+                    notification_type: 'NEW_FOLLOWER',
+                    notification: `${user.username} Started Following You!`,
+                    type_id: user.user_id
+                })
+
+                fullNotification = await Notifications.findOne({
+                    where: {
+                        id: originalNotification.id
+                    },
+                    include: [
+                      {
+                          model: User,
+                          as: 'targetUser'
+                      }
+                    ]
+                })
+
+                io.to(target).emit('newNotification', fullNotification)
+                break;
             
                 // WHEN A USER ACCEPTS A FRIEND REQUEST
             case "ACCEPTED_FRIEND_REQUEST":
