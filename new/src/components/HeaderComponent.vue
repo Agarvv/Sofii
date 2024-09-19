@@ -33,7 +33,7 @@
          <i class="fa fa-bell"></i>
          <font-awesome-icon icon="bell"/>
          <div class="not-readed">
-           
+           <p>{{nonReadedNotifications.length}}</p>
          </div>
        </div>
        <div @click="goToPage('/chats')" id="iconDiv" class="chat">
@@ -94,6 +94,7 @@ export default {
       required: false,
       default: "home"
     },
+    nonReadedNotifications: {},
     data() {
       return {
         searchQ: ""

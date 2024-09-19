@@ -4,7 +4,7 @@
       <div class="profile-banner">
         <img :src="'http://localhost:3000/' + user.banner" alt="Profile Banner">
       </div>
-      
+      <!-- i love you -->
       <div class="user">
         <div class="user-img">
          <img :src="'http://localhost:3000/' + user.profilePicture" alt="Foto de Perfil">
@@ -54,27 +54,65 @@
 
           </div>
           
+          
           <div v-else class="interact-buttons">
-            <button @click="sendChat(user.id)" style="background: purple;"> <font-awesome-icon :icon="['fas', 'comment']" />Chat</button>
-            <button @click="sendFriendRequest(user.id)" style="background: #007bff;"> <font-awesome-icon :icon="['fas', 'user-plus']" />Friend Request</button>
-            <button style="background: black; color: white; padding: 15px">
-                <font-awesome-icon icon="user-plus"/>
-            </button>
-          </div>
+  <!-- Botón de Chat -->
+  <button @click="sendChat(user.id)" style="background: purple;">
+    <font-awesome-icon :icon="['fas', 'comment']" /> Chat
+  </button>
+  
+  <!-- Botón de Friend Request -->
+  <button 
+    v-if="isFriend"
+    @click="removeFriend"
+    style="background: lightblue; color: blue;"
+  >
+    <font-awesome-icon :icon="['fas', 'user-friends']" /> Friends
+  </button>
+
+  <button 
+    v-else-if="sentFriendRequest"
+    @click="null" <!-- No realiza ninguna acción -->
+    style="background: rgba(128, 128, 128, 0.5); color: white;"
+  >
+    <font-awesome-icon :icon="['fas', 'clock']" /> Request Sent
+  </button>
+  
+  <button 
+    v-else-if="receivedFriendRequest"
+    @click="acceptFriendRequest"
+    style="background: green; color: white;"
+  >
+    <font-awesome-icon :icon="['fas', 'check']" /> Accept Friend Request
+  </button>
+  
+  <button 
+    v-else
+    @click="sendFriendRequest(user.id)"
+    style="background: initial; color: initial;"
+  >
+    <font-awesome-icon :icon="['fas', 'user-plus']" /> Send Friend Request
+  </button>
+  
+  <!-- Botón de Follow -->
+  <button @click="followUser(user.id)" style="background: black; color: white; padding: 15px">
+    <font-awesome-icon icon="user-plus"/>
+  </button>
+</div>
+       
+         
+          
         </div>
       </div>
     </header>
     
-    <div class="responsive-user-details">
+    <div style="display: none" class="responsive-user-details">
         
         <div class="r-bio">
             <p>{{user.bio}}</p>
         </div>
         
         <div class="r-info">
-            
-             
-             
             <div class="ubication">
               <font-awesome-icon icon="fas fa-map-marker-alt" style="color: red" />
               <span>{{ user.ubication }}</span>
@@ -153,7 +191,6 @@
       <main>
           
 
-          
           <h4 style="width: 100%;
            display: flex;
            align-items: center;
@@ -164,38 +201,7 @@
              <div v-if="userPosts.length > 0" class="posts">
                  
           <div  v-for="post in userPosts" :key="post.id" class="post" >
-              
-              
-            <div class="post-header">
-              <div class="post-user-img">
-                <img style="width: 50px; border-radius: 50%" :src="'http://localhost:3000/' + post.user.profilePicture" alt="Post User Image">
-              </div>
-              <div class="post-user-detail">
-                <h4>{{ post.user.username }}</h4>
-              </div>
-              <div class="post-button-ellipsis">
-                <font-awesome-icon icon="fas fa-ellipsis-h" />
-              </div>
-            </div>
-            <div class="post-content">
-              <div class="post-description">
-                <p>{{ post.description }}</p>
-              </div>
-              <div @click="goToPostPage(post.id)" class="post-image">
-                <img :src="'http://localhost:3000/' + post.postPicture" alt="Post Image">
-              </div>
-            </div>
-            <div class="post-interactions">
-              <div @click="like('POST', post.id)" class="like"><font-awesome-icon icon="fas fa-thumbs-up" /> <span>{{post.postLikes.length}}</span>   </div>
-              <div @click="goToPostPage(post.id)"class="comment"><font-awesome-icon icon="fas fa-comment" /> <span>{{post.postComments.length}}</span></div>
-              <div @click="savePost(post.id)" class="save"><font-awesome-icon icon="fas fa-bookmark" />
-              <span>{{post.saved_post.length}}</span>
-              </div>
-              <div class="share"><font-awesome-icon icon="fas fa-share" /></div>
-            </div>
-            
-            
-            
+              <PostCard :post="post"/>
           </div>
         </div> 
       </main>
@@ -209,28 +215,47 @@ import userMixin from '../mixins/userMixin';
 import { like, dislike } from '../composables/usePostActions';
 import {
   getUser,
-  sendFriendRequest
+  sendFriendRequest,
+  followUser
 } from '../services/usersService'
 import {
   startChat
 } from '../services/chatService'
+import { PostCard } from './PostCard'
+
+
+
+
 export default {
+    components: {
+        PostCard
+    }
   mixins: [userMixin],
   data() {
     return {
       user: {},
       userPosts: [],
       isSelfUser: null,
-      error: ""
+      error: "",
+      isFollowing: this.user.isFollowing,
+      sentFriendRequest: this.user.sendFriendRequest,
+      receivedFriendRequest: this.user.receivedFriendRequest,
+      isFriend: this.user.isFriend
+     
+      // sentFriendRequest means that a user sent a friend request to the user that is showing on
+      //receivedFriendRequest means that a user received a friend request from the user that s showing up and he can Accept or Deny the request
+      //isFriend means that a user is friend with the user that is showing on
+      
+      // so easy, right? :p
     };
   },
   methods: {
     async getUser() {
       try {
-       const data = await getUser(this.$route.params.id)
+       const data = await getUser(this.$route.params.id, this.usuario)
        this.user = data.user
        this.userPosts = data.user.posts
-      
+      console.log('user from service: ', this.user)
       } catch (error) {
         console.error('Error fetching user:', error);
       }
@@ -239,7 +264,7 @@ export default {
     async sendFriendRequest(friend_target) {
       try {
         const data = await sendFriendRequest(friend_target)
-        console.log('All Ok!', data)
+        this.sentFriendRequest = true
       } catch(e) { 
         console.log(e)
         this.error = "Internal Server Error..."
@@ -255,12 +280,40 @@ export default {
       this.error = "Oops, Something Went Down!"
      }
     },
+    async followUser(user_id) {
+        try {
+            const data = await followUser(user_id)
+            if(data.followed && !data.unfollowed) {
+                this.isFollowing = true
+            } else if(data.unfollowed && !data.followed) {
+                this.isFollowing = false
+            }
+        } catch(e) {
+            this.error = "Something Went Wrong..."
+        }
+    },
     goToPage(route) {
       this.$router.push(route);
+    },
+    async removeFriend() {
+        return true
     }
   },
   async mounted() {
     await this.getUser();
+  },
+  async created() {
+      this.$socket.on('newFollower', newFollower => {
+          if(newFollower.following_id == this.user.id) {
+              this.user.followers.push(newFollower)
+          }
+      })
+      
+      this.$socket.on('unfollowedUser', newFollower => {
+          if(newFollower.following_id == this.user.id) {
+              this.user.followers = this.user.followers.filter(follower => follower.id !== newFollower.id)
+          }
+      })
   }
 };
 
@@ -321,66 +374,6 @@ header .profile-banner img {
     width: 100%;
 }
 
-.posts .post {
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    background: #fff; /* Fondo blanco para los posts */
-    border-radius: 8px; /* Bordes redondeados */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra sutil */
-    margin-bottom: 20px; /* Espacio entre posts */
-}
-
-.post .post-header {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-.post .post-header .username {
-    flex: 1; /* Permite que el nombre de usuario ocupe todo el espacio disponible */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.post .post-button-ellipsis {
-    display: flex;
-    align-items: top;
-    justify-content: flex-end;
-    width: auto;
-}
-
-.post-description {
-    margin-bottom: 15px;
-    color: #333; /* Color de texto más oscuro */
-}
-
-.post-image img {
-    width: 100%;
-    height: auto;
-    max-height: 300px;
-    object-fit: cover;
-    border-radius: 8px; /* Bordes redondeados para imágenes */
-}
-
-.post-image {
-    margin-bottom: 20px;
-}
-
-.post-interactions {
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-    padding: 15px 0;
-    border-top: 1px solid #eee; /* Separador superior */
-    color: #555; /* Color de los íconos de interacción */
-}
-
-.post-interactions i {
-  font-size: 25px;
-}
-
 aside, main {
   
     height: 100vh;
@@ -410,50 +403,6 @@ main .posts {
     gap: 20px;
     border-radius: 20px;
 }
-
-main .posts .post {
-  
-    padding: 15px;
-    border-radius: 15px;
-}
-
-main .posts .post .post-header {
- 
-  gap: 10px;
-}
-
-main .posts .post .post-header .user-information {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 5px;
-}
-
-
-.post-user {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-.post-img img {
-    width: 100%;
-}
-
-.post-interactions {
-    display: flex;
-    justify-content: space-between;
-    padding: 15px;
-}
-
-.post-interactions div {
-    flex-grow: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-}
-
 
 .user {
     position: relative;
@@ -575,6 +524,10 @@ aside .description {
 @media (max-width: 600px) {
     aside {
         display: none;
+    }
+    
+    .responsive-user-details {
+        display: flex;
     }
   
     .container {

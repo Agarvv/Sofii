@@ -10,6 +10,8 @@ const handleFollow = async (follower, following_id) => {
             follower_id: follower.user_id,
             following_id: following_id
         })
+        
+        io.emit('newFollower', newFollowDBObject)
 
         // We handle the Notifications
         await NotificationService.sendNotificationToSingleUser(

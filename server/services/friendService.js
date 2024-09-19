@@ -73,13 +73,11 @@ const handleFriendRequest = async (user, friend_target) => {
         })
 
         await sendNotificationToSingleUser(friend_target, user, newRequest, "FRIEND_REQUEST")
-
-
         
         return
         
     } catch(e) {
-        console.log('nicht machts die scheise', e)
+        console.log('Nu mere, in pizda ma si si sa o fut pe ma sa', e)
         throw new Error(e)
     }
 }

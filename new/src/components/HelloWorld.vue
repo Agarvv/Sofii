@@ -3,16 +3,9 @@
   <div >
       
     <div v-if="showNotification" class="notification">
-      <!-- Escuchamos el evento `notificationClosed` desde el hijo -->
-      <NotificationCard :notification="notification" @notificationClosed="hideNotification"/>
-    </div>
-   
-    
-
+      <NotificationCard :notification="notification" :nonReadedNotifications="nonReadedNotifications" @notificationClosed="hideNotification"/>
+    </div> 
   <HeaderComponent :activePage="'home'" />
-
- 
-    
     <div v-show="showSearchBox" id="search" class="search-box">
         
       <div class="search-icons">
@@ -91,7 +84,8 @@ export default {
       error: "",
       postsById: {},
       showNotification: false,
-      notification: {}
+      notification: {},
+      nonReadedNotifications: {}
     };
   },
   methods: {
@@ -99,8 +93,12 @@ export default {
     async servePage() {
       try {
           console.log('antes de llamar al metodo: ', this.user);
+          // Get posts Method also does 
+          // Get The non-readed user notifications, and recomended users. 
+          
           const data = await getPosts(this.user);
           this.posts = data.posts;
+          this.nonReadedNotifications = data.nonReadedNotifications
           console.log('data', data)
           
           this.postsById = {};
@@ -205,12 +203,10 @@ this.$socket.on('unsavedPost', saved => {
     if (postTarget) {
         console.log('Unsaved recibido:', saved);
 
-        // Eliminar el guardado del usuario específico
         postTarget.saved_post = postTarget.saved_post.filter(s => 
             !(s.user_id === saved.user_id && s.post_id === saved.post_id)
         );
 
-        // Si el evento es para el usuario actual, actualizamos el estado `isSaved`
         if (saved.user_id === this.usuario.id) {
             postTarget.isSaved = false;
         }

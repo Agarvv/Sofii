@@ -2,11 +2,20 @@ import fetchUrl from "../helpers/fetchUrl"
 
 // FUNCTION TO GET A SPECIFIC USER, USED IN THE USER PAGE.
 // USER_ID MEANS THE ID FROM THE USER THAT WE WANT TO GET, (it is not obvious?? :P)
-export async function getUser(user_id) {
+export async function getUser(user_id, currentUser) {
   const response = await fetchUrl(process.env.VUE_APP_API_URL + `/api/sofi/user/${user_id}`, null, 'GET')
   const data = await response.json()
   if(response.ok) {
-    return data
+      // Here we just check if a user is following the user of the request
+      data.user.isFollowing = data.user.followers.some(follower => follower.following_id == data.user.id && follower.follower_id == currentUser.user_id)
+     //Here we check if the user of the session (mean the user that enters to our profile page and sees this user that i just get from the server with his id) haves a friend request from the user that he is seeing.
+     data.user.receivedFriendRequest = data.user.receivedRequests.some(request => request.request_sender_id == currentUser.user_id)
+     
+     //Here we check if our current user has sent a friend request to the user that he is seeing
+     data.user.sendFriendRequest = user.receivedRequests.some(request => request.friend_target == user.id && request.sender_id == currentUser.user_id)
+     
+     // Here we check if our current user is friend with the user that he is seeing
+     data.user.isFriend = data.user.friends.some(friend => friend.friend_one_id == currentUser.user_id || friend.friend_two_id == currentUser.user_id)
   } else {
     throw new Error('Something Went Wrong.')
     // THIS WILL BE HANDLED ALLWAYS ON THE COMPONENT,
@@ -29,9 +38,9 @@ export async function checkIfUserIsFriend(user, currentUser) {
 }
 
 // USER MEANS THE USER THAT WE WANT TO FOLLOW
-export async function followUser(user) {
+export async function followUser(user_id) {
    const response = await fetchUrl(process.env.VUE_APP_API_URL + '/api/sofi/follow', {
-    following_id: user.user_id
+    following_id: user_id
    }, 'POST')
    const data = await response.json()
    if(response.ok) {

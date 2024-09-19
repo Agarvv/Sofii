@@ -59,8 +59,16 @@ const serveHomePage = async (user) => {
             ]
         });
         
+        const nonReadedNotifications = await
+        Notifications.findAll({
+            where: {
+                readed: false,
+                
+            }
+        })
+        
 
-        return { posts, randomUsers }
+        return { posts, randomUsers, nonReadedNotifications }
     } catch (e) {
         throw e
     }
