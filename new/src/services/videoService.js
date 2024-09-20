@@ -1,30 +1,32 @@
 import fetchUrl from '../helpers/fetchUrl'
 
+// METHOD TO CREATE A VIDEO
+export async function createVideo(data) {
+   const response = await fetch(process.env.VUE_APP_API_URL + '/api/sofi/add_video', {
+    method: 'POST',
+    body: data
+   })
+   const data = await response.json()
+   if(response.ok) {
+    return data 
+   } else {
+    throw new Error('Something went')
+   }
+}
 
+// METHOD TO FIND VIDEOS FOR THE VIDEOS PAGE
 export async function findVideos(user) {
     try {
-        console.log('find videos user: ', user)
         const response = await fetchUrl(process.env.VUE_APP_API_URL + '/api/sofi/videos', null, 'GET');
-        
+        const data = await response.json()
         if(response.ok) {
-            const data = await response.json()
-            
-            
                 data.videos.forEach((video) => {
-                    console.log('Video fjsj: ', video)
                     video.isLiked = video.video_likes.some(like => like.user_id == user.user_id)
-                    
                     video.isSaved = video.videos_saved.some(saved => saved.user_id == user.user_id)
                 })
-            
-            console.log('Filters passed: ', data.videos)
-            
-            
-            
-            console.log('Response from Method videos!', data)
             return data
         } else {
-            throw new Error("Something Went Wrong..")
+            throw new Error("Something Went Wrong")
         }
         
     } catch (e) {
@@ -36,7 +38,6 @@ export async function findVideos(user) {
 
 export async function likeVideo(video_id) {
     try {
-        console.log('fetfhurlmethod: ', fetchUrl)
         const response = await fetchUrl(process.env.VUE_APP_API_URL +
         '/api/sofi/like_content',
         {
@@ -48,7 +49,6 @@ export async function likeVideo(video_id) {
         
         if(response.ok) {
             const data = await response.json()
-            console.log('Response from Method LikeVideo Ok!', data)
             return data
         } else {
             throw new Error("Something Went Wrong..")

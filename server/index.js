@@ -16,6 +16,9 @@ const setUserActiveOrInactive = require('./outils/setUserActiveOrInactive')
 const tokenController = require('./controllers/tokenController')
 const websocket = require('./websocket')
 
+// npm install passport passport-google-oauth20 passport-facebook passport-apple express-session
+
+
 const app = express();
 const server = http.createServer(app);
 

@@ -1,197 +1,186 @@
-
 <template>
   <div>
-   
-   <HeaderComponent :activePage="'chat'" :user="usuario"/>
-    
-    
-    <div class="container">
-      
-      <aside>
-        
-        <div class="aside-header">
-         
-          
-          <div class="aside-header-search-inp">
-            <input type="search" placeholder="Search Contacts">
-            <font-awesome-icon icon="search"></font-awesome-icon>
-          </div>
-          
-          
+    <header>
+      <h1>Chat</h1>
+      <p>Sofii</p>
+    </header>
+    <main>
+      <div class="main-header">
+        <div class="mh-search">
+          <i class="fa fa-search"></i>
+          <font-awesome-icon icon="search" />
+          <input 
+            type="search" 
+            placeholder="Search Chats..." 
+            v-model="searchQuery"  
+          >
         </div>
-        
-        <div class="aside-contacts">
-          
-          <div @click="goToPage('/chat/' + contact.userToDisplayInfo.id)" v-for="contact in contacts" :key="contact.chat_id" class="contact">
-            
-            <div class="contact-img">
-               <img :src="'http://localhost:3000/' + contact.userToDisplayInfo.profilePicture" style="width: 70px; height: 70px; object-fit: cover; border-radius: 50%;">
+      </div>
+      <div class="main-chats">
+        <div 
+          v-for="chat in filteredChats" 
+          :key="chat.id" 
+          @click="goToPage('/chat/' + chat.userToDisplayInfo.id)" 
+          class="chat"
+        >
+          <div class="main-chat-user">
+            <div class="user-img">
+              <img :src="'http://localhost:3000' + chat.userToDisplayInfo.profilePicture">
             </div>
-            
-            <div class="contact-details">
-              <h4 class="contact-username">{{contact.userToDisplayInfo.username}}</h4>
-                <p class="contact-last-message">
-  {{ contact.last_message.length > 25 ? contact.last_message.substring(0, 25) + '...' : contact.last_message }}
-             </p>
+            <div class="user-details">
+              <h4>{{chat.userToDisplayInfo.username}}</h4>
+              <p>{{chat.last_message}}</p>
             </div>
-            
           </div>
-          
-          <!-- Aquí irían más contactos -->
-
         </div>
-        
-      </aside> 
-      
-    </div>
+      </div>
+    </main>
   </div>
 </template>
-
 
 <script>
 import HeaderComponent from './HeaderComponent'
 import userMixin from '../mixins/userMixin'
+import { getChats } from '../services/chatService'
 
 export default {
-    mixins: [userMixin],
-    components: {
-        HeaderComponent
+  mixins: [userMixin],
+  components: {
+    HeaderComponent
+  },
+  name: 'ChatPage',
+  data() {
+    return {
+      contacts: [],
+      searchQuery: "", 
+    }
+  },
+  computed: {
+    filteredChats() {
+      if (!this.searchQuery) {
+        return this.contacts; 
+      }
+     
+      return this.contacts.filter(chat => 
+        chat.userToDisplayInfo.username
+          .toLowerCase()
+          .includes(this.searchQuery.toLowerCase()) ||
+        chat.last_message
+          .toLowerCase()
+          .includes(this.searchQuery.toLowerCase())
+      );
+    }
+  },
+  methods: {
+    async getContacts() {
+      try {
+        const data = await getChats();
+        console.log('data', data);
+        this.contacts = data.chats; 
+      } catch(e) {
+        console.error('error', e);
+      }
     },
-    name: 'ChatPage',
-    data() {
-        return {
-            contacts: [],
-            chat: [],
-            messages: [],
-            message: "",
-            roomId: null
-        }
-    },
-    methods: {
-        async getContacts() {
-            try {
-                const response = await fetch('http://localhost:3000/api/sofi/chats', {
-                    method: 'GET',
-                    credentials: 'include'
-                });
-
-                const data = await response.json();
-                console.log('Server data from chats:', data.chats);
-
-                this.contacts = data.chats;
-                console.log('this.contacts:', this.contacts);
-            } catch (error) {
-                console.error('Error fetching contacts:', error);
-            }
-        },
-        goToPage(route) {
-            this.$router.push(route)
-        }
-    },
-    async created() {  // Esto está ahora fuera de methods
-        await this.getContacts(); 
-    },
+    goToPage(route) {
+      this.$router.push(route);
+    }
+  },
+  async created() {
+    await this.getContacts(); 
+  }
 };
 </script>
 
 <style scoped>
-    html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  font-family: 'Poppins', sans-serif;
-  background: #f9f9f9; /* Fondo un poco más claro */
+ header {
+  padding: 15px;
+  background-color: #2C2F33; 
+  color: white;
+  
 }
 
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+header p {
+  color: #B9BBBE; 
 }
 
-.container {
-  border: 2px solid #ddd; /* Borde principal más suave */
-  width: 100%;
-  height: 100vh;
+.main-header {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.container aside {
-    border: 1px solid black;
-    width: 50%;
-    height: 100vh;
-}
-
-
-.aside-header {
+.mh-search {
+  background: #7289DA;
   padding: 10px;
-  margin-bottom: 5px;
+  margin: 10px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
 }
 
-.aside-header-user {
+.mh-search input {
+  background: transparent; 
+  border: none;
+  color: white;
+  outline: none;
+}
+
+.mh-search input::placeholder {
+  color: #D3D3D3;
+}
+
+.main-chat-user {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 3px;
 }
 
-.aside-header-search-inp {
-  display: flex;
-  gap: 5px;
-  align-items: center;
-  height: 30px;
-  margin-bottom: 20px;
+.chat {
+  transition: 0.4s;
+  width: 85%;
+  padding: 15px;
+  border-radius: 15px;
+  background: #F6F6F6;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
 }
 
-.aside-header-search-inp input {
-  flex: 1;
-  height: 100%;
-  border: none;
-  border-radius: 10px;
+.chat:hover {
+  background: #A1A9FF;
 }
 
-.aside-contacts {
-  width: 100%;
-}
-
-.aside-contacts .contact {
-  display: flex;
-  gap: 5px;
-  align-items: center;
-  padding: 5px;
-  background: #f5f5f5; /* Fondo ligeramente gris */
-  color: #333; /* Texto gris oscuro */
-}
-
-.aside-contacts .contact:hover {
-  background: white; /* Fondo blanco al pasar el mouse */
-  color: black; /* Texto negro al pasar el mouse */
-}
-
-.aside-interactions {
-  display: grid;
-  grid-template-columns: 1fr;
-  margin-bottom: 10px;
-}
-
-.aside-interactions .add-contact {
+.main-chat-user .user-img img {
+  width: 40px;
   height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.main-chats {
   display: flex;
+  flex-direction: column;
+  gap: 10px;
   align-items: center;
-  justify-content: center;
-  gap: 5px;
-  background: white; /* Fondo blanco */
-  border: none;
-  border-radius: 10px;
 }
 
-@media(max-width: 600px) {
-    .container aside {
-        width: 100%;
-    }
+.main-chat-user .user-details p {
+  color: #B9BBBE; 
 }
 
+@media(max-width: 730px) {
+  .container {
+    width: 100%;
+    
+  }
 
+  
+
+  .main-chat-user .user-img img {
+    width: 35px;
+    height: 35px; 
+  }
+
+  .main-chat-user .user-details p {
+    font-size: 14px; 
+  }
+}
 </style>
+

@@ -1,19 +1,13 @@
 const express = require('express');
 const passport = require('passport');
-
 const router = express.Router();
 
-router.get('/',
-  passport.authenticate('google', {
-    scope: ['profile', 'email']
-  })
-);
+// Ruta para iniciar sesión con Google
+router.get('/', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
-router.get('/callback',
-  passport.authenticate('google', { failureRedirect: '/login' }),
-  (req, res) => {
-    res.redirect('/dashboard');
-  }
-);
+// Callback para Google
+router.get('/callback', passport.authenticate('google', { failureRedirect: '/' }), (req, res) => {
+   
+});
 
 module.exports = router;

@@ -1,61 +1,55 @@
 <template>
-  <div>
-      
+<div>
       <HeaderComponent :activePage="'create'" :user="usuario"/>
-    
-    <div class="container">
-      <div class="form">
-        <form @submit.prevent="submitForm">
-          <div class="form-input">
-            <div class="form-input-user-img">
-              <img :src="profileImage" style="width: 50px; border-radius: 50%;" />
-            </div>
-            <div class="form-input-input">
-              <input v-model="content" placeholder="What's Up?" />
-            </div>
-          </div>
-          <div class="form-buttons">
-            <div class="icons">
-              <div class="image" @click="openFileInput('imageInp')">
-                <font-awesome-icon icon="image" />
-                <input id="imageInp" type="file" style="display: none;" @change="handleImageChange" />
-              </div>
-              <div class="video" @click="openFileInput('videoInp')">
-                <font-awesome-icon icon="video" />
-                <input id="videoInp" type="file" style="display: none;" @change="handleVideoChange" />
-              </div>
-              <div class="emotion">
-                <font-awesome-icon icon="smile" />
-              </div>
-              <div class="tags">
-                <font-awesome-icon icon="hashtag" />
-              </div>
-            </div>
-            <div class="post-button">
-              <button type="submit">
-                <i class="fa fa-upload"></i>
-                Upload
-              </button>
-            </div>
-          </div>
-          <div class="form-image">
-            <img v-for="(photo, index) in photos" :key="index" :src="photo" class="uploaded-photo" />
-          </div>
-          <div class="form-video">
-            <video controls v-if="videoSource" class="uploaded-video">
-              <source :src="videoSource" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          </div>
-        </form>
+       <div class="create-container">
+    <div class="f-column">
+      <img style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" src="195196-2.jpg">
+      <div class="fc-inp"> 
+       <input v-model="content" placeholder="What's Up?">
       </div>
     </div>
+    <div class="demostration-content">
+      <img style="
+       display: none;
+       width: 100%;
+       height: 250px;
+       object-fit: cover;
+       border-radius: 15px;
+      " :src=" imageSource">
+      <video style="
+      display: none;
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      border-radius: 15px;
+      " controls>
+        <source :src="videoSource">
+      </video>
+    </div>
+    <div class="s-column">
+     <div @click="openFileInput('imageInp')" class="sce-one">
+       <font-awesome-icon icon="image"/>
+       <input @change="handleImageChange" type="file" id="imageInp">
+     </div>
+     <div @click="openFileInput('videoInp')" class="sce-two">
+       <font-awesome-icon :icon="video"/>
+       <input @change="handleVideoChange" id="videoInp" type="file">
+     </div>
+     <div @click="submitForm" class="sce-three">
+       <font-awesome-icon :icon="paperPlane"/>
+     </div>
+    </div>
   </div>
+
+
+</div>
 </template>
 
 <script>
 import HeaderComponent from './HeaderComponent'
-import userMixin from '../mixins/userMixin'
+import { createPost } from '../services/postService'
+import { createVideo } from '../services/videoService'
+
 
 export default {
     components: {
@@ -65,8 +59,6 @@ export default {
     
   data() {
     return {
-      username: 'Sofii',
-      profileImage: '',
       photos: [],
       content: '',
       videoSource: null,
@@ -79,12 +71,10 @@ export default {
     },
     handleImageChange(e) {
       if (this.videoSource) {
-        alert('Ya has seleccionado un video. Solo puedes subir una imagen o un video.');
         return;
       }
 
-      if (this.photos.length > 0) {
-        alert('You cannot add more than 1 image.');
+      if (this.imageSource) {
         return;
       }
 
@@ -102,17 +92,16 @@ export default {
     },
     handleVideoChange(e) {
       if (this.imageSource) {
-        alert('Ya has seleccionado una imagen. Solo puedes subir una imagen o un video.');
         return;
       }
 
       if (this.videoSource) {
-        alert('You cannot add more than 1 video.');
         return;
       }
 
       const file = e.target.files[0];
       if (!file) return;
+
 
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -130,39 +119,26 @@ export default {
 
       if (this.imageSource) {
         const imageBlob = await fetch(this.imageSource).then(res => res.blob());
-        console.log('Image BLOB: ', imageBlob);
         formData.append('postPicture', imageBlob, 'image.jpg');
+        try {
+          const data = await createPost(formData)
+         console.log('all ok', data)
+        } catch (error) {
+          console.log('error', e)
+        }
       }
 
       if (this.videoSource) {
         const videoBlob = await fetch(this.videoSource).then(res => res.blob());
         formData.append('video', videoBlob, 'video.mp4');
+        try {
+          const data = await createVideo(formData) 
+          console.log('all ok',data)
+        } catch(e) {
+          console.log('ERROR!', e)
+        }
       }
 
-      let url;
-      if (this.videoSource) {
-        url = 'http://localhost:3000/api/sofi/add_video';
-      } else if (this.imageSource) {
-        url = 'http://localhost:3000/api/sofi/createPost';
-      } else {
-        console.log('No image or video to upload.');
-        return;
-      }
-      
-      console.log('Fetching URL: ', url)
-
-      const response = await fetch(url, {
-        method: 'POST',
-        credentials: 'include',
-        body: formData
-      });
-
-      if (!response.ok) {
-        console.log('Response not Ok.');
-      }
-
-      const data = await response.json();
-      console.log(data);
     }
   }
 };
@@ -182,98 +158,66 @@ html, body {
   margin: 0;
 }
 
-header {
+.create-container {
+  border: 1px solid #ccc;
+  border-radius: 10px;
   display: flex;
-  justify-content: space-between;
-  padding: 15px;
+  flex-direction: column;
+  padding: 20px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+
+.f-column {
+  display: flex;
   align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
 }
 
-header i {
-  font-size: 25px;
+.fc-inp {
+  flex-grow: 1;
 }
 
-.container {
-  height: 100vh;
+.fc-inp input {
+  width: 100%;
+  height: 40px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  padding: 0 15px;
+  font-size: 14px;
+  background: #e0e0e0;
+  transition: border-color 0.3s;
+}
+
+.fc-inp input:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.s-column {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px; 
+}
+
+.s-column div {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.container .form {
-  color: white;
-  width: 100%;
-  height: 100%;
   padding: 10px;
-}
-
-.container .form form {
-  background: #03B9FF;
-  padding: 20px;
   border-radius: 10px;
+  background-color: #fff;
+  transition: background-color 0.3s, transform 0.3s;
 }
 
-.form-input {
-  display: flex;
-  align-items: center;
+.s-column div:hover {
+  background-color: #f0f0f0;
+  transform: translateY(-2px); 
 }
 
-.form-input-input input {
-  border: none;
-  outline: none;
-  border-radius: 10px;
-  padding: 10px;
-  font-size: 14px;
-  width: 100%;
-  margin-left: 10px;
-}
-
-.form-buttons {
-  margin-top: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.icons {
-  display: flex;
-}
-
-.icons div {
-  margin-right: 10px;
-  font-size: 18px;
-}
-
-.post-button button {
-  background: #0862aa;
-  border: none;
-  color: white;
-  border-radius: 10px;
-  padding: 10px 15px;
-  cursor: pointer;
-}
-
-.post-button button i {
-  margin-right: 5px;
-}
-
-.form-image {
-  margin-top: 10px;
-}
-
-.uploaded-photo {
-  width: 100%;
-  max-height: 200px;
-  object-fit: cover;
-  margin-bottom: 10px;
-  border-radius: 10px;
-}
-
-.uploaded-video {
-  width: 100%;
-  max-height: 200px;
-  object-fit: cover;
-  margin-bottom: 10px;
-  border-radius: 10px;
+.s-column i {
+  font-size: 20px; 
 }
 </style>

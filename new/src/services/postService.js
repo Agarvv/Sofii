@@ -1,6 +1,19 @@
 import fetchUrl from '../helpers/fetchUrl'
 import checkIfUserIsFollowed from './usersService'
 
+export async function createPost(data) {
+const response = await fetch(process.env.VUE_APP_API_URL + '/createPost', {
+    method: 'POST',
+    body: data
+})
+
+const data = await response.json()
+if(response.ok) {
+    return data
+} else {
+    throw new Error('Something Went Wrong...')
+}
+}
 
 export async function getPosts(user) {
     console.log('Method called ¡')
@@ -24,8 +37,6 @@ export async function getPosts(user) {
         throw new Error("Internal Server Error")
     }
 }
-
-
 
 
 export async function savePost(post_id) {

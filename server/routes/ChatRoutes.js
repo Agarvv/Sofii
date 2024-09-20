@@ -25,11 +25,7 @@ router.get('/chats',async (req, res) => {
     try {
         const jwt_token = req.cookies.jwt 
         const chatsWithUserInfo = await ChatController.getUserChats(jwt_token)
-        if(chatsWithUserInfo.length == 0) {
-           return res.status(404).json({ detail: 'You do not have contacts, go and explore!'})
-        } else if(chatsWithUserInfo.length > 0) {
-            return res.status(201).json({ chats: chatsWithUserInfo})
-        }
+        return res.status(201).json({ chats: chatsWithUserInfo})
         
     } catch(e) {
         console.log('errno', e)
