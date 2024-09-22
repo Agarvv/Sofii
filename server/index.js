@@ -8,7 +8,7 @@ const passport = require('passport');
 const { setupRoutes } = require('./routes/main.js');
 const ChatController = require('./controllers/ChatController')
 const socketIo = require('socket.io');
-require('./config/passport'); // Archivo para la configuración de Passport
+no
 const cookie = require('cookie');
 const Tests = require('./models/Tests')
 const  CommentAnswer  = require('./models/CommentAwnser'); // Importa el

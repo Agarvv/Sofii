@@ -17,7 +17,7 @@ const upload = multer({ storage });
 router.get('/user/:userId', async (req, res) => {
     try {
         const user = await userService.findUserById(req.params.userId);
-        return res.status(200).json({ user });
+        return res.status(200).json({ user, isok: 'pk' });
     } catch (error) {
         console.log(error);
         return res.status(500).json({ error: error.message });

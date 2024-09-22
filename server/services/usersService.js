@@ -1,4 +1,7 @@
 const User = require('../models/User')
+const Follower = require('./Followers');
+const FriendRequest = require('./FriendRequest')
+const Friends = require('./Friends');  
 
 const findUserById = (id) => {
     try {
@@ -6,8 +9,28 @@ const findUserById = (id) => {
             {
                 where: 
                 {
-                    id
-                }
+                    id: id
+                },
+                include: [
+                    {
+                        model: User,
+                        through: Follower,
+                        as: 'followers'
+                    },
+                    {
+                        model: User,
+                        through: Friends,
+                        as: 'friends'
+                    },
+                    {
+                        model: FriendRequest,
+                        as: 'sentRequests'
+                    },
+                    {
+                        model: FriendRequest,
+                        as: 'receivedRequests'
+                    }
+                ]
             }
         )
         if(!databaseUser) {

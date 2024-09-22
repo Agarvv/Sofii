@@ -36,7 +36,7 @@ const verifyJwtToken = (token) => {
                         user_job: dbUser.job
                     });
                 } else {
-                    reject(new Error("User not found"));
+                    return
                 }
             } catch (e) {
                 console.log(e);

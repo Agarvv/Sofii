@@ -2,7 +2,7 @@
      <div  class="post" >
             <div class="post-header">
               <div>
-                <img style="width: 50px; height: 50px; border-radius: 50%" :src="'http://localhost:3000/' + post.user.profilePicture" alt="Post User Image">
+ <img style="width: 50px; height: 50px; border-radius: 50%" :src="post.user.profilePicture ? 'http://localhost:3000/' +  post.user.profilePicture: '/images/default.jpeg'" alt="Post User Image">
               </div>
               <div class="post-user-detail">
                 <h4>{{ post.user.username }}</h4>

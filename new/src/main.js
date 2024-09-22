@@ -26,6 +26,8 @@ const socket = io('http://localhost:3000', {
 });
 
 const app = createApp(App);
+app.config.devtools = true;  // Habilitar Vue Devtools
+app.config.productionTip = false;  // Desactivar los tips de producción en desarrollo
 
 
 

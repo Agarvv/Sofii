@@ -1,3 +1,4 @@
+import { Cursor } from "mongoose"
 import fetchUrl from "../helpers/fetchUrl"
 
 // FUNCTION TO GET A SPECIFIC USER, USED IN THE USER PAGE.
@@ -5,28 +6,32 @@ import fetchUrl from "../helpers/fetchUrl"
 export async function getUser(user_id, currentUser) {
   const response = await fetchUrl(process.env.VUE_APP_API_URL + `/api/sofi/user/${user_id}`, null, 'GET')
   const data = await response.json()
+  console.log('data from the server', data)
+  console.log('all data', currentUser)
   if(response.ok) {
       // Here we just check if a user is following the user of the request
-      data.user.isFollowing = data.user.followers.some(follower => follower.following_id == data.user.id && follower.follower_id == currentUser.user_id)
+      data.user.isFollowing = data.user.followers.some(follower => follower.Follower.follower_id == currentUser.user_id)
      //Here we check if the user of the session (mean the user that enters to our profile page and sees this user that i just get from the server with his id) haves a friend request from the user that he is seeing.
      data.user.receivedFriendRequest = data.user.receivedRequests.some(request => request.request_sender_id == currentUser.user_id)
      
      //Here we check if our current user has sent a friend request to the user that he is seeing
-     data.user.sendFriendRequest = user.receivedRequests.some(request => request.friend_target == user.id && request.sender_id == currentUser.user_id)
+     data.user.sendFriendRequest = data.user.receivedRequests.some(request => request.friend_target == data.user.id && request.sender_id == currentUser.user_id)
      
      // Here we check if our current user is friend with the user that he is seeing
      data.user.isFriend = data.user.friends.some(friend => friend.friend_one_id == currentUser.user_id || friend.friend_two_id == currentUser.user_id)
+     return data
   } else {
     throw new Error('Something Went Wrong.')
-    // THIS WILL BE HANDLED ALLWAYS ON THE COMPONENT,
+    // THIS WILL BE6 HANDLED ALLWAYS ON THE COMPONENT,
     // SO DONT WORRY ABOUT IT
   }
 }
 
-export async function checkIfUserIsFollowed(user, currentUser) {
+export function checkIfUserIsFollowed(user, currentUser) {
   // USER IS THE USER TO COMPARE THE DATA
   // current user is the current user of the session 
-  const isFollowing = user.followers.some(follower => follower.follower_id == currentUser.user_id)
+  console.log('user:vv', user)
+  const isFollowing = user.followers.some(follower => follower.Follower.follower_id == currentUser.user_id)
   return isFollowing
 }
 // wenn sehen sie das, ich mochte sie weissen was ich liebe sie ;)

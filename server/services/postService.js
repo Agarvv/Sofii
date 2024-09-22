@@ -10,9 +10,12 @@ const sequelize = require('../config/database')
 const tokenController = require('../controllers/tokenController')
 const Post = require('../models/Post')
 const websocket = require('../websocket')
+const { Op } = require('sequelize');
+
+
 
 const serveHomePage = async (user) => {
-    try {
+    try { 
         const posts = await Post.findAll({
             where: { private: false },
             include: [
@@ -44,6 +47,11 @@ const serveHomePage = async (user) => {
         });
 
         const randomUsers = await User.findAll({
+            where: {
+                id: {
+                    [Op.ne]: user.user_id // Esto filtra el id que no es igual a user.user_id
+                }
+            },
             order: sequelize.random(),
             limit: 10,
             attributes: ['username', 'id', 'profilePicture', 'job'],
@@ -59,14 +67,12 @@ const serveHomePage = async (user) => {
             ]
         });
         
-        const nonReadedNotifications = await
-        Notifications.findAll({
+        const nonReadedNotifications = await Notifications.findAll({
             where: {
-                readed: false,
-                
+                user_target: user.user_id,
+                readed: false
             }
         })
-        
 
         return { posts, randomUsers, nonReadedNotifications }
     } catch (e) {

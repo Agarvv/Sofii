@@ -52,7 +52,7 @@ const createForFriendNotification = async (user, post) => {
     }
 };
 
-const sendNotificationToSingleUser = async (target, user, content, chat_message, type) => {
+const sendNotificationToSingleUser = async (target, user, content, chat_message = null, type) => {
     try {
         const io = websocket.getIO()
         console.log(`data: TARGET: ${target}, USER: ${user}, CONTENT: ${content}, type: ${type}`)

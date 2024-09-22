@@ -1,5 +1,5 @@
 const Notifications = require('../models/Notifications')
-const User = require('../models/User') // Asegúrate de que User esté importado si no lo estaba.
+const User = require('../models/User') 
 const tokenController = require('./tokenController')
 
 const handleUserNotifications = async (user_id) => {
@@ -8,18 +8,25 @@ const handleUserNotifications = async (user_id) => {
             where: { user_id: user_id },
             include: [
                 {
-                    model: User, // Asegúrate de que el modelo User esté correctamente definido e importado
-                    as: 'targetUser' // Usamos el alias definido en las asociaciones
-                    
+                    model: User, 
+                    as: 'targetUser' 
                 }
             ]
         });
+
+        const filteredNotifications = userNotifications.filter(notification => !notification.readed);
         
-        return userNotifications;
-    } catch(e) {
+        for (const noti of filteredNotifications) {
+            noti.readed = true;
+            await noti.save();
+        }
+        
+        return userNotifications
+    } catch (e) {
         throw new Error(e.message);
     }
 }
+
 
 const destroyNotificationById = async (jwt_token, notification_id) => {
     try {

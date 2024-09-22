@@ -5,7 +5,7 @@ const tokenController = require('./tokenController')
 const serveHomePage = async (jwtToken) => {
     try {
         const userDecoded = await tokenController.verifyJwtToken(jwtToken)
-        const data = await postService.serveHomePage()
+        const data = await postService.serveHomePage(userDecoded)
         return data
     } catch (e) {
         throw e

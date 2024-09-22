@@ -7,6 +7,7 @@ const Likes = require('../models/Likes')
 const Follower = require('../models/Followers')
 
 const Saved = require('../models/Saved')
+const Friends = require('../models/Friends')
 
 
 const handleProfileDataChange = async (field, value, token) => {
@@ -83,6 +84,11 @@ const findUserById = async (user_id) => {
                 {
                     model: User,
                     as: 'following'  // Y aquí a 'following'
+                },
+                {
+                    model: User,
+                    through: Friends,
+                    as: 'friends'
                 }
             ]
         });

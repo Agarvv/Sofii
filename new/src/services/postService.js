@@ -1,15 +1,16 @@
 import fetchUrl from '../helpers/fetchUrl'
-import checkIfUserIsFollowed from './usersService'
+import  { checkIfUserIsFollowed } from './usersService'
 
-export async function createPost(data) {
-const response = await fetch(process.env.VUE_APP_API_URL + '/createPost', {
+export async function createPost(vdata) {
+const response = await fetch(process.env.VUE_APP_API_URL + '/api/sofi/createPost', {
     method: 'POST',
-    body: data
+    body: vdata,
+     credentials: 'include'
 })
 
-const data = await response.json()
+const sdata = await response.json()
 if(response.ok) {
-    return data
+    return sdata
 } else {
     throw new Error('Something Went Wrong...')
 }

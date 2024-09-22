@@ -1,5 +1,5 @@
 <template>
-
+<div> 
 <HeaderComponent :activePage="'notifications'" :user="usuario"/>
     
 
@@ -18,13 +18,13 @@
           <h4>You Do Not Have Notifications...</h4>
       </div>
     
-    <div v-for="notification in notifications" :key="notification.id" class="notification">
-      
+    <div v-for="notification in notifications" :key="notification.id" 
+     :class="['notification', notification.readed ? 'read' : 'unread']">
       
     
    <div class="notification-body"> 
       <div class="notification-user-img">
-        <img style="width: 70px; border-radius: 50%" :src="'http://localhost:3000/' + notification.targetUser.profilePicture">
+        <img style="width: 70px; border-radius: 50%" :src="notification.targetUser.profilePicture ? 'http://localhost:3000/' + notification.targetUser.profilePicture : '/images/default.jpeg'">
       </div>
       
       <div class="notification-details">
@@ -49,7 +49,7 @@
   
 </div>
 
-
+</div>
 </template>
 
 <script>
@@ -168,6 +168,8 @@ header {
   border-bottom: 1px solid #eee;
   transition: background 0.3s;
 }
+
+
 
 .notifications .notification:hover {
   background-color: #f9f9f9;

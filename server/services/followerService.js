@@ -4,7 +4,9 @@ const   NotificationService = require('./NotificationService')
 
 const handleFollow = async (follower, following_id) => {
     try {
-        
+        // we init our io of our websocket 
+        const io = websocket.getIO()
+
        // We just create a new notification object in the database
        const newFollowDBObject = await Followers.create({
             follower_id: follower.user_id,
@@ -18,8 +20,10 @@ const handleFollow = async (follower, following_id) => {
             newFollowDBObject.following_id, 
             follower,
             newFollowDBObject,
-            'NEW_FOLLOWER'
-        )
+            null, 
+            'NEW_FOLLOWER' 
+        );
+        
         
         // And we return an object that will be handled on the frontend for some comparations.
         return true

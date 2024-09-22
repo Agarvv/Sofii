@@ -1,9 +1,9 @@
 <template>
-<div>
-      <HeaderComponent :activePage="'create'" :user="usuario"/>
-       <div class="create-container">
+<div class="container">
+      
+  <div class="create-container">
     <div class="f-column">
-      <img style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" src="195196-2.jpg">
+      <img style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" src="/images/default.jpeg">
       <div class="fc-inp"> 
        <input v-model="content" placeholder="What's Up?">
       </div>
@@ -15,7 +15,7 @@
        height: 250px;
        object-fit: cover;
        border-radius: 15px;
-      " :src=" imageSource">
+      " :src="imageSource">
       <video style="
       display: none;
       width: 100%;
@@ -28,15 +28,15 @@
     </div>
     <div class="s-column">
      <div @click="openFileInput('imageInp')" class="sce-one">
-       <font-awesome-icon icon="image"/>
-       <input @change="handleImageChange" type="file" id="imageInp">
+      <font-awesome-icon icon="image"/>
+       <input  style="display: none" @change="handleImageChange" type="file" id="imageInp">
      </div>
      <div @click="openFileInput('videoInp')" class="sce-two">
-       <font-awesome-icon :icon="video"/>
-       <input @change="handleVideoChange" id="videoInp" type="file">
+      <font-awesome-icon icon="video"/>
+       <input style="display: none" @change="handleVideoChange" id="videoInp" type="file">
      </div>
      <div @click="submitForm" class="sce-three">
-       <font-awesome-icon :icon="paperPlane"/>
+        <font-awesome-icon icon="paper-plane"/>
      </div>
     </div>
   </div>
@@ -46,16 +46,13 @@
 </template>
 
 <script>
-import HeaderComponent from './HeaderComponent'
+
 import { createPost } from '../services/postService'
 import { createVideo } from '../services/videoService'
-
+import { userMixin } from '../mixins/userMixin'
 
 export default {
-    components: {
-        HeaderComponent
-    }, 
-    mixins: [userMixin], 
+   // mixins: [userMixin],
     
   data() {
     return {
@@ -85,7 +82,6 @@ export default {
       reader.readAsDataURL(file);
 
       reader.onload = (ev) => {
-        this.photos.push(ev.target.result);
         this.imageSource = ev.target.result;
         console.log('image source: ', this.imageSource);
       };
@@ -123,7 +119,7 @@ export default {
         try {
           const data = await createPost(formData)
          console.log('all ok', data)
-        } catch (error) {
+        } catch (e) {
           console.log('error', e)
         }
       }
@@ -150,15 +146,19 @@ html, body {
   margin: 0;
   padding: 0;
   font-family: 'Poppins', sans-serif;
+  display: flex;
+  justify-content: center; /* Centramos horizontalmente */
+  align-items: center; /* Centramos verticalmente */
 }
 
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+.container {
+  width: 100%;
+  padding: 20px;
 }
 
 .create-container {
+  width: 70%; /* Ajuste a un 70% del ancho de la pantalla */
+  max-width: 800px; /* Limitar el ancho máximo */
   border: 1px solid #ccc;
   border-radius: 10px;
   display: flex;
@@ -166,7 +166,7 @@ html, body {
   padding: 20px;
   background-color: #f9f9f9;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 100%;
+  margin: 0 auto; /* Asegura que el contenedor se centre */
 }
 
 .f-column {
@@ -177,15 +177,15 @@ html, body {
 }
 
 .fc-inp {
-  flex-grow: 1;
+  width: 100%;
 }
 
 .fc-inp input {
-  width: 100%;
+  background: red;
+  width: 100%; /* Ajuste al 100% del contenedor */
   height: 40px;
   border-radius: 20px;
   border: 1px solid #ddd;
-  padding: 0 15px;
   font-size: 14px;
   background: #e0e0e0;
   transition: border-color 0.3s;
@@ -198,8 +198,8 @@ html, body {
 
 .s-column {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px; 
+  grid-template-columns: repeat(3, 1fr); /* Mantener 3 columnas siempre */
+  gap: 10px;
 }
 
 .s-column div {
@@ -214,10 +214,16 @@ html, body {
 
 .s-column div:hover {
   background-color: #f0f0f0;
-  transform: translateY(-2px); 
+  transform: translateY(-2px);
 }
 
-.s-column i {
-  font-size: 20px; 
+.demostration-content img,
+.demostration-content video {
+  width: 100%; /* Asegura que se ajusten al contenedor */
+  max-height: 250px; /* Limitar la altura máxima */
+  object-fit: cover;
+  border-radius: 15px;
 }
+
+
 </style>

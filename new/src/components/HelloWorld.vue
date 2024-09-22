@@ -44,8 +44,8 @@
             <h3>You Might Like</h3>
           </div>
           <div class="us-users">
-             <div class="us-user">
-                  
+             <div v-for="user in recommendedUsers" :key="user.id" class="us-user">
+                  <HomePageUserMustLike :user="user"/>
              </div>
           </div>
         </div>
@@ -59,8 +59,9 @@ import HeaderComponent from './HeaderComponent'
 import SidebarComponent from './SidebarComponent'
 import PostCard from './PostCard'
 import NotificationCard from './NotificationCard'
+import  HomePageUserMustLike  from './HomePageUserMustLike'
 import goToRoute from '../helpers/goToRoute'
-import { getPosts, checkIfUserLikedPost, checkIfUserSavedPost } from '../services/postService'
+import {  getPosts, checkIfUserLikedPost, checkIfUserSavedPost } from '../services/postService'
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
@@ -69,7 +70,8 @@ export default {
       HeaderComponent,
       SidebarComponent,
       PostCard,
-      NotificationCard
+      NotificationCard,
+      HomePageUserMustLike
   }, 
    computed: {
     ...mapGetters(['user'])  // Mapea el getter a una propiedad computada
@@ -78,6 +80,7 @@ export default {
   data() {
     return {
       posts: [],
+      recommendedUsers: [],
       searchQ: "",
       showSearchBox: false,
       showSidebar: false,
@@ -91,13 +94,14 @@ export default {
   methods: {
      ...mapActions(['fetchUser']), 
     async servePage() {
+   
       try {
-          console.log('antes de llamar al metodo: ', this.user);
           // Get posts Method also does 
           // Get The non-readed user notifications, and recomended users. 
           
-          const data = await getPosts(this.user);
+          const data = await  getPosts(this.user);
           this.posts = data.posts;
+          this.recommendedUsers = data.users
           this.nonReadedNotifications = data.nonReadedNotifications
           console.log('data', data)
           
@@ -106,9 +110,9 @@ export default {
             this.postsById[post.id] = post;
           });
 
-          console.log('Posts From Method: ', data);
+          
       } catch(e) {
-          this.error = "¡Oops! Something Went Wrong !";
+          console.error('error', e)
       }
     },
     goToPage(route) {
@@ -130,8 +134,9 @@ export default {
     if(this.user) {
       console.log('thi.user', this.user)
       await this.servePage()
+    } else {
+      alert('not user')
     }
-
 
     this.$socket.on('createdPost', async newPost => {
         newPost.isLiked = await checkIfUserLikedPost(newPost) ? true : false;
@@ -249,6 +254,7 @@ html, body {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+
 }
 
 img {
@@ -271,7 +277,6 @@ img {
 .container aside,
 .right-aside {
     border: none; /* Sin borde */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra sutil */
     background: #fff; /* Fondo blanco */
     padding: 10px;
     border-radius: 8px; /* Bordes redondeados */
@@ -527,7 +532,7 @@ aside .aside-logo i {
     position: fixed;
     top: 0;
     left: 0;
-  
+    z-index: 999;
 }
 
 .no-content {

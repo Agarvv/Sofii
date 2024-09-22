@@ -210,7 +210,7 @@
 </template>
 
 <script>
-
+import { mapState, mapActions } from 'vuex';
 import userMixin from '../mixins/userMixin';
 import { like, dislike } from '../composables/usePostActions';
 import {
@@ -229,18 +229,22 @@ import { PostCard } from './PostCard'
 export default {
     components: {
         PostCard
-    }
-  mixins: [userMixin],
+    },
+    computed: {
+      ...mapState({
+        currentUser: state => state.user
+      })
+    },
   data() {
     return {
       user: {},
       userPosts: [],
       isSelfUser: null,
       error: "",
-      isFollowing: this.user.isFollowing,
-      sentFriendRequest: this.user.sendFriendRequest,
-      receivedFriendRequest: this.user.receivedFriendRequest,
-      isFriend: this.user.isFriend
+      isFollowing: false,
+      sentFriendRequest: false,
+      receivedFriendRequest: false,
+      isFriend: false
      
       // sentFriendRequest means that a user sent a friend request to the user that is showing on
       //receivedFriendRequest means that a user received a friend request from the user that s showing up and he can Accept or Deny the request
@@ -250,9 +254,12 @@ export default {
     };
   },
   methods: {
+    ...mapActions(['fetchUser']),
     async getUser() {
       try {
-       const data = await getUser(this.$route.params.id, this.usuario)
+       await this.fetchUser()
+       const data = await getUser(this.$route.params.id, this.currentUser)
+       console.log('user data', data)
        this.user = data.user
        this.userPosts = data.user.posts
       console.log('user from service: ', this.user)

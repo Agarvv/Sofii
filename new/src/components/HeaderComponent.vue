@@ -33,7 +33,7 @@
          <i class="fa fa-bell"></i>
          <font-awesome-icon icon="bell"/>
          <div class="not-readed">
-           <p>{{nonReadedNotifications.length}}</p>
+           <p>0</p>
          </div>
        </div>
        <div @click="goToPage('/chats')" id="iconDiv" class="chat">

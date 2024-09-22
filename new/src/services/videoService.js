@@ -4,11 +4,12 @@ import fetchUrl from '../helpers/fetchUrl'
 export async function createVideo(data) {
    const response = await fetch(process.env.VUE_APP_API_URL + '/api/sofi/add_video', {
     method: 'POST',
-    body: data
+    body: data,
+    credentials: 'include'
    })
-   const data = await response.json()
+   const sdata = await response.json()
    if(response.ok) {
-    return data 
+    return sdata 
    } else {
     throw new Error('Something went')
    }
