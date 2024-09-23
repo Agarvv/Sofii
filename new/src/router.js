@@ -14,7 +14,8 @@ import SingleVideoPage from './components/SingleVideoPage'
 import ChatBox from './components/ChatBox'
 import NotificationsComponent from './components/NotificationsComponent'
 import FriendsPage from './components/FriendsPage'
-
+import EnterEmailResetPassword from './components/EnterEmailResetPassword'
+import ResetPassword from './components/ResetPassword'
 
 const routes = [
     { path: '/', component: HelloWorld, meta: { requiresAuth: true } },
@@ -31,7 +32,9 @@ const routes = [
     { path: '/watch', component: VideosPage, meta: { requiresAuth: true } },
     { path: '/watch/:video_id', component: SingleVideoPage, meta: { requiresAuth: true } },
     { path: '/notifications', component: NotificationsComponent, meta: { requiresAuth: true } },
-    { path: '/friends', component: FriendsPage, meta: { requiresAuth: true } }
+    { path: '/friends', component: FriendsPage, meta: { requiresAuth: true } },
+    { path: '/get_reset_url', component: EnterEmailResetPassword },
+    { path: '/reset_password/:reset_token', component: ResetPassword },
 ];
 
 const router = createRouter({

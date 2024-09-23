@@ -27,6 +27,33 @@ export async function getUser(user_id, currentUser) {
   }
 }
 
+// FUNCTION TO SEND A RESET PASSWORD URL
+export async function sendPasswordResetUrl(email) {
+  const response = await fetchUrl(process.env.VUE_APP_API_URL + '/api/sofi/send_password_reset_url', {
+     email: email
+   }, 'POST')
+  
+   if(response.ok) {
+    return data
+   } else {
+    throw new Error('something went wrong')
+   }
+}
+
+// FUNCTION TO CHANGE A USER'S PASSWORD
+export async function changeUserPassword(password, token) {
+   const response = await fetchUrl(process.env.VUE_APP_API_URL + '/api/sofi/reset_password', {
+    password: password,
+    token: token // THE RESET TOKEN GENERATED IN THE SERVER 
+   }, 'POST')
+  
+   if(response.ok) {
+    return data
+   } else {
+    throw new Error('something went wrong')
+   }
+}
+
 export function checkIfUserIsFollowed(user, currentUser) {
   // USER IS THE USER TO COMPARE THE DATA
   // current user is the current user of the session 

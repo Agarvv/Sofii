@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer')
+const PasswordResetToken = require('../models/PasswordResetToken')
+const transporter = require('../index')
 
 const makeLogin = async (user, userPassword) => {
     try {
@@ -40,6 +42,49 @@ const makeLogin = async (user, userPassword) => {
     }
 };
 
+const sendPasswordResetUrl = async(user, resetToken, expiresAt) => {
+    try {
+        await PasswordResetToken.create({
+            token: resetToken,
+            expires_at: expiresAt,
+            used: false,
+            user_id: user.id
+        })
+
+        const mailOptions = {
+            from: 'tu-email@gmail.com', // Remitente
+            to: 'destinatario@example.com', // Destinatario
+            subject: 'Prueba de Nodemailer',
+            text: 'Hola, este es un correo de prueba enviado desde Nodemailer en mi servidor Express.',
+        };
+
+        await transporter.sendMail(mailOptions)
+
+        return true
+    } catch (e) {
+        throw e
+    }
+}
+
+const resetPassword = async(newPassword, userDecoded) => {
+    try {
+       const user = await User.findOne({
+        where: {
+            id: userDecoded.user_id
+        }
+       })
+
+       user.password = newPassword 
+       await user.save()
+
+       return true 
+    } catch(e) {
+        throw e
+    }
+}
+
 module.exports = {
-    makeLogin
+    makeLogin,
+    sendPasswordResetUrl,
+    resetPassword
 };

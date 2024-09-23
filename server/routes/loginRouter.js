@@ -80,5 +80,45 @@ router.get('/check_token',async (req, res) => {
     }
 })
 
+router.post('/send_password_reset_url', [
+   body("email").trim().isEmail().withMessage('Please enter a valid email')
+], async (req, res) => {
+    try {
+        const email = req.body.email
+        if(!email) {
+            return res.status(400)
+        }
+
+        await loginController.sendPasswordResetUrl(email)
+        return res.status(200).json({ detail: 'OK'})
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({error: error})
+    }
+})
+
+router.post('/reset_password', [
+ body("password").trim()
+], async (req, res) => {
+  try {
+      const { password, token } = req.body 
+      if(!password) {
+        return res.status(400)
+      } 
+
+      if(!token) {
+        return res.status(400)
+      }
+
+      if(!req.cookies.jwt) {
+        return res.status(401)
+      }
+      
+     await loginController.resetPassword(password, token, req.cookies.jwt)
+     return res.status(200).json({detail: 'OK'})
+  } catch (e) {
+    return res.status(500).json({ error: e})
+  }
+})
 
 module.exports = router;

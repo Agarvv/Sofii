@@ -24,6 +24,7 @@ const VideoCommentLikes = require('./VideoCommentLikes')
 const VideoCommentDislikes = require('./VideoCommentDislikes')
 const VideoCommentAwnsersLikes = require('./VideoCommentAwnsersLikes')
 const VideoCommentAwnsersDislikes = require('./VideoCommentAwnsersDislikes')
+ const PasswordResetToken = require('./PasswordResetToken')
 
 User.hasMany(Post, { 
   as: 'posts', 
@@ -416,6 +417,11 @@ VideoCommentAwnsersDislikes.belongsTo(VideoCommentAwnser, {
     foreignKey: 'awnser_id',
     as: 'awnser_dislike'
 })
+
+User.hasMany(PasswordResetToken, {
+    foreignKey: 'user_id',
+    as: 'password_reset_tokens',  // Plural para múltiples tokens
+});
 
 
 
