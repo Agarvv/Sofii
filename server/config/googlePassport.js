@@ -16,7 +16,15 @@ passport.use(new GoogleStrategy({
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     callbackURL: '/auth/google/callback'
   }, (accessToken, refreshToken, profile, done) => {
+      
+      const user = {
+          id: profile.id,
+          username: profile.displayName,
+          email: profile.emails[0].value,
+          profilePicture: profile.photos[0].value
+      }
+      
+      return done(null, user)
     
-    return done(null, profile);
   }));
 

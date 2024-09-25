@@ -3,6 +3,8 @@ const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer')
 const PasswordResetToken = require('../models/PasswordResetToken')
 const transporter = require('../index')
+const User = require('../models/User')
+const crypto = require('crypto')
 
 const makeLogin = async (user, userPassword) => {
     try {
@@ -34,13 +36,80 @@ const makeLogin = async (user, userPassword) => {
       const token = jwt.sign(payload, 'secret');
         
       
-        return token;
+      return token;
         
         
     } catch (e) {
         throw e
     }
 };
+
+
+const loginBySocialMedia = async (user) => {
+    try {
+        const payload = {
+            user_id: user.id,
+            username: user.username,
+            email: user.email,
+            user_picture: user.profilePicture,
+            user_banner: user.banner,
+            user_bio: user.bio,
+            user_civil_status: user.civil_status,
+            user_gender: user.gender,
+            user_native_city: user.native_city,
+            user_ubication: user.ubication,
+            user_job: user.job
+        };
+        
+      const token = jwt.sign(payload, 'secret');
+      return token;
+      
+    } catch(e) {
+        throw e 
+    }
+}
+
+const createNewUserBySocialMedia = async (socialMediaUser) => {
+    try {
+        //When a user logs in with a social media, he will not have the password.
+        //So we include a secure password, 
+        // because the user logged in with social media
+        // probably is never going to log in on a form, so that means that he will never use also the password
+        // but we generate a secure password in case 
+        // what a malicious user knows our logged by social media user's email.
+        const generatedPassword = crypto.randomBytes(20).toString('hex').slice(0, cifras);
+        
+        const hashedGeneratedPassword = await bcrypt.hash(generatedPassword)
+        
+        const user = await User.create({
+            username: socialMediaUser.username,
+            // we generate a email that always should be unique, if the social media API does not provide it.
+            email: socialMediaUser.email || 'not_haves_email' + hashedGeneratedPassword + '@gmail.com',
+            password: generatedPassword
+        })
+        
+        const payload = {
+            user_id: user.id,
+            username: user.username,
+            email: user.email,
+            user_picture: user.profilePicture,
+            user_banner: user.banner,
+            user_bio: user.bio,
+            user_civil_status: user.civil_status,
+            user_gender: user.gender,
+            user_native_city: user.native_city,
+            user_ubication: user.ubication,
+            user_job: user.job
+        };
+        
+      const token = jwt.sign(payload, 'secret');
+      return token;
+        
+        
+    } catch(e) {
+        throw e
+    }
+}
 
 const sendPasswordResetUrl = async(user, resetToken, expiresAt) => {
     try {
@@ -52,10 +121,10 @@ const sendPasswordResetUrl = async(user, resetToken, expiresAt) => {
         })
 
         const mailOptions = {
-            from: 'tu-email@gmail.com', // Remitente
-            to: 'destinatario@example.com', // Destinatario
-            subject: 'Prueba de Nodemailer',
-            text: 'Hola, este es un correo de prueba enviado desde Nodemailer en mi servidor Express.',
+            from: 'casluagarv@gmail.com', // Remitente
+            to: user.email, // Destinatario
+            subject: 'Reset your password At Sofii',
+            text: `Enter this link to resset your password: http://localhost:5000/reset_password/${resetToken}`,
         };
 
         await transporter.sendMail(mailOptions)
@@ -85,6 +154,7 @@ const resetPassword = async(newPassword, userDecoded) => {
 
 module.exports = {
     makeLogin,
+    loginBySocialMedia,
     sendPasswordResetUrl,
     resetPassword
 };

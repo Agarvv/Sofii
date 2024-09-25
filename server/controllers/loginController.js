@@ -29,6 +29,27 @@ const handleLogin = async (email, password) => {
 }
 };
 
+const loginBySocialMedia = async (user) => {
+    try {
+        //user means the user of the social media
+                const dbUser = await User.findOne({
+                    where: {
+                        email: user.email
+                    }
+                })
+                
+                if(dbUser) {
+                    const jwtToken = await loginService.loginBySocialMedia(dbUser)
+                    return jwtToken
+                } else {
+                    const jwtToken = await loginService.createNewUserBySocialMedia(user)
+                    return jwtToken
+                }
+    } catch(e) {
+        throw e
+    }
+}
+
 const sendPasswordResetUrl = async (email) => {
     try {
         const user = await User.findOne({
@@ -97,6 +118,7 @@ const resetPassword = async(newPassword, resetToken, jwtToken) => {
 
 module.exports = {
     handleLogin,
+    loginBySocialMedia,
     sendPasswordResetUrl,
     resetPassword
 };
