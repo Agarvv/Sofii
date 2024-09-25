@@ -13,9 +13,8 @@ const SavedVideo = require('./SavedVideo')
 const Chat = require('./Chat')
 const Message = require('./Message')
 const Saved = require('./Saved')
-// Relación de usuario con posts
 const VideoCommentAwnser = require('./VideoCommentAwnser')
-const CommentAnswer = require('./CommentAwnser'); // Importa el
+const CommentAnswer = require('./CommentAwnser');
 const CommentLikes = require('./CommentLikes')
 const CommentDislikes = require('./CommentDislikes')
 const CommentAwnsersLikes = require('./CommentAwnsersLikes')
@@ -25,6 +24,9 @@ const VideoCommentDislikes = require('./VideoCommentDislikes')
 const VideoCommentAwnsersLikes = require('./VideoCommentAwnsersLikes')
 const VideoCommentAwnsersDislikes = require('./VideoCommentAwnsersDislikes')
  const PasswordResetToken = require('./PasswordResetToken')
+ const Blocked = require('./Blocked')
+
+
 
 User.hasMany(Post, { 
   as: 'posts', 
@@ -423,6 +425,12 @@ User.hasMany(PasswordResetToken, {
     as: 'password_reset_tokens',  // Plural para múltiples tokens
 });
 
+User.hasMany(Blocked, {
+    foreignKey: 'blocker_id',
+    as: 'users_blocked'
+})
 
-
-module.exports = { User, Post, Comment, Likes, Follower, Friends, FriendRequest, Video, Chat};
+User.hasMany(Blocked, {
+    foreignKey: 'blocked_id',
+    as: 'users_what_blocked_you'
+})

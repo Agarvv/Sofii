@@ -1,4 +1,4 @@
-import { Cursor } from "mongoose"
+
 import fetchUrl from "../helpers/fetchUrl"
 
 // FUNCTION TO GET A SPECIFIC USER, USED IN THE USER PAGE.
@@ -127,6 +127,20 @@ export async function denyFriendRequest(req_id) {
 }
 // Yes, i could handle the friend request logic in one function,
 // but this is more easy to understand. :P
+
+export async function blockUser(target_id) {
+    const response = await fetchUrl(process.env.VUE_APP_API_URL + '/api/sofi/block_user', {
+        target_id: target_id
+    }, 'POST')
+    
+    const data = await response.json()
+    if(response.ok) {
+        return data 
+    }
+    else {
+        throw new Error('error')
+    }
+}
 
 
 

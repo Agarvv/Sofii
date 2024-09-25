@@ -8,6 +8,8 @@ const Follower = require('../models/Followers')
 
 const Saved = require('../models/Saved')
 const Friends = require('../models/Friends')
+const Blocked = require('../models/Blocked')
+
 
 
 const handleProfileDataChange = async (field, value, token) => {
@@ -105,8 +107,36 @@ const findUserById = async (user_id) => {
     }
 };
 
+const blockUser = async (target, user) => {
+    try {
+        await Blocked.create({
+            blocked_id: target.id,
+            blocker_id: user.user_id
+        })
+        
+        return true 
+        
+    } catch(e) {
+        throw e
+    }
+}
+
+
+const unblockUser = async (block) => {
+    try {
+        //just destroys the block object from the database
+        await block.destroy()
+        return true 
+    } catch(e) {
+        throw e
+    }
+}
+
+
 
 module.exports = {
 	handleProfileDataChange,
-	findUserById
+	findUserById,
+	blockUser,
+	unblockUser
 }

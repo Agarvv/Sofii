@@ -1,5 +1,6 @@
 const express = require('express');
 const userService = require('../services/userService');
+const userController = require('../controllers/userController')
 const multer = require('multer');
 const path = require('path');
 const router = express.Router();
@@ -13,6 +14,8 @@ const storage = multer.diskStorage({
   }
 });
 const upload = multer({ storage });
+const { body } = require('express-validator')
+
 
 router.get('/user/:userId', async (req, res) => {
     try {
@@ -122,5 +125,43 @@ router.post('/set_gender', async (req, res) => {
         return res.status(500).json({ error: 'Internal server error.'})
     }
 })
+
+
+
+router.post('/block_user', [
+      body("target_id").isNumeric()
+    ], async (req, res) => {
+    try {
+       const jwt = req.cookies.jwt 
+       
+       
+       //this is the target id from the user that we want to block
+       const target_id = req.body.target_id  
+       
+       
+       if(!target_id) {
+           //returns a bad request error
+           return res.status(400)
+       }
+       
+       const data = await userController.blockUser(target_id, jwt)
+       //Data should be a object like:
+       // if the user already blocked him and blocks him another time, data should be:
+       // {unblocked: true, blocked: false} 
+       // but if the user does not blocked the target, data should be:
+       // { blocked: true, unblocked: false }
+       //Like that we have a 'loop' and
+       // we dont have to do 2 endpoints.
+       
+       return res.status(200).json(data)
+       
+    } catch(e) {
+        return res.status(500).json({error: e})
+    }
+})
+
+
+
+
 
 module.exports = router;
