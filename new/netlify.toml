@@ -4,4 +4,4 @@
   command = "npm run build"   # Este es el comando para construir el proyecto
 
 [context.production.environment]
-  NODE_VERSION = "16"         # Esta es una versión de Node.js compatible con Vue CLI
+  NODE_VERSION = "16"         # Esta es una versión de Node.js compatible con Vue CLI   
