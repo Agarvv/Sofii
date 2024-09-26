@@ -48,6 +48,10 @@ app.get('/', (req, res) => {
     res.send('All Ok')
 })
 
+app.get('/health', (req, res => {
+    res.send('okk')
+})
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(passport.initialize());
