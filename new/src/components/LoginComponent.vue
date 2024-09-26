@@ -116,7 +116,7 @@ export default {
                     this.error = ""
                 }
                 this.loading = true
-                const response = await fetch('http://localhost:3000/api/sofi/login', {
+                const response = await fetch(process.env.VUE_APP_API_URL + '/api/sofi/login', {
                     method: 'POST', // Agregué el método POST para enviar datos
                     headers: {
                         'Content-Type': 'application/json' // Corregí la forma de especificar el Content-Type

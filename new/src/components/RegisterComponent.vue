@@ -116,7 +116,7 @@ export default {
       try {
           this.loading = true 
           
-        const response = await fetch('http://localhost:3000/api/sofi/register', {
+        const response = await fetch(process.env.VUE_APP_API_URL + '/api/sofi/register', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
