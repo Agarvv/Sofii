@@ -45,12 +45,12 @@ app.use(cors({
 }));
 
 app.get('/', (req, res) => {
-    res.send('All Ok')
-})
+    res.send('All Ok');
+});
 
-app.get('/health', (req, res => {
-    res.send('okk')
-})
+app.get('/health', (req, res) => {
+    res.send('okk');
+});
 
 app.use(express.json());
 app.use(cookieParser());
