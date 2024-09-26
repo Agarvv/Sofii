@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const path = require('path');
 const passport = require('passport');
+const session = require('express-session');
 const { setupRoutes } = require('./routes/main.js');
 const ChatController = require('./controllers/ChatController')
 const socketIo = require('socket.io');
@@ -14,12 +15,22 @@ const  CommentAnswer  = require('./models/CommentAwnser'); // Importa el
 const setUserActiveOrInactive = require('./outils/setUserActiveOrInactive')
 const tokenController = require('./controllers/tokenController')
 const websocket = require('./websocket')
+require('./config/googlePassport'); 
+require('./config/twitterPassport.js')
+require('./config/githubPassport.js')
 
-
-// npm install passport passport-google-oauth20 passport-facebook passport-apple express-session
 
 
 const app = express();
+
+
+app.use(session({
+    secret: 'secret', // Cambia esto por un secreto seguro
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false } // Cambia a true si estás usando HTTPS
+}));
+
 const server = http.createServer(app);
 
 

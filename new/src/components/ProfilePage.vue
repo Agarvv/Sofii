@@ -1,6 +1,7 @@
 <template>
   <div>
     <header>
+      <BlockUserCard :user="user"/>
       <div class="profile-banner">
         <img :src="'http://localhost:3000/' + user.banner" alt="Profile Banner">
       </div>
@@ -60,44 +61,55 @@
   <button @click="sendChat(user.id)" style="background: purple;">
     <font-awesome-icon :icon="['fas', 'comment']" /> Chat
   </button>
-  
   <!-- Botón de Friend Request -->
-  <button 
-    v-if="isFriend"
-    @click="removeFriend"
-    style="background: lightblue; color: blue;"
-  >
-    <font-awesome-icon :icon="['fas', 'user-friends']" /> Friends
-  </button>
+<button 
+  v-if="isFriend"
+  style="background: lightblue; color: blue;"
+>
+  <font-awesome-icon :icon="['fas', 'user-friends']" /> Friends
+</button>
 
-  <button 
-    v-else-if="sentFriendRequest"
-    @click="null" <!-- No realiza ninguna acción -->
-    style="background: rgba(128, 128, 128, 0.5); color: white;"
-  >
-    <font-awesome-icon :icon="['fas', 'clock']" /> Request Sent
-  </button>
-  
-  <button 
-    v-else-if="receivedFriendRequest"
-    @click="acceptFriendRequest"
-    style="background: green; color: white;"
-  >
-    <font-awesome-icon :icon="['fas', 'check']" /> Accept Friend Request
-  </button>
-  
-  <button 
-    v-else
-    @click="sendFriendRequest(user.id)"
-    style="background: initial; color: initial;"
-  >
-    <font-awesome-icon :icon="['fas', 'user-plus']" /> Send Friend Request
-  </button>
-  
-  <!-- Botón de Follow -->
-  <button @click="followUser(user.id)" style="background: black; color: white; padding: 15px">
-    <font-awesome-icon icon="user-plus"/>
-  </button>
+<button 
+  v-else-if="
+    user.friendRequestRelation && 
+    user.friendRequestRelation.request_sender_id === currentUser.user_id &&
+    user.friendRequestRelation.friend_target === user.id
+  "
+  @click="null" 
+  style="background: rgba(128, 128, 128, 0.5); color: white;"
+>
+  <font-awesome-icon :icon="['fas', 'clock']" /> Request Sent
+</button>
+
+<button 
+  v-else-if="
+    user.friendRequestRelation && 
+    user.friendRequestRelation.friend_target === currentUser.user_id && 
+    user.friendRequestRelation.request_sender_id === user.id
+  "
+  @click="acceptFriendRequest()"
+  style="background: green; color: white;"
+>
+  <font-awesome-icon :icon="['fas', 'check']" /> Accept Friend Request
+</button>
+
+<button 
+  v-else
+  @click="sendFriendRequest(user.id)"
+  style="background: initial; color: initial;"
+>
+  <font-awesome-icon :icon="['fas', 'user-plus']" /> Send Friend Request
+</button>
+
+<!-- Botón de Follow -->
+<button 
+  @click="followUser(user.id)" 
+  :style="isFollowing ? { backgroundColor: '#4CAF50', color: 'white' } : { backgroundColor: 'transparent', color: 'black' }"
+>
+  <font-awesome-icon :icon="isFollowing ? 'user-check' : 'user-plus'"/>
+</button>
+<p>{{user.friendRequestRelation}}</p>
+<p>{{currentUser}}</p>
 </div>
        
          
@@ -210,12 +222,12 @@
 </template>
 
 <script>
+import BlockUserCard from './BlockUserCard' 
 import { mapState, mapActions } from 'vuex';
-import userMixin from '../mixins/userMixin';
-import { like, dislike } from '../composables/usePostActions';
 import {
   getUser,
   sendFriendRequest,
+  acceptFriendRequest,
   followUser
 } from '../services/usersService'
 import {
@@ -228,7 +240,8 @@ import { PostCard } from './PostCard'
 
 export default {
     components: {
-        PostCard
+        PostCard,
+        BlockUserCard
     },
     computed: {
       ...mapState({
@@ -237,7 +250,8 @@ export default {
     },
   data() {
     return {
-      user: {},
+      user: {
+      },
       userPosts: [],
       isSelfUser: null,
       error: "",
@@ -262,6 +276,14 @@ export default {
        console.log('user data', data)
        this.user = data.user
        this.userPosts = data.user.posts
+
+      this.isFollowing = this.user.isFollowing || false;
+      this.sentFriendRequest = this.user.sentFriendRequest || false;
+      this.receivedFriendRequest = this.user.receivedFriendRequest || false;
+      this.isFriend = this.user.isFriend || false;
+
+
+
       console.log('user from service: ', this.user)
       } catch (error) {
         console.error('Error fetching user:', error);
@@ -278,6 +300,16 @@ export default {
       }
     },
 
+    async acceptFriendRequest(req_id) {
+       try {
+          const data = await acceptFriendRequest(req_id)
+          this.isFriend = true
+       } catch (e) {
+          console.log(e)
+          this.error = e
+       }
+    },
+
     async sendChat(user_id) {
      try {
           const data = await startChat(user_id)
@@ -290,6 +322,7 @@ export default {
     async followUser(user_id) {
         try {
             const data = await followUser(user_id)
+            console.log('data from following', data)
             if(data.followed && !data.unfollowed) {
                 this.isFollowing = true
             } else if(data.unfollowed && !data.followed) {

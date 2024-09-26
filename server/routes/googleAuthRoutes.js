@@ -18,6 +18,7 @@ router.get('/callback',
              return res.redirect('http://localhost:5000/')
          }
       } catch(e) {
+        console.log(e)
           return res.redirect('http://localhost:5000/login')
       }
   }

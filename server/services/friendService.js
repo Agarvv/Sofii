@@ -72,7 +72,7 @@ const handleFriendRequest = async (user, friend_target) => {
             request_sender_id: user.user_id
         })
 
-        await sendNotificationToSingleUser(friend_target, user, newRequest, "FRIEND_REQUEST")
+        await sendNotificationToSingleUser(friend_target, user, newRequest, null, "FRIEND_REQUEST")
         
         return
         

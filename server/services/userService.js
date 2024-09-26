@@ -71,13 +71,12 @@ const findUserById = async (user_id) => {
                 },
                 {
                     model: FriendRequest,
-                    as: 'sentRequests',
-                    attributes: ['id', 'friend_target']
+                    as: 'sentRequests'
+                 
                 },
                 {
                     model: FriendRequest,
-                    as: 'receivedRequests',
-                    attributes: ['id', 'request_sender_id']
+                    as: 'receivedRequests'
                 },
                 {
                     model: User,
@@ -91,6 +90,10 @@ const findUserById = async (user_id) => {
                     model: User,
                     through: Friends,
                     as: 'friends'
+                },
+                {
+                    model: Blocked,
+                    as: 'users_blocked_me'
                 }
             ]
         });

@@ -5,7 +5,7 @@
       <font-awesome-icon :icon="close"/>
     </div>
     
-    <div class="block-user-card">
+    <div @click="blockUser" class="block-user-card">
       <p>{{ isBlocked ? 'Unblock User' : 'Block User' }}</p>
      
       <font-awesome-icon :icon="isBlocked ? 'fas fa-unlock' : 'fas fa-lock'" />
@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import blockUser from '../services/userService' 
+import { blockUser } from '../services/usersService' 
 
 export default {
     name: 'BlockUserCard',
@@ -25,7 +25,7 @@ export default {
     },
     data() {
         return {
-            isBlocked: false
+            isBlocked: this.user.isBlocked
         }
     },
     methods: {

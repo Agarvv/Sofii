@@ -23,9 +23,8 @@ const VideoCommentLikes = require('./VideoCommentLikes')
 const VideoCommentDislikes = require('./VideoCommentDislikes')
 const VideoCommentAwnsersLikes = require('./VideoCommentAwnsersLikes')
 const VideoCommentAwnsersDislikes = require('./VideoCommentAwnsersDislikes')
- const PasswordResetToken = require('./PasswordResetToken')
  const Blocked = require('./Blocked')
-
+// const PasswordResetToken = require('./PasswordResetToken')
 
 
 User.hasMany(Post, { 
@@ -420,10 +419,10 @@ VideoCommentAwnsersDislikes.belongsTo(VideoCommentAwnser, {
     as: 'awnser_dislike'
 })
 
-User.hasMany(PasswordResetToken, {
-    foreignKey: 'user_id',
-    as: 'password_reset_tokens',  // Plural para múltiples tokens
-});
+//User.hasMany(PasswordResetToken, {
+   // foreignKey: 'user_id',
+  //  as: 'password_reset_tokens',  // Plural para múltiples tokens
+//});
 
 User.hasMany(Blocked, {
     foreignKey: 'blocker_id',
@@ -432,5 +431,5 @@ User.hasMany(Blocked, {
 
 User.hasMany(Blocked, {
     foreignKey: 'blocked_id',
-    as: 'users_what_blocked_you'
+    as: 'users_blocked_me' // the users that blocked this user
 })

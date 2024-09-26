@@ -9,16 +9,27 @@ export async function getUser(user_id, currentUser) {
   console.log('data from the server', data)
   console.log('all data', currentUser)
   if(response.ok) {
+      
+   
+
+  
+const friendRequestSentExists = data.user.sentRequests.some(request => 
+  request.request_sender_id == currentUser.user_id && request.friend_target == data.user.id
+);
+
+
+
+
+    
+
       // Here we just check if a user is following the user of the request
       data.user.isFollowing = data.user.followers.some(follower => follower.Follower.follower_id == currentUser.user_id)
-     //Here we check if the user of the session (mean the user that enters to our profile page and sees this user that i just get from the server with his id) haves a friend request from the user that he is seeing.
-     data.user.receivedFriendRequest = data.user.receivedRequests.some(request => request.request_sender_id == currentUser.user_id)
-     
-     //Here we check if our current user has sent a friend request to the user that he is seeing
-     data.user.sendFriendRequest = data.user.receivedRequests.some(request => request.friend_target == data.user.id && request.sender_id == currentUser.user_id)
-     
+        
      // Here we check if our current user is friend with the user that he is seeing
      data.user.isFriend = data.user.friends.some(friend => friend.friend_one_id == currentUser.user_id || friend.friend_two_id == currentUser.user_id)
+
+     // here we check if our current user blocked the user that he is seeing
+     data.user.isBlocked = data.user.users_blocked_me.some(block => block.blocker_id == currentUser.user_id)
      return data
   } else {
     throw new Error('Something Went Wrong.')
@@ -102,7 +113,7 @@ export async function sendFriendRequest(user_id) {
 
 // req_id means the friend request id.
 export async function acceptFriendRequest(req_id) {
-    const response = await fetchUrl(process.env.VUE_APP_API_URL + '/accept_friend_request', {
+    const response = await fetchUrl(process.env.VUE_APP_API_URL + '/api/sofi/accept_friend_request', {
       request_id: req_id
     }, 'POST')
     const data = await response.json()
@@ -115,7 +126,7 @@ export async function acceptFriendRequest(req_id) {
 
 // req_id means the friend request id.
 export async function denyFriendRequest(req_id) {
-    const response = await fetchUrl(process.env.VUE_APP_API_URL + '/deny_friend_request', {
+    const response = await fetchUrl(process.env.VUE_APP_API_URL + 'api/sofi/deny_friend_request', {
       request_id: req_id
     }, 'POST')
     const data = await response.json()

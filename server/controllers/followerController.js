@@ -3,25 +3,25 @@ const Followers = require('../models/Followers')
 const User = require('../models/User')
 const tokenController = require('../controllers/tokenController')
 
-const handleFollow = async (follower, followingData) => {
+const handleFollow = async (follower, following_id) => {
     try {
         const follower_id = follower.user_id;
 
-        if (!followingData) {
+        if (!following_id) {
             throw new Error("Some data is missing.");
         } else {
-            console.log('follow exists:', followingData.id);
+            console.log('follow exists:', following_id);
         }
 
-        console.log('follow data', follower, followingData)
+        console.log('follow data', follower, following_id)
 
-        if(follower.user_id == followingData.id) {
+        if(follower.user_id == following_id) {
             throw new Error('You cannot follow yourself')
         }
 
         // Cambiamos 'following' por 'followingData'
         const following = await User.findOne({
-            where: { id: followingData.id }
+            where: { id: following_id }
         });
 
         // Si el usuario que queremos seguir no existe, lanzamos un error.
@@ -44,6 +44,7 @@ const handleFollow = async (follower, followingData) => {
         return { followed: true, unfollowed: false };
 
     } catch (e) {
+        console.log(e)
         throw new Error(e);
     }
 };

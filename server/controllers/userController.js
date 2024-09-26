@@ -3,7 +3,7 @@ const Blocked = require('../models/Blocked')
 const tokenController = require('../controllers/tokenController')
 const userService = require('../services/userService')
 
-const blockUser = async(target_id, jwtToken) {
+const blockUser = async (target_id, jwtToken) => {
     
     const userDecoded = await tokenController.verifyJwtToken(jwtToken)
     
@@ -40,6 +40,7 @@ const blockUser = async(target_id, jwtToken) {
         return { blocked: true, unblocked: false }
     }
 }
+
 
 module.exports = {
     blockUser

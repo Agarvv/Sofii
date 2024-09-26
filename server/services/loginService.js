@@ -77,9 +77,9 @@ const createNewUserBySocialMedia = async (socialMediaUser) => {
         // probably is never going to log in on a form, so that means that he will never use also the password
         // but we generate a secure password in case 
         // what a malicious user knows our logged by social media user's email.
-        const generatedPassword = crypto.randomBytes(20).toString('hex').slice(0, cifras);
+        const generatedPassword = crypto.randomBytes(20).toString('hex').slice(0, 20);
         
-        const hashedGeneratedPassword = await bcrypt.hash(generatedPassword)
+        const hashedGeneratedPassword = await bcrypt.hash(generatedPassword, 10)
         
         const user = await User.create({
             username: socialMediaUser.username,
@@ -155,6 +155,7 @@ const resetPassword = async(newPassword, userDecoded) => {
 module.exports = {
     makeLogin,
     loginBySocialMedia,
+    createNewUserBySocialMedia,
     sendPasswordResetUrl,
     resetPassword
 };

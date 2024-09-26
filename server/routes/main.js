@@ -13,8 +13,8 @@ const savedContentRoutes = require('./savedContentRoutes')
 const ChatRoutes = require('./ChatRoutes')
 const NotificationsRoutes = require('./NotificationsRoutes')
 const mediaRoutes = require('./mediaRoutes')
-const facebookAuthRoutes = require('./facebookAuthRoutes')
-const appleAuthRoutes = require('./appleAuthRoutes')
+const githubAuthRoutes = require('./githubAuthRoutes')
+const twitterAuthRoutes = require('./twitterAuthRoutes')
 
 
 function setupRoutes(app) {
@@ -33,8 +33,8 @@ function setupRoutes(app) {
     app.use('/api/sofi', NotificationsRoutes);
     app.use('/api/sofi', mediaRoutes);
     app.use('/auth/google', googleAuthRoutes);
-    app.use('/auth/apple', appleAuthRoutes);
-    app.use('/auth/facebok', facebookAuthRoutes)
+    app.use('/auth/twitter', twitterAuthRoutes);
+    app.use('/auth/github', githubAuthRoutes)
     
 }
 
