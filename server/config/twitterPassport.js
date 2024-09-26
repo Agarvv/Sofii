@@ -2,8 +2,8 @@ const TwitterStrategy = require('passport-twitter').Strategy;
 const passport = require('passport')
 
 passport.use(new TwitterStrategy({
-    consumerKey: 'here', 
-    consumerSecret: 'here',  
+    consumerKey: process.env.TWITTER_API_KEY, 
+    consumerSecret: process.env.TWITTER_SECRET,  
     callbackURL: '/auth/twitter/callback',
     includeEmail: true  
   },
