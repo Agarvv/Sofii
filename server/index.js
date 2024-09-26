@@ -59,12 +59,12 @@ app.use(passport.initialize());
 // Configuración de rutas (incluye createPost)
 setupRoutes(app);
 
- // sequelize.authenticate().then(() => {
- //  console.log('Database Working Fine');
-  //    sequelize.sync({ force: false });
- // }).catch((e) => { 
- //    console.log(e);
- // });
+  sequelize.authenticate().then(() => {
+   console.log('Database Working Fine');
+     sequelize.sync({ force: false });
+  }).catch((e) => { 
+     console.log(e);
+  });
 
 server.listen(process.env.PORT || 3000, (err) => {
     if (err) {
