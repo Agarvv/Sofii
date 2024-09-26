@@ -44,8 +44,8 @@ app.use(cors({
     credentials: true
 }));
 
-app.get('/health', (req, res) => {
-    res.send('Working')
+app.get('/', (req, res) => {
+    res.send('All Ok')
 })
 
 app.use(express.json());
