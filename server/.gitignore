@@ -1,2 +1,6 @@
-/server/config/database.js
+
 .env
+
+node_modules/
+
+*.log
