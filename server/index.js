@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const express = require('express');
 const http = require('http');
 const sequelize = require('./config/database');
@@ -18,7 +20,7 @@ const websocket = require('./websocket')
 require('./config/googlePassport'); 
 require('./config/twitterPassport.js')
 require('./config/githubPassport.js')
-require('dotenv').config()
+
 
 
 const app = express();
