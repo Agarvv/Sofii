@@ -3,13 +3,13 @@ export default {
   data() {
     return {
       usuario: null,
-      isLoadingUser: true, // Indicador de carga
-      userError: null // Mensaje de error si ocurre
+      isLoadingUser: true, 
+      userError: null
     };
   },
   async created() {
     try {
-      const response = await fetch('http://localhost:3000/api/sofi/check_token', {
+      const response = await fetch(process.env.VUE_APP_API_URL + '/api/sofi/check_token', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
