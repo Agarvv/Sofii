@@ -17,7 +17,7 @@ const handleLogin = async (email, password) => {
         })
         
         if(!userExists) {
-            throw new Error("email_not_found")
+            throw new Error("Please Check your email and password.")
         }
 
         const token = await loginService.makeLogin(userExists, password);
@@ -25,7 +25,7 @@ const handleLogin = async (email, password) => {
         return token;
     }catch (e) {
     console.error('Error during login process:', e);
-    throw e; // Esto es importante para que el error llegue al router
+    throw e; 
 }
 };
 

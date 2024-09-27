@@ -11,7 +11,7 @@ const makeLogin = async (user, userPassword) => {
         const isMatch = await bcrypt.compare(userPassword, user.password);
         
         if (!isMatch) {
-            throw new Error("password_does_not_match")
+            throw new Error("Please Check your email and password.")
         }
 
         user.last_login = Date.now()

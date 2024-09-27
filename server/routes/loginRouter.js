@@ -15,13 +15,13 @@ router.post('/login', [
 
     if(!email) {
         return res.status(400).json({ 
-            error: "email_missing"
+            error: "Please Enter Email."
         })
     }
     
     if(!password) {
         return res.status(400).json({
-            error: "password_missing"
+            error: "Please Enter Password."
         })
     }
 
