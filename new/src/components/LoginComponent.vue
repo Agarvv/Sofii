@@ -98,6 +98,7 @@
 </template>
 
 <script>
+import { loginUser } from '../services/usersService'
 export default {
     name: 'LoginComponent',
     data() {
@@ -111,68 +112,19 @@ export default {
     },
     methods: {
         async handleLogin() {
-            try {
-                if(this.error !== "") {
-                    this.error = ""
-                }
-                this.loading = true
-                const response = await fetch(process.env.VUE_APP_API_URL + '/api/sofi/login', {
-                    method: 'POST', // Agregué el método POST para enviar datos
-                    headers: {
-                        'Content-Type': 'application/json' // Corregí la forma de especificar el Content-Type
-                    },
-                    credentials: 'include',
-                    body: JSON.stringify({
-                        email: this.email, 
-                        password: this.password,
-                        rememberMe: this.rememberMe
-                    })
-                });
-                
-                const data = await response.json();
-                console.log('Login: ', data);
-                
-                if(!response.ok) {
-                    this.loading = false
-                    switch(data.error) {
-    case "password_not_match":
-        this.error = "The Password Does Not Match"
-        break;
-    case "email_not_found":
-        this.error = "That Email Does Not Exist In Our System."
-        break;
-    case "internal_server_error":
-        this.error = "Something Went Wrong On Our Servers, Try Again Later.."
-        break; // Aquí te faltaba este break
-    case "email_missing":
-        this.error = "The Email Is Missing."
-        break;
-    case "password_missing":
-        this.error = "The Password Is Missing"
-        break;
-    default:
-        this.error = "Internal Server Error..."
-}
-                    
-                    
-                    
-                
-                    
-                }
-                
-                
-                 if(response.ok) {
-                     
-                    setInterval(async() => {
-                        this.loading = false
-                        await this.$router.push('/')
-                        
-                    }, 3000)
-                }
+          if(this.loading) return;
+          if(this.error) this.error = "";
 
-            
-            } catch (error) {
-                console.error('Error:', error);
+          this.loading = true
+            try {
+                const data = await loginUser(this.email, this.password, this.rememberMe)
+                 setTimeout(() => {
+                  this.$router.push('/')
+                 }, 3000)
+            } catch(e) {
+              this.error = e
+            } finally {
+              this.loading = false
             }
         },
 

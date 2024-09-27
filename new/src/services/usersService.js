@@ -19,6 +19,21 @@ export async function registerUser(data) {
 
   }
 
+  export async function loginUser(data) {
+    const response = await fetchUrl(process.env.VUE_APP_API_URL + '/api/sofi/login', {
+        email: data.email,
+        password: data.password
+    }, 'POST');
+
+    const responseData = await response.json();
+
+    if (response.ok) {
+        return responseData;
+    } else {
+        throw new Error(responseData.error) // Throws an error if the response was not ok
+    }
+    
+  }
 
 
 // FUNCTION TO GET A SPECIFIC USER, USED IN THE USER PAGE.
