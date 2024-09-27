@@ -4,7 +4,7 @@ const passport = require('passport')
 passport.use(new TwitterStrategy({
     consumerKey: process.env.TWITTER_API_KEY, 
     consumerSecret: process.env.TWITTER_SECRET,  
-    callbackURL: 'https://sofii-1.onrender.com/auth/github/callback',
+    callbackURL: 'https://sofii-1.onrender.com/auth/twitter/callback',
     includeEmail: true  
   },
   (token, tokenSecret, profile, done) => {
