@@ -17,6 +17,8 @@ export async function registerUser(data) {
         throw new Error(responseData.error) // Throws an error if the response was not ok
    }
 
+  }
+
 
 
 // FUNCTION TO GET A SPECIFIC USER, USED IN THE USER PAGE.
