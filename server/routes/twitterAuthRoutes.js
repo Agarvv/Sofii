@@ -7,16 +7,16 @@ const loginController = require('../controllers/loginController');
 router.get('/', passport.authenticate('twitter'));
 
 router.get('/callback', 
-  passport.authenticate('twitter', { failureRedirect: 'http://localhost:5000/login' }), 
+  passport.authenticate('twitter', { failureRedirect: 'https://sofii.vercel.app/login' }), 
   async (req, res) => {
       try {
          const jwtToken = await loginController.loginBySocialMedia(req.user);
          if (jwtToken) {
              res.cookie('jwt', jwtToken);
-             return res.redirect('http://localhost:5000/');
+             return res.redirect('https://sofii.vercel.app/');
          }
       } catch (e) {
-          return res.redirect('http://localhost:5000/login');
+          return res.redirect('https://sofii.vercel.app/');
       }
   }
 );

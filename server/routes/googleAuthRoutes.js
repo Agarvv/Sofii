@@ -9,17 +9,17 @@ router.get('/', passport.authenticate('google', { scope: ['profile', 'email'] })
 
 
 router.get('/callback', 
-  passport.authenticate('google', { failureRedirect: 'http://localhost:5000/login' }), 
+  passport.authenticate('google', { failureRedirect: 'https://sofii.vercel.app/login' }), 
   async (req, res) => {
       try {
          const jwtToken = await loginController.loginBySocialMedia(req.user)
          if(jwtToken) {
              res.cookie('jwt', jwtToken)
-             return res.redirect('http://localhost:5000/')
+             return res.redirect('https://sofii.vercel.app/')
          }
       } catch(e) {
         console.log(e)
-          return res.redirect('http://localhost:5000/login')
+          return res.redirect('https://sofii.vercel.app/login')
       }
   }
 );
