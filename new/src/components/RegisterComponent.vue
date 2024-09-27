@@ -96,6 +96,7 @@
 </template>
 
 <script>
+import registerUser from '../services/registerUser'
 export default {
   name: 'RegisterComponent', 
   data() {
@@ -108,67 +109,78 @@ export default {
     };
   },
   methods: {
+    
     async handleRegister() {
-        if(this.error !== "") {
-            this.error = ""
-        }
         
-      try {
-          this.loading = true 
-          
-        const response = await fetch(process.env.VUE_APP_API_URL + '/api/sofi/register', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
+    if (this.error !== "") {
+        this.error = "";
+    }
+
+    if (this.loading) {
+        return;
+    }
+
+    try {
+        this.loading = true;
+
+
+        if (!this.name) {
+            this.error = "Please Enter Your Name";
+            return;
+        }
+
+        if (!this.email) {
+            this.error = "Please Enter Email.";
+            return;
+        }
+
+        if (!this.password) {
+            this.error = "Please Enter Password.";
+            return;
+        }
+
+        const data = await registerUser({
             name: this.name,
             email: this.email,
             password: this.password
-          })
         });
-        
-        const data = await response.json();
-        console.log(data);
 
-        if (!response.ok) {
-           this.loading = false
-            switch(data.error) {
+        setTimeout(() => {
+            this.$router.push('/login');
+        }, 3000);
+
+    } catch (e) {
+        if (e.response && e.response.data) {
+            const data = e.response.data;
+            switch (data.error) {
                 case "username_exists":
-                    this.error = "That username Already Exists"
-                    break; 
-                case "email_exists":
-                    this.error = "That email already exists"
+                    this.error = "That username Already Exists";
                     break;
-                
+                case "email_exists":
+                    this.error = "That email already exists";
+                    break;
                 case "name_missing":
-                    this.error = "The Username Is Missing."
-                    break; 
+                    this.error = "The Username Is Missing.";
+                    break;
                 case "email_missing":
-                    this.error = "The Email Is Missing."
+                    this.error = "The Email Is Missing.";
                     break;
                 case "password_missing":
-                    this.error = "The Password Is Missing."
-                    break; 
-                
-                
-                case "internal_server_error":
-                    this.error = "Oops, Something Went Down..."
+                    this.error = "The Password Is Missing.";
                     break;
+                default:
+                    this.error = "Something Went Wrong... Universe must hate you.";
             }
-            
-            
-        } else if(response.ok) {
-            setInterval(() => {
-                this.loading = false 
-                this.$router.push('/login')
-            }, 3000)
+        } else {
+            this.error = "Something Went Wrong...";
         }
-        
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    },
+    } finally {
+        this.loading = false;
+    }
+}
+    
+    
+    
     goToRoute(route) {
           this.$router.push(route)
     }

@@ -1,5 +1,6 @@
 <template>
 <div class="container">
+      <ErrorComponent v-if="error" :error="error"/>
       
   <div class="create-container">
     <div class="f-column">
@@ -46,10 +47,12 @@
 </template>
 
 <script>
-
+import ErrorComponent from './ErrorComponent'
 import { createPost } from '../services/postService'
 import { createVideo } from '../services/videoService'
 import { userMixin } from '../mixins/userMixin'
+
+
 
 export default {
    // mixins: [userMixin],
@@ -59,7 +62,9 @@ export default {
       photos: [],
       content: '',
       videoSource: null,
-      imageSource: null
+      imageSource: null,
+      loading: false,
+      error: ""
     };
   },
   methods: {
@@ -108,6 +113,12 @@ export default {
       };
     },
     async submitForm() {
+        
+        if(this.loading) {
+            alert('please wait')
+        }
+       
+      this.loading = true 
       const formData = new FormData();
       formData.append('description', this.content);
       formData.append('privatePost', false);
@@ -118,9 +129,13 @@ export default {
         formData.append('postPicture', imageBlob, 'image.jpg');
         try {
           const data = await createPost(formData)
-         console.log('all ok', data)
+          console.log('all ok', data)
+          this.loading = false 
+          this.$router.push('/')
+     
         } catch (e) {
-          console.log('error', e)
+           this.loading = false
+           this.error = "Something Went Wrong..."
         }
       }
 
@@ -129,9 +144,12 @@ export default {
         formData.append('video', videoBlob, 'video.mp4');
         try {
           const data = await createVideo(formData) 
-          console.log('all ok',data)
+          console.log('all ok', data)
+          this.loading = false 
+          this.$router.push('/')
         } catch(e) {
-          console.log('ERROR!', e)
+           this.loading = false
+           this.error = "Something Went Wrong..."
         }
       }
 

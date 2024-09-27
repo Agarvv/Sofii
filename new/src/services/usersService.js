@@ -1,5 +1,22 @@
-
 import fetchUrl from "../helpers/fetchUrl"
+
+
+//FUNCTION TO REGISTER USER 
+export async function registerUser(data) {
+    const response = await fetchUrl(process.env.VUE_APP_API_URL + '/api/sofi/register', {
+        name: data.name,
+        email: data.email,
+        password: data.password
+    }, 'POST')
+    const data = await response.json()
+    if(response.ok) {
+        return data
+    } else {
+        throw new Error("Something Went Wrong")
+    }
+}
+
+
 
 // FUNCTION TO GET A SPECIFIC USER, USED IN THE USER PAGE.
 // USER_ID MEANS THE ID FROM THE USER THAT WE WANT TO GET, (it is not obvious?? :P)
