@@ -1,10 +1,10 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const nodemailer = require('nodemailer')
 const PasswordResetToken = require('../models/PasswordResetToken')
 const transporter = require('../index')
 const User = require('../models/User')
 const crypto = require('crypto')
+
 
 const makeLogin = async (user, userPassword) => {
     try {
@@ -32,12 +32,29 @@ const makeLogin = async (user, userPassword) => {
         };
         
        
-
       const token = jwt.sign(payload, 'secret');
-        
-      
+
+      try { 
+         const mailOptions = {
+            from: 'casluagarv@gmail.com',
+            to: user.email,
+            subject: 'Sofii Warning',
+            text: 'someone logged into your account, if you did not logged into your account recently, kindly change your password to secure your account.'
+         }
+
+         transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log('Email sent:'+ info.response);
+            }
+         });
+         console.log('notified user')
+      } catch(e) {
+        console.log('could not notify user')
+      }
+
       return token;
-        
         
     } catch (e) {
         throw e
