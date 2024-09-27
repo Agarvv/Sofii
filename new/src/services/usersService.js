@@ -9,10 +9,10 @@ export async function registerUser(data) {
         password: data.password
     }, 'POST');
 
-    const responseData = await response.json(); // Cambié 'data' por 'responseData'
+    const responseData = await response.json();
 
     if (response.ok) {
-        return responseData; // Usa la nueva variable aquí
+        return responseData;
     } else {
         throw new Error("Something Went Wrong");
     }

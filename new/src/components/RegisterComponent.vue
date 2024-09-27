@@ -109,8 +109,8 @@ export default {
     };
   },
   methods: {
-    
-    async handleRegister() {
+      
+        async handleRegister() {
         
     if (this.error !== "") {
         this.error = "";
@@ -177,10 +177,8 @@ export default {
     } finally {
         this.loading = false;
     }
-}
-    
-    
-    
+},
+
     goToRoute(route) {
           this.$router.push(route)
     }
