@@ -14,6 +14,8 @@ const CommentLikes = require('../models/CommentLikes')
 const CommentDislikes = require('../models/CommentDislikes')
 const CommentAwnsersLikes = require('../models/CommentAwnsersLikes')
 const CommentAwnsersDislikes = require('../models/CommentAwnsersDislikes');
+// db 
+
 const sequelize = require('../config/database');
 
 
