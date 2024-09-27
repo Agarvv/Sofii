@@ -54,7 +54,7 @@ router.beforeEach(async (to, from, next) => {
             });
 
             if (response.ok) {
-                next(); // Permitir la navegación
+                next(); 
                 
             } else {
               console.log('repsones not ok')
