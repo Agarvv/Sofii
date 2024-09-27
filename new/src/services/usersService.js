@@ -14,9 +14,8 @@ export async function registerUser(data) {
     if (response.ok) {
         return responseData;
     } else {
-        throw new Error("Something Went Wrong");
-    }
-}
+        throw new Error(responseData.error) // Throws an error if the response was not ok
+   }
 
 
 

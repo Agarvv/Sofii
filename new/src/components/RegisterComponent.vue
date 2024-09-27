@@ -110,11 +110,11 @@ export default {
   },
   methods: {
       
-        async handleRegister() {
+       async handleRegister() {
         
     if (this.error !== "") {
         this.error = "";
-    }
+    } 
 
     if (this.loading) {
         return;
@@ -150,30 +150,7 @@ export default {
         }, 3000);
 
     } catch (e) {
-        if (e.response && e.response.data) {
-            const data = e.response.data;
-            switch (data.error) {
-                case "username_exists":
-                    this.error = "That username Already Exists";
-                    break;
-                case "email_exists":
-                    this.error = "That email already exists";
-                    break;
-                case "name_missing":
-                    this.error = "The Username Is Missing.";
-                    break;
-                case "email_missing":
-                    this.error = "The Email Is Missing.";
-                    break;
-                case "password_missing":
-                    this.error = "The Password Is Missing.";
-                    break;
-                default:
-                    this.error = "Something Went Wrong... Universe must hate you.";
-            }
-        } else {
-            this.error = "Something Went Wrong...";
-        }
+       this.error = e;
     } finally {
         this.loading = false;
     }
