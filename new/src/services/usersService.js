@@ -7,12 +7,14 @@ export async function registerUser(data) {
         name: data.name,
         email: data.email,
         password: data.password
-    }, 'POST')
-    const data = await response.json()
-    if(response.ok) {
-        return data
+    }, 'POST');
+
+    const responseData = await response.json(); // Cambié 'data' por 'responseData'
+
+    if (response.ok) {
+        return responseData; // Usa la nueva variable aquí
     } else {
-        throw new Error("Something Went Wrong")
+        throw new Error("Something Went Wrong");
     }
 }
 
