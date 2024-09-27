@@ -14,7 +14,7 @@ router.get('/callback',
       try {
          const jwtToken = await loginController.loginBySocialMedia(req.user)
          if(jwtToken) {
-            res.cookie('jwt', token, {
+            res.cookie('jwt', jwtToken, {
                 secure: true,
                 httpOnly: true,
                 sameSite: 'None' 

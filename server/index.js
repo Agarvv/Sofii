@@ -25,13 +25,16 @@ require('./config/githubPassport.js')
 
 const app = express();
 
-
 app.use(session({
     secret: 'secret', // Cambia esto por un secreto seguro
     resave: false,
     saveUninitialized: true,
     cookie: { secure: false } // Cambia a true si estás usando HTTPS
 }));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 const server = http.createServer(app);
 

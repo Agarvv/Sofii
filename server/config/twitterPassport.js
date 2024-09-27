@@ -1,6 +1,15 @@
 const TwitterStrategy = require('passport-twitter').Strategy;
 const passport = require('passport')
 
+passport.serializeUser((user, done) => {
+  done(null, user);
+});
+
+passport.deserializeUser((user, done) => {
+  done(null, user);
+});
+
+
 passport.use(new TwitterStrategy({
     consumerKey: process.env.TWITTER_API_KEY, 
     consumerSecret: process.env.TWITTER_SECRET,  
@@ -18,3 +27,4 @@ passport.use(new TwitterStrategy({
     return done(null, user);
   }
 ));
+
