@@ -3,6 +3,7 @@ const { body } = require('express-validator');
 const loginController = require('../controllers/loginController');
 const tokenController = require('../controllers/tokenController');
 
+// router
 const router = express.Router();
 
 router.post('/login', [
