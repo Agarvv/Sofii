@@ -22,7 +22,8 @@ export async function registerUser(data) {
   export async function loginUser(data) {
     const response = await fetchUrl(process.env.VUE_APP_API_URL + '/api/sofi/login', {
         email: data.email,
-        password: data.password
+        password: data.password,
+        rememberMe: data.rememberMe
     }, 'POST');
 
     const responseData = await response.json();

@@ -117,7 +117,11 @@ export default {
 
           this.loading = true
             try {
-                const data = await loginUser(this.email, this.password, this.rememberMe)
+                const data = await loginUser({
+                  email: this.email, 
+                  password: this.password, 
+                  rememberMe: this.rememberMe
+                })
                  setTimeout(() => {
                   this.$router.push('/')
                  }, 3000)
