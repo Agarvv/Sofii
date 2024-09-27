@@ -2,6 +2,7 @@ const express = require('express');
 const { body } = require('express-validator');
 const loginController = require('../controllers/loginController');
 const tokenController = require('../controllers/tokenController');
+const { trusted } = require('mongoose');
 
 const router = express.Router();
 
@@ -31,34 +32,23 @@ router.post('/login', [
         
         
          if(rememberMe == true) {
-             res.cookie('jwt', token, {
-    maxAge: 365 * 24 * 60 * 60 * 1000, // 1 año en milisegundos
-  });
+            res.cookie('jwt', token, {
+                maxAge: 365 * 24 * 60 * 60 * 1000, 
+                secure: true, 
+                httpOnly: true 
+            });
+            
          } else if(rememberMe == false) {
-             res.cookie('jwt', token)
+             res.cookie('jwt', token, {
+                secure: true,
+                httpOnly: true
+             })
          }
-         
          
         return res.status(200).json({ welcome: 'Welcome Back To Sofii, Have a Good Session.' });
     } catch (e) {
         console.log(e.message)
-       switch(e.message) {
-           case "password_does_not_match":
-               return res.status(401).json({ error: "password_not_match"})
-               break;
-           
-            case "email_not_found":
-                return res.status(401).json({
-                    error: "email_not_found"
-                })
-                break;
-            default:
-                  return res.status(500).json({
-                      error: "internal_server_error"
-                  })
-                  break;
-                  
-       }
+        return res.status(500).json({error: e.message})
     }
 });
 
