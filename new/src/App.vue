@@ -11,5 +11,7 @@ export default {
 </script>
 
 <style>
-
+img {
+    loading: 'lazy';
+}
 </style>

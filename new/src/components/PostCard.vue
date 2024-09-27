@@ -2,7 +2,7 @@
      <div  class="post" >
             <div class="post-header">
               <div>
- <img style="width: 50px; height: 50px; border-radius: 50%" :src="post.user.profilePicture ? 'http://localhost:3000/' +  post.user.profilePicture: '/images/default.jpeg'" alt="Post User Image">
+ <img style="width: 50px; height: 50px; border-radius: 50%" :src="post.user.profilePicture ? apiUrl +  post.user.profilePicture: '/images/default.jpeg'" alt="Post User Image">
               </div>
               <div class="post-user-detail">
                 <h4>{{ post.user.username }}</h4>
@@ -17,7 +17,7 @@
                 <p>{{ post.description }}</p>
               </div>
               <div @click="goToPost(post.id)" class="post-image">
-                <img loading="lazy":src="'http://localhost:3000/' + post.postPicture" alt="Post Image">
+                <img :src="apiUrl + post.postPicture" alt="Post Image">
               </div>
             </div>
             
@@ -46,6 +46,7 @@
 <script>
 import { likePost, savePost, deletePost } from '../services/postService'
 import userMixin from '../mixins/userMixin'
+import { apiUrl } from '../config'
 
 export default {
     mixins: [userMixin],
@@ -60,7 +61,8 @@ export default {
         return {
             error: "",
             isLiked: this.post.isLiked,
-            isSaved: this.post.isSaved
+            isSaved: this.post.isSaved,
+            apiUrl: apiUrl
         }
     },
     methods: {
