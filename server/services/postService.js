@@ -75,6 +75,7 @@ const serveHomePage = async (user) => {
 
         return { posts, randomUsers, nonReadedNotifications }
     } catch (e) {
+        console.log(e)
         throw e
     }
 }
