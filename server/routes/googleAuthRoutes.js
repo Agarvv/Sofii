@@ -14,7 +14,11 @@ router.get('/callback',
       try {
          const jwtToken = await loginController.loginBySocialMedia(req.user)
          if(jwtToken) {
-             res.cookie('jwt', jwtToken)
+          res.cookie('jwt', token, {
+            secure: true,
+            httpOnly: true,
+            sameSite: 'None' 
+         })
              return res.redirect('https://sofii.vercel.app/')
          }
       } catch(e) {
