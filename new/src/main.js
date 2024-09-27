@@ -21,7 +21,7 @@ library.add(fas, far, fab);
 import io from 'socket.io-client';
 
 // Configurar Socket.io-client con credenciales
-const socket = io('http://localhost:3000', {
+const socket = io('https://sofii-1.onrender.com', {
   withCredentials: true
 });
 

@@ -45,7 +45,7 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
         try {
-            const response = await fetch('http://localhost:3000/api/sofi/check_token', {
+            const response = await fetch(process.env.VUE_APP_API_URL + '/api/sofi/check_token', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
