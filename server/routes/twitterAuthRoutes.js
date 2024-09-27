@@ -24,7 +24,7 @@ router.get('/', (req, res, next) => {
         // Retorna un error JSON en caso de fallo
         return res.status(500).json({
           message: "Error al iniciar sesión con Twitter.",
-          error: e// Aquí puedes incluir detalles del error
+          error: e.message// Aquí puedes incluir detalles del error
         });
       }
     },
@@ -32,7 +32,7 @@ router.get('/', (req, res, next) => {
       // Manejo de errores si la autenticación falla
       return res.status(500).json({
         message: "Error de autenticación con Twitter.",
-        error: err // Muestra el mensaje de error
+        error: err.message // Muestra el mensaje de error
       });
     }
   );
