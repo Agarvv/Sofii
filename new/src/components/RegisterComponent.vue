@@ -96,7 +96,7 @@
 </template>
 
 <script>
-import registerUser from '../services/usersService'
+import { registerUser } from '../services/usersService'; 
 export default {
   name: 'RegisterComponent', 
   data() {
