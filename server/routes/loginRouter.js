@@ -2,7 +2,6 @@ const express = require('express');
 const { body } = require('express-validator');
 const loginController = require('../controllers/loginController');
 const tokenController = require('../controllers/tokenController');
-const { trusted } = require('mongoose');
 
 const router = express.Router();
 
