@@ -35,13 +35,14 @@ const makeLogin = async (user, userPassword) => {
       const token = jwt.sign(payload, 'secret');
 
       try { 
+        // preparing email notification to user
          const mailOptions = {
             from: 'casluagarv@gmail.com',
             to: user.email,
             subject: 'Sofii Warning',
             text: 'someone logged into your account, if you did not logged into your account recently, kindly change your password to secure your account.'
          }
-
+        // send email notification to user
          transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
                 console.log(error);

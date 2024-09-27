@@ -12,15 +12,15 @@ router.post('/register', [
     const { name, email, password } = req.body;
 
     if (!name) {
-        return res.status(400).json({ error: "name_missing" });
+        return res.status(400).json({ error: "Please Enter Username." });
     }
 
     if (!email) {
-        return res.status(400).json({ error: "email_missing" });
+        return res.status(400).json({ error: "Please Enter Email." });
     }
 
     if (!password) {
-        return res.status(400).json({ error: "password_missing" });
+        return res.status(400).json({ error: "Please Enter Password." });
     }
 
     try {
@@ -30,11 +30,11 @@ router.post('/register', [
         console.error('Error occurred:', e.message);
         switch (e.message) {
             case "username_exists":
-                return res.status(400).json({ error: "username_exists" });
+                return res.status(400).json({ error: "The Username Already Exists." });
             case "email_exists":
-                return res.status(400).json({ error: "email_exists" });
+                return res.status(400).json({ error: "The Email Is Already Associated To a Account." });
             default:
-                return res.status(500).json({ error: "internal_server_error" });
+                return res.status(500).json({ error: "Something Went Wrong... :/" });
         }
     }
 });
