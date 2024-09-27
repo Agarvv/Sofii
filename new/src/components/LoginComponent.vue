@@ -45,7 +45,7 @@
       </div>
       
       <div class="form-links">
-        <div>
+        <div @click="goToRoute('/get_reset_url')">
           <a href="">Forgot Your Password?</a>
         </div>
         <div @click="goToRoute('/register')">

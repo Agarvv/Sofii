@@ -46,7 +46,6 @@
       
       
       
-      
       <div class="form-links">
         <div @click="goToRoute('/login')">
           <a href="">Already Have An Account?</a>
