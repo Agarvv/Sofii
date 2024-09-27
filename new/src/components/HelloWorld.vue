@@ -74,7 +74,7 @@ export default {
       HomePageUserMustLike
   }, 
    computed: {
-    ...mapGetters(['user'])  // Mapea el getter a una propiedad computada
+    ...mapGetters(['user'])  
   },
 
   data() {

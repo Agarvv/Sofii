@@ -69,8 +69,7 @@ const serveHomePage = async (user) => {
         
         const nonReadedNotifications = await Notifications.findAll({
             where: {
-                user_target: user.user_id,
-                readed: false
+                user_target: user.user_id
             }
         })
 

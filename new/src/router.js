@@ -55,7 +55,6 @@ router.beforeEach(async (to, from, next) => {
 
             if (response.ok) {
                 next(); 
-                
             } else {
               console.log('repsones not ok')
               router.push('/login')
