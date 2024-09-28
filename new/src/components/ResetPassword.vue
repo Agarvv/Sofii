@@ -51,7 +51,15 @@ export default {
     email: this.$route.params.email
    }, 'POST')
    
+   if(!response.ok) {
+    console.error('error while reseting')
+    const data = await response.json()
+    console.error('data', data)
+   }
+
    const data = await response.json()
+
+   
   
    console.log('server data', data)
    
