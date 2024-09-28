@@ -21,16 +21,15 @@
 </template>
 
 <script>
+import SuccessComponent from './SuccessComponent'
+import ErrorComponent  from './ErrorComponent'
+
  import { sendPasswordResetUrl } from '../services/usersService'
-// import SuccessComponent from './SuccessComponent'
-// import ErrorComponent  from './ErrorComponent'
-
-
 
 export default {
-     components: {
-            SuccessComponent,
-            ErrorComponent
+    components: {
+        SuccessComponent,
+        ErrorComponent
     },
     name: 'EnterEmailResetPassword',
     data() {
@@ -39,26 +38,25 @@ export default {
             error: "",
             success: "",
             loading: null
-        },
+        }
     },
     methods: {
-        // method for sending reset password url email
         async sendResetPasswordCode() {
-           // console.log('Method called')
-           // this.loading = true 
-           // try {
-           //     const data = await sendPasswordResetUrl(this.email)
-            //    this.success = "Check Your Email, We Just Sent You A URL To Verify You And Reset Your Password."
-                
-          //  } catch (e) {
-           //     console.log('Somethinh Went Wrong', e)
-           //     this.error = e
-          //  } finally {
-            //    this.loading = false
-           //  }
+            console.log('Method called')
+            this.loading = true 
+            try {
+                const data = await sendPasswordResetUrl(this.email)
+                this.success = "Check Your Email, We Just Sent You A URL To Verify You And Reset Your Password."
+            } catch (e) {
+                console.log('Something Went Wrong', e)
+                this.error = e
+            } finally {
+                this.loading = false
+            }
         }
     }
 }
+
 </script>
 
 <style scoped>
