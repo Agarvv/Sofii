@@ -14,30 +14,13 @@ export async function registerUser(data) {
     if (response.ok) {
         return responseData;
     } else {
-        throw new Error(responseData.error) // Throws an error if the response was not ok
-   }
-
-  }
-
-  export async function loginUser(data) {
-    const response = await fetchUrl(process.env.VUE_APP_API_URL + '/api/sofi/login', {
-        email: data.email,
-        password: data.password,
-        rememberMe: data.rememberMe
-    }, 'POST');
-
-    const responseData = await response.json();
-
-    if (response.ok) {
-        return responseData;
-    } else {
-        throw new Error(responseData.error) // Throws an error if the response was not ok
+        throw new Error("Something Went Wrong");
     }
-    
-  }
+}
 
 
-// FUNCTION TO GET A SPECIFIC USER, USED IN THE USER PAGE.
+
+// FUNCTION TO GET A SPECIFIC USER, USED IN THE USER PAGE
 // USER_ID MEANS THE ID FROM THE USER THAT WE WANT TO GET, (it is not obvious?? :P)
 export async function getUser(user_id, currentUser) {
   const response = await fetchUrl(process.env.VUE_APP_API_URL + `/api/sofi/user/${user_id}`, null, 'GET')
