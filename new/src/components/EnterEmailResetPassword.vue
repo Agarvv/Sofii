@@ -21,6 +21,8 @@
 // import { sendPasswordResetUrl } from '../services/usersService'
 import { SuccessComponent } from './SuccessComponent'
 import { ErrorComponent } from './ErrorComponent'
+import fetchUrl from '../helpers/fetchUrl'
+
 
 export default {
     name: 'EnterEmailResetPassword',
@@ -48,13 +50,17 @@ export default {
             }
         },
         async sendPasswordResetUrl() {
-  const response = await fetchUrl(process.env.VUE_APP_API_URL + '/api/sofi/send_password_reset_url', {
+   try {
+       const response = await fetchUrl(process.env.VUE_APP_API_URL + '/api/sofi/send_password_reset_url', {
      email: this.email
    }, 'POST')
    
    const data = await response.json()
   
    console.log('data from server', data)
+   } catch(e) {
+       console.log('error', e)
+   }
 }
     }
 }
@@ -62,10 +68,9 @@ export default {
 
 <style scoped>
 .outer-container {
-    display: flex;
-    justify-content: center;
+   justify-content: center;
     align-items: center; 
-    height: 100vh; 
+    height: 100vh;a
     width: 100%;
 }
 
