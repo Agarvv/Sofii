@@ -9,9 +9,9 @@
         <div class="container">
             <h2>¿Forgot Your Password?</h2>
             <p>Enter Your Email, If Your Email Exists On Our System, You Will Receive a URL To Reset Your Password.</p>
-            <form @submit.prevent="sendResetPasswordCode" id="resetForm">
+            <form id="resetForm">
                 <input v-model="email" type="email" placeholder="Enter Your Email" required>
-                <button type="submit">Enviar Código</button>
+                <button @click="sendResetPasswordCode" type="submit">Enviar Código</button>
             </form>
         </div>
     </div>
@@ -34,6 +34,7 @@ export default {
     },
     methods: {
         async sendResetPasswordCode() {
+            alert('method called')
             this.loading = true 
             try {
                 const data = await sendPasswordResetUrl(this.email)
