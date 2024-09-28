@@ -110,7 +110,9 @@ router.post('/reset_password', [
      await loginController.resetPassword(password, token, email)
      return res.status(200).json({detail: 'OK'})
   } catch (e) {
+    console.log('error', e)
     return res.status(500).json({ error: e.message})
+    
   }
 })
 

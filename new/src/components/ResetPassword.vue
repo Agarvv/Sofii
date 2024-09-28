@@ -1,30 +1,37 @@
 <template>
 <div>
 
+
+  <LoadingComponent message="Setting Up Your Password..." v-if="loading"/>
   <ErrorComponent v-if="error" :error="error"/>
-    <SuccessComponent v-if="success" :success="success" />
-    
-    <div class="container">
+  <SuccessComponent v-if="success" :success="success" />
+
+  <div class="out">
+      <div class="container">
         <h2>Change Your Password</h2>
     
             <input v-model="newPassword" type="password" placeholder="New Password" required>
             <input v-model="comparePassword" type="password" placeholder="Confirm Password " required>
-            <button @click="cp">Update Your Password</button>
+            <button @click="changePassword">Update Your Password</button>
     </div>
+  </div>
 
 </div>
 </template>
 
 <script>
-import changeUserPassword from '../services/usersService'
+import  { changeUserPassword } from '../services/usersService'
 import SuccessComponent  from './SuccessComponent'
+import LoadingComponent from './LoadingComponent'
 import  ErrorComponent  from './ErrorComponent'
 import fetchUrl from '../helpers/fetchUrl'
+
 
 export default {
     components: {
         SuccessComponent,
-        ErrorComponent
+        ErrorComponent,
+        LoadingComponent
     },
     name: 'ResetPassword',
     data() {
@@ -32,43 +39,51 @@ export default {
             newPassword: "",
             comparePassword: "",
             error: "",
-            success: ""
+            success: "",
+            loading: false 
         }
     },
     methods: {
         async changePassword() {
+           if(this.error) {
+            this.error = "" 
+           }
+
+           if(this.success) {
+            this.success = ""
+           }
+
+           if(this.loading) {
+            return
+           }
+
+            if(this.newPassword !== this.comparePassword) {
+                this.error = "Assure Your Passwords Match!"
+                return
+            }
              try {
-                const data = await changeUserPassword(this.password, this.$route.params.reset_token)
+                this.loading = true
+                const data = await changeUserPassword(this.newPassword, this.$route.params.reset_token, this.$route.params.email)
                 this.success = "¡Your Password Has Been Changed Sucesfully!"
              } catch (e) {
-                this.error = "Something Went Wrong, Or Your Request To Reset The Password Has Expired.."
+                this.error = e
+             } finally {
+                this.loading = false
              }
-        },
-        async cp() {
-            const response = await fetchUrl(process.env.VUE_APP_API_URL + '/api/sofi/reset_password', {
-    password: this.password,
-    token: this.$route.params.reset_token,
-    email: this.$route.params.email
-   }, 'POST')
-   
-   if(!response.ok) {
-    console.error('error while reseting')
-    const data = await response.json()
-    console.error('data', data)
-   }
-
-   const data = await response.json()
-
-   
-  
-   console.log('server data', data)
-   
         }
     }
 }
 </script>
 
 <style scoped>
+.out {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
  .container {
     background-color: white;
     padding: 30px;

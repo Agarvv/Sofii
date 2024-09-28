@@ -1,10 +1,12 @@
 <template>
    <div>
-   <!-- <SuccessComponent v-if="success" :success="success"/> -->
+   
+   <LoadingComponent message="Sending Mail, Please Wait..." v-if="loading"/>
 
-   <!-- <ErrorComponent v-if="error" :error="error"/> --> 
+   <SuccessComponent v-if="success" :success="success"/> 
+
+    <ErrorComponent v-if="error" :error="error"/>
     
-    <h1 v-if="loading">Please Wait...</h1>
     
     <div class="outer-container">
         <div class="container">
@@ -23,13 +25,15 @@
 <script>
 import SuccessComponent from './SuccessComponent'
 import ErrorComponent  from './ErrorComponent'
+import LoadingComponent from './LoadingComponent'
 
  import { sendPasswordResetUrl } from '../services/usersService'
 
 export default {
     components: {
         SuccessComponent,
-        ErrorComponent
+        ErrorComponent,
+        LoadingComponent
     },
     name: 'EnterEmailResetPassword',
     data() {
@@ -42,14 +46,30 @@ export default {
     },
     methods: {
         async sendResetPasswordCode() {
-            console.log('Method called')
-            this.loading = true 
+
+            if(this.error) {
+                this.error = ""
+            }
+
+            if(this.success) {
+                this.success = ""
+            }
+
+            if(this.loading) {
+                return
+            }
+
+            if(this.email == "") {
+                this.error = "Please Enter Your Email"
+            } 
+            
             try {
+                this.loading = true 
                 const data = await sendPasswordResetUrl(this.email)
                 this.success = "Check Your Email, We Just Sent You A URL To Verify You And Reset Your Password."
             } catch (e) {
                 console.log('Something Went Wrong', e)
-                this.error = e
+                this.error = "Something Went Wrong, maybe you tried to change your password too many times."
             } finally {
                 this.loading = false
             }

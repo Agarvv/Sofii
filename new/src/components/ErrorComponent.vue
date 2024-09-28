@@ -28,6 +28,6 @@
       top: 0;
       left: 0;
       z-index: 500;
-      background: red;
+      background: rgb(196, 3, 3);
     }
 </style>

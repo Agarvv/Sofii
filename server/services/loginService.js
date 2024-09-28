@@ -134,11 +134,14 @@ const sendPasswordResetUrl = async(user, resetToken, expiresAt) => {
     }
 }
 
-const resetPassword = async(newPassword, user) => {
+const resetPassword = async(newPassword, user, token) => {
     try {
       
        user.password = newPassword 
+       token.used = true 
+ 
        await user.save()
+       await token.save()
 
        return true 
     } catch(e) {

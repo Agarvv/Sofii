@@ -89,10 +89,11 @@ export async function sendPasswordResetUrl(email) {
 }
 
 // FUNCTION TO CHANGE A USER'S PASSWORD
-export async function changeUserPassword(password, token) {
+export async function changeUserPassword(password, token, email) {
    const response = await fetchUrl(process.env.VUE_APP_API_URL + '/api/sofi/reset_password', {
     password: password,
-    token: token 
+    token: token,
+    email: email
    }, 'POST')
    
    const data = await response.json()
@@ -100,7 +101,7 @@ export async function changeUserPassword(password, token) {
    if(response.ok) {
     return data
    } else {
-    throw new Error('something went wrong')
+    throw new Error(data.error)
    }
 }
 

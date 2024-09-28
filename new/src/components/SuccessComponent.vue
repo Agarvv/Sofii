@@ -20,7 +20,7 @@
 <style scoped>
     .success_container {
       width: 100%;
-      padding: 15px;
+      padding: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -28,6 +28,7 @@
       top: 0;
       left: 0;
       z-index: 500;
-      background: green;
+      background: rgb(63, 202, 63);
+      
     }
 </style>

@@ -118,7 +118,7 @@ const resetPassword = async(newPassword, resetToken, email) => {
          }
 
         const passwordEncoded = await bcrypt.hash(newPassword, 10)
-        await loginService.resetPassword(passwordEncoded, dbUser)
+        await loginService.resetPassword(passwordEncoded, dbUser, isTokenValid)
         return true
         
     } catch (e) {
