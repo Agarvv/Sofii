@@ -35,6 +35,7 @@ export default {
         }
     },
     methods: {
+        // method for sending reset password url email
         async sendResetPasswordCode() {
             console.log('Method called')
             this.loading = true 
