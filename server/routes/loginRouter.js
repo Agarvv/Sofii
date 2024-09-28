@@ -80,7 +80,7 @@ router.post('/send_password_reset_url', [
         if(!email) {
             return res.status(400)
         }
-
+        // controller method to send password reset url here
         await loginController.sendPasswordResetUrl(email)
         return res.status(200).json({ detail: 'OK'})
     } catch (error) {
