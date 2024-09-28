@@ -4,7 +4,7 @@ const PasswordResetToken = require('../models/PasswordResetToken')
 const transporter = require('../index')
 const User = require('../models/User')
 const crypto = require('crypto')
-
+const { sendEmail } = require('../config/mailer')
 
 const makeLogin = async (user, userPassword) => {
     try {
@@ -35,21 +35,7 @@ const makeLogin = async (user, userPassword) => {
       const token = jwt.sign(payload, 'secret');
 
       try { 
-        // preparing email notification to user
-         const mailOptions = {
-            from: 'casluagarv@gmail.com',
-            to: user.email,
-            subject: 'Sofii Warning',
-            text: 'someone logged into your account, if you did not logged into your account recently, kindly change your password to secure your account.'
-         }
-        // send email notification to user
-         transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                console.log(error);
-            } else {
-                console.log('Email sent:'+ info.response);
-            }
-         });
+        sendEmail(user.email, 'YOUR SOFII ACCOUNT', 'WE HAVE DETECTED A LOGIN IN YOUR ACCOUNT, IF YOU DID NOT LOGGED IN IN YOUR ACCOUNT RECENTLY, CHANGE YOUR PASSWORD.')
          console.log('notified user')
       } catch(e) {
         console.log('could not notify user')
@@ -138,14 +124,9 @@ const sendPasswordResetUrl = async(user, resetToken, expiresAt) => {
             user_id: user.id
         })
 
-        const mailOptions = {
-            from: 'casluagarv@gmail.com', // Remitente
-            to: user.email, // Destinatario
-            subject: 'Reset your password At Sofii',
-            text: `Enter this link to resset your password: http://localhost:5000/reset_password/${resetToken}`,
-        };
-
-        await transporter.sendMail(mailOptions)
+        sendEmail(user.email, 'YOUR RESET PASSWORD URL SOFII',
+        `Here is your Reset Password URL at Sofii: https://sofii.vercel.app/reset_password/${resetToken}`
+        )
 
         return true
     } catch (e) {

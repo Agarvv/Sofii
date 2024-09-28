@@ -22,7 +22,7 @@ const websocket = require('./websocket')
 require('./config/googlePassport'); 
 require('./config/twitterPassport.js')
 require('./config/githubPassport.js')
-
+require('./config/mailer')
 
 const app = express();
 
