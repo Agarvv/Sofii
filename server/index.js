@@ -1,4 +1,6 @@
+require("./instrument.js")
 require('dotenv').config()
+
 
 const express = require('express');
 const http = require('http');
@@ -20,8 +22,7 @@ const websocket = require('./websocket')
 require('./config/googlePassport'); 
 require('./config/twitterPassport.js')
 require('./config/githubPassport.js')
-// idk
-
+const Sentry = require("@sentry/node");
 
 const app = express();
 
@@ -63,6 +64,8 @@ app.use(passport.initialize());
 
 // Configuración de rutas (incluye createPost)
 setupRoutes(app);
+
+Sentry.setupExpressErrorHandler(app)
 
   sequelize.authenticate().then(() => {
    console.log('Database Working Fine');
