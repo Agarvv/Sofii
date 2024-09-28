@@ -11,7 +11,7 @@
             <p>Enter Your Email, If Your Email Exists On Our System, You Will Receive a URL To Reset Your Password.</p>
         
                 <input v-model="email" type="email" placeholder="Enter Your Email" required>
-                <button @click="sendResetPasswordResetUrl">Send Code</button>
+                <button @click="sendPasswordResetUrl">Send Code</button>
     
         </div>
     </div>
@@ -68,7 +68,8 @@ export default {
 
 <style scoped>
 .outer-container {
-   justify-content: center;
+    display: flex;
+    justify-content: center;
     align-items: center; 
     height: 100vh;
     width: 100%;
