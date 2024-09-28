@@ -48,7 +48,7 @@ export default {
             const response = await fetchUrl(process.env.VUE_APP_API_URL + '/api/sofi/reset_password', {
     password: this.password,
     token: this.$route.params.reset_token,
-    email: this.$router.params.email
+    email: this.$route.params.email
    }, 'POST')
    
    const data = await response.json()
