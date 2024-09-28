@@ -34,11 +34,14 @@ export default {
     },
     methods: {
         async sendResetPasswordCode() {
+            console.log('Method called')
             this.loading = true 
             try {
                 const data = await sendPasswordResetUrl(this.email)
                 this.success = "Check Your Email, We Just Sent You A URL To Verify You And Reset Your Password."
+                
             } catch (e) {
+                console.log('Algo malo paso', e)
                 this.error = e
             } finally {
                 this.loading = false
