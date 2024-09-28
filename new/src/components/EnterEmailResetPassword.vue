@@ -1,4 +1,6 @@
 <template>
+   <div>
+   
     <SuccessComponent v-if="success" :success="success"/>
     
     <ErrorComponent v-if="error" :error="error"/>
@@ -15,16 +17,22 @@
     
         </div>
     </div>
+   
+   </div>
 </template>
 
 <script>
  import { sendPasswordResetUrl } from '../services/usersService'
-import { SuccessComponent } from './SuccessComponent'
-import { ErrorComponent } from './ErrorComponent'
+import SuccessComponent from './SuccessComponent'
+import ErrorComponent  from './ErrorComponent'
 import fetchUrl from '../helpers/fetchUrl'
 
 
 export default {
+     components: {
+            SuccessComponent,
+            ErrorComponent
+    },
     name: 'EnterEmailResetPassword',
     data() {
         return {
@@ -32,7 +40,7 @@ export default {
             error: "",
             success: "",
             loading: null
-        }
+        },
     },
     methods: {
         // method for sending reset password url email
