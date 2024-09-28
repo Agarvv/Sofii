@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import sendPasswordResetUrl from '../services/usersService'
+import { sendPasswordResetUrl } from '../services/usersService'
 import { SuccessComponent } from './SuccessComponent'
 import { ErrorComponent } from './ErrorComponent'
 
