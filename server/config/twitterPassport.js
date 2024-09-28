@@ -11,20 +11,22 @@ passport.deserializeUser((user, done) => {
 
 
 passport.use(new TwitterStrategy({
-    consumerKey: process.env.TWITTER_API_KEY, 
-    consumerSecret: process.env.TWITTER_SECRET,  
+    consumerKey: process.env.TWITTER_API_KEY,
+    consumerSecret: process.env.TWITTER_SECRET,
     callbackURL: 'https://sofii-1.onrender.com/auth/twitter/callback',
-    includeEmail: true  
+    includeEmail: true
   },
   (token, tokenSecret, profile, done) => {
-    const user = {
-      id: profile.id,
-      username: profile.username,
-      email: profile.emails ? profile.emails[0].value : null,  
-      profilePicture: profile.photos[0].value
-    };
-
-    return done(null, user);
+    return (req, res, next) => {
+        req.session.oauthRequestToken = token;
+        req.session.oauthRequestTokenSecret = tokenSecret;
+        const user = {
+          id: profile.id,
+          username: profile.username,
+          email: profile.emails ? profile.emails[0].value : null,
+          profilePicture: profile.photos[0].value
+        };
+        return done(null, user);
+    }
   }
 ));
-
