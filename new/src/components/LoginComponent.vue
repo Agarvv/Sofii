@@ -8,7 +8,7 @@
   
     <h1 class="lf-h1">Welcome Back To Sofii</h1>
     
-    <form @submit.prevent="handleLogin()">
+    <form @submit.prevent="handleLogin">
         
         <div v-if="error" class="error">
             <p>{{error}}</p>
