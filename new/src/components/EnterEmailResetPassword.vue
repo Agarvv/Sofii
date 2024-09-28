@@ -1,9 +1,8 @@
 <template>
    <div>
-   
-    <SuccessComponent v-if="success" :success="success"/>
-    
-    <ErrorComponent v-if="error" :error="error"/>
+   <!-- <SuccessComponent v-if="success" :success="success"/> -->
+
+   <!-- <ErrorComponent v-if="error" :error="error"/> --> 
     
     <h1 v-if="loading">Please Wait...</h1>
     
@@ -23,9 +22,9 @@
 
 <script>
  import { sendPasswordResetUrl } from '../services/usersService'
-import SuccessComponent from './SuccessComponent'
-import ErrorComponent  from './ErrorComponent'
-import fetchUrl from '../helpers/fetchUrl'
+// import SuccessComponent from './SuccessComponent'
+// import ErrorComponent  from './ErrorComponent'
+
 
 
 export default {
