@@ -9,7 +9,7 @@
     
             <input v-model="newPassword" type="password" placeholder="New Password" required>
             <input v-model="comparePassword" type="password" placeholder="Confirm Password " required>
-            <button>Update Your Password</button>
+            <button @click="cp">Update Your Password</button>
     </div>
 
 </div>
