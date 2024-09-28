@@ -8,34 +8,38 @@ router.get('/', (req, res, next) => {
   });
   
   router.get('/callback', 
-    passport.authenticate('twitter', { failureRedirect: 'https://sofii.vercel.app/login', failWithError: true }),
-    async (req, res) => {
-      try {
-        const jwtToken = await loginController.loginBySocialMedia(req.user);
-        if (jwtToken) {
-          res.cookie('jwt', jwtToken, {
-            secure: true,
-            httpOnly: true,
-            sameSite: 'None' 
-          });
-          return res.redirect('https://sofii.vercel.app/');
-        }
-      } catch (e) {
-        // Retorna un error JSON en caso de fallo
-        return res.status(500).json({
-          message: "Error al iniciar sesión con Twitter.",
-          error: e.message// Aquí puedes incluir detalles del error
+  passport.authenticate('twitter', { failureRedirect: 'https://sofii.vercel.app/login', failWithError: true }),
+  async (req, res) => {
+    try {
+      console.log("Autenticación exitosa, usuario:", req.user); // Comprobar que req.user existe
+      const jwtToken = await loginController.loginBySocialMedia(req.user);
+      if (jwtToken) {
+        res.cookie('jwt', jwtToken, {
+          secure: true,
+          httpOnly: true,
+          sameSite: 'None' 
         });
+        return res.redirect('https://sofii.vercel.app/');
+      } else {
+        throw new Error("No se pudo generar el JWT");  // Forzar un error si no hay JWT
       }
-    },
-    (err, req, res, next) => {
-      // Manejo de errores si la autenticación falla
+    } catch (e) {
+      // Devuelve todo el stacktrace en la respuesta JSON para saber qué está pasando
       return res.status(500).json({
-        message: "Error de autenticación con Twitter.",
-        error: err.message // Muestra el mensaje de error
+        message: "Error al iniciar sesión con Twitter.",
+        error: e.message,
+        stack: e.stack  // Incluye el stack trace en la respuesta
       });
     }
-  );
-  
+  },
+  (err, req, res, next) => {
+    // Devuelve el error completo de autenticación
+    return res.status(500).json({
+      message: "Error de autenticación con Twitter.",
+      error: err.message,
+      stack: err.stack  // También puedes incluir el stack trace en caso de error en autenticación
+    });
+  }
+);
 
 module.exports = router;
