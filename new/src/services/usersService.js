@@ -80,7 +80,7 @@ export async function sendPasswordResetUrl(email) {
    if(response.ok) {
     return data
    } else {
-    throw new Error('something went wrong')
+    throw new Error('something went wrong', data.error)
    }
 }
 
