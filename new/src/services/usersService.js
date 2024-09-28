@@ -28,7 +28,7 @@ export async function loginUser(data) {
     if(response.ok) {
         return ServerData
     } else {
-        throw new Error(serverData.error)
+        throw new Error(ServerData.error)
     }
 }
 
