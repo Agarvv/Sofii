@@ -11,7 +11,7 @@
             <p>Enter Your Email, If Your Email Exists On Our System, You Will Receive a URL To Reset Your Password.</p>
         
                 <input v-model="email" type="email" placeholder="Enter Your Email" required>
-                <button @click="sendResetPasswordCode" type="submit">Enviar Código</button>
+                <button @click="sendResetPasswordCode">Send Code</button>
     
         </div>
     </div>
