@@ -5,6 +5,8 @@ const PasswordResetToken = require('../models/PasswordResetToken')
 const { Op } = require('sequelize')
 const tokenController = require('../controllers/tokenController')
 const bcrypt = require('bcryptjs')
+const crypto = require('crypto')
+
 
 const handleLogin = async (email, password) => {
     try {
