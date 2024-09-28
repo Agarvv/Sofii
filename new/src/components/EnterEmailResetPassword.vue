@@ -70,7 +70,7 @@ export default {
 .outer-container {
    justify-content: center;
     align-items: center; 
-    height: 100vh;a
+    height: 100vh;
     width: 100%;
 }
 
