@@ -84,7 +84,7 @@ const sendPasswordResetUrl = async (email) => {
         
     } catch (error) {
         console.error(error);
-        throw new Error('controller error', error);
+        throw error;
     }
 };
 
