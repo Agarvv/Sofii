@@ -11,14 +11,14 @@
             <p>Enter Your Email, If Your Email Exists On Our System, You Will Receive a URL To Reset Your Password.</p>
         
                 <input v-model="email" type="email" placeholder="Enter Your Email" required>
-                <button @click="sendResetPasswordCode">Send Code</button>
+                <button @click="sendResetPasswordResetUrl">Send Code</button>
     
         </div>
     </div>
 </template>
 
 <script>
-import { sendPasswordResetUrl } from '../services/usersService'
+// import { sendPasswordResetUrl } from '../services/usersService'
 import { SuccessComponent } from './SuccessComponent'
 import { ErrorComponent } from './ErrorComponent'
 
@@ -46,7 +46,16 @@ export default {
             } finally {
                 this.loading = false
             }
-        }
+        },
+        async sendPasswordResetUrl() {
+  const response = await fetchUrl(process.env.VUE_APP_API_URL + '/api/sofi/send_password_reset_url', {
+     email: this.email
+   }, 'POST')
+   
+   const data = await response.json()
+  
+   console.log('data from server', data)
+}
     }
 }
 </script>
