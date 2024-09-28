@@ -85,7 +85,7 @@ router.post('/send_password_reset_url', [
         return res.status(200).json({ detail: 'OK'})
     } catch (error) {
         console.log(error)
-        return res.status(500).json({error: error})
+        return res.status(500).json({error: `Endpoint error: ${error.message}`})
     }
 })
 
