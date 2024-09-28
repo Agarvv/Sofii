@@ -1,5 +1,7 @@
 <template>
-    <ErrorComponent v-if="error" :error="error"/>
+<div>
+
+  <ErrorComponent v-if="error" :error="error"/>
     <SuccessComponent v-if="success" :success="success" />
     
     <div class="container">
@@ -9,15 +11,21 @@
             <input v-model="comparePassword" type="password" placeholder="Confirm Password " required>
             <button>Update Your Password</button>
     </div>
+
+</div>
 </template>
 
 <script>
 import changeUserPassword from '../services/usersService'
-import { SuccessComponent } from './SuccessComponent'
-import { ErrorComponent } from './ErrorComponent'
+import SuccessComponent  from './SuccessComponent'
+import  ErrorComponent  from './ErrorComponent'
 import fetchUrl from '../helpers/fetchUrl'
 
 export default {
+    components: {
+        SuccessComponent,
+        ErrorComponent
+    },
     name: 'ResetPassword',
     data() {
         return {
