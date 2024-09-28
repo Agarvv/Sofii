@@ -90,10 +90,11 @@ router.post('/send_password_reset_url', [
 })
 
 router.post('/reset_password', [
- body("password").trim()
+ body("password").trim(),
+ body("email").isEmail()
 ], async (req, res) => {
   try {
-      const { password, token } = req.body 
+      const { password, token, email } = req.body 
       if(!password) {
         return res.status(400)
       } 
@@ -102,14 +103,14 @@ router.post('/reset_password', [
         return res.status(400)
       }
 
-      if(!req.cookies.jwt) {
-        return res.status(401)
+      if(!email) {
+          return res.status(400)
       }
       
-     await loginController.resetPassword(password, token, req.cookies.jwt)
+     await loginController.resetPassword(password, token, email)
      return res.status(200).json({detail: 'OK'})
   } catch (e) {
-    return res.status(500).json({ error: e})
+    return res.status(500).json({ error: e.message})
   }
 })
 

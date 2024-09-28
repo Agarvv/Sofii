@@ -34,7 +34,7 @@ const routes = [
     { path: '/notifications', component: NotificationsComponent, meta: { requiresAuth: true } },
     { path: '/friends', component: FriendsPage, meta: { requiresAuth: true } },
     { path: '/get_reset_url', component: EnterEmailResetPassword },
-    { path: '/reset_password/:reset_token', component: ResetPassword },
+    { path: '/reset_password/:reset_token/:email', component: ResetPassword },
 ];
 
 const router = createRouter({

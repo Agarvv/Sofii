@@ -43,25 +43,12 @@ export default {
                 this.success = "Check Your Email, We Just Sent You A URL To Verify You And Reset Your Password."
                 
             } catch (e) {
-                console.log('Algo malo paso', e)
+                console.log('Somethinh Went Wrong', e)
                 this.error = e
             } finally {
                 this.loading = false
             }
-        },
-        async sendPasswordResetUrl() {
-   try {
-       const response = await fetchUrl(process.env.VUE_APP_API_URL + '/api/sofi/send_password_reset_url', {
-     email: this.email
-   }, 'POST')
-   
-   const data = await response.json()
-  
-   console.log('data from server', data)
-   } catch(e) {
-       console.log('error', e)
-   }
-}
+        }
     }
 }
 </script>

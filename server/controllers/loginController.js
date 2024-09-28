@@ -90,14 +90,23 @@ const sendPasswordResetUrl = async (email) => {
     }
 };
 
-const resetPassword = async(newPassword, resetToken, jwtToken) => {
+const resetPassword = async(newPassword, resetToken, email) => {
     try {
-        const userDecoded = await tokenController.verifyJwtToken(jwtToken)
+        const dbUser = await User.findOne({
+            where: {
+                email: email
+            }
+        })
+        
+        if(!dbUser) {
+            throw new Error('verify_data')
+        }
+        
          const isTokenValid = await PasswordResetToken.findOne({
             where: {
                 token: resetToken,
                 used: false,
-                user_id: userDecoded.user_id,
+                user_id: dbUser.id,
                 expires_at: {
                     [Op.gt]: new Date(),
                 },
@@ -109,7 +118,7 @@ const resetPassword = async(newPassword, resetToken, jwtToken) => {
          }
 
         const passwordEncoded = await bcrypt.hash(newPassword, 10)
-        await loginService.resetPassword(passwordEncoded, userDecoded)
+        await loginService.resetPassword(passwordEncoded, dbUser)
         return true
         
     } catch (e) {

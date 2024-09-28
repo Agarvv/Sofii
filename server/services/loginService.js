@@ -125,7 +125,7 @@ const sendPasswordResetUrl = async(user, resetToken, expiresAt) => {
         })
 
         sendEmail(user.email, 'YOUR RESET PASSWORD URL SOFII',
-        `Here is your Reset Password URL at Sofii: https://sofii.vercel.app/reset_password/${resetToken}`
+        `Here is your Reset Password URL at Sofii: https://sofii.vercel.app/${resetToken}/${user.email}`
         )
 
         return true
@@ -134,14 +134,9 @@ const sendPasswordResetUrl = async(user, resetToken, expiresAt) => {
     }
 }
 
-const resetPassword = async(newPassword, userDecoded) => {
+const resetPassword = async(newPassword, user) => {
     try {
-       const user = await User.findOne({
-        where: {
-            id: userDecoded.user_id
-        }
-       })
-
+      
        user.password = newPassword 
        await user.save()
 

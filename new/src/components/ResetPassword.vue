@@ -4,11 +4,10 @@
     
     <div class="container">
         <h2>Change Your Password</h2>
-        <form @submit.prevent="changePassword">
+    
             <input v-model="newPassword" type="password" placeholder="New Password" required>
             <input v-model="comparePassword" type="password" placeholder="Confirm Password " required>
-            <button type="submit">Actualizar Contraseña</button>
-        </form>
+            <button>Update Your Password</button>
     </div>
 </template>
 
@@ -16,6 +15,7 @@
 import changeUserPassword from '../services/usersService'
 import { SuccessComponent } from './SuccessComponent'
 import { ErrorComponent } from './ErrorComponent'
+import fetchUrl from '../helpers/fetchUrl'
 
 export default {
     name: 'ResetPassword',
@@ -35,6 +35,18 @@ export default {
              } catch (e) {
                 this.error = "Something Went Wrong, Or Your Request To Reset The Password Has Expired.."
              }
+        },
+        async cp() {
+            const response = await fetchUrl(process.env.VUE_APP_API_URL + '/api/sofi/reset_password', {
+    password: this.password,
+    token: this.$route.params.reset_token,
+    email: this.$router.params.email
+   }, 'POST')
+   
+   const data = await response.json()
+  
+   console.log('server data', data)
+   
         }
     }
 }
