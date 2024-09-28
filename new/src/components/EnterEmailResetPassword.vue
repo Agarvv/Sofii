@@ -1,18 +1,20 @@
 <template>
-    
     <SuccessComponent v-if="success" :success="success"/>
     
     <ErrorComponent v-if="error" :error="error"/>
     
-    <div class="container">
-        <h2>¿Forgot Your Password?</h2>
-        <p>Enter Your Email, If Your Email Exists On Our System, You Will Receive a URL To Reset Your Password.</p>
-        <form @submit.prevent="sendResetPasswordCode" id="resetForm">
-            <input v-model="email" type="email" placeholder="Enter Your Email" required>
-            <button type="submit">Enviar Código</button>
-        </form>
-    </div>
+    <h1 v-if="loading">Please Wait...</h1>
     
+    <div class="outer-container">
+        <div class="container">
+            <h2>¿Forgot Your Password?</h2>
+            <p>Enter Your Email, If Your Email Exists On Our System, You Will Receive a URL To Reset Your Password.</p>
+            <form @submit.prevent="sendResetPasswordCode" id="resetForm">
+                <input v-model="email" type="email" placeholder="Enter Your Email" required>
+                <button type="submit">Enviar Código</button>
+            </form>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -26,16 +28,20 @@ export default {
         return {
             email: "",
             error: "",
-            success: ""
+            success: "",
+            loading: null
         }
     },
     methods: {
         async sendResetPasswordCode() {
+            this.loading = true 
             try {
                 const data = await sendPasswordResetUrl(this.email)
-                this.success = "Check Your Email, We Just Sendt You A URL To Verify You And Reset Your Password."
+                this.success = "Check Your Email, We Just Sent You A URL To Verify You And Reset Your Password."
             } catch (e) {
                 this.error = e
+            } finally {
+                this.loading = false
             }
         }
     }
@@ -43,7 +49,15 @@ export default {
 </script>
 
 <style scoped>
-  .container {
+.outer-container {
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    height: 100vh; 
+    width: 100%;
+}
+
+.container {
     background-color: white;
     padding: 30px;
     border-radius: 8px;
@@ -86,5 +100,4 @@ button {
 button:hover {
     background-color: #0056b3;
 }
-
 </style>
