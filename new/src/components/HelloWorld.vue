@@ -1,13 +1,16 @@
-
 <template>
-  <div >
-      
+  <div>
     <div v-if="showNotification" class="notification">
-      <NotificationCard :notification="notification" :nonReadedNotifications="nonReadedNotifications" @notificationClosed="hideNotification"/>
+      <NotificationCard 
+        :notification="notification" 
+        :nonReadedNotifications="nonReadedNotifications" 
+        @notificationClosed="hideNotification"
+      />
     </div> 
-  <HeaderComponent :activePage="'home'" />
+
+    <HeaderComponent :activePage="'home'" @showAside="showAside" />
+  
     <div v-show="showSearchBox" id="search" class="search-box">
-        
       <div class="search-icons">
         <font-awesome-icon @click="closeSearch()" id="close-search" icon="close" />
       </div>
@@ -15,26 +18,29 @@
       <div class="input">
         <input v-model="searchQ" type="search" placeholder="Search">
         <div class="input-icons">
-        <div @click="handleSearch()">
-          <font-awesome-icon icon="fas fa-search" />
-         </div>
+          <div @click="handleSearch()">
+            <font-awesome-icon icon="fas fa-search" />
+          </div>
           <font-awesome-icon icon="fas fa-microphone" />
         </div>
       </div>
-      
     </div>
 
     <div class="container">
-     <SidebarComponent activePage="home"/>
+      <LoadingComponent v-if="loading" message="Getting Posts, Please Wait..."/> 
+      
+      <ErrorComponent v-if="error" :error="error"/>
+        
+      <SidebarComponent v-if="showSidebar" activePage="home"/>
+      
       <main>
         <div v-if="posts.length > 0" class="posts">
-          <div  v-for="post in posts" :key="post.id" class="post" >
-              <PostCard :post="post"/> 
-
+          <div v-for="post in posts" :key="post.id" class="post">
+            <PostCard :post="post"/> 
           </div>
         </div>
         <div class="no-content" v-if="posts.length == 0">
-            <p style="color: gray">There Is No Content Avaibable... <a href="/create">Create!</a></p>
+          <p style="color: gray">There Is No Content Available... <a href="/create">Create!</a></p>
         </div>
       </main>
 
@@ -44,9 +50,9 @@
             <h3>You Might Like</h3>
           </div>
           <div class="us-users">
-             <div v-for="user in recommendedUsers" :key="user.id" class="us-user">
-                  <HomePageUserMustLike :user="user"/>
-             </div>
+            <div v-for="user in recommendedUsers" :key="user.id" class="us-user">
+              <HomePageUserMustLike :user="user"/>
+            </div>
           </div>
         </div>
       </div>
@@ -59,183 +65,157 @@ import HeaderComponent from './HeaderComponent'
 import SidebarComponent from './SidebarComponent'
 import PostCard from './PostCard'
 import NotificationCard from './NotificationCard'
-import  HomePageUserMustLike  from './HomePageUserMustLike'
+import HomePageUserMustLike from './HomePageUserMustLike'
+import LoadingComponent from './LoadingComponent'
+import ErrorComponent from './ErrorComponent'
+
+
 import goToRoute from '../helpers/goToRoute'
-import {  getPosts, checkIfUserLikedPost, checkIfUserSavedPost } from '../services/postService'
+import { getPosts, checkIfUserLikedPost, checkIfUserSavedPost } from '../services/postService'
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'HelloWorld',
   components: {
-      HeaderComponent,
-      SidebarComponent,
-      PostCard,
-      NotificationCard,
-      HomePageUserMustLike
+    HeaderComponent,
+    SidebarComponent,
+    PostCard,
+    NotificationCard,
+    HomePageUserMustLike,
+    LoadingComponent,
+    ErrorComponent
   }, 
-   computed: {
+  computed: {
     ...mapGetters(['user'])  
   },
-
   data() {
     return {
       posts: [],
       recommendedUsers: [],
       searchQ: "",
       showSearchBox: false,
-      showSidebar: false,
+      showSidebar: window.innerWidth > 768, 
       error: "",
       postsById: {},
       showNotification: false,
       notification: {},
-      nonReadedNotifications: {}
+      nonReadedNotifications: {},
+      loading: null
     };
   },
   methods: {
-     ...mapActions(['fetchUser']), 
-    async servePage() {
-   
-      try {
-          // Get posts Method also does 
-          // Get The non-readed user notifications, and recomended users. 
-          
-          const data = await  getPosts(this.user);
-          this.posts = data.posts;
-          this.recommendedUsers = data.users
-          this.nonReadedNotifications = data.nonReadedNotifications
-          console.log('data', data)
-          
-          this.postsById = {};
-          this.posts.forEach(post => {
-            this.postsById[post.id] = post;
-          });
+    ...mapActions(['fetchUser']), 
 
-          
-      } catch(e) {
-          console.error('error', e)
+    async servePage() {
+      try {
+          this.loading = true 
+        const data = await getPosts(this.user);
+        this.posts = data.posts;
+        this.recommendedUsers = data.users;
+        this.nonReadedNotifications = data.nonReadedNotifications;
+        
+        this.postsById = {};
+        this.posts.forEach(post => {
+          this.postsById[post.id] = post;
+        });
+      } catch (e) {
+        this.error = "Oops, Somethint Went Wrong..."
+      } finally {
+          this.loading = false
       }
     },
+
     goToPage(route) {
-        goToRoute(this.$router, route);
+      goToRoute(this.$router, route);
     }, 
+
     handleSearch() {
       this.$router.push('/search/' + this.searchQ);
     },
+
     hideNotification() {
-      this.showNotification = false
+      this.showNotification = false;
     },
+
     showAside() {
-      alert('callekkfmoefm')
-      this.showSidebar = !this.showSidebar
+      this.showSidebar = !this.showSidebar;
+    },
+
+    handleResize() {
+      this.showSidebar = window.innerWidth > 768; // Ajusta según el ancho
     }
   },
   async created() {
-    await this.fetchUser() 
-    if(this.user) {
-      console.log('thi.user', this.user)
-      await this.servePage()
+    await this.fetchUser(); 
+    if (this.user) {
+      await this.servePage();
     } else {
-      alert('not user')
+      return
     }
 
     this.$socket.on('createdPost', async newPost => {
-        newPost.isLiked = await checkIfUserLikedPost(newPost) ? true : false;
-        newPost.isSaved = await checkIfUserSavedPost(newPost) ? true : false;
-
-        // Agregamos el post y actualizamos el índice
-        this.posts.push({ ...newPost });
-        this.postsById[newPost.id] = newPost;
+      newPost.isLiked = await checkIfUserLikedPost(newPost);
+      newPost.isSaved = await checkIfUserSavedPost(newPost);
+      this.posts.push({ ...newPost });
+      this.postsById[newPost.id] = newPost;
     });
-    
-    
 
-this.$socket.on('likePost', newLike => {
-    console.log('Like Recibido!', newLike);
-    
-
-    const postTarget = this.postsById[newLike.post_id];
-
-    if (postTarget) {
-        console.log('post target: ', postTarget);
-        console.log('new liker: ', newLike);
-        console.log('likes from post:', postTarget.postLikes);
-        
-
+    this.$socket.on('likePost', newLike => {
+      const postTarget = this.postsById[newLike.post_id];
+      if (postTarget) {
         postTarget.postLikes.push({ ...newLike });
-
-
-    } else {
+      } else {
         console.warn(`Post con ID ${newLike.post_id} no encontrado.`);
-    }
-});
-
-
-    // Evento para unlikes recibidos
-    this.$socket.on('unlikePost', like => {
-        console.log('Unlike Recibido!', like);
-
-        // Encontramos el post en cuestión
-        const postTarget = this.postsById[like.post_id];
-
-        if (postTarget) {
-            // Filtramos el like que corresponde al unlike
-            postTarget.postLikes = postTarget.postLikes.filter(l => l.id !== like.id);
-        } else {
-            console.warn(`Post con ID ${like.post_id} no encontrado.`);
-        }
+      }
     });
-    
-    
- 
-this.$socket.on('savedPost', saved => {
-    console.log('Saved Received!', saved);
 
-    const postTarget = this.postsById[saved.post_id];
+    this.$socket.on('unlikePost', like => {
+      const postTarget = this.postsById[like.post_id];
+      if (postTarget) {
+        postTarget.postLikes = postTarget.postLikes.filter(l => l.id !== like.id);
+      } else {
+        console.warn(`Post con ID ${like.post_id} no encontrado.`);
+      }
+    });
 
-    if (postTarget) {
-        // Verificar si el evento pertenece al usuario actual
-        if (saved.user_id === this.usuario.id) {
-            postTarget.isSaved = true;  // Solo actualizamos isSaved si es para el usuario actual
-        }
+    this.$socket.on('savedPost', saved => {
+      const postTarget = this.postsById[saved.post_id];
+      if (postTarget && saved.user_id === this.user.id) {
+        postTarget.isSaved = true; // Actualizar solo si es para el usuario actual
         postTarget.saved_post.push(saved);
-    }
-});
+      }
+    });
 
-
-this.$socket.on('unsavedPost', saved => {
-    const postTarget = this.postsById[saved.post_id];
-    
-    if (postTarget) {
-        console.log('Unsaved recibido:', saved);
-
+    this.$socket.on('unsavedPost', saved => {
+      const postTarget = this.postsById[saved.post_id];
+      if (postTarget) {
         postTarget.saved_post = postTarget.saved_post.filter(s => 
-            !(s.user_id === saved.user_id && s.post_id === saved.post_id)
+          !(s.user_id === saved.user_id && s.post_id === saved.post_id)
         );
-
-        if (saved.user_id === this.usuario.id) {
-            postTarget.isSaved = false;
+        if (saved.user_id === this.user.id) {
+          postTarget.isSaved = false;
         }
-    }
-});
+      }
+    });
 
-this.$socket.on('newNotification', notification => {
-   this.notification = notification
-   this.showNotification = true
-   console.log('Notification received', notification.targetUser)
-   this.showNotification = true
-   
+    this.$socket.on('newNotification', notification => {
+      this.notification = notification;
+      this.showNotification = true;
 
-  if (this.hideNotificationInterval) {
-       clearInterval(this.hideNotificationInterval)
-   }
+      if (this.hideNotificationInterval) {
+        clearInterval(this.hideNotificationInterval);
+      }
 
-   this.hideNotificationInterval = setTimeout(() => {
-      this.showNotification = false
-  }, 5000)
-   
-})
-    
-    
+      this.hideNotificationInterval = setTimeout(() => {
+        this.showNotification = false;
+      }, 5000);
+    });
+
+    window.addEventListener('resize', this.handleResize); // Escuchar cambios de tamaño
+  },
+
+  beforeDestroy() {
+    window.removeEventListener('resize', this.handleResize); // Limpiar listener
   }
 };
 </script>
