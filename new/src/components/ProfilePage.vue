@@ -78,7 +78,7 @@
   <p>Request pending...</p>
 </button>
 
-<button  v-if="!receivedFriendRequest && !sentFriendRequest" style="background: transparent;">
+<button @click="sendFriendRequest(user.id)"  v-if="!receivedFriendRequest && !sentFriendRequest" style="background: transparent;">
  <font-awesome-icon :icon="['fas', 'user-plus']"/> Send Friend Request
 </button>
 
@@ -281,16 +281,7 @@ export default {
       }
     },
 
-    async acceptFriendRequest(req_id) {
-       try {
-          const data = await acceptFriendRequest(req_id)
-          this.isFriend = true
-       } catch (e) {
-          console.log(e)
-          this.error = e
-       }
-    },
-
+  
     async sendChat(user_id) {
      try {
           const data = await startChat(user_id)
