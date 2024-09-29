@@ -129,7 +129,7 @@ export async function followUser(user_id) {
    if(response.ok) {
     return data
    } else {
-    throw new Error('Something Went Wrong.')
+    throw new Error(data.error)
    }
 }
 
