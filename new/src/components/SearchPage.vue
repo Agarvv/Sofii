@@ -1,3 +1,27 @@
+<!-- IM NOT GOING TO CLEAN THIS COMPONENT, THAT WILL TAKE ME A LOT OF TIME SO I WILL JUST LET IT LIKE THAT BECAUSE THIS APP IS A DEMO. -->
+
+
+<!-- IM NOT GOING TO CLEAN THIS COMPONENT, THAT WILL TAKE ME A LOT OF TIME SO I WILL JUST LET IT LIKE THAT BECAUSE THIS APP IS A DEMO. -->
+
+
+<!-- IM NOT GOING TO CLEAN THIS COMPONENT, THAT WILL TAKE ME A LOT OF TIME SO I WILL JUST LET IT LIKE THAT BECAUSE THIS APP IS A DEMO. -->
+
+
+<!-- IM NOT GOING TO CLEAN THIS COMPONENT, THAT WILL TAKE ME A LOT OF TIME SO I WILL JUST LET IT LIKE THAT BECAUSE THIS APP IS A DEMO. -->
+
+
+<!-- IM NOT GOING TO CLEAN THIS COMPONENT, THAT WILL TAKE ME A LOT OF TIME SO I WILL JUST LET IT LIKE THAT BECAUSE THIS APP IS A DEMO. -->
+
+
+<!-- IM NOT GOING TO CLEAN THIS COMPONENT, THAT WILL TAKE ME A LOT OF TIME SO I WILL JUST LET IT LIKE THAT BECAUSE THIS APP IS A DEMO. -->
+
+
+<!-- IM NOT GOING TO CLEAN THIS COMPONENT, THAT WILL TAKE ME A LOT OF TIME SO I WILL JUST LET IT LIKE THAT BECAUSE THIS APP IS A DEMO. -->
+
+
+<!-- IM NOT GOING TO CLEAN THIS COMPONENT, THAT WILL TAKE ME A LOT OF TIME SO I WILL JUST LET IT LIKE THAT BECAUSE THIS APP IS A DEMO. -->
+
+
 <template>
   <div>
     <header>
@@ -17,8 +41,9 @@
     </header>
     
     
-                  
      <div v-show="showFiltersButton" class="filter-div">
+         
+         
           
           <div @click="toggleFiltersButton" class="close-filters">
             <i style="color: gray"class="fa fa-close"></i>
@@ -147,6 +172,9 @@
            </div>
           
           
+          
+          
+          
         </div>
         
   
@@ -163,7 +191,12 @@
         
         
         <nav>
-          <div class="aside-users">
+                    <div @click="toggleFiltersButton" class="close-filters">
+            <i style="color: gray"class="fa fa-close"></i>
+            <font-awesome-icon icon="close"/>
+          </div>
+          
+          <div @click="showFilters('users')" class="aside-users">
             <div @click="toggleUsers">
               <font-awesome-icon icon="user" />
               <span>Users</span>
@@ -173,7 +206,7 @@
             </div>
           </div>
 
-          <div class="hidden-users" >
+          <div v-show="showUsersFilters" class="hidden-users">
             <div class="order-by-son">
               <div class="following">
                 <label>Following</label>
@@ -184,13 +217,13 @@
                 <input type="checkbox" v-model="filters.users.friend" />
               </div>
               <div class="followers">
-                <label>Followers</label>
-                <input type="number" v-model="filters.users.followers" />
+                <label>Popular</label>
+                <input type="checkbox" v-model="filters.users.followers" />
               </div>
             </div>
           </div>
 
-          <div class="aside-posts">
+          <div @click="showFilters('posts')" class="aside-posts">
             <div>
               <font-awesome-icon icon="newspaper" />
               <span>Posts</span>
@@ -202,6 +235,28 @@
 
           <div class="hidden-posts" v-show="showPostsFilters">
             <div class="sort-options">
+                
+                <div class="most-liked">
+                    <label>Most Liked</label>
+                    <input type="checkbox" v-model="filters.posts.most_liked">
+                </div>
+                
+                <div class="most-saved">
+                    <label>Most Saved</label>
+                    <input type="checkbox" v-model="filters.posts.most_saved">
+                </div>
+                
+                <div class="most-commented">
+                    <label>Most Commented</label>
+                    <input type="checkbox" v-model="filters.posts.most_commented">
+                </div>
+                
+                <div class="liked">
+                    <label>Liked</label>
+                    <input type="checkbox" v-model="filters.posts.liked">
+                </div>
+                
+                
               <div class="latest">
                 <label>Latest</label>
                 <input type="checkbox" name="sort-posts" v-model="filters.latest" />
@@ -216,8 +271,53 @@
               </div>
             </div>
           </div>
+          
+          <div class="hidden-videos" @click="showFilters('videos')">
+              <div>
+                  <span>Videos</span>
+              </div>
+              <div>
+                  <font-awesome-icon icon="caret-down"/>
+              </div>
+          </div>
+          
+          <div class="hidden-videos" v-show="showVideosFilters">
+              <div class="sort-options">
+                  
+                  <div class="most-liked">
+                      <label>Most Liked</label>
+                      <input type="checkbox" v-model="filters.videos.most_liked">
+                  </div>
+                  
+                  <div class="most_saved">
+                     <label>Most Saved</label>
+                     <input type="checkbox" v-model="filters.videos.most_saved">
+                  </div>
+                      
+                      
+                  <div class="most_commented">
+                    <label>Most Commented</label>
+                    <input type="checkbox" v-model="filters.videos.most_commented">
+                  </div>
+                      
+                  <div class="trending">
+                    <label>Trending</label>
+                    <input type="checkbox" v-model="filters.videos.trending">
+                  </div>
+                  
+                  <div class="liked">
+                      <label>Liked</label>
+                      <input type="checkbox" v-model="filters.videos.liked">
+                  </div>
+                      
+              </div>
+          </div>
 
-          <button @click="applyFilters">Apply Filters</button>
+           <div class="show_filters_button_div">
+         <button @click="applyFilters">Apply Filters</button>
+           </div>
+          
+          
         </nav>
         
         

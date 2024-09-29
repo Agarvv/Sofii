@@ -366,20 +366,6 @@ img {
   font-size: 25px;
 }
 
-/* Ejemplo de media query básico */
-@media (max-width: 600px) {
-  .container {
-    grid-template-columns: 1fr;
-  }
-  
-   .pc-sidebar {
-       display: none;
-   }
-  
-  .right-aside {
-    display: none;
-  }
-}
 
 aside .aside-logo {
   display: flex;
@@ -535,7 +521,21 @@ aside .aside-logo i {
     height: 100vh; /* Asegúrate de que ocupa toda la altura */
     overflow: auto; /* Agrega desplazamiento si el contenido excede la altura */
     display: block;
-    border: 3px solid red;
+
+}
+
+@media (max-width: 600px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+  
+   .pc-sidebar {
+       display: none;
+   }
+  
+  .right-aside {
+    display: none;
+  }
 }
 
 </style>

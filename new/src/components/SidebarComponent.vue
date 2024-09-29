@@ -74,16 +74,10 @@ export default {
   },
   methods: {
     goToPage(page) {
-      this.$emit('update:activePage', page);
+        alert('Method called', page)
       this.$router.push(`/${page}`);
     }
-  },
-  watch: {
-    // Observa cambios en activePage y actualiza la clase en consecuencia
-    activePage(newPage) {
-      // Opcional: realizar alguna acción cuando activePage cambie, si es necesario.
-      console.log(`Active page changed to: ${newPage}`);
-    }
+  }
   }
 }
 </script>
