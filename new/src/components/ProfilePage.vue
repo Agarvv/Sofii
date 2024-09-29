@@ -2,7 +2,7 @@
   <div>
     <header>
     <!-- Div for block the user -->
-      <BlockUserCard :user="user" v-if="isPendingRequestReceived"/>
+      <BlockUserCard :user="user" v-if="user.isPendingRequestReceived"/>
     
 
 
