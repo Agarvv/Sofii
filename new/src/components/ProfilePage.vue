@@ -2,8 +2,8 @@
   <div>
     <header>
     <!-- Div for block the user -->
-      <BlockUserCard :user="user"/>
-
+      <BlockUserCard :user="user" v-if="isPendingRequestReceived"/>
+    
 
 
       <div class="profile-banner">
@@ -552,7 +552,7 @@ aside .description {
 }
 
 
-@media (max-width: 600px) {
+@media (max-width: 687px) {
     aside {
         display: none;
     }
