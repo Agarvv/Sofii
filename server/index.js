@@ -46,7 +46,7 @@ websocket.init(server)
 
 app.use('/media', express.static(path.join(__dirname, 'media')));
 app.use(cors({
-    origin: 'http://localhost:5000',
+    origin: 'https://sofii.vercel.app',
     credentials: true
 }));
 

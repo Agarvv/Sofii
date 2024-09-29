@@ -8,7 +8,7 @@ module.exports = {
     init: (server) => {
         io = require('socket.io')(server, {
             cors: {
-                origin: 'http://localhost:5000',
+                origin: 'https://sofii.vercel.app',
                 methods: ['GET', 'POST'],
                 credentials: true
             }

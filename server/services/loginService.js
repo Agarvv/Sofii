@@ -125,7 +125,7 @@ const sendPasswordResetUrl = async(user, resetToken, expiresAt) => {
         })
 
         sendEmail(user.email, 'YOUR RESET PASSWORD URL SOFII',
-        `Here is your Reset Password URL at Sofii: https://sofii.vercel.app/${resetToken}/${user.email}`
+        `Here is your Reset Password URL at Sofii: https://sofii.vercel.app/reset_password/${resetToken}/${user.email}`
         )
 
         return true
