@@ -236,7 +236,7 @@ export default {
   }
 
   .responsive-aside-open {
-    display: block;!important
+    display: block!important;
   }
 
   .responsive-sub-header {
