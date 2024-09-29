@@ -535,6 +535,11 @@ aside .aside-logo i {
     top: 0;
     left: 0;
     z-index: 777;
+    width: 250px; /* Ajusta según necesites */
+    height: 100vh; /* Asegúrate de que ocupa toda la altura */
+    overflow: auto; /* Agrega desplazamiento si el contenido excede la altura */
+    display: block;
+    border: 3px solid red;
 }
 
 </style>
