@@ -370,7 +370,7 @@ img {
     grid-template-columns: 1fr;
   }
   
-  aside {
+  /* aside {
     display: none;
   position: fixed;
   top: 0;
@@ -378,7 +378,7 @@ img {
   height: 100vh;
   width: 250px;
   background: white;
-  }
+  } */
   
   .right-aside {
     display: none;
