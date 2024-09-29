@@ -131,7 +131,7 @@ export default {
 
 .header {
   background-color: #ffffff; /* Fondo blanco para el header */
-  padding: 15px;
+  padding: 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -158,7 +158,7 @@ export default {
   background: #e5e5e5;
   display: flex;
   align-items: center;
-  padding: 10px;
+  padding: 5px;
   border-radius: 15px;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra interna */
 }
@@ -167,14 +167,14 @@ export default {
   background: #e5e5e5;
   border: none;
   outline: none;
-  padding-left: 10px;
+  padding-left: 5px;
   color: #333;
 }
 
 .header .second-flex {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 10px;
 }
 
 .s-flex-user {
