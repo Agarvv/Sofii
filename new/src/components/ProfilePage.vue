@@ -61,11 +61,12 @@
           
           
           <div v-else class="interact-buttons">
-  <!-- Botón de Chat -->
+  <!-- Chat -->
   <button @click="sendChat(user.id)" style="background: purple;">
     <font-awesome-icon :icon="['fas', 'comment']" /> Chat
   </button>
-  <!-- Botón de Friend Request -->
+ 
+ <!-- friend buttons -->
 <button 
   v-if="isFriend"
   style="background: lightblue; color: blue;"
@@ -73,11 +74,16 @@
   <font-awesome-icon :icon="['fas', 'user-friends']" /> Friends
 </button>
 
-<button style="background: gray; color: black;" v-if="receivedFriendRequest">
+<button style="background: gray; color: black;" v-if="receivedFriendRequest || sentFriendRequest">
   <p>Request pending...</p>
 </button>
 
-<!-- Botón de Follow -->
+<button  v-if="!receivedFriendRequest && !sentFriendRequest" style="background: transparent;">
+ <font-awesome-icon :icon="['fas', 'user-plus']"/> Send Friend Request
+</button>
+
+
+<!-- Follow -->
 <button 
   @click="followUser(user.id)" 
   :style="isFollowing ? { backgroundColor: '#4CAF50', color: 'white' } : { backgroundColor: 'transparent', color: 'black' }"
