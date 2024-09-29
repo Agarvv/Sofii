@@ -2,7 +2,7 @@
   <div>
     <header>
     <!-- Div for block the user -->
-      <BlockUserCard :user="user" v-if="user.isPendingRequestReceived"/>
+      <BlockUserCard :user="user"/>
     
 
 
@@ -73,23 +73,8 @@
   <font-awesome-icon :icon="['fas', 'user-friends']" /> Friends
 </button>
 
-<button 
-  v-else-if="
-   user.isPendingFriendRequestSent || 
-  isPendingRequestReceived
-  "
-  @click="goToPage('/friends')" 
-  style="background: rgba(128, 128, 128, 0.5); color: white;"
->
-  <font-awesome-icon :icon="['fas', 'clock']" /> Request Pending...
-</button>
-
-<button 
-  v-else
-  @click="sendFriendRequest(user.id)"
-  style="background: initial; color: initial;"
->
-  <font-awesome-icon :icon="['fas', 'user-plus']" /> Send Friend Request
+<button style="background: gray; color: black;" v-if="receivedFriendRequest">
+  <p>Request pending...</p>
 </button>
 
 <!-- Botón de Follow -->
@@ -267,8 +252,9 @@ export default {
        this.userPosts = data.user.posts
 
       this.isFollowing = this.user.isFollowing || false;
-      this.sentFriendRequest = this.user.sentFriendRequest || false;
-      this.receivedFriendRequest = this.user.receivedFriendRequest || false;
+      this.sentFriendRequest = this.user.isPendingFriendRequestSent 
+      this.receivedFriendRequest = this.user.isPendingRequestReceived
+
       this.isFriend = this.user.isFriend || false;
 
 
