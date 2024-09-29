@@ -102,7 +102,7 @@ export default {
       showNotification: false,
       notification: {},
       nonReadedNotifications: {},
-      loading: null
+      loading: true
     };
   },
   methods: {
@@ -110,7 +110,6 @@ export default {
 
     async servePage() {
       try {
-          this.loading = true
         const data = await getPosts(this.user);
         this.posts = data.posts;
         this.recommendedUsers = data.users;
