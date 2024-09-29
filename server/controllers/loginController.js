@@ -59,11 +59,22 @@ const sendPasswordResetUrl = async (email) => {
         });
 
         if (user) {
-            const now = new Date(); 
+            const now = new Date();
 
+        
+            await PasswordResetToken.destroy({
+                where: {
+                    user_id: user.id,
+                    expires_at: {
+                        [Op.lt]: now // Tokens expirados
+                    }
+                }
+            });
+
+        
             const resetAttempts = await PasswordResetToken.findAll({
                 where: {
-                    user_id: user.id, 
+                    user_id: user.id,
                     expires_at: {
                         [Op.gt]: now
                     }
@@ -75,15 +86,15 @@ const sendPasswordResetUrl = async (email) => {
             }
 
             const resetToken = crypto.randomBytes(32).toString('hex');
-            const expiresAt = new Date(Date.now() + 15 * 60 * 1000); 
-            
+            const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
+
             await loginService.sendPasswordResetUrl(user, resetToken, expiresAt);
 
-            return true; 
+            return true;
         } else {
-            return true; 
+            return true;
         }
-        
+
     } catch (error) {
         console.error(error);
         throw error;

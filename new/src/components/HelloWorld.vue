@@ -221,7 +221,6 @@ this.$socket.on('unsavedPost', saved => {
 this.$socket.on('newNotification', notification => {
    this.notification = notification
    this.showNotification = true
-   alert('works')
    console.log('Notification received', notification.targetUser)
    this.showNotification = true
    

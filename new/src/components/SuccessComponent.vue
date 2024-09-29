@@ -29,6 +29,7 @@
       left: 0;
       z-index: 500;
       background: rgb(63, 202, 63);
+      text-align: center;
       
     }
 </style>
