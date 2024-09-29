@@ -241,7 +241,8 @@ export default {
       isFollowing: false,
       sentFriendRequest: false,
       receivedFriendRequest: false,
-      isFriend: false
+      isFriend: false,
+      showBlockCard: false
      
       // sentFriendRequest means that a user sent a friend request to the user that is showing on
       //receivedFriendRequest means that a user received a friend request from the user that s showing up and he can Accept or Deny the request
@@ -540,8 +541,8 @@ aside .description {
 
 .block-user {
   position: absolute;
-  top: 50px;
-  right: 100px;
+  top: 25px;
+  right: 70px;
 }
 
 
