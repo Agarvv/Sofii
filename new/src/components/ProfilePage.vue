@@ -75,26 +75,13 @@
 
 <button 
   v-else-if="
-    user.friendRequestRelation && 
-    user.friendRequestRelation.request_sender_id === currentUser.user_id &&
-    user.friendRequestRelation.friend_target === user.id
+   user.isPendingFriendRequestSent || 
+  isPendingRequestReceived
   "
-  @click="null" 
+  @click="goToPage('/friends')" 
   style="background: rgba(128, 128, 128, 0.5); color: white;"
 >
-  <font-awesome-icon :icon="['fas', 'clock']" /> Request Sent
-</button>
-
-<button 
-  v-else-if="
-    user.friendRequestRelation && 
-    user.friendRequestRelation.friend_target === currentUser.user_id && 
-    user.friendRequestRelation.request_sender_id === user.id
-  "
-  @click="acceptFriendRequest()"
-  style="background: green; color: white;"
->
-  <font-awesome-icon :icon="['fas', 'check']" /> Accept Friend Request
+  <font-awesome-icon :icon="['fas', 'clock']" /> Request Pending...
 </button>
 
 <button 
