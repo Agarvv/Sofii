@@ -101,7 +101,8 @@ export default {
       postsById: {},
       showNotification: false,
       notification: {},
-      nonReadedNotifications: {}
+      nonReadedNotifications: {},
+      loading: null
     };
   },
   methods: {

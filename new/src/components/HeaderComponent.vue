@@ -65,15 +65,19 @@
      
       <font-awesome-icon icon="plus" />
     </div>
-    <div @click="goToPage('/notifications')" class="rsb-i" :class="{ on: activePage === 'notifications' }"> </div>
-     
-      <font-awesome-icon icon="bell" />
+    <div @click="goToPage('/notifications')" class="rsb-i" :class="{ on: activePage === 'notifications' }"> 
+          <font-awesome-icon icon="bell" />
     </div>
-    <div @click="goToPage('/chats')" class="rsb-i" :class="{ on: activePage === 'chat' }">
+     
+     
+      
+      
+     <div @click="goToPage('/chats')" class="rsb-i" :class="{ on: activePage === 'chat' }">
       
       <font-awesome-icon icon="comment-dots" />
     </div>
-    
+      
+    </div>
     
   </div>
 </template>
