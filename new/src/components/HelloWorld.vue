@@ -7,6 +7,8 @@
         @notificationClosed="hideNotification"
       />
     </div> 
+    
+    <h1 v-if="showSidebar">Sidebar should show</h1>
 
     <HeaderComponent :activePage="'home'" @showAside="showAside" />
   
