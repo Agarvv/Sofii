@@ -27,9 +27,6 @@
     </div>
 
     <div class="container">
-      <LoadingComponent v-if="loading" message="Getting Posts, Please Wait..."/> 
-      
-      <ErrorComponent v-if="error" :error="error"/>
         
       <SidebarComponent v-if="showSidebar" activePage="home"/>
       
@@ -39,7 +36,7 @@
             <PostCard :post="post"/> 
           </div>
         </div>
-        <div class="no-content" v-if="posts.length == 0">
+        <div class="no-content" v-if="posts.length == 0 && !loading">
           <p style="color: gray">There Is No Content Available... <a href="/create">Create!</a></p>
         </div>
       </main>
@@ -66,10 +63,6 @@ import SidebarComponent from './SidebarComponent'
 import PostCard from './PostCard'
 import NotificationCard from './NotificationCard'
 import HomePageUserMustLike from './HomePageUserMustLike'
-import LoadingComponent from './LoadingComponent'
-import ErrorComponent from './ErrorComponent'
-
-
 import goToRoute from '../helpers/goToRoute'
 import { getPosts, checkIfUserLikedPost, checkIfUserSavedPost } from '../services/postService'
 import { mapGetters, mapActions } from 'vuex';
@@ -81,9 +74,7 @@ export default {
     SidebarComponent,
     PostCard,
     NotificationCard,
-    HomePageUserMustLike,
-    LoadingComponent,
-    ErrorComponent
+    HomePageUserMustLike
   }, 
   computed: {
     ...mapGetters(['user'])  
@@ -94,13 +85,12 @@ export default {
       recommendedUsers: [],
       searchQ: "",
       showSearchBox: false,
-      showSidebar: window.innerWidth > 768, 
+      showSidebar: window.innerWidth > 768, // Mostrar en pantallas grandes
       error: "",
       postsById: {},
       showNotification: false,
       notification: {},
-      nonReadedNotifications: {},
-      loading: null
+      nonReadedNotifications: {}
     };
   },
   methods: {
@@ -108,7 +98,6 @@ export default {
 
     async servePage() {
       try {
-          this.loading = true 
         const data = await getPosts(this.user);
         this.posts = data.posts;
         this.recommendedUsers = data.users;
@@ -119,9 +108,7 @@ export default {
           this.postsById[post.id] = post;
         });
       } catch (e) {
-        this.error = "Oops, Somethint Went Wrong..."
-      } finally {
-          this.loading = false
+        console.error('error', e);
       }
     },
 
@@ -138,6 +125,7 @@ export default {
     },
 
     showAside() {
+        alert('called')
       this.showSidebar = !this.showSidebar;
     },
 
