@@ -530,5 +530,12 @@ aside .aside-logo i {
   justify-content: center;
 }
 
+.rs-aside {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 777;
+}
+
 </style>
 
