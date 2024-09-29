@@ -17,10 +17,10 @@
                 <p>{{ post.description }}</p>
               </div>
               <div @click="goToPost(post.id)" class="post-image">
-                <img :src="apiUrl + post.postPicture" alt="Post Image">
+                <img :src="apiUrl + '/' + post.postPicture" alt="Post Image">
               </div>
             </div>
-            <h1>{{apiUrl}}</h1>
+            
             
             <div class="post-interactions">
               <div @click="likeAPost(post.id)" class="like">

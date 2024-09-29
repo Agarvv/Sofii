@@ -4,7 +4,7 @@
       <div class="user-picture">
         <img 
           style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" 
-          :src="user.profilePicture ? 'http://localhost:3000/' + user.profilePicture : '/images/default.jpeg'"
+          :src="user.profilePicture ? apiUrl + '/' + user.profilePicture : '/images/default.jpeg'"
           alt="User Picture"
         />
       </div>
@@ -31,6 +31,7 @@
 
 <script>
 import { followUser } from '../services/usersService'
+import apiUrl from '../config'
 export default {
   name: 'HomePageUserMustLike',
   props: {
@@ -39,7 +40,8 @@ export default {
   data() {
     return {
       error: "",
-      isFollowed: this.user.isFollowing
+      isFollowed: this.user.isFollowing,
+      apiUrl: apiUrl
     }
   },
   methods: {
