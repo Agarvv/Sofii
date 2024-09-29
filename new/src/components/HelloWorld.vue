@@ -31,12 +31,14 @@
       
     <ErrorComponent v-if="error" :error="error"/>
         
-        
-   
+    <!-- MOBILE SCREEN SIDEBAR -->
+    <div v-if="showSidebar" class="rs-aside">
+        <SidebarComponent activePage="home"/>
+    </div>
 
     <div class="container">
-    
-        <SidebarComponent v-if="showSidebar" activePage="home"/>
+        <!-- PC SCREEN SIDEBAR -->
+        <SidebarComponent activePage="home"/>
     
       <main>
         <div v-if="posts.length > 0" class="posts">
@@ -99,7 +101,7 @@ export default {
       recommendedUsers: [],
       searchQ: "",
       showSearchBox: false,
-      showSidebar: window.innerWidth > 768,
+      showSidebar: false,
       error: "",
       postsById: {},
       showNotification: false,
@@ -142,12 +144,11 @@ export default {
     },
 
     showAside() {
-        alert('called')
       this.showSidebar = !this.showSidebar;
     },
 
     handleResize() {
-      this.showSidebar = window.innerWidth > 768; // Ajusta según el ancho
+      this.showSidebar = window.innerWidth > 768; 
     }
   },
   async created() {
