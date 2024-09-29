@@ -32,11 +32,12 @@
     <ErrorComponent v-if="error" :error="error"/>
         
         
-    <SidebarComponent v-if="showSidebar" activePage="home"/>
+   
 
     <div class="container">
-        
-      
+    
+        <SidebarComponent v-if="showSidebar" activePage="home"/>
+    
       <main>
         <div v-if="posts.length > 0" class="posts">
           <div v-for="post in posts" :key="post.id" class="post">
