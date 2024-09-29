@@ -42,20 +42,11 @@ export async function getUser(user_id, currentUser) {
   console.log('data from the server', data)
   console.log('all data', currentUser)
   if(response.ok) {
-      
-   
 
-  
-const friendRequestSentExists = data.user.sentRequests.some(request => 
-  request.request_sender_id == currentUser.user_id && request.friend_target == data.user.id
-);
-
-
-
-
-    
-
-      // Here we just check if a user is following the user of the request
+      data.user.isPendingFriendRequestSent = data.user.friend_requests.some(req => req.request_sender_id == currentUser.user_id)
+       data.user.isPendingRequestReceived = data.user.friend_requests.some(req => req.request_sender_id == currentUser.user_id)
+       
+     // Here we just check if a user is following the user of the request
       data.user.isFollowing = data.user.followers.some(follower => follower.Follower.follower_id == currentUser.user_id)
         
      // Here we check if our current user is friend with the user that he is seeing
