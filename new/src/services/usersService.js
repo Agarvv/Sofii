@@ -129,7 +129,9 @@ export async function followUser(user_id) {
    if(response.ok) {
     return data
    } else {
+    console.log(data)
     throw new Error(data.error)
+   
    }
 }
 

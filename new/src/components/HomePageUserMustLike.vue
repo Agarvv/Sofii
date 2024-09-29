@@ -53,7 +53,7 @@ export default {
         const data = await followUser(this.user)
         this.isFollowed = data.followed || !data.unfollowed
       } catch (e) {
-        this.error = 'Oops, Something Went Wrong On The Server...'
+        console.log("error", e)
       }
     }
   }
