@@ -11,11 +11,6 @@
      </div>
    </div>
    
-   <div @click="showAside" class="responsive-aside-open">
-     <div>
-       <font-awesome-icon icon="bars"/>
-     </div>
-   </div>
    
     <div class="m-flex-nav-items">
        <div @click="goToPage('/')" id="iconDiv" class="home">
