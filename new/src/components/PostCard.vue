@@ -8,6 +8,7 @@
                 <h4>{{ post.user.username }}</h4>
                 <p style="color: gray">{{ post.userHandle }}</p>
               </div>
+             
               <div @click="deleteAPost(post.id)" class="post-button-delete">
                 <font-awesome-icon icon="close" />
               </div>
@@ -18,6 +19,7 @@
               </div>
               <div @click="goToPost(post.id)" class="post-image">
                 <img :src="apiUrl + '/' + post.postPicture" alt="Post Image">
+                <h1>{{apiUrl + '/' +post.postPicture}}</h1>
               </div>
             </div>
             
