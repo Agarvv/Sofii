@@ -9,11 +9,8 @@ const handleFollow = async (follower, following_id) => {
 
         if (!following_id) {
             throw new Error("Some data is missing.");
-        } else {
-            console.log('follow exists:', following_id);
-        }
-
-        console.log('follow data', follower, following_id)
+        } 
+      
 
         if(follower.user_id == following_id) {
             throw new Error('You cannot follow yourself')

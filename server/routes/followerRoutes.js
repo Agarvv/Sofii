@@ -31,7 +31,7 @@ router.post('/follow',[
         // we are doing that to check if all its on correct format 
     } catch(e) {
         console.log(e)
-        return res.status(500).json({error: e})
+        return res.status(500).json({error: e.message})
     }
 })
 
