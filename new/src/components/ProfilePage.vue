@@ -1,19 +1,23 @@
 <template>
   <div>
     <header>
+    <!-- Div for block the user -->
       <BlockUserCard :user="user"/>
+
+
+
       <div class="profile-banner">
-        <img :src="'http://localhost:3000/' + user.banner" alt="Profile Banner">
+        <img :src="user.banner ? apiUrl + '/' + user.banner : '/images/default_banner.webp'" alt="Profile Banner">
       </div>
-      <!-- i love you -->
+    
       <div class="user">
         <div class="user-img">
-         <img :src="'http://localhost:3000/' + user.profilePicture" alt="Foto de Perfil">
+         <img :src="user.profilePicture ? apiUrl + '/' + user.profilePicture : '/images/default.jpeg'" alt="Foto de Perfil">
         </div>
 
         <div class="user-details">
           <div class="username">
-            <h1>{{ user.username }}</h1>
+            <h1>{{ user.username ? user.username : 'Someone' }}</h1>
           </div>
           
             <div class="followers" style="margin-bottom: 20px">
@@ -121,33 +125,33 @@
     <div style="display: none" class="responsive-user-details">
         
         <div class="r-bio">
-            <p>{{user.bio}}</p>
+            <p>{{user.bio ? user.bio : 'BIO Not Provided'}}</p>
         </div>
         
         <div class="r-info">
             <div class="ubication">
               <font-awesome-icon icon="fas fa-map-marker-alt" style="color: red" />
-              <span>{{ user.ubication }}</span>
+              <span>{{ user.ubication ? user.ubication : 'Ubication Not Provided' }}</span>
             </div>
             
             <div class="native">
               <font-awesome-icon icon="fas fa-globe" style="color: black" />
-              <span>{{ user.native_city }}</span>
+              <span>{{ user.native_city ? user.native_city : 'Native City Not Provided' }}</span>
             </div>
             
             <div class="gender">
               <font-awesome-icon icon="fas fa-venus-mars" style="color: hotpink" />
-              <span>{{ user.gender }}</span>
+              <span>{{ user.gender ? user.gender : 'Gender Not Provided' }}</span>
             </div>
             
             <div class="work">
               <font-awesome-icon icon="fas fa-briefcase" style="color: gray" />
-              <span>{{ user.job }}</span>
+              <span>{{ user.job ? user.job : 'Job Not Provided' }}</span>
             </div>
             
             <div class="love">
               <font-awesome-icon icon="fa fa-heart" style="color: red" />
-              <span>{{ user.civil_status }}</span>
+              <span>{{ user.civil_status ? user.civil_status : 'Civil Status Not Provided' }}</span>
             </div>
             
         </div>
@@ -166,32 +170,32 @@
                
                
              <div  class="description">
-               <p>{{ user.bio }}</p>
+               <p>{{ user.bio ? user.bio  : 'Bio Not Provided' }}</p>
              </div>
              
             <div class="ubication">
               <font-awesome-icon icon="fas fa-map-marker-alt" style="color: red" />
-              <span>{{ user.ubication }}</span>
+              <span>{{ user.ubication ? user.ubication : 'Ubication Not Provided' }}</span>
             </div>
             
             <div class="native">
               <font-awesome-icon icon="fas fa-globe" style="color: black" />
-              <span>{{ user.native_city }}</span>
+              <span>{{ user.native_city ? user.native_city : 'Native City Not Provided' }}</span>
             </div>
             
             <div class="gender">
               <font-awesome-icon icon="fas fa-venus-mars" style="color: hotpink" />
-              <span>{{ user.gender }}</span>
+              <span>{{ user.gender ? user.gender : 'Gender Not Provided' }}</span>
             </div>
             
             <div class="work">
               <font-awesome-icon icon="fas fa-briefcase" style="color: gray" />
-              <span>{{ user.job }}</span>
+              <span>{{ user.job ? user.job : 'Job Not Provided' }}</span>
             </div>
             
             <div class="love">
               <font-awesome-icon icon="fa fa-heart" style="color: red" />
-              <span>{{ user.civil_status }}</span>
+              <span>{{ user.civil_status ? user.civil_status: 'Civil Status Not Provided' }}</span>
             </div>
             
             
