@@ -40,7 +40,7 @@ router.post('/send_friend_request', async (req, res) => {
         
     } catch(e) {
         console.log(e)
-        return res.status(500).json({error: e})
+        return res.status(500).json({error: e.message})
     }
 })
 

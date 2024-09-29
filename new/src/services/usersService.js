@@ -136,7 +136,7 @@ export async function sendFriendRequest(user_id) {
     if(response.ok) {
        return data
     } else {
-        throw new Error('Something Went Wrong.')
+        throw new Error(data.error)
     }
 } 
 // no se porque me pongo a hacer comentarios random

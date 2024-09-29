@@ -99,8 +99,6 @@
 >
   <font-awesome-icon :icon="isFollowing ? 'user-check' : 'user-plus'"/>
 </button>
-<p>{{user.friendRequestRelation}}</p>
-<p>{{currentUser}}</p>
 </div>
        
          
