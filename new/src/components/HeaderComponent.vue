@@ -1,4 +1,5 @@
 <template>
+<div> 
   <header class="header">
     <div class="first-flex">
       <div @click="goToPage('/')" class="f-flex-logo">
@@ -72,6 +73,8 @@
       
       <font-awesome-icon icon="comment-dots" />
     </div>
+    
+    
   </div>
 </template>
 
