@@ -8,8 +8,7 @@
       />
     </div> 
     
-    <h1 v-if="showSidebar">Sidebar should show</h1>
-
+    
     <HeaderComponent :activePage="'home'" @showAside="showAside" />
   
     <div v-show="showSearchBox" id="search" class="search-box">
@@ -40,7 +39,10 @@
 
     <div class="container">
         <!-- PC SCREEN SIDEBAR -->
-        <SidebarComponent activePage="home"/>
+        <div class="pc-sidebar">
+             <SidebarComponent activePage="home"/>
+        </div>
+
     
       <main>
         <div v-if="posts.length > 0" class="posts">
@@ -370,15 +372,9 @@ img {
     grid-template-columns: 1fr;
   }
   
-  /* aside {
-    display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  width: 250px;
-  background: white;
-  } */
+   .pc-sidebar {
+       display: none;
+   }
   
   .right-aside {
     display: none;
