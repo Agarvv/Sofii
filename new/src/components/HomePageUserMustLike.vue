@@ -50,7 +50,7 @@ export default {
     },
     async followUser() {
       try {
-        const data = await followUser(this.user)
+        const data = await followUser(this.user.id)
         this.isFollowed = data.followed || !data.unfollowed
       } catch (e) {
         console.log("error", e)

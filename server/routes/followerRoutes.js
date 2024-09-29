@@ -16,6 +16,9 @@ router.post('/follow',[
         }
         
         const following_id = req.body.following_id
+        if(!following_id) {
+            throw new Error("Following id is required")
+        }
         
         const data = await followerController.handleFollow(userDecoded, following_id)
         // DATA SHOULD BE LIKE: { followed: true, unfollowed: false } IF TH-
