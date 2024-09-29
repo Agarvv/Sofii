@@ -27,10 +27,10 @@
     <div class="second-flex">
       <div class="s-flex-user">
         <div @click="goToPage('/notifications')" id="iconDiv" class="notifications">
-          <i class="fa fa-bell"></i>
+            
           <font-awesome-icon icon="bell" />
           <div class="not-readed">
-            <p>0</p>
+        
           </div>
         </div>
         <div @click="goToPage('/chats')" id="iconDiv" class="chat">
@@ -54,23 +54,22 @@
 
   <div class="responsive-sub-header">
     <div @click="goToPage('/')" class="rsb-i" :class="{ on: activePage === 'home' }">
-      <i class="fa fa-home"></i>
       <font-awesome-icon icon="home" />
     </div>
     <div @click="goToPage('/watch')" class="rsb-i" :class="{ on: activePage === 'watch' }">
-      <i class="fa fa-tv"></i>
+     
       <font-awesome-icon icon="tv" />
     </div>
     <div @click="goToPage('/create')" class="rsb-i" :class="{ on: activePage === 'create' }">
-      <i class="fa fa-plus"></i>
+     
       <font-awesome-icon icon="plus" />
     </div>
-    <div @click="goToPage('/notifications')" class="rsb-i" :class="{ on: activePage === 'notifications' }">
-      <i class="fa fa-bell"></i>
+    <div @click="goToPage('/notifications')" class="rsb-i" :class="{ on: activePage === 'notifications' }"> </div>
+     
       <font-awesome-icon icon="bell" />
     </div>
     <div @click="goToPage('/chats')" class="rsb-i" :class="{ on: activePage === 'chat' }">
-      <i class="fa fa-comment-dots"></i>
+      
       <font-awesome-icon icon="comment-dots" />
     </div>
   </div>

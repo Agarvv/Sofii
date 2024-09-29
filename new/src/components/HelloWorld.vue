@@ -28,6 +28,11 @@
 
     <div class="container">
         
+      <LoadingComponent v-if="loading" message="Getting Posts, Please Wait..." />
+      
+      
+      <ErrorComponent v-if="error" :error="error"/>
+        
       <SidebarComponent v-if="showSidebar" activePage="home"/>
       
       <main>
@@ -63,6 +68,10 @@ import SidebarComponent from './SidebarComponent'
 import PostCard from './PostCard'
 import NotificationCard from './NotificationCard'
 import HomePageUserMustLike from './HomePageUserMustLike'
+import ErrorComponent from './ErrorComponent'
+import LoadingComponent from './LoadingComponent'
+
+
 import goToRoute from '../helpers/goToRoute'
 import { getPosts, checkIfUserLikedPost, checkIfUserSavedPost } from '../services/postService'
 import { mapGetters, mapActions } from 'vuex';
@@ -74,7 +83,9 @@ export default {
     SidebarComponent,
     PostCard,
     NotificationCard,
-    HomePageUserMustLike
+    HomePageUserMustLike,
+    ErrorComponent,
+    LoadingComponent
   }, 
   computed: {
     ...mapGetters(['user'])  
@@ -85,7 +96,7 @@ export default {
       recommendedUsers: [],
       searchQ: "",
       showSearchBox: false,
-      showSidebar: window.innerWidth > 768, // Mostrar en pantallas grandes
+      showSidebar: window.innerWidth > 768,
       error: "",
       postsById: {},
       showNotification: false,
@@ -98,6 +109,7 @@ export default {
 
     async servePage() {
       try {
+          this.loading = true
         const data = await getPosts(this.user);
         this.posts = data.posts;
         this.recommendedUsers = data.users;
@@ -108,7 +120,9 @@ export default {
           this.postsById[post.id] = post;
         });
       } catch (e) {
-        console.error('error', e);
+         this.error = "Oops, Something Went Wrong..."
+      } finally {
+          this.loading = false
       }
     },
 
