@@ -25,15 +25,17 @@
         </div>
       </div>
     </div>
+    
+    <LoadingComponent v-if="loading" message="Getting Posts, Please Wait..." />
+      
+      
+    <ErrorComponent v-if="error" :error="error"/>
+        
+        
+    <SidebarComponent v-if="showSidebar" activePage="home"/>
 
     <div class="container">
         
-      <LoadingComponent v-if="loading" message="Getting Posts, Please Wait..." />
-      
-      
-      <ErrorComponent v-if="error" :error="error"/>
-        
-      <SidebarComponent v-if="showSidebar" activePage="home"/>
       
       <main>
         <div v-if="posts.length > 0" class="posts">
