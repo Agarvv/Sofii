@@ -188,15 +188,14 @@ export default {
   gap: 20px;
 }
 
-/* Estilos para el botón de abrir el sidebar */
 .responsive-aside-open {
-  display: none; /* Inicialmente oculto, se mostrará en dispositivos móviles */
-  font-size: 24px; /* Tamaño del icono */
-  cursor: pointer; /* Cambiar el cursor para indicar que es clickeable */
-  color: #007bff; /* Color del icono */
-  padding: 10px;
-  border-radius: 50%; /* Para que tenga bordes redondeados */
-  transition: background 0.3s, color 0.3s; /* Efecto de transición suave */
+  display: none;
+  font-size: 20px; 
+  cursor: pointer;
+  color: #007bff; 
+  padding: 5px;
+  border-radius: 50%; 
+  transition: background 0.3s, color 0.3s; 
 }
 
 .responsive-aside-open:hover {
