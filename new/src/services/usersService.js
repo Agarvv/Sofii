@@ -130,7 +130,7 @@ export async function followUser(user_id) {
     return data
    } else {
     console.log(data)
-    throw new Error(data.error)
+    throw new Error(data.error.message)
    
    }
 }
