@@ -1,5 +1,5 @@
 <template>
-  <aside id="aside">
+ <aside id="aside">
     <div class="aside-logo">
       <font-awesome-icon id="close-sidebar" icon="fas fa-bars" />
       <h1>Sofii</h1>
@@ -61,6 +61,7 @@
       </div>
     </div>
   </aside>
+
 </template>
 
 <script>
@@ -79,7 +80,6 @@ export default {
     }
   }
   }
-}
 </script>
 
 <style scoped>
