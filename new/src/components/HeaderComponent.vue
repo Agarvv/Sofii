@@ -8,7 +8,7 @@
         <font-awesome-icon @click="handeSearch" icon="search" />
         <input v-model="searchQ" type="search" placeholder="Search Users, Posts, Videos....." />
       </div>
-    </div
+    </div>
     
     
     <div class="responsive-aside-open" @click="showAside">
