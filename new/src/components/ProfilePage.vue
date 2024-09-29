@@ -2,7 +2,10 @@
   <div>
     <header>
     <!-- Div for block the user -->
-      <BlockUserCard :user="user"/>
+    <div class="block-user">
+     <BlockUserCard :user="user"/>
+    </div>
+     
     
 
 
@@ -263,6 +266,9 @@ export default {
 
       this.isFriend = this.user.isFriend || false;
 
+      if(data.user.id == this.currentUser.user_id) {
+        this.isSelfUser = true  
+      } 
 
 
       console.log('user from service: ', this.user)
@@ -530,6 +536,12 @@ aside .description {
     display: flex;
     align-items: center;
     gap: 5px;
+}
+
+.block-user {
+  position: absolute;
+  top: 50px;
+  right: 100px;
 }
 
 
