@@ -43,10 +43,8 @@
     
      <div v-show="showFiltersButton" class="filter-div">
          
-         
-          
           <div @click="toggleFiltersButton" class="close-filters">
-            <i style="color: gray"class="fa fa-close"></i>
+
             <font-awesome-icon icon="close"/>
           </div>
           
@@ -194,7 +192,7 @@
         
         <nav>
                    
-         <div class="filter-div">
+         <div class="filter-div-pc">
          
          
           
@@ -491,13 +489,13 @@ export default {
       applyFilters() {
     alert('Filter method called');
 
-    // Inicializamos filteredContent con una copia de los usuarios originales.
+    
     this.content_to_show = 'all'
     this.filteredContent.users = [...this.content.users];
     this.filteredContent.posts = [...this.content.posts];
     this.filteredContent.videos = [...this.content.videos]
 
-    // FILTROS DE USUARIOS
+
     if (this.filters.users.following) {
         this.content_to_show = 'users'
         
