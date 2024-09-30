@@ -15,10 +15,10 @@ const tokenController = require('../controllers/tokenController')
 
 const handleSearch = async (query, jwtToken) => {
     try {
-        console.log('Inicio del manejo de búsqueda con query:', query); // Log de inicio
+        console.log('Inicio del manejo de búsqueda con query:', query);
 
         const userDecoded = await tokenController.verifyJwtToken(jwtToken);
-        console.log('Usuario decodificado:', userDecoded); // Log del usuario decodificado
+        console.log('Usuario decodificado:', userDecoded); 
 
         const errors = [];
 

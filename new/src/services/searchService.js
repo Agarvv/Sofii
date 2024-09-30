@@ -12,7 +12,7 @@ import {
 } from './videoService'
 
 export async function handleSearch(query, currentUser) {
-    const response = await fetchUrl(process.env.VUE_APP_API_URL + `/api/sofi/search/${query}`, null, 'POST');
+    const response = await fetchUrl(process.env.VUE_APP_API_URL + `/api/sofi/search/${query}`, null, 'GET');
     const data = await response.json();
     if (response.ok) {
         

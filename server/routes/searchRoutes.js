@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const searchService = require('../services/searchService')
 
-router.post('/search/:query', async (req, res) => {
+router.get('/search/:query', async (req, res) => {
     try {
         let query = req.params.query.toLowerCase()
         const results = await searchService.handleSearch(query, req.cookies.jwt)
