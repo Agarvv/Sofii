@@ -25,9 +25,9 @@
     
     <SearchPageHeader @toggleFilters="toggleFiltersButton" />
     
-    <LoadingComponent message="Searching, Please Wait..."/>
+    <LoadingComponent v-if="loading" message="Searching, Please Wait..."/>
     
-    <ErrorComponent :error="error"/> 
+    <ErrorComponent v-if="error" :error="error"/> 
     
      <div v-show="showFiltersButton" class="filter-div">
          
@@ -378,7 +378,8 @@ export default {
         UserCard,
         PostCard,
         ErrorComponent,
-        LoadingComponent
+        LoadingComponent,
+        SearchPageHeader
     }, 
     data() {
         return {
