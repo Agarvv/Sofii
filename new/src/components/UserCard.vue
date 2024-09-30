@@ -6,7 +6,7 @@
   <div class="user-card-details">
     <h3>{{user.username}}</h3>
     <p style="color: gray">{{user.job}}</p>
-    <div class="user-buttons">
+    <div v-show="!isSelf" class="user-buttons">
       <button @click="followUser(user.id)" class="follow-btn">{{isFollowing ? 'Unfollow' : 'Follow'}}</button>
       <button class="view-profile-btn">View Profile</button>
     </div>
@@ -26,7 +26,8 @@ import { followUser } from '../services/usersService'
         }, 
         data() {
             return {
-                isFollowing: this.user.following
+                isFollowing: this.user.following,
+                isSelf: this.user.isSelf
             }
         },
         methods: {

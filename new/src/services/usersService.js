@@ -54,6 +54,8 @@ export async function getUser(user_id, currentUser) {
 
      // here we check if our current user blocked the user that he is seeing
      data.user.isBlocked = data.user.users_blocked_me.some(block => block.blocker_id == currentUser.user_id)
+
+     data.user.isSelf = data.user.id == currentUser.user_id
      return data
   } else {
     throw new Error('Something Went Wrong.')

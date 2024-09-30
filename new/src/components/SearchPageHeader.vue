@@ -38,12 +38,13 @@ export default {
 
 <style scoped>
 header {
-    background-color: #ff6347;
+    background-color: #ffffff;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100px;
     padding: 0 20px;
+    box-shadow: 5px 5px 6px rgba(0, 0, 0, 0.5);
 }
 
 header .search-input {
