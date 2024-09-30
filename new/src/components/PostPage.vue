@@ -123,7 +123,7 @@ export default {
 
     this.$socket.on('likePost', newLike => {
     console.log('Like Recibido!', newLike);
-    
+    alert('like received')
 
     const postTarget = this.post
 
@@ -362,7 +362,7 @@ header {
     padding: 10px;
     min-height: auto; /* Permite que crezca según el contenido */
     max-height: 600px; /* No te pases del 100% de la altura de la pantalla */
-     border: 1px solid black;
+    
 }
 
 .post-user-img img {
