@@ -605,10 +605,13 @@ export default {
     try {
         const user = await this.fetchUser();
         if (user) {
+            alert("user")
             const data = await handleSearch(this.$route.params.query, user);
             console.log('all went ok', data);
             this.content = data.results.results;
             this.filteredContent = { ...this.content };
+        } else {
+            alert("not user")
         }
     } catch (e) {
         this.error = 'Something Went Wrong...'
