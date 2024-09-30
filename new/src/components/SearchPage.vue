@@ -201,7 +201,7 @@
             <font-awesome-icon icon="close"/>
           </div>
           
-          <div @click="showFilters('users')" class="aside-users">
+          <div @click="showFilters('users')" class="aside-users.pc">
             <div @click="toggleUsers">
               <font-awesome-icon icon="user" />
               <span>Users</span>
@@ -238,7 +238,7 @@
             </div>
           </div>
 
-          <div class="hidden-posts" v-show="showPostsFilters">
+          <div class="hidden-posts.pc" v-show="showPostsFilters">
             <div class="sort-options">
                 
                 <div class="most-liked">
@@ -886,6 +886,7 @@ aside i {
     align-items: center;
 }
 
+
 .filter-div span {
     font-weight: bold;
     font-size: 1em;
@@ -905,6 +906,7 @@ aside i {
 
 .hidden-users, .hidden-posts, .hidden-videos {
     padding-left: 15px;
+    border: 1px solid red;
 }
 
 .show_filters_button_div {
