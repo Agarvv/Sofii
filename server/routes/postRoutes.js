@@ -97,75 +97,17 @@ router.get('/posts', async (req, res) => {
 
 router.get('/post/:post_id', async (req, res) => {
     const post_id = req.params.post_id;
-    console.log('post called:')
     try {
-        const post = await Post.findOne({
-            where: { id: post_id },
-            include: [
-                {
-                    model: User,
-                    as: 'user'
-                },
-                {
-                    model: Comment,
-                    as: 'postComments',
-                    include: [
-                      {
-                          model: User,
-                          as: 'commentUser'
-                      },
-                      {
-                          model: CommentLikes,
-                          as: 'comment_likes'
-                      }, 
-                      {
-                          model: CommentDislikes,
-                          as: 'comment_dislikes'
-                      }, 
-                    
-                      {
-                          model: CommentAnswer,
-                    as: 'awnsers',
-                        include: [
-                            {
-                                model: User,
-                                as: 'awnser_user'
-                            },
-                            {
-                                model: CommentAwnsersLikes,
-                                as: 'awnser_likes'
-                            },
-                            {
-                                model: CommentAwnsersDislikes,
-                                as: 'awnser_dislikes'
-                            }
-                        ]
-                      }
-                    ]
-                },
-                {
-                     model: Likes,
-                     as: 'postLikes'
-                },
-                {
-                    model: Saved,
-                    as: 'saved_post'
-                }
-            ]
-        });
         
-        if (!post) {
-            return res.status(404).json({ detail: 'Post Not Found.' });
-        }
+       const post = await postController.findPost(post_id)
         
-        console.log('post: ', post)
         return res.status(200).json({ post });
     } catch (e) {
         return res.status(500).json({ error: e.message });
     }
 });
 
-// Ruta para obtener los posts de un usuario específico por ID de usuario
+
 router.get('/post_user/:userId', async (req, res) => {
   const userId = req.params.userId;
 
