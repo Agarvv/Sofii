@@ -2,7 +2,7 @@
      <div  class="post" >
             <div class="post-header">
               <div>
-                 <img :src="post.postPicture ? apiUrl + '/' + post.postPicture : '/images/default_banner.webp'" alt="Post Image">
+                 <img :src="post.user.profilePicture ? apiUrl + '/' + post.user.profilePicture : '/images/default.jpeg'" alt="Post Image">
               </div>
               <div class="post-user-detail">
                 <h4>{{ post.user.username }}</h4>
