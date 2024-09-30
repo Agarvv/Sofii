@@ -886,10 +886,11 @@ aside i {
 
 .filter-div.pc .aside-users, 
 .filter-div.pc .aside-posts, 
-.filter-div.pc .hidden-videos {
+.filter-div.pc .aside-videos {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border: 1px solid red;
 }
 
 
