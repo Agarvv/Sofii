@@ -20,8 +20,6 @@
 
 
 <!-- IM NOT GOING TO CLEAN THIS COMPONENT, THAT WILL TAKE ME A LOT OF TIME SO I WILL JUST LET IT LIKE THAT BECAUSE THIS APP IS A DEMO. -->
-
-
 <template>
   <div>
     <header>
@@ -199,7 +197,12 @@
             <font-awesome-icon icon="close"/>
           </div>
           
-          <div @click="showFilters('users')" class="aside-users.pc">
+          <!-- breef styles -->
+          <div @click="showFilters('users')" class="aside-users.pc" style="
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          ">
             <div @click="toggleUsers">
               <font-awesome-icon icon="user" />
               <span>Users</span>
