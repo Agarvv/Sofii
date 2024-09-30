@@ -48,7 +48,7 @@ export default {
     UploadComment,
     CommentCard,
     PostCard
-  }
+  },
   data() {
     return {
       ...mapGetters(['user']),
