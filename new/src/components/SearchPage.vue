@@ -349,8 +349,8 @@
             <PostCard :post="post"/>
           </div>
         </div>
-
-        <div class="videos" v-if="filteredContent.videos.length > 0 && content_to_show == 'videos' || content_to_show == 'all'">
+<!-- v-if="filteredContent.videos.length > 0 && content_to_show == 'videos' || content_to_show == 'all'" -->
+        <div class="videos">
           <div v-for="video in filteredContent.videos" :key="video.id" class="video">
             <VideoCard :video="video" />
           </div>
