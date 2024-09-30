@@ -119,15 +119,28 @@ export async function postComment(post_id, type, comment_content) {
     }
 }
 
-export async function getPost(post_id) {
+export async function getPost(post_id, currentUser) {
       const response = await fetchUrl(process.env.VUE_APP_API_URL + `/api/sofi/post/${post_id}`, null, 'GET')
       const data = await response.json()
 
       if(response.ok) {
           
-          data.post.isLiked = 
-          
-          return data.post
+          data.post.isLiked = await checkIfUserLikedPost(data.post, currentUser)
+          data.post.isSaved = await checkIfUserSavedPost(data.post, currentUser)
+
+         for(const comment of data.post.comments) {
+             comment.isLiked = await checkIfCommentIsLiked(comment, currentUser)
+             comment.isDisliked = await checkIfCommentIsDisliked(comment, currentUser)
+             if(comment.awnsers) {
+                 for(const awnser of comment.awnsers) {
+                     awnser.isLiked = await checkIfAwnserIsLiked(awnser, currentUser)
+                     awnser.isDisliked = await checkIfAwnserIsDisliked(awnser, currentUser)
+                 }
+             }
+         }
+
+        return data.post
+
       } else {
           console.log('not ok')
           throw new Error("intern_serv_err")
@@ -242,7 +255,7 @@ export async function checkIfCommentIsDisliked(comment, user) {
 }
 
 
-export async function checkIfAwnserIsDisliked(awnser, user) {
+export async function checkIfAwnserIsLiked(awnser, user) {
     return awnser.awnser_likes.some(like => like.user_id == user.user_id)
 }
 
@@ -250,28 +263,3 @@ export async function checkIfAwnserIsDisliked(awnser, user) {
     return awnser.awnser_dislikes.some(dislike => dislike.user_id == user.user_id)
 }
 
-
-
-
-this.post.postComments.forEach(comment => {
-            this.commentsById[comment.id] = comment;
-            comment.isLiked = comment.comment_likes.some(like => like.user_id == this.usuario.user_id)
-            
-            comment.isDisliked = comment.comment_dislikes.some(dislike => dislike.user_id == this.usuario.user_id)
-            
-            
-         
-            comment.awnsers.forEach(awnser => {
-            this.awnsersById[awnser.id] = awnser; 
-            
-            awnser.isLiked = awnser.awnser_likes.some(like => like.user_id == this.usuario.user_id)
-            
-            awnser.isDisliked = awnser.awnser_dislikes.some(dislike => dislike.user_id == this.usuario.user_id)
-            
-            
-          });
-          
-          console.log('final comment: ', comment)
-          
-         });
-          

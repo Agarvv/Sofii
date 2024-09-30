@@ -25,15 +25,16 @@
 import { likePost,
          savePost,
          getPost,
-         postComment,
-         awnserToComment,
-         likeComment,
-         likeCommentAwnser,
-         dislikeComment,
-         dislikeCommentAwnser,
-         likeCommentAwnser,
-         checkIfUserLikedPost,
-         checkIfUserSavedPost } from '../services/postService'
+        // postComment,
+        // awnserToComment,
+        // likeComment,
+        // likeCommentAwnser,
+        // dislikeComment,
+        // dislikeCommentAwnser,
+        // likeCommentAwnser,
+        // checkIfUserLikedPost,
+        // checkIfUserSavedPost
+ } from '../services/postService'
          
          
 import UploadComment from './UploadComment'
@@ -51,7 +52,6 @@ export default {
   },
   data() {
     return {
-      ...mapGetters(['user']),
       post: {
         postComments: []
       },
@@ -65,12 +65,13 @@ export default {
     };
   },
   computed: {
-    
+    ...mapGetters(['user']),
   }, 
   methods: {
     ...mapActions(['fetchUser']),
-    
-    async getPost(currentUser) {
+
+
+  async getPost(currentUser) {
    try { 
       const post = await getPost(this.$route.params.id, currentUser)
       
@@ -162,7 +163,7 @@ this.$socket.on('savedPost', saved => {
 
     if (postTarget) {
         // Verificar si el evento pertenece al usuario actual
-        if (saved.user_id === this.usuario.id) {
+        if (saved.user_id === this.user.user_id) {
             postTarget.isSaved = true;  // Solo actualizamos isSaved si es para el usuario actual
         }
         postTarget.saved_post.push(saved);
@@ -182,7 +183,7 @@ this.$socket.on('unsavedPost', saved => {
         );
 
         // Si el evento es para el usuario actual, actualizamos el estado `isSaved`
-        if (saved.user_id === this.usuario.id) {
+        if (saved.user_id === this.user.user_id) {
             postTarget.isSaved = false;
         }
     }
