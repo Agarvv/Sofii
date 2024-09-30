@@ -2,7 +2,12 @@
      <div  class="post" >
             <div class="post-header">
               <div>
-                 <img :src="post.user.profilePicture ? apiUrl + '/' + post.user.profilePicture : '/images/default.jpeg'" alt="Post Image">
+                 <img style="
+                  width: 40px;
+                  height: 40px;
+                  border-radius: 50%;
+                  object-fit: cover;
+                 " :src="post.user.profilePicture ? apiUrl + '/' + post.user.profilePicture : '/images/default.jpeg'" alt="Post Image">
               </div>
               <div class="post-user-detail">
                 <h4>{{ post.user.username }}</h4>
