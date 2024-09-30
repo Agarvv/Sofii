@@ -26,7 +26,7 @@ import { followUser } from '../services/usersService'
         }, 
         data() {
             return {
-                isFollowing: user.following
+                isFollowing: this.user.following
             }
         },
         methods: {
