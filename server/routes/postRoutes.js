@@ -5,7 +5,7 @@ const { body } = require('express-validator');
 const tokenController = require('../controllers/tokenController');
 const Likes = require('../models/Likes')
 const Saved = require('../models/Saved')
-const  CommentAnswer  = require('../models/CommentAwnser'); // Importa el
+const  CommentAnswer  = require('../models/CommentAwnser'); 
 const router = express.Router();
 const postController = require('../controllers/postController')
 const { User, Post, Comment

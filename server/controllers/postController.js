@@ -1,6 +1,16 @@
 const postService = require('../services/postService')
 const Post = require('../models/Post')
 const tokenController = require('./tokenController')
+const Comment = require('../models/Comment')
+const Saved = require('../models/Saved')
+const Likes = require('../models/Likes')
+const CommentLikes = require('../models/CommentLikes')
+const CommentDislikes = require('../models/CommentDislikes')
+const CommentAwnsersLikes = require('../models/CommentAwnsersLikes')
+const CommentAwnsersDislikes = require('../models/CommentAwnsersDislikes');
+const sequelize = require('../config/database');
+const  CommentAnswer  = require('../models/CommentAwnser'); 
+
 
 const serveHomePage = async (jwtToken) => {
     try {
@@ -50,7 +60,7 @@ const deletePost = async (post_id, jwtToken) => {
 const findPost = async (p_id) => {
     try {
         const post = await Post.findOne({
-            where: { id: post_id },
+            where: { id: p_id },
             include: [
                 {
                     model: User,
