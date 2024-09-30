@@ -192,7 +192,7 @@
                    
          <div class="filter-div-pc">
           
-          <div @click="toggleFiltersButton" class="close-filters">
+          <div style="display: none" @click="toggleFiltersButton" class="close-filters">
             <i style="color: gray"class="fa fa-close"></i>
             <font-awesome-icon icon="close"/>
           </div>
@@ -229,7 +229,11 @@
             </div>
           </div>
 
-          <div @click="showFilters('posts')" class="aside-posts.pc">
+          <div @click="showFilters('posts')" class="aside-posts.pc" style="
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          ">
             <div>
               <font-awesome-icon icon="newspaper" />
               <span>Posts</span>
@@ -278,7 +282,11 @@
             </div>
           </div>
           
-          <div class="aside-videos" @click="showFilters('videos')">
+          <div class="aside-videos" @click="showFilters('videos')" style="
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          ">
               <div>
                   <span>Videos</span>
               </div>
