@@ -117,5 +117,6 @@ const findPost = async (p_id) => {
 module.exports = {
     serveHomePage,
     createPost,
-    deletePost
+    deletePost,
+    findPost
 }
