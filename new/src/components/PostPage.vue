@@ -361,6 +361,7 @@ header {
     height: 100%;
     width: 70%;
     padding: 10px;
+     border: 1px solid black;
 }
 
 .post-user-img img {
