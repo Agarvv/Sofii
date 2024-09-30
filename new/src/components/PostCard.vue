@@ -18,8 +18,7 @@
                 <p>{{ post.description }}</p>
               </div>
               <div @click="goToPost(post.id)" class="post-image">
-                <img :src="apiUrl + '/' + post.postPicture" alt="Post Image">
-            
+                <img :src="post.postPicture ? apiUrl + '/' + post.postPicture : '/images/default_banner.webp" alt="Post Image">
               </div>
             </div>
             

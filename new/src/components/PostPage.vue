@@ -7,63 +7,13 @@
     
     <div class="container"> 
       <div class="post">
-        <div class="post-header">
-          <div class="post-user">
-            <div class="post-user-img">
-              <img :src="'http://localhost:3000/' + post.user.profilePicture">
-            </div>
-            <div class="post-username">
-              <h3>{{ post.user.username }}</h3>
-              <p style="color: gray">3h</p>
-            </div>
-          </div>
-          <div class="post-description">
-            <p>{{ post.description }}</p>
-          </div>
-        </div>
-        
-        <div class="post-image">
-          <img :src="'http://localhost:3000/' + post.postPicture" alt="Post Image">
-        </div>
-        
-        <div class="post-interactions">
-          <div @click="likeAPost(post.id)" class="like">
-            <font-awesome-icon icon="thumbs-up"
-            :style="{color: isLiked ? 'blue' : ''}"
-            />
-            <span
-            :style="{color: isLiked ? 'blue' : ''}"
-            >{{post.postLikes.length}}</span>
-          </div>
-          <div style="border: none" class="comment">
-            <font-awesome-icon icon="comments"/>
-            <span>{{post.postComments.length}}</span>
-          </div>
-          <div class="share">
-            <font-awesome-icon icon="share"/>
-          </div>
-          <div @click="saveAPost(post.id)" class="save">
-            <font-awesome-icon icon="bookmark"
-            :style="{color: isSaved ? 'blue' : ''}"
-            />
-            <span
-            :style="{color: isSaved ? 'blue' : ''}"
-            >{{post.saved_post.length}}</span>
-          </div>
-        </div>
-        
-        <UploadComment :id="$route.params.id" type="POST"/>
-        
+          <PostCard :post="post"/>
+          <UploadComment :id="$route.params.id" type="POST"/>
         <div class="comments">
-
-       
           <div class="comment-section">
-
             <div v-for="(comment, index) in post.postComments" :key="comment.id" class="comment">
                <CommentCard :comment="comment"/>
-                 
             </div> 
-
           </div>
         </div>
       </div>
@@ -72,35 +22,41 @@
 </template>
 
 <script>
-import userMixin from '@/mixins/userMixin';
-import { likePost } from '../services/postService'
-import { savePost } from '../services/postService'
-import { getPost } from '../services/postService'
-import { postComment } from '../services/postService'
-import { awnserToComment } from '../services/postService'
-import { likeComment } from '../services/postService'
-import { likeCommentAwnser } from '../services/postService'
-import { dislikeComment } from '../services/postService'
-import { dislikeCommentAwnser } from '../services/postService'
-import { checkIfUserLikedPost, checkIfUserSavedPost } from '../services/postService'
+import { likePost,
+         savePost,
+         getPost,
+         postComment,
+         awnserToComment,
+         likeComment,
+         likeCommentAwnser,
+         dislikeComment,
+         dislikeCommentAwnser,
+         likeCommentAwnser,
+         checkIfUserLikedPost,
+         checkIfUserSavedPost } from '../services/postService'
+         
+         
 import UploadComment from './UploadComment'
 import CommentCard from './CommentCard'
+import PostCard from './PostCard'
+import { mapGetters, mapActions } from 'vuex';
+
 
 export default {
   name: 'PostPage',
   components: {
     UploadComment,
-    CommentCard
-  },
-  mixins: [userMixin],
+    CommentCard,
+    PostCard
+  }
   data() {
     return {
+      ...mapGetters(['user']),
       post: {
         postComments: []
       },
       postComment: "",
       comment_awnser: "",
-      user: {},
       error: "",
       isLiked: false,
       isSaved: false,
@@ -109,26 +65,25 @@ export default {
     };
   },
   computed: {
-     
+    
   }, 
   methods: {
-    async getPost() {
-      const post = await getPost(this.$route.params.id)
-      this.post = post
-      this.post.isLiked = await checkIfUserLikedPost(post, this.usuario)
-      this.post.isSaved = await checkIfUserSavedPost(post, this.usuario)
-      this.isLiked = this.post.isLiked
-      this.isSaved = this.post.isSaved
-      console.log('final post n:', this.post)
+    ...mapActions(['fetchUser']),
+    
+    async getPost(currentUser) {
+   try { 
+      const post = await getPost(this.$route.params.id, currentUser)
+      
+   } catch(e) {
+       this.error = "Oops, Something Went Wrong..."
+       console.log('ERROR!', e)
+   }
     },
 
      async likeAPost(post_id) {
             try {
                 const data = await likePost(post_id)
-                console.log('Like Post Method: ', data)
-                
-                console.log('server data from like service xd', data)
-                
+        
                 if(data.liked) {
                     this.isLiked = true
                 } else {
@@ -159,9 +114,11 @@ export default {
           console.log('comments by id: ', this.commentsById)
           console.log('awnsers by id: ', this.awnsersById)
           
+          await this.fetchUser() 
+          await this.getPost(this.user)
+          
           
 
-    
     this.$socket.on('likePost', newLike => {
     console.log('Like Recibido!', newLike);
     
@@ -338,18 +295,18 @@ this.$socket.on('newCommentAwnser', newAwnser => {
       console.log('this post: ', this.post)
       this.post.postComments.forEach(comment => {
             this.commentsById[comment.id] = comment;
-            comment.isLiked = comment.comment_likes.some(like => like.user_id == this.usuario.user_id)
+          //  comment.isLiked = comment.comment_likes.some(like => like.user_id == this.usuario.user_id)
             
-            comment.isDisliked = comment.comment_dislikes.some(dislike => dislike.user_id == this.usuario.user_id)
+         //   comment.isDisliked = comment.comment_dislikes.some(dislike => dislike.user_id == this.usuario.user_id)
             
             
          
             comment.awnsers.forEach(awnser => {
             this.awnsersById[awnser.id] = awnser; 
             
-            awnser.isLiked = awnser.awnser_likes.some(like => like.user_id == this.usuario.user_id)
+          //  awnser.isLiked = awnser.awnser_likes.some(like => like.user_id == this.usuario.user_id)
             
-            awnser.isDisliked = awnser.awnser_dislikes.some(dislike => dislike.user_id == this.usuario.user_id)
+         //   awnser.isDisliked = awnser.awnser_dislikes.some(dislike => dislike.user_id == this.usuario.user_id)
             
             
           });
@@ -359,13 +316,6 @@ this.$socket.on('newCommentAwnser', newAwnser => {
          });
           
           
-  }, 
-  watch: {
-    usuario(newValue, oldValue) {
-      if(newValue) {
-         this.getPost()
-      }
-    }
   }
 };
 </script>
