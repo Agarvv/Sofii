@@ -362,7 +362,7 @@
 </template>
 
 <script>
-import handleSearch from '../services/searchService'
+import { handleSearch } from '../services/searchService'
 import VideoCard from './VideoCard';
 import UserCard from './UserCard'
 import PostCard from './PostCard'
