@@ -601,10 +601,10 @@ export default {
         
     },
     
-    async mounted() {
+    async created() {
     try {
-        const user = await this.fetchUser();
-        if (user) {
+        await this.fetchUser();
+        if (this.user) {
             alert("user")
             const data = await handleSearch(this.$route.params.query, user);
             console.log('all went ok', data);
