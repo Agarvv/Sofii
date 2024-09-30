@@ -96,14 +96,14 @@ export async function changeUserPassword(password, token, email) {
    }
 }
 
-export function checkIfUserIsFollowed(user, currentUser) {
+export async function checkIfUserIsFollowed(user, currentUser) {
   // USER IS THE USER TO COMPARE THE DATA
   // current user is the current user of the session 
   console.log('user:vv', user)
   const isFollowing = user.followers.some(follower => follower.Follower.follower_id == currentUser.user_id)
   return isFollowing
 }
-// wenn sehen sie das, ich mochte sie weissen was ich liebe sie ;)
+
 export async function checkIfUserIsFriend(user, currentUser) {
   // USER IS THE USER TO COMPARE THE DATA
   // current user is the current user of the session

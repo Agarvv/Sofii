@@ -7,7 +7,7 @@
     <h3>{{user.username}}</h3>
     <p style="color: gray">{{user.job}}</p>
     <div class="user-buttons">
-      <button class="follow-btn">Follow</button>
+      <button @click="followUser(user.id)" class="follow-btn">{{isFollowing ? 'Unfollow' : 'Follow'}}</button>
       <button class="view-profile-btn">View Profile</button>
     </div>
   </div>
@@ -16,6 +16,9 @@
 </template>
 
 <script>
+import { followUser } from '../services/usersService'
+
+
     export default {
         name: 'UserCard',
         props: {
@@ -23,7 +26,25 @@
         }, 
         data() {
             return {
-                
+                isFollowing: user.following
+            }
+        },
+        methods: {
+            goToPage(route) {
+                this.$router.push(route)
+            },
+            async followUser(user_id) {
+                try {
+                    const data = await followUser(user_id)
+                    if(data.followed && !data.unfollowed) {
+                        this.isFollowing = true
+                    } else if(data.unfollowed && !data.followed) {
+                        this.isFollowing = false
+                    }
+                } catch(e) {
+                    return 
+                    console.log("ERROR!!", e)
+                }
             }
         }
     }

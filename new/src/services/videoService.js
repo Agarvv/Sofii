@@ -206,3 +206,10 @@ export async function dislikeVideoCommentAwnser(comment_id, awnser_id, video_id,
     }
 }
 
+export async function checkIfUserLikedVideo(video, user) {
+    return video.video_likes.some(like => like.user_id == user.user_id)
+}
+
+export async function checkIfUserSavedVideo(video, user) {
+    return video.videos_saved.some(saved => saved.user_id == user.user_id)
+}

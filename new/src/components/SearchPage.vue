@@ -22,22 +22,12 @@
 <!-- IM NOT GOING TO CLEAN THIS COMPONENT, THAT WILL TAKE ME A LOT OF TIME SO I WILL JUST LET IT LIKE THAT BECAUSE THIS APP IS A DEMO. -->
 <template>
   <div>
-    <header>
-      <div class="logo">
-        <h2>Sofii</h2>
-      </div>
-      <div class="search-input">
-        <input v-model="searchQ" type="search"/>
-      </div>
-      <div class="icons">
-        <font-awesome-icon icon="search" @click="search"/>
-        <font-awesome-icon icon="microphone" />
-        <font-awesome-icon icon="filter" @click="toggleFiltersButton" 
-        
-        />
-      </div>
-    </header>
     
+    <SearchPageHeader @toggleFilters="toggleFiltersButton" />
+    
+    <LoadingComponent message="Searching, Please Wait..."/>
+    
+    <ErrorComponent :error="error"/> 
     
      <div v-show="showFiltersButton" class="filter-div">
          
@@ -172,13 +162,7 @@
           
           
         </div>
-        
-        
-        
-  
-  
-        
-
+    
     <div class="container">
       <aside>
         <div class="aside-header">
@@ -288,7 +272,9 @@
           align-items: center;
           ">
               <div>
+                                    <font-awesome-icon icon="video"/>
                   <span>Videos</span>
+                 
               </div>
               <div>
                   <font-awesome-icon icon="caret-down"/>
@@ -376,24 +362,30 @@
 </template>
 
 <script>
+import handleSearch from '../services/searchService'
 import VideoCard from './VideoCard';
 import UserCard from './UserCard'
 import PostCard from './PostCard'
-
-import userMixin from '../mixins/userMixin'
+import SearchPageHeader from './SearchPageHeader'
+import ErrorComponent from './ErrorComponent'
+import LoadingComponent from './LoadingComponent'
+import { mapGetters, mapActions } from 'vuex';
 
 
 export default {
-    mixins: [userMixin], 
-    
     components: {
         VideoCard,
         UserCard,
-        PostCard
+        PostCard,
+        ErrorComponent,
+        LoadingComponent
     }, 
     data() {
         return {
+            ...mapGetters(['user']),
             searchQ: "",
+            error: "",
+            loading: true,
             content: {
                 users: [],
                 posts: [],
@@ -440,12 +432,7 @@ export default {
         };
     },
     methods: {
-        
-        search() {
-          
-            this.$router.push('/search/' + this.searchQ)
-        }, 
-        
+        ...mapActions(['fetchUser']), 
         
         toggleFiltersButton() {
             
@@ -475,24 +462,6 @@ export default {
         }, 
         goToPostPage(post_id) {
             this.$router.push('/post/' + post_id);
-        },
-      
-        async followUser(following_id) {
-            console.log('Follow user method called, ', following_id);
-            const response = await fetch('http://localhost:3000/api/sofi/follow', {
-                body: JSON.stringify({ following_id }),
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-            if (!response.ok) {
-                console.log('response not ok');
-            }
-
-            const data = await response.json();
-            console.log('follow server data', data);
         },
       
       applyFilters() {
@@ -627,99 +596,26 @@ export default {
     console.log('Filtered content videos:', this.filteredContent.videos);
   
   
-}
+   }
         
     },
     
     async mounted() {
-        this.searchQ = this.$route.params.query
     try {
-        const response = await fetch('http://localhost:3000/api/sofi/search/' + this.$route.params.query, {
-            method: 'POST',
-            credentials: 'include'
-        });
-
-        if (!response.ok) {
-            console.error('Something went wrong!');
-            return;
+        const user = await this.fetchUser();
+        if (user) {
+            const data = await handleSearch(this.$route.params.query, user);
+            console.log('all went ok', data);
+            this.content = data.results.results;
+            this.filteredContent = { ...this.content };
         }
-
-        const data = await response.json();
-console.log('srvr data: ', data)
-        // Asignar atributos extra al contenido original
-data.results.results.users.forEach(user => {
-    
-    user.followers.forEach((follower) => {
-        console.log('recorriendo follower', follower)
-        if(follower.follower.follower_id == this.usuario.user_id) {
-            user.following = true
-        } else {
-            user.following = false
-        }
-    })
-    
-    user.friends.forEach((friend) => {
-       if(friend.friend_one_id == this.usuario.id || friend.friend_two_id == this.usuario.id) {
-           user.isYourFriend = true
-       } else {
-           user.isYourFriend = false
-       }
-    })
-});
-        
-        data.results.results.posts.forEach(post => {
-            post.postLikes.forEach((like) => {
-                if(like.user_id == this.usuario.user_id) {
-                    post.isLiked = true
-                } else {
-                    post.isLiked = false
-                }
-            })
-            
-            post.saved_post.forEach((saved) => {
-                if(saved.user_id == this.usuario.user_id) {
-                    post.isSaved = true
-                } else {
-                    post.isSaved = false
-                }
-            })
-        });
-        
-        
-        
-        data.results.results.videos.forEach((video) => {
-            video.video_likes.forEach((like) => {
-                if(like.user_id == this.usuario.user_id) {
-                    video.isLiked = true
-                } else {
-                    video.isLiked = false
-                }
-            })
-            
-            video.videos_saved.forEach((saved) => {
-                if(saved.user_id == this.usuario.user_id) {
-                    video.isSaved = true
-                } else {
-                    video.isSaved = false
-                }
-            })
-        })
-
-        this.content = data.results.results;
-        this.filteredContent = { ...this.content };
-
-        console.log('Final filteredContent:', this.filteredContent);
-    } catch (error) {
-        console.error('Fetch error:', error);
+    } catch (e) {
+        this.error = 'Something Went Wrong...'
+        console.error('ERROR?', e);
+    } finally {
+        this.loading = false;
     }
 },
-    
-    
-    
-    async created() {
-        
-    
-}
     
 };
 </script>
@@ -735,48 +631,6 @@ data.results.results.users.forEach(user => {
 
 * {
     box-sizing: border-box;
-}
-
-
-/* Header */
-header {
-    background-color: #ff6347;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100px;
-    padding: 0 20px;
-}
-
-header .search-input {
-    flex: 1;
-    margin: 0 20px;
-}
-
-header .search-input input {
-    width: 100%;
-    height: 100%;
-    padding: 10px;
-    font-size: 16px;
-    border: 2px solid #ccc;
-    border-radius: 20px;
-    outline: none;
-    transition: border-color 0.3s ease;
-}
-
-header .search-input input:focus {
-    border-color: #ff6347;
-}
-
-header .icons {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-header .icons i {
-    font-size: 24px;
-    color: white;
 }
 
 /* Contenedor principal */
