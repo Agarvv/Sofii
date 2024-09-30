@@ -178,6 +178,7 @@ export default {
     padding: 15px 0;
     border-top: 1px solid #eee; /* Separador superior */
     color: #555; /* Color de los íconos de interacción */
+    border: 1px solid black;
 }
 
 .post-interactions i {
