@@ -128,7 +128,7 @@ export async function getPost(post_id, currentUser) {
           data.post.isLiked = await checkIfUserLikedPost(data.post, currentUser)
           data.post.isSaved = await checkIfUserSavedPost(data.post, currentUser)
 
-         for(const comment of data.post.comments) {
+         for(const comment of data.post.postComments) {
              comment.isLiked = await checkIfCommentIsLiked(comment, currentUser)
              comment.isDisliked = await checkIfCommentIsDisliked(comment, currentUser)
              if(comment.awnsers) {
