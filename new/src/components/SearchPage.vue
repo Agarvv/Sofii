@@ -177,6 +177,8 @@
           
         </div>
         
+        
+        
   
   
         
@@ -191,7 +193,12 @@
         
         
         <nav>
-                    <div @click="toggleFiltersButton" class="close-filters">
+                   
+         <div class="filter-div">
+         
+         
+          
+          <div @click="toggleFiltersButton" class="close-filters">
             <i style="color: gray"class="fa fa-close"></i>
             <font-awesome-icon icon="close"/>
           </div>
@@ -317,6 +324,12 @@
          <button @click="applyFilters">Apply Filters</button>
            </div>
           
+          
+          
+          
+          
+        </div>
+        
           
         </nav>
         
