@@ -193,8 +193,6 @@
         <nav>
                    
          <div class="filter-div-pc">
-         
-         
           
           <div @click="toggleFiltersButton" class="close-filters">
             <i style="color: gray"class="fa fa-close"></i>
@@ -228,7 +226,7 @@
             </div>
           </div>
 
-          <div @click="showFilters('posts')" class="aside-posts">
+          <div @click="showFilters('posts')" class="aside-posts.pc">
             <div>
               <font-awesome-icon icon="newspaper" />
               <span>Posts</span>
@@ -238,7 +236,7 @@
             </div>
           </div>
 
-          <div class="hidden-posts.pc" v-show="showPostsFilters">
+          <div class="hidden-posts" v-show="showPostsFilters">
             <div class="sort-options">
                 
                 <div class="most-liked">
@@ -277,7 +275,7 @@
             </div>
           </div>
           
-          <div class="hidden-videos" @click="showFilters('videos')">
+          <div class="aside-videos" @click="showFilters('videos')">
               <div>
                   <span>Videos</span>
               </div>
@@ -886,6 +884,14 @@ aside i {
     align-items: center;
 }
 
+.filter-div.pc .aside-users, 
+.filter-div.pc .aside-posts, 
+.filter-div.pc .hidden-videos {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 
 .filter-div span {
     font-weight: bold;
@@ -904,10 +910,10 @@ aside i {
     transform: scale(1.2);
 }
 
-.hidden-users, .hidden-posts, .hidden-videos {
+/* .hidden-users, .hidden-posts, .hidden-videos {
     padding-left: 15px;
     border: 1px solid red;
-}
+} */
 
 .show_filters_button_div {
     text-align: center;
