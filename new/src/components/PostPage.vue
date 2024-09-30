@@ -53,7 +53,7 @@ export default {
   data() {
     return {
       post: {
-        postComments: []
+        
       },
       postComment: "",
       comment_awnser: "",
@@ -74,7 +74,8 @@ export default {
   async getPost(currentUser) {
    try { 
       const post = await getPost(this.$route.params.id, currentUser)
-      
+      console.log('post from service', post)
+      this.post = post
    } catch(e) {
        this.error = "Oops, Something Went Wrong..."
        console.log('ERROR!', e)
