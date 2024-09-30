@@ -606,7 +606,7 @@ export default {
         await this.fetchUser();
         if (this.user) {
             alert("user")
-            const data = await handleSearch(this.$route.params.query, user);
+            const data = await handleSearch(this.$route.params.query, this.user);
             console.log('all went ok', data);
             this.content = data.results.results;
             this.filteredContent = { ...this.content };
