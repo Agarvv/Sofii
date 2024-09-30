@@ -2,7 +2,11 @@
     <div class="awnser">
         <div class="response-user">
                     <div class="response-user-img">
-                      <img style="width: 40px; height: 40px; border-radius: 50%" :src="'http://localhost:3000/' + awnser.awnser_user.profilePicture">
+                      <img style="width: 40px; height: 40px; border-radius: 50%"
+                       :src="awnser.awnser_user.profilePicture ? 
+                       apiUrl + '/' + awnser.awnser_user.profilePicture : 
+                       '/images/default.jpeg'
+                       ">
                     </div>
                     <div class="response-username">
                       <h3>{{awnser.awnser_user.username}}</h3>
@@ -39,7 +43,7 @@ import {
     likeCommentAwnser,
     dislikeCommentAwnser
 } from '../services/postService'
-
+import apiUrl from '../apiUrl'
 
 export default {
     name: 'AwnserCard',
@@ -50,7 +54,8 @@ export default {
         return {
             error: "",
             isLiked: this.awnser.isLiked,
-            isDisliked: this.awnser.isDisliked
+            isDisliked: this.awnser.isDisliked,
+            apiUrl: apiUrl
         }
     },
     methods: {

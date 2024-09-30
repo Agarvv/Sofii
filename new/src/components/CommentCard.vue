@@ -2,7 +2,11 @@
        <div  class="comment">
               <div class="comment-user-details">
                 <div class="user-comment-img"> 
-                  <img :src="`http://localhost:3000/${comment.commentUser.profilePicture}`" alt="User Picture">
+                  <img 
+                  :src="
+                   comment.commentUser.profilePicture ? apiUrl + '/' + comment.commentUser.profilePicture  :
+                   '/images/default.jpeg'
+                  " alt="User Picture">
                 </div>
                 <div class="user-comment-username">
                   <h4>{{ comment.commentUser.username }}</h4>
@@ -74,6 +78,7 @@
 </template>
 
 <script>
+import apiUrl from '../apiUrl'
 import {
     likeComment,
     dislikeComment,
@@ -98,7 +103,8 @@ export default {
            newComment: "",
            commentAwnser: "",
            isLiked: this.comment.isLiked,
-           isDisliked: this.comment.isDisliked
+           isDisliked: this.comment.isDisliked,
+           apiUrl: apiUrl
         }
     },
     props: {

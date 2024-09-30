@@ -2,7 +2,7 @@
    <div class="upload-comment">
        
             <div class="user-picture">
-              <img alt="User Picture">
+              <img src="/images/default.jpeg" alt="">
             </div>
             
             <div class="input">
