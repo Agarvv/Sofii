@@ -10,7 +10,7 @@ const CommentAwnsersLikes = require('../models/CommentAwnsersLikes')
 const CommentAwnsersDislikes = require('../models/CommentAwnsersDislikes');
 const sequelize = require('../config/database');
 const  CommentAnswer  = require('../models/CommentAwnser'); 
-
+const User = require('../models/User')
 
 const serveHomePage = async (jwtToken) => {
     try {
