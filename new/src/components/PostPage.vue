@@ -6,7 +6,7 @@
     </header>
     
     <div class="container"> 
-      <div class="post">
+      <div class="post-ctn">
           <PostCard :post="post"/>
           <UploadComment :id="$route.params.id" type="POST"/>
         <div class="comments">
@@ -356,7 +356,7 @@ header {
     justify-content: center;
 }
 
-.post {
+.post-ctn{
     background: white;
     width: 70%;
     padding: 10px;
