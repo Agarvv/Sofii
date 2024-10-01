@@ -62,7 +62,7 @@ import { mapGetters, mapActions } from 'vuex';
             }
         },
         computed: {
-                ...mapState(['user'])
+            ...mapGetters(['user'])
         },
         methods: {
             ...mapActions(['fetchUser']),
