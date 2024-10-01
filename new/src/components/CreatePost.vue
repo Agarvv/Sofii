@@ -22,7 +22,7 @@
        border-radius: 15px;
       " :src="imageSource">
       <video v-if="videoSource"
-       :key="videoSource"  <!-- Forces the video tag to reload when the source changes -->
+       :key="videoSource"  
        :src="videoSource"  
        style="width: 100%; height: 250px; object-fit: cover; border-radius: 15px;"
        controls>
