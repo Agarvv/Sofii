@@ -1,7 +1,8 @@
 const express = require('express')
 const friendController = require('../controllers/friendController')
 const router = express.Router() 
-const sendEmail = require('../config/mailer')
+const { sendEmail } = require('../config/mailer');
+
 
 router.get('/friends',async (req, res) => {
     try {
