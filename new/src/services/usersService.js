@@ -146,7 +146,7 @@ export async function acceptFriendRequest(req_id) {
 
 // req_id means the friend request id.
 export async function denyFriendRequest(req_id) {
-    const response = await fetchUrl(process.env.VUE_APP_API_URL + 'api/sofi/deny_friend_request', {
+    const response = await fetchUrl(process.env.VUE_APP_API_URL + '/api/sofi/deny_friend_request', {
       request_id: req_id
     }, 'POST')
     const data = await response.json()
