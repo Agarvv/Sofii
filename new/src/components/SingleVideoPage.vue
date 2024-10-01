@@ -17,6 +17,7 @@
 </template>
 
 <script>
+// video vard
 import VideoCard from './VideoCard.vue';
 import VideoComment from './VideoComment'
 import UploadComment from './UploadComment'
