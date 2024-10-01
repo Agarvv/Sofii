@@ -1,7 +1,7 @@
 const express = require('express')
 const friendController = require('../controllers/friendController')
 const router = express.Router() 
-
+const sendEmail = require('../config/mailer')
 
 router.get('/friends',async (req, res) => {
     try {
@@ -79,8 +79,8 @@ router.post('/accept_friend_request', async (req, res) => {
         return res.status(201).json({ detail: 'This person is now your friend.'})
         
     } catch(e) {
-        console.log(e)
-        return res.status(500).json({error: e})
+        sendEmail('casluagarv@gmail.com', 'error at sofii', e)
+        return res.status(500).json({error: e.message})
     }
 })
 
@@ -95,7 +95,7 @@ router.post('/deny_friend_request', async (req, res) => {
         
     } catch(e) {
         console.log(e)
-        return res.status(500).json({error: e})
+        return res.status(500).json({error: e.message})
     }
 })
 
