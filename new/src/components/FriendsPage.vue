@@ -13,7 +13,6 @@
   
   <aside>
 
-    
     <div class="aside-content">
       
       <div @click="toggleSelectedOption('friends')" class="only-friends">
@@ -84,7 +83,8 @@
         <div class="friend-details">
           
           <div @click="goToUserPage(request.sender.id)" class="friend-img">
-            <img style="width: 80px; border-radius: 50%" :src="'http://localhost:3000/' + request.sender.profilePicture">
+            <img style="width: 80px; border-radius: 50%" 
+            :src="request.sender.profilePicture ? aiUrl + '/' + request.sender.profilePicture : '/images/default.jpeg' ">
           </div>
           
           <div class="friend-username-and-buttons">
@@ -128,7 +128,10 @@
            
           <div class="friend-img"> 
             
-            <img :src="'http://localhost:3000/' + friend.friendToDisplayInfo.profilePicture">
+            <img 
+            :src="friend.friendToDisplayInfo.profilePicture ? apiUrl +
+            '/' + friend.friendToDisplayInfo.profilePicture : '/images/default.jpeg' ">
+            ">
             
           </div>
           
@@ -160,6 +163,8 @@
 
 <script>
 import { getUserFriends,  acceptFriendRequest, denyFriendRequest } from '../services/usersService'
+import apiUrl from '../config/apiUrl'
+
 
 export default {
     name: 'FriendsPage',
@@ -169,7 +174,8 @@ export default {
             friend_requests: [],
             selectedOption: null,
             loading: true,
-            error: ""
+            error: "",
+            apiUrl: apiUrl
         };
     },
     methods: {
