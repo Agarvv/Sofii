@@ -163,7 +163,7 @@
 
 <script>
 import { getUserFriends,  acceptFriendRequest, denyFriendRequest } from '../services/usersService'
-import apiUrl from '../config/apiUrl'
+import apiUrl from '../config'
 
 
 export default {
