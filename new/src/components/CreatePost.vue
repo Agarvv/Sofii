@@ -1,10 +1,12 @@
 <template>
     <HeaderComponent activePage="create"/> 
     
+    <ErrorComponent v-if="error" :error="error"/>
+    
+    <LoadingComponent v-if="loading" message="Creating Video, Please wait..."/>
+    
 <div class="container">
     
-      <ErrorComponent v-if="error" :error="error"/>
-      
   <div class="create-container">
     <div class="f-column">
       <img style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" src="/images/default.jpeg">
@@ -14,14 +16,12 @@
     </div>
     <div class="demostration-content">
       <img style="
-       display: none;
        width: 100%;
        height: 250px;
        object-fit: cover;
        border-radius: 15px;
       " :src="imageSource">
       <video style="
-      display: none;
       width: 100%;
       height: 250px;
       object-fit: cover;
@@ -51,6 +51,7 @@
 
 <script>
 import ErrorComponent from './ErrorComponent'
+import LoadingComponent from './LoadingComponent'
 import HeaderComponent from './HeaderComponent'
 
 
@@ -62,7 +63,8 @@ import { mapGetters, mapActions } from 'vuex';
 export default {
   
     components: {
-          HeaderComponent
+          HeaderComponent,
+          LoadingComponent
       },
   data() {
     return {
@@ -71,7 +73,7 @@ export default {
       videoSource: null,
       imageSource: null,
       loading: false,
-      error: ""
+      error: "Something Went Wrong"
     };
   },
   methods: {
@@ -123,6 +125,10 @@ export default {
         
         if(this.loading) {
             alert('please wait')
+        }
+        
+        if(this.error) {
+            this.error = ""
         }
        
       this.loading = true 
