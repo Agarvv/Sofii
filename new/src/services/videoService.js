@@ -3,6 +3,7 @@ import fetchUrl from '../helpers/fetchUrl'
 
 // METHOD TO GET A VIDEO
 export async function getVideo(video_id, currentUser) {
+    console.log("Video id from the damn method: ", video_id)
     const response = await fetch(process.env.VUE_APP_API_URL + `/api/sofi/video/${video_id}`);
     const data = await response.json();
 
