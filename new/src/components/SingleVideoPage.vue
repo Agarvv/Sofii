@@ -52,10 +52,9 @@ import { getVideo } from '../services/videoService'
             
             ...mapActions(['fetchUser']),
             
-            async getVideo(user) {
+            async getVideo(user, id) {
                 try {
-                    console.log("video id: ", thos.$route.params.video_id)
-                    const data = await getVideo(this.$route.params.video_id, this.usuario)
+                    const data = await getVideo(id, this.usuario)
                     console.log("All went ok: ", data)
                     this.video = data.video
                 } catch(e) {
@@ -71,7 +70,7 @@ import { getVideo } from '../services/videoService'
             console.log("Route param", this.$route.params.video_id)
             await this.fetchUser()
             if(this.user) {
-                await getVideo(this.user)
+                await getVideo(this.user, this.$route.params.video_id)
             }
             
             this.$socket.on('likeVideoComment', newLike => {
