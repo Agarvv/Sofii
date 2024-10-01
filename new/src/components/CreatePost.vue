@@ -1,5 +1,8 @@
 <template>
+    <HeaderComponent activePage="create"/> 
+    
 <div class="container">
+    
       <ErrorComponent v-if="error" :error="error"/>
       
   <div class="create-container">
@@ -48,16 +51,21 @@
 
 <script>
 import ErrorComponent from './ErrorComponent'
+import HeaderComponent from './HeaderComponent'
+
+
 import { createPost } from '../services/postService'
 import { createVideo } from '../services/videoService'
-import { userMixin } from '../mixins/userMixin'
-
+import { mapGetters, mapActions } from 'vuex';
 
 
 export default {
-   // mixins: [userMixin],
+  
     
   data() {
+      components: {
+          HeaderComponent
+      },
     return {
       photos: [],
       content: '',
@@ -130,12 +138,13 @@ export default {
         try {
           const data = await createPost(formData)
           console.log('all ok', data)
-          this.loading = false 
           this.$router.push('/')
      
         } catch (e) {
-           this.loading = false
+           console.log("Something Went Wrong...")
            this.error = "Something Went Wrong..."
+        } finally {
+            this.loading = false
         }
       }
 
@@ -184,7 +193,7 @@ html, body {
   padding: 20px;
   background-color: #f9f9f9;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin: 0 auto; /* Asegura que el contenedor se centre */
+  margin: 0 auto; 
 }
 
 .f-column {
@@ -200,7 +209,7 @@ html, body {
 
 .fc-inp input {
   background: red;
-  width: 100%; /* Ajuste al 100% del contenedor */
+  width: 100%; 
   height: 40px;
   border-radius: 20px;
   border: 1px solid #ddd;
@@ -216,7 +225,7 @@ html, body {
 
 .s-column {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Mantener 3 columnas siempre */
+  grid-template-columns: repeat(3, 1fr); 
   gap: 10px;
 }
 
@@ -237,11 +246,15 @@ html, body {
 
 .demostration-content img,
 .demostration-content video {
-  width: 100%; /* Asegura que se ajusten al contenedor */
-  max-height: 250px; /* Limitar la altura máxima */
+  width: 100%; 
+  max-height: 250px; 
   object-fit: cover;
   border-radius: 15px;
 }
 
-
+@media(max-width: 600px) {
+    .create-container {
+        width: 100%;
+    }
+}
 </style>
