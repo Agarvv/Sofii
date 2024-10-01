@@ -54,6 +54,7 @@ import { getVideo } from '../services/videoService'
             
             async getVideo(user) {
                 try {
+                    console.log("video id: ", thos.$route.params.video_id)
                     const data = await getVideo(this.$route.params.video_id, this.usuario)
                     console.log("All went ok: ", data)
                     this.video = data.video
