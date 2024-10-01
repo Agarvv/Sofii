@@ -54,7 +54,8 @@ import { getVideo } from '../services/videoService'
             
             async getVideo(user, id) {
                 try {
-                    const data = await getVideo(id, this.usuario)
+                    console.log('id', id)
+                    const data = await getVideo(id,user)
                     console.log("All went ok: ", data)
                     this.video = data.video
                 } catch(e) {
