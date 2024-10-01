@@ -77,7 +77,7 @@ const handleFriendRequest = async (user, friend_target) => {
         return
         
     } catch(e) {
-        console.log('Nu mere, in pizda ma si si sa o fut pe ma sa', e)
+        console.log('not working', e)
         throw new Error(e)
     }
 }

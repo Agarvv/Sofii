@@ -5,7 +5,7 @@ const friendService = require('../services/friendService')
 const FriendRequest = require('../models/FriendRequest')
 const { Op } = require('sequelize')
 const sendNotificationToSingleUser = require('../services/NotificationService')
-
+const Friends = require('../models/Friends')
 
 const getUserFriendsAndRequests = async (jwt_token) => {
     try {
@@ -53,10 +53,27 @@ const handleFriendRequest = async (jwt_token, friend_target) => {
         if(isSendtFriendRequest) {
             throw new Error("You have already sendt a friend request to that user.")
         }
+
+        const isFriends = await Friends.findOne({
+            where: {
+                [Sequelize.Op.or]: [
+                    {
+                        friend_one_id: userDecoded.user_id,
+                        friend_two_id: friend_target
+                    },
+                    {
+                        friend_one_id: friend_target,
+                        friend_two_id: userDecoded.user_id
+                    }
+                ]
+            }
+        });        
+
+        if(isFriends) {
+            throw new Error("You are already friends with this user.")
+        }
         
-        const success = await friendService.handleFriendRequest(userDecoded, friend_target)
-        
-        return success
+        await friendService.handleFriendRequest(userDecoded, friend_target)
         
     } catch(e) {
         console.log('ERRORORORO', e)
