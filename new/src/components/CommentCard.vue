@@ -78,7 +78,7 @@
 </template>
 
 <script>
-import apiUrl from '../apiUrl'
+import apiUrl from '../config'
 import {
     likeComment,
     dislikeComment,
