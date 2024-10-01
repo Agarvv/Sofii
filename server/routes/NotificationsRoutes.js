@@ -20,7 +20,7 @@ router.get('/notifications', async (req, res) => {
         
     } catch(e) {
         console.log(e)
-        return res.status(500).json({ error: 'Intenal serve rerror ! '})
+        return res.status(500).json({ error: e.message})
     }
 })
 
