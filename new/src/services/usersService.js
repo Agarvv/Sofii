@@ -201,6 +201,16 @@ export async function destroyUserNotification(notification_id) {
     }
 }
  
+export async function getUserFriends() {
+    const response = await fetchUrl(process.env.VUE_APP_API_URL + '/api/sofi/friends', null, 'GET')
+    const data = await response.json()
+    
+    if(response.ok) {
+        return data
+    } else {
+        throw new Error(data.error)
+    }
+}
 
 
 export async function checkIfUserIsFollowed(user, currentUser) {

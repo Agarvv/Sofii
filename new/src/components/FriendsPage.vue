@@ -1,5 +1,5 @@
 <template>
-    
+    <div> 
     
     <header> 
   <div class="logo">
@@ -155,64 +155,41 @@
 </div>
 
 
-
-
-
-
-    
-    
+</div>
 </template>
 
 <script>
+import { getUserFriends,  acceptFriendRequest, denyFriendRequest } from '../services/usersService'
+
 export default {
     name: 'FriendsPage',
     data() {
         return {
             friends: [],
             friend_requests: [],
-            selectedOption: null
+            selectedOption: null,
+            loading: true,
+            error: ""
         };
     },
     methods: {
         async getFriends() {
             try {
-                const response = await fetch('http://localhost:3000/api/sofi/friends', {
-                    method: 'GET',
-                    credentials: 'include'
-                });
-                
-                const data = await response.json();
+               const data = await getUserFriends()
+               console.log('all went ok', data)
                 this.friend_requests = data.friends.userFriendsRequests;
-                this.friends = data.friends.friends; // Asegúrate que 'data.friends' tenga la estructura correcta.
-                console.log(data)
-                console.log(this.friend_requests)
-                console.log(this.friends)
+                this.friends = data.friends.friends;
             } catch (error) {
-                console.error('Error fetching friends:', error);
+                this.error = "Something Went Wrong..."
+                console.error('Error getting friends:', error);
+            } finally {
+              this.loading = false;
             }
         },
-        async acceptRequest(request_id) {
+  async acceptRequest(request_id) {
     try {
-        console.log('Method acceptRequest called with request_id:', request_id);
-        
-        const response = await fetch('http://localhost:3000/api/sofi/accept_friend_request', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include', // Esto asegura que las cookies de sesión se incluyan en la solicitud
-            body: JSON.stringify({ request_id }) // Envía el ID de la solicitud en el cuerpo de la solicitud
-        });
-        
-        if (!response.ok) {
-            throw new Error('Error en la solicitud: ' + response.statusText);
-        }
-        
-        const data = await response.json();
-        console.log('Server response for acceptRequest:', data);
-
-        // Aquí podrías actualizar la lista de solicitudes de amistad o realizar alguna otra acción
-        // Ejemplo: Eliminar la solicitud aceptada de la lista
+        const data = await acceptFriendRequest(request_id);
+        console.log('all went ok', data)
         this.friend_requests = this.friend_requests.filter(request => request.id !== request_id);
 
     } catch (error) {
@@ -222,28 +199,9 @@ export default {
 
 async declineRequest(request_id) {
     try {
-        console.log('Method declineRequest called with request_id:', request_id);
-        
-        const response = await fetch('http://localhost:3000/api/sofi/deny_friend_request', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include',
-            body: JSON.stringify({ request_id }) // Envía el ID de la solicitud en el cuerpo de la solicitud
-        });
-        
-        if (!response.ok) {
-            throw new Error('Error en la solicitud: ' + response.statusText);
-        }
-
-        const data = await response.json();
-        console.log('Server response for declineRequest:', data);
-
-        // Aquí también podrías actualizar la lista de solicitudes de amistad o realizar otra acción
-        // Ejemplo: Eliminar la solicitud rechazada de la lista
+        const data = await denyFriendRequest(request_id);
+        console.log('all went ok', data);
         this.friend_requests = this.friend_requests.filter(request => request.id !== request_id);
-
     } catch (error) {
         console.error('Error declining friend request:', error);
     }
@@ -257,13 +215,7 @@ toggleSelectedOption(option) {
         return 
     }
     this.selectedOption = option
-  
 }
-
-
-
-
-
     },
     async created() {
         await this.getFriends();

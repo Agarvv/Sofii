@@ -18,7 +18,7 @@ router.get('/friends',async (req, res) => {
         
     } catch(e) {
         console.log(e)
-        return res.status(500).json({ error: 'Something Went Wrong In The Server '})
+        return res.status(500).json({ error: e.message})
     }
 }) 
 
