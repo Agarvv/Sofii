@@ -84,7 +84,7 @@ export async function likeVideo(video_id) {
             const data = await response.json()
             return data
         } else {
-            throw new Error("Something Went Wrong..")
+            throw new Error(data.error)
         }
     } catch(e) {
         throw e

@@ -2,10 +2,8 @@
 <div> 
 <HeaderComponent :activePage="'notifications'" :user="usuario"/>
 
-<LoadingComponent v-if="loading" message="Searching Your Notifications, Please Wait..."/>
+<LoadingComponent v-if="loading"/>
     
-<ErrorComponent v-if="error" :error="error"/>
-
 <div class="container"> 
   
   <div class="notifications">
@@ -15,14 +13,15 @@
       <h2>Your Notifications</h2>
     </div>
     
-      <div class="empty-notifications" v-if="notifications.length == 0">
+      <div class="empty-notifications" v-if="!loading && notifications.length == 0">
           <h4>You Do Not Have Notifications...</h4>
       </div>
     
-    <div v-for="notification in notifications" :key="notification.id" 
+    <div
+    v-for="notification in notifications" :key="notification.id"
+    @click="goToNotification(notification.notification_type, notification.type_id)"
      :class="['notification', notification.readed ? 'read' : 'unread']">
-      
-    
+        
    <div class="notification-body"> 
       <div class="notification-user-img">
         <img style="width: 70px; border-radius: 50%" :src="notification.targetUser.profilePicture ? 'http://localhost:3000/' + notification.targetUser.profilePicture : '/images/default.jpeg'">
@@ -101,7 +100,84 @@ import { mapGetters, mapActions } from 'vuex';
              console.log('error', e)
              return 
          }
-      }
+      },
+      goToNotification(n_type, target_id) {
+    switch (n_type) {
+        // When a user likes a post
+        case "POST_LIKED":
+            this.$router.push('/post/' + target_id);
+            break;
+
+        // When a user likes a video
+        case "VIDEO_LIKED":
+            this.$router.push('/video/' + target_id);
+            break;
+
+        // When a user comments on a post
+        case "POST_COMMENT":
+            this.$router.push('/post/' + target_id); // Redirect to the post
+            break;
+
+        // When a user comments on a video
+        case "VIDEO_COMMENT":
+            this.$router.push('/video/' + target_id); // Redirect to the video
+            break;
+
+        // When a comment is liked
+        case "COMMENT_LIKED":
+            this.$router.push('/post/' + target_id); // Redirect to the post
+            break;
+
+        // When an answer to a comment is liked
+        case "COMMENT_AWNSER_LIKED":
+            this.$router.push('/post/' + target_id); // Redirect to the post
+            break;
+
+        // When a user answers a comment on a video
+        case "VIDEO_COMMENT_AWNSER_LIKED":
+            this.$router.push('/video/' + target_id); // Redirect to the video
+            break;
+
+        // When a user answers a comment
+        case "AWNSERED_COMMENT":
+            this.$router.push('/post/' + target_id); // Redirect to the post
+            break;
+
+        // When a user answers a comment on a video
+        case "VIDEO_COMMENT_AWNSERED":
+            this.$router.push('/video/' + target_id); // Redirect to the video
+            break;
+
+        // When a friend request is sent
+        case "FRIEND_REQUEST":
+            this.$router.push('/friends'); // Redirect to friend requests page
+            break;
+
+        // When a user follows someone
+        case "NEW_FOLLOWER":
+            this.$router.push('/user/' + target_id); // Redirect to the user's profile
+            break;
+
+        // When a friend request is accepted
+        case "ACCEPTED_FRIEND_REQUEST":
+            this.$router.push('/friends'); // Redirect to friends list
+            break;
+
+        // When a chat message is received
+        case "CHAT_MESSAGE":
+            this.$router.push('/chat/' + target_id); // Redirect to chat with the user
+            break;
+
+        // When a chat message with a file is received
+        case "CHAT_MESSAGE_WITH_FILE":
+            this.$router.push('/chat/' + target_id); // Redirect to chat with the user
+            break;
+
+        default:
+            alert('Something Went Wrong');
+            break;
+    }
+}
 },
             
    async created() {

@@ -73,7 +73,7 @@ const sendNotificationToSingleUser = async (target, user, content, chat_message 
                     user_target: user.user_id,
                     notification_type: type,
                     notification: `${user.username} Liked Your Post: "${content.description}"`,
-                    type_id: content.id // <-- Asegúrate de que haya una coma en la línea anterior.
+                    type_id: content.id 
                 });
                 
                 
