@@ -1,24 +1,17 @@
 <template> 
  <div class="wrapper">
   <div class="container"> 
-
-    <VideoCard :video="video"/>
-    
-    <UploadComment type="VIDEO" :id="$route.params.video_id"/>
-    
+  <LoadingComponent v-if="loading"/>
+  <ErrorComponent v-if="error" :error="error"/> 
+ <VideoCard :video="video"/>
+    <UploadComment type="VIDEO" :id="$route.params.video_id"/> 
      <div class="comments">
-        
           <div class="comment-section">
-              
             <div v-for="(comment, index) in video.video_comments" class="comment">
-                
              <VideoComment :comment="comment"/>
-             
             </div> 
-            
           </div>
         </div>
-        
     </div>
   </div> 
 </template>
@@ -27,16 +20,19 @@
 import VideoCard from './VideoCard.vue';
 import VideoComment from './VideoComment'
 import UploadComment from './UploadComment'
-import userMixin from '../mixins/userMixin'
-
+import ErrorComponent from './ErrorComponent'
+import LoadingComponent from './LoadingComponent'
+import { mapGetters, mapActions } from 'vuex';
+import { getVideo } from '../services/videoService'
 
     export default {
-        mixins: [userMixin],
         name: 'SingleVideoPage',
         components: {
             VideoCard,
             VideoComment,
-            UploadComment
+            UploadComment,
+            LoadingComponent,
+            ErrorComponent
         },
         data() {
             return {
@@ -44,27 +40,37 @@ import userMixin from '../mixins/userMixin'
                 comment: "",
                 comment_awnser: "",
                 commentsById: {},
-                awnsersById: {}
+                awnsersById: {},
+                error: "",
+                loading: true
             }
+        },
+        computed: {
+            ...mapGetters(['user'])
         },
         methods: {
             
-            async getVideo() {
-                const videoId = this.$route.params.video_id
-                
-                const response = await fetch('http://localhost:3000/api/sofi/video/' + videoId)
-                
-                const data = await response.json()
-                
-                console.log('Server data:bid ', data)
-                
-                this.video = data.video
+            ...mapActions(['fetchUser']),
+            
+            async getVideo(user) {
+                try {
+                    const data = await getVideo(this.$route.params.video_id, this.usuario)
+                    console.log("All went ok: ", data)
+                    this.video = data.video
+                } catch(e) {
+                    console.log('Something went wrtonv', e)
+                    this.error = "Something Went Wrong..."
+                } finally {
+                    this.loading = false
+                }
             }
             
         },
         async created() {
-            this.getVideo()
-            console.log('user,',this.usuario)
+            await this.fetchUser()
+            if(this.user) {
+                await getVideo(this.user)
+            }
             
             this.$socket.on('likeVideoComment', newLike => {
                 const commentTarget = this.commentsById[newLike.comment_id]
@@ -164,18 +170,18 @@ import userMixin from '../mixins/userMixin'
             // 
             this.video.video_comments.forEach(comment => {
             this.commentsById[comment.id] = comment;
-            comment.isLiked = comment.comment_likes.some(like => like.user_id == this.usuario.user_id)
+           // comment.isLiked = comment.comment_likes.some(like => like.user_id == this.usuario.user_id)
             
-            comment.isDisliked = comment.comment_dislikes.some(dislike => dislike.user_id == this.usuario.user_id)
+          //  comment.isDisliked = comment.comment_dislikes.some(dislike => dislike.user_id == this.usuario.user_id)
             
             
          
             comment.awnsers.forEach(awnser => {
             this.awnsersById[awnser.id] = awnser; 
             
-            awnser.isLiked = awnser.awnser_likes.some(like => like.user_id == this.usuario.user_id)
+           // awnser.isLiked = awnser.awnser_likes.some(like => like.user_id == this.usuario.user_id)
             
-            awnser.isDisliked = awnser.awnser_dislikes.some(dislike => dislike.user_id == this.usuario.user_id)
+         //   awnser.isDisliked = awnser.awnser_dislikes.some(dislike => dislike.user_id == this.usuario.user_id)
             
             
           });

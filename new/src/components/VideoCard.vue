@@ -5,7 +5,7 @@
         <img style="width: 50px;
                 height: 50px;
                 border-radius: 50%;
-                object-fit: cover;" :src="video.user_video.profilePicture ? apiUrl + '/' + video.user_video.profilePicture : '/images/default.jpeg'" alt="Video User Image">
+                object-fit: cover;" :src="">
       </div>
       <div class="video-user-detail">
         <h4>{{ video.user_video.username }}</h4>
@@ -57,9 +57,11 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex';
 import { likeVideo } from '../services/videoService'
 import { saveVideo } from '../services/videoService'
 import { deleteVideo } from '../services/videoService'
+import apiUrl from '../config'
 
 export default {
   name: 'VideoCard',
@@ -74,7 +76,8 @@ export default {
       comment: "",
       error: "",
       isLiked: this.video.isLiked,
-      isSaved: this.video.isSaved
+      isSaved: this.video.isSaved,
+      
     };
   },
   methods: {

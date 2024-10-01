@@ -1,5 +1,34 @@
 import fetchUrl from '../helpers/fetchUrl'
 
+
+// METHOD TO GET A VIDEO
+export async function getVideo(video_id, currentUser) {
+    const response = await fetch(process.env.VUE_APP_API_URL + `/api/sofi/video/${video_id}`);
+    const data = await response.json();
+
+    if (response.ok) {
+        data.video.isLiked = await checkIfUserLikedVideo(data.video, currentUser);
+        data.video.isSaved = await checkIfUserSavedVideo(data.video, currentUser);
+
+        for (const comment of data.video.video_comments) {
+            comment.isLiked = await checkIfCommentLiked(comment, currentUser);
+            comment.isDisliked = await checkIfCommentDisliked(comment, currentUser);
+
+            // Loop through "awnsers" (yes, we’ll tolerate the spelling)
+            for (const awnser of comment.awnsers) {
+                awnser.isLiked = await checkIfAwnserLiked(awnser, currentUser);
+                awnser.isDisliked = await checkIfAwnserDisliked(awnser, currentUser);
+            }
+        }
+
+        return data;
+    } else {
+        throw new Error(data.error);
+    }
+}
+
+
+
 // METHOD TO CREATE A VIDEO
 export async function createVideo(data) {
    const response = await fetch(process.env.VUE_APP_API_URL + '/api/sofi/add_video', {
@@ -212,4 +241,21 @@ export async function checkIfUserLikedVideo(video, user) {
 
 export async function checkIfUserSavedVideo(video, user) {
     return video.videos_saved.some(saved => saved.user_id == user.user_id)
+}
+
+export async function checkIfCommentLiked(comment, user) {
+    return comment.comment_likes.some(like => like.user_id == user.user_id)
+}
+
+export async function checkIfCommentDisliked(comment, user) {
+    return comment.comment_dislikes.some(dislike => dislike.user_id == user.user_id)
+}
+
+
+export async function checkIfAwnserLiked(awnser, user) {
+    return awnser.awnser_likes.some(like => like.user_id == user.user_id)
+}
+
+export async function checkIfAwnserDisliked(awnser, user) {
+    return awnser.awnser_dislikes.some(dislike => dislike.user_id == user.user_id)
 }
