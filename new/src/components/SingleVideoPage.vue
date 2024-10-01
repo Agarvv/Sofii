@@ -68,6 +68,7 @@ import { getVideo } from '../services/videoService'
             
         },
         async created() {
+            console.log("Route param", this.$route.params.video_id)
             await this.fetchUser()
             if(this.user) {
                 await getVideo(this.user)
