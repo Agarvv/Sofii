@@ -43,7 +43,7 @@ import {
     likeCommentAwnser,
     dislikeCommentAwnser
 } from '../services/postService'
-import apiUrl from '../apiUrl'
+import apiUrl from '../config/apiUrl'
 
 export default {
     name: 'AwnserCard',
