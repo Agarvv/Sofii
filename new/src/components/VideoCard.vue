@@ -5,7 +5,7 @@
         <img style="width: 50px;
                 height: 50px;
                 border-radius: 50%;
-                object-fit: cover;" :src="'http://localhost:3000/' + video.user_video.profilePicture" alt="Video User Image">
+                object-fit: cover;" :src="video.user_video.profilePicture ? apiUrl + '/' + video.user_video.profilePicture : '/images/default.jpeg'" alt="Video User Image">
       </div>
       <div class="video-user-detail">
         <h4>{{ video.user_video.username }}</h4>

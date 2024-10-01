@@ -3,13 +3,13 @@
     
     <ErrorComponent v-if="error" :error="error"/>
     
-    <LoadingComponent v-if="loading" message="Creating Video, Please wait..."/>
+    <LoadingComponent v-if="loading" message="Creating, Please wait..."/>
     
 <div class="container">
     
   <div class="create-container">
     <div class="f-column">
-      <img style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" src="/images/default.jpeg">
+      <img style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" :src="user.user_picture ? apiUrl + '/' + user.user_picture : '/images/default.jpeg' ">
       <div class="fc-inp"> 
        <input v-model="content" placeholder="What's Up?">
       </div>
@@ -52,7 +52,7 @@ import ErrorComponent from './ErrorComponent'
 import LoadingComponent from './LoadingComponent'
 import HeaderComponent from './HeaderComponent'
 
-
+import apiUrl from '../config'
 import { createPost } from '../services/postService'
 import { createVideo } from '../services/videoService'
 import { mapGetters, mapActions } from 'vuex';
@@ -72,10 +72,15 @@ export default {
       videoSource: null,
       imageSource: null,
       loading: false,
-      error: "Something Went Wrong"
+      error: "",
+      apiUrl: apiUrl
     };
   },
+  computed: {
+      ...mapGetters(['user'])
+  },
   methods: {
+      ...mapActions(['fetchUser']),
     openFileInput(inputId) {
       document.getElementById(inputId).click();
     },
@@ -167,6 +172,9 @@ export default {
       }
 
     }
+  },
+  async mounted() {
+      await this.fetchUser()
   }
 };
 </script>
