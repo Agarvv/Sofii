@@ -188,9 +188,11 @@ export async function getUserNotifications() {
 
 
 export async function destroyUserNotification(notification_id) {
-    const data = await fetchUrl(process.env.VUE_APP_API_URL + '/api/sofi/destroy_notification', {
+    const response = await fetchUrl(process.env.VUE_APP_API_URL + '/api/sofi/destroy_notification', {
         notification_id: notification_id
     }, 'POST')
+    
+    const data = await response.json()
     
     if(response.ok) {
         return data

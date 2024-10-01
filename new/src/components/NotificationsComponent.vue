@@ -1,7 +1,11 @@
 <template>
 <div> 
 <HeaderComponent :activePage="'notifications'" :user="usuario"/>
+
+<LoadingComponent v-if="loading" message="Searching Your Notifications, Please Wait..."/>
     
+<ErrorComponent v-if="error" :error="error"/>
+
 <div class="container"> 
   
   <div class="notifications">
@@ -51,7 +55,9 @@ import { mapGetters, mapActions } from 'vuex';
 
     export default {
         components: {
-            HeaderComponent
+            HeaderComponent,
+            LoadingComponent,
+            ErrorComponent
         }, 
         name: 'NotificationsComponent',
         data() {
