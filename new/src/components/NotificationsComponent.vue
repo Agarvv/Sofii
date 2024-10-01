@@ -1,112 +1,110 @@
 <template>
-  <div> 
-    <HeaderComponent :activePage="'notifications'" :user="usuario"/>
+<div> 
+<HeaderComponent :activePage="'notifications'" :user="usuario"/>
     
-    <LoadingComponent v-if="LoadingComponent" message="Getting Your Notifications, please wait..."/>
+<div class="container"> 
+  
+  <div class="notifications">
+      
     
-    <ErrorComponent v-if="error" :error="error"/>
+    <div v-if="notifications.length > 0" class="notifications-header">
+      <h2>Your Notifications</h2>
+    </div>
     
-    <div class="container"> 
-      <div class="notifications">
-        <div v-if="notifications.length > 0" class="notifications-header">
-          <h2>Your Notifications</h2>
-        </div>
-        
-        <div class="empty-notifications" v-if="notifications.length == 0">
+      <div class="empty-notifications" v-if="notifications.length == 0">
           <h4>You Do Not Have Notifications...</h4>
-        </div>
-        
-        <div v-for="notification in notifications" :key="notification.id" 
-             :class="['notification', notification.readed ? 'read' : 'unread']">
-          
-          <div class="notification-body"> 
-            <div class="notification-user-img">
-              <img style="width: 70px; border-radius: 50%" 
-                   :src="notification.targetUser?.profilePicture ? apiUrl + '/' + notification.targetUser.profilePicture : '/images/default.jpeg'">
-            </div>
-            
-            <div class="notification-details">
-              <h2>{{ notification.notification }}</h2>
-              <p style="color: gray">{{ notification.createdAt }}</p>
-            </div>
-          </div>
-          
-          <div @click="closeNotification(notification.id)" class="notification-close">
-            <font-awesome-icon icon="close"/>
-          </div>
-          
-        </div>
+      </div>
+    
+    <div v-for="notification in notifications" :key="notification.id" 
+     :class="['notification', notification.readed ? 'read' : 'unread']">
+      
+    
+   <div class="notification-body"> 
+      <div class="notification-user-img">
+        <img style="width: 70px; border-radius: 50%" :src="notification.targetUser.profilePicture ? 'http://localhost:3000/' + notification.targetUser.profilePicture : '/images/default.jpeg'">
+      </div>
+      
+      <div class="notification-details">
+        <h2>{{notification.notification}}</h2>
+        <p style="color: gray">{{notification.createdAt}}</p>
       </div>
     </div>
+    
+    <div @click="closeNotification(notification.id)" class="notification-close">
+      <font-awesome-icon icon="close"/>
+    </div>
+      
+    </div> <!-- NOTIFICATION DIV END -->
   </div>
+</div>
+</div>
 </template>
 
 <script>
 import HeaderComponent from './HeaderComponent'
-import LoadingComponent from './LoadingComponent'
 import ErrorComponent from './ErrorComponent'
+import LoadingComponent from './LoadingComponent'
+
+import { getUserNotifications, destroyUserNotification } from '../services/usersService'
+import { mapGetters, mapActions } from 'vuex';
 
 
-import apiUrl from '../config'
-import { getUserNotifications, destroyUserNotification } from '../services/usersServices'
-import { mapGetters, mapActions, mapState } from 'vuex';
+    export default {
+        components: {
+            HeaderComponent
+        }, 
+        name: 'NotificationsComponent',
+        data() {
+            return {
+                notifications: [],
+                error: "",
+                loading: true 
+            }
+        },
+        computed: {
+                ...mapState(['user'])
+        },
+        methods: {
+            ...mapActions(['fetchUser']),
+            async getUserNotifications() {
+                try {
+                    const data = await getUserNotifications() 
+                    console.log("data", data)
+                    this.notifications = data.notifications
+                } catch(e) {
+                    console.log(e)
+                    this.error = "Something Went Wrong..."
+                } finally {
+                    this.loading = false
+                }
+            },
+        async closeNotification(n_id) {
+         try {
+            const data = await destroyUserNotification(n_id)
+            
+            const index = this.notifications.findIndex(notification => notification.id === n_id);
 
-export default {
-  components: {
-    HeaderComponent,
-    ErrorComponent,
-    LoadingComponent
-  }, 
-  name: 'NotificationsComponent',
-  data() {
-    return {
-      notifications: [],
-      error: "",
-      loading: true,
-      apiUrl: apiUrl
-    };
-  },
-  computed: {
-    ...mapState(['user'])
-  },
-  methods: {
-    ...mapActions(['fetchUser']),
-    async initialize() {
-      await this.fetchUser();
-      if (this.user) {
-        await this.getUserNotifications();
+            if (index !== -1) {
+                this.notifications.splice(index, 1);
+                
+            } else {
+                console.warn(`Notification Not Found... ${notification_id}.`);
+            }
+            
+         } catch(e) {
+             console.log('error', e)
+             return 
+         }
       }
-    },
-    async getUserNotifications() {
-      try {
-        const data = await getUserNotifications();
-        console.log("data", data);
-        this.notifications = data.notifications;
-      } catch (e) {
-        console.log(e);
-        this.error = "Something Went Wrong...";
-      } finally {
-        this.loading = false;
-      }
-    },
-    async closeNotification(n_id) {
-      try {
-        await destroyUserNotification(n_id);
-        
-        const index = this.notifications.findIndex(notification => notification.id === n_id);
-        if (index !== -1) {
-          this.notifications.splice(index, 1);
-        } else {
-          console.warn(`Notification Not Found... ${n_id}.`);
+},
+            
+   async created() {
+        await this.fetchUser()
+        if(this.user) {
+            await this.getUserNotifications()
         }
-      } catch (e) {
-        console.log('error', e);
-      }
-    }
-  },
-  created() {
-    this.initialize();
-  },
+   },
+    
 }
 </script>
 
