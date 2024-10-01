@@ -61,11 +61,10 @@ import { mapGetters, mapActions } from 'vuex';
 
 export default {
   
-    
-  data() {
-      components: {
+    components: {
           HeaderComponent
       },
+  data() {
     return {
       photos: [],
       content: '',
