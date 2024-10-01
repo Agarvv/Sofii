@@ -5,7 +5,7 @@
         <img style="width: 50px;
                 height: 50px;
                 border-radius: 50%;
-                object-fit: cover;" :src="">
+                object-fit: cover;" :src="video.user.profilePicture ? apiUrl + '/' + video.user.profile_picture : '/images/default.jpeg'">
       </div>
       <div class="video-user-detail">
         <h4>{{ video.user_video.username }}</h4>
@@ -77,7 +77,7 @@ export default {
       error: "",
       isLiked: this.video.isLiked,
       isSaved: this.video.isSaved,
-      
+      apiUrl: apiUrl
     };
   },
   methods: {
