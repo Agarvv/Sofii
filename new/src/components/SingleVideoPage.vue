@@ -71,7 +71,7 @@ import { getVideo } from '../services/videoService'
             console.log("Route param", this.$route.params.video_id)
             await this.fetchUser()
             if(this.user) {
-                await getVideo(this.user, this.$route.params.video_id)
+                await this.getVideo(this.user, this.$route.params.video_id)
             }
             
             this.$socket.on('likeVideoComment', newLike => {
