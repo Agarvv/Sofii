@@ -63,15 +63,15 @@ const findVideoById = async (videoId) => {
             include: [
                 {
                     model: User,
-                    as: 'user_video'  // Asegúrate de que este alias coincida con la definición en relations.js
+                    as: 'user_video'
                 },
                 {
                     model: VideoComments,
-                    as: 'video_comments',  // Asegúrate de que este alias coincida con la definición en relations.js
+                    as: 'video_comments', 
                     include: [
                         {
                             model: User,
-                            as: 'video_comment_user'  // Asegúrate de que este alias coincida con la definición en relations.js
+                            as: 'video_comment_user' 
                         },
                         {
                             model: VideoCommentLikes,
