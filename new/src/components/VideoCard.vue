@@ -66,10 +66,7 @@ import apiUrl from '../config'
 export default {
   name: 'VideoCard',
   props: {
-    video: { 
-      type: Object,
-      required: true
-    }
+    video:  {}
   },
   data() {
     return {

@@ -56,8 +56,8 @@ import { getVideo } from '../services/videoService'
                 try {
                     console.log('id', id)
                     const data = await getVideo(id,user)
-                    console.log("All went ok: ", data)
                     this.video = data.video
+                    console.log("All went ok: ",  this.video)
                 } catch(e) {
                     console.log('Something went wrtonv', e)
                     this.error = "Something Went Wrong..."
