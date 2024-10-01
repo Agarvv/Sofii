@@ -15,20 +15,18 @@
       </div>
     </div>
     <div class="demostration-content">
-      <img style="
+      <img v-if="imageSource" style="
        width: 100%;
        height: 250px;
        object-fit: cover;
        border-radius: 15px;
       " :src="imageSource">
-      <video style="
-      width: 100%;
-      height: 250px;
-      object-fit: cover;
-      border-radius: 15px;
-      " controls>
-        <source :src="videoSource">
-      </video>
+      <video v-if="videoSource"
+       :key="videoSource"  <!-- Forces the video tag to reload when the source changes -->
+       :src="videoSource"  
+       style="width: 100%; height: 250px; object-fit: cover; border-radius: 15px;"
+       controls>
+     </video>
     </div>
     <div class="s-column">
      <div @click="openFileInput('imageInp')" class="sce-one">
@@ -64,7 +62,8 @@ export default {
   
     components: {
           HeaderComponent,
-          LoadingComponent
+          LoadingComponent,
+          ErrorComponent
       },
   data() {
     return {
@@ -118,7 +117,7 @@ export default {
 
       reader.onload = (ev) => {
         this.videoSource = ev.target.result;
-        this.photos.push(ev.target.result);
+        console.log('video source', this.videoSource)
       };
     },
     async submitForm() {
