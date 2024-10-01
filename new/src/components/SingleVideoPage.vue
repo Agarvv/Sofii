@@ -166,12 +166,9 @@ import { getVideo } from '../services/videoService'
         async mounted() {
             console.log('mounted video', this.video)
             this.video.video_comments.forEach((comment) => {
-                comment.showAwnserInp = false
-                comment.showAwnsers = false
+                this.commentsById[comment.id] = comment;
             })
-            // 
-            this.video.video_comments.forEach(comment => {
-            this.commentsById[comment.id] = comment;
+            
            // comment.isLiked = comment.comment_likes.some(like => like.user_id == this.usuario.user_id)
             
           //  comment.isDisliked = comment.comment_dislikes.some(dislike => dislike.user_id == this.usuario.user_id)

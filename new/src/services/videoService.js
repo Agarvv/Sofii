@@ -14,6 +14,8 @@ export async function getVideo(video_id, currentUser) {
         for (const comment of data.video.video_comments) {
             comment.isLiked = await checkIfCommentLiked(comment, currentUser);
             comment.isDisliked = await checkIfCommentDisliked(comment, currentUser);
+            comment.showAwnserInp = false
+            comment.showAwnsers = false
 
             // Loop through "awnsers" (yes, we’ll tolerate the spelling)
             for (const awnser of comment.awnsers) {
