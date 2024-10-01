@@ -176,7 +176,7 @@ export async function blockUser(target_id) {
 //function to find the user notifications
 //(By the user's JWT Token)
 export async function getUserNotifications() {
-    const response = await fetchUrl(process.env.VUE_APP_API_URL + 'api/sofi/notifications', null, 'GET')
+    const response = await fetchUrl(process.env.VUE_APP_API_URL + '/api/sofi/notifications', null, 'GET')
     
     const data = await response.json()
     if(response.ok) {
