@@ -98,21 +98,6 @@ export async function changeUserPassword(password, token, email) {
    }
 }
 
-export async function checkIfUserIsFollowed(user, currentUser) {
-  // USER IS THE USER TO COMPARE THE DATA
-  // current user is the current user of the session 
-  console.log('user:vv', user)
-  const isFollowing = user.followers.some(follower => follower.Follower.follower_id == currentUser.user_id)
-  return isFollowing
-}
-
-export async function checkIfUserIsFriend(user, currentUser) {
-  // USER IS THE USER TO COMPARE THE DATA
-  // current user is the current user of the session
-  const isFriend = user.friends.some(friend => friend.friend_one_id == currentUser.user_id || friend.friend_two_id == currentUser.user_id)
-  return isFriend
-}
-
 // USER MEANS THE USER THAT WE WANT TO FOLLOW
 export async function followUser(user_id) {
    const response = await fetchUrl(process.env.VUE_APP_API_URL + '/api/sofi/follow', {
@@ -188,7 +173,49 @@ export async function blockUser(target_id) {
     }
 }
 
+//function to find the user notifications
+//(By the user's JWT Token)
+export async function getUserNotifications() {
+    const response = await fetchUrl(process.env.VUE_APP_API_URL + 'api/sofi/notifications', null, 'GET')
+    
+    const data = await response.json()
+    if(response.ok) {
+        return data
+    } else {
+        throw new Error(data.error)
+    }
+}
 
+
+export async function destroyUserNotification(notification_id) {
+    const data = await fetchUrl(process.env.VUE_APP_API_URL + '/api/sofi/destroy_notification', {
+        notification_id: notification_id
+    }, 'POST')
+    
+    if(response.ok) {
+        return data
+    } else {
+        throw new Error(data.error)
+    }
+}
+ 
+
+
+export async function checkIfUserIsFollowed(user, currentUser) {
+  // USER IS THE USER TO COMPARE THE DATA
+  // current user is the current user of the session 
+  console.log('user:vv', user)
+  const isFollowing = user.followers.some(follower => follower.Follower.follower_id == currentUser.user_id)
+  return isFollowing
+}
+
+export async function checkIfUserIsFriend(user, currentUser) {
+  // USER IS THE USER TO COMPARE THE DATA
+  // current user is the current user of the session
+  const isFriend = user.friends.some(friend => friend.friend_one_id == currentUser.user_id || friend.friend_two_id == currentUser.user_id)
+  return isFriend
+}
 
 
 // angular >>>>>> vue
+

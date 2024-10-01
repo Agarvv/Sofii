@@ -85,6 +85,7 @@ import goToRoute from '../helpers/goToRoute'
 import { getPosts, checkIfUserLikedPost, checkIfUserSavedPost } from '../services/postService'
 import { mapGetters, mapActions } from 'vuex';
 
+
 export default {
   name: 'HelloWorld',
   components: {

@@ -1,122 +1,113 @@
 <template>
-<div> 
-<HeaderComponent :activePage="'notifications'" :user="usuario"/>
+  <div> 
+    <HeaderComponent :activePage="'notifications'" :user="usuario"/>
     
-
-
-
-<div class="container"> 
-  
-  <div class="notifications">
-      
+    <LoadingComponent v-if="LoadingComponent" message="Getting Your Notifications, please wait..."/>
     
-    <div v-if="notifications.length > 0" class="notifications-header">
-      <h2>Your Notifications</h2>
-    </div>
+    <ErrorComponent v-if="error" :error="error"/>
     
-      <div class="empty-notifications" v-if="notifications.length == 0">
+    <div class="container"> 
+      <div class="notifications">
+        <div v-if="notifications.length > 0" class="notifications-header">
+          <h2>Your Notifications</h2>
+        </div>
+        
+        <div class="empty-notifications" v-if="notifications.length == 0">
           <h4>You Do Not Have Notifications...</h4>
-      </div>
-    
-    <div v-for="notification in notifications" :key="notification.id" 
-     :class="['notification', notification.readed ? 'read' : 'unread']">
-      
-    
-   <div class="notification-body"> 
-      <div class="notification-user-img">
-        <img style="width: 70px; border-radius: 50%" :src="notification.targetUser.profilePicture ? 'http://localhost:3000/' + notification.targetUser.profilePicture : '/images/default.jpeg'">
-      </div>
-      
-      <div class="notification-details">
-        <h2>{{notification.notification}}</h2>
-        <p style="color: gray">{{notification.createdAt}}</p>
+        </div>
+        
+        <div v-for="notification in notifications" :key="notification.id" 
+             :class="['notification', notification.readed ? 'read' : 'unread']">
+          
+          <div class="notification-body"> 
+            <div class="notification-user-img">
+              <img style="width: 70px; border-radius: 50%" 
+                   :src="notification.targetUser?.profilePicture ? apiUrl + '/' + notification.targetUser.profilePicture : '/images/default.jpeg'">
+            </div>
+            
+            <div class="notification-details">
+              <h2>{{ notification.notification }}</h2>
+              <p style="color: gray">{{ notification.createdAt }}</p>
+            </div>
+          </div>
+          
+          <div @click="closeNotification(notification.id)" class="notification-close">
+            <font-awesome-icon icon="close"/>
+          </div>
+          
+        </div>
       </div>
     </div>
-    
-    <div @click="closeNotification(notification.id)" class="notification-close">
-      <font-awesome-icon icon="close"/>
-    </div>
-      
-    </div> <!-- NOTIFICATION DIV END -->
-
-
-
-
-
-    
-    
   </div>
-  
-</div>
-
-</div>
 </template>
 
 <script>
 import HeaderComponent from './HeaderComponent'
-import userMixin from '../mixins/userMixin'
+import LoadingComponent from './LoadingComponent'
+import ErrorComponent from './ErrorComponent'
 
 
-    export default {
-        mixins: [userMixin],
-        components: {
-            HeaderComponent
-        }, 
-        name: 'NotificationsComponent',
-        data() {
-            return {
-                notifications: []
-            }
-        },
-        methods: {
-            async getUserNotifications() {
-                const response = await
-                fetch('http://localhost:3000/api/sofi/notifications', {
-                    method: 'GET',
-                    credentials: 'include'
-                })
-                
-                const data = await response.json()
-                console.log('Server data notification: ', data)
-                this.notifications = data.notifications
-            },
-            async closeNotification(notification_id) {
-    console.log('Close notification Method Called: ', notification_id);
+import apiUrl from '../config'
+import { getUserNotifications, destroyUserNotification } from '../services/usersServices'
+import { mapGetters, mapActions, mapState } from 'vuex';
 
-    const response = await fetch('http://localhost:3000/api/sofi/destroy_notification', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ notification_id: notification_id }),
-        credentials: 'include'
-    });
-
-    const data = await response.json();
-    console.log('server data destroy notification: ', data);
-
-    if (response.ok) {
-        // Encuentra el índice de la notificación en el array
-        const index = this.notifications.findIndex(notification => notification.id === notification_id);
-
+export default {
+  components: {
+    HeaderComponent,
+    ErrorComponent,
+    LoadingComponent
+  }, 
+  name: 'NotificationsComponent',
+  data() {
+    return {
+      notifications: [],
+      error: "",
+      loading: true,
+      apiUrl: apiUrl
+    };
+  },
+  computed: {
+    ...mapState(['user'])
+  },
+  methods: {
+    ...mapActions(['fetchUser']),
+    async initialize() {
+      await this.fetchUser();
+      if (this.user) {
+        await this.getUserNotifications();
+      }
+    },
+    async getUserNotifications() {
+      try {
+        const data = await getUserNotifications();
+        console.log("data", data);
+        this.notifications = data.notifications;
+      } catch (e) {
+        console.log(e);
+        this.error = "Something Went Wrong...";
+      } finally {
+        this.loading = false;
+      }
+    },
+    async closeNotification(n_id) {
+      try {
+        await destroyUserNotification(n_id);
+        
+        const index = this.notifications.findIndex(notification => notification.id === n_id);
         if (index !== -1) {
-            // Si se encontró, elimínala del array
-            this.notifications.splice(index, 1);
-            console.log(`Notificación con ID ${notification_id} eliminada.`);
+          this.notifications.splice(index, 1);
         } else {
-            console.warn(`No se encontró la notificación con ID ${notification_id}.`);
+          console.warn(`Notification Not Found... ${n_id}.`);
         }
+      } catch (e) {
+        console.log('error', e);
+      }
     }
-},
-            
-        },
-        async created() {
-            this.getUserNotifications()
-        },
-        async mounted() {
-            
-        }
-    }
+  },
+  created() {
+    this.initialize();
+  },
+}
 </script>
 
 <style scoped>
