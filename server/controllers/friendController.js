@@ -56,7 +56,7 @@ const handleFriendRequest = async (jwt_token, friend_target) => {
 
         const isFriends = await Friends.findOne({
             where: {
-                [Sequelize.Op.or]: [
+                [Op.or]: [
                     {
                         friend_one_id: userDecoded.user_id,
                         friend_two_id: friend_target
