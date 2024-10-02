@@ -341,7 +341,7 @@ export default {
         this.chat = data.chat;
         this.chat_id = data.chat.chat_id;
         this.messages = data.chat.messages;
-        this.user = data.chat.userToDisplayInfo;
+        this.user = data.userToDisplayInfo;
         this.$socket.emit('joinRoom', this.chat_id);
       } catch (e) {
         console.error('error', e);
