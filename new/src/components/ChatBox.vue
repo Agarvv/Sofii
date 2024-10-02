@@ -198,7 +198,7 @@ clearMessage() {
   this.message = '';
   this.imageSrc = '';
   this.videoSrc = '';
-}
+},
 
 async sendMessage() {
   try {
@@ -223,7 +223,7 @@ async sendMessage() {
   } catch (error) {
     console.error('Error sending message:', error);
   }
-}
+},
 
 
 

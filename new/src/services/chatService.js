@@ -27,10 +27,3 @@ export async function getChats() {
       throw new Error('Something went wrong')
    }
 }
-
-export async function sendMessage(
-    message,
-    image = null,
-    video = null,
-    audio = null
-)
