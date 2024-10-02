@@ -129,9 +129,9 @@ export default {
        LoadingComponent
     },
   name: 'profileDetails',
-  computed {
+  computed: {
         //The actual user 
-      ...mapGetters(['user']),
+      ...mapGetters(['user'])
   },
   data() {
     return {
