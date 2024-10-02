@@ -4,7 +4,7 @@
       <div class="main-header">
         <div class="user-details">
           <div class="user-img">
-            <img style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;" :src="user.profilePicture ? apiUrl + '/' + user.profilePicture : '/images/default.jpeg" class="profile-img">
+            <img style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;" :src="user.profilePicture ? apiUrl + '/' + user.profilePicture : '/images/default.jpeg'" class="profile-img">
           </div>
           <div class="user-username">
             
