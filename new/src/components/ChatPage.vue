@@ -25,10 +25,10 @@
         >
           <div class="main-chat-user">
             <div class="user-img">
-              <img :src="'http://localhost:3000' + chat.userToDisplayInfo.profilePicture">
+              <img :src="chat.userToDisplayInfo.profilePicture ? apiUrl + '/' + chat.userToDisplayInfo.profilePicture : '/images/default.jpeg'">
             </div>
             <div class="user-details">
-              <h4>{{chat.userToDisplayInfo.username}}</h4>
+              <h4>{{chat.userToDisplayInfo.username || 'Someone'}}</h4>
               <p>{{chat.last_message}}</p>
             </div>
           </div>
@@ -39,6 +39,7 @@
 </template>
 
 <script>
+import apiUrl from '../config'
 import HeaderComponent from './HeaderComponent'
 import userMixin from '../mixins/userMixin'
 import { getChats } from '../services/chatService'
@@ -53,6 +54,7 @@ export default {
     return {
       contacts: [],
       searchQuery: "", 
+      apiUrl: apiUrl
     }
   },
   computed: {

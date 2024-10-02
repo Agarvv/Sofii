@@ -8,7 +8,7 @@
           </div>
           <div class="user-username">
             
-            <h4>{{ user.username }}</h4>
+            <h4>{{ user.username || 'Someone' }}</h4>
             <p v-if="isUserTyping">{{user.username}} Is Typing...</p>
              <p  style="color: green;" v-if=" !isUserTyping && user.active" class="status">Online</p>
             <p style="color: gray" v-if=" !isUserTyping && !user.active">Offline</p>
