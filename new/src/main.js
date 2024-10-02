@@ -25,6 +25,16 @@ const socket = io('https://sofii-1.onrender.com', {
   withCredentials: true
 });
 
+// Log to check if the WebSocket is connected
+socket.on('connect', () => {
+  console.log('WebSocket connected successfully! Socket ID:', socket.id);
+});
+
+// You can also log disconnection events if you'd like
+socket.on('disconnect', () => {
+  console.log('WebSocket disconnected!');
+});
+
 const app = createApp(App);
 app.config.devtools = true;  // Habilitar Vue Devtools
 app.config.productionTip = false;  // Desactivar los tips de producción en desarrollo
