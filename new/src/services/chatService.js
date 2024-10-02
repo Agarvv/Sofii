@@ -28,3 +28,9 @@ export async function getChats() {
    }
 }
 
+export async function sendMessage(
+    message,
+    image = null,
+    video = null,
+    audio = null
+)

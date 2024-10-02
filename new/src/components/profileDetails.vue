@@ -219,91 +219,86 @@ export default {
             const formData = new FormData();
             
             switch (key) {
-    case 'profile_pic':
-        formData.append('profile-picture', changes[key]);
-        response = await fetch(process.env.VUE_APP_API_URL + '/api/sofi/set_profile_picture', {
-            method: 'POST',
-            body: formData,
-            credentials: 'include'
-        });
-        break;
-    case 'profile_banner':
-        formData.append('profile-banner', changes[key]);
-        response = await fetch(process.env.VUE_APP_API_URL + '/api/sofi/set_profile_banner', {
-            method: 'POST',
-            body: formData,
-            credentials: 'include'
-        });
-        break;
-    case 'bio':
-        response = await fetch(process.env.VUE_APP_API_URL + '/api/sofi/set_bio', {
-            method: 'POST',
-            body: JSON.stringify({ bio: changes[key] }),
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include'
-        });
-        break;
-    case 'native_city':
-        response = await fetch(process.env.VUE_APP_API_URL + '/api/sofi/set_native_city', {
-            method: 'POST',
-            body: JSON.stringify({ native_city: changes[key] }),
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include'
-        });
-        break;
-    case 'ubication':
-        response = await fetch(process.env.VUE_APP_API_URL + '/api/sofi/set_ubication', {
-            method: 'POST',
-            body: JSON.stringify({ ubication: changes[key] }),
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include'
-        });
-        break;
-    case 'civil_status':
-        response = await fetch(process.env.VUE_APP_API_URL + '/api/sofi/set_civil_status', {
-            method: 'POST',
-            body: JSON.stringify({ civil_status: changes[key] }),
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include'
-        });
-        break;
-    case 'gender':
-        response = await fetch(process.env.VUE_APP_API_URL + '/api/sofi/set_gender', {
-            method: 'POST',
-            body: JSON.stringify({ gender: changes[key] }),
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include'
-        });
-        break;
-    case 'job':
-        response = await fetch(process.env.VUE_APP_API_URL + '/api/sofi/set_job', {
-            method: 'POST',
-            body: JSON.stringify({ job: changes[key] }),
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include'
-        });
-        break;
-    default:
-        console.error(`No endpoint found for field ${key}`);
-        continue;
-}
-            
-            
-            
-            
-            
+                case 'profile_pic':
+                    formData.append('profile-picture', changes[key]);
+                    response = await fetch(process.env.VUE_APP_API_URL + '/api/sofi/set_profile_picture', {
+                        method: 'POST',
+                        body: formData,
+                        credentials: 'include'
+                    });
+                    break;
+                case 'profile_banner':
+                    formData.append('profile-banner', changes[key]);
+                    response = await fetch(this.apiUrl + '/api/sofi/set_profile_banner', {
+                        method: 'POST',
+                        body: formData,
+                        credentials: 'include'
+                    });
+                    break;
+                case 'bio':
+                    response = await fetch(this.apiUrl + '/api/sofi/set_bio', {
+                        method: 'POST',
+                        body: JSON.stringify({ bio: changes[key] }),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        credentials: 'include'
+                    });
+                    break;
+                case 'native_city':
+                    response = await fetch(this.apiUrl + '/api/sofi/set_native_city', {
+                        method: 'POST',
+                        body: JSON.stringify({ native_city: changes[key] }),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        credentials: 'include'
+                    });
+                    break;
+                case 'ubication':
+                    response = await fetch(this.apiUrl + '/api/sofi/set_ubication', {
+                        method: 'POST',
+                        body: JSON.stringify({ ubication: changes[key] }),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        credentials: 'include'
+                    });
+                    break;
+                case 'civil_status':
+                    response = await fetch(this.apiUrl + '/api/sofi/set_civil_status', {
+                        method: 'POST',
+                        body: JSON.stringify({ civil_status: changes[key] }),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        credentials: 'include'
+                    });
+                    break;
+                case 'gender':
+                    response = await fetch(this.apiUrl + '/api/sofi/set_gender', {
+                        method: 'POST',
+                        body: JSON.stringify({ gender: changes[key] }),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        credentials: 'include'
+                    });
+                    break;
+                case 'job':
+                    response = await fetch(this.apiUrl + '/api/sofi/set_job', {
+                        method: 'POST',
+                        body: JSON.stringify({ job: changes[key] }),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        credentials: 'include'
+                    });
+                    break;
+                default:
+                    console.error(`No endpoint found for field ${key}`);
+                    continue;
+            }
 
             if (response.ok) {
                 this.changes.push(key); 

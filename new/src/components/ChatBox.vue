@@ -131,7 +131,7 @@
 
 <script>
 import userMixin from '../mixins/userMixin'
-
+import apiUrl from '../config'
 
 export default {
   mixins: [userMixin], 
@@ -155,129 +155,75 @@ export default {
       recordingInterval: null,
       image: null,
       video: null,
-      isUserTyping: false
+      isUserTyping: false,
+      apiUrl: apiUrl
     };
   },
   computed: {
     userProfilePicture() {
       return this.user.profilePicture 
-        ? `http://localhost:3000/${this.user.profilePicture}`
-        : 'default_image_path_here'; 
+        ? `${apiUrl}/${this.user.profilePicture}`
+        : '/images/default.jpeg'; 
     }
   },
   methods: {
+      
+ getMessageType() {
+  if (this.imageSrc && this.message) return 'text-image';
+  if (this.videoSrc && this.message) return 'text-video';
+  if (this.imageSrc) return 'image';
+  if (this.videoSrc) return 'video';
+  return 'text';
+},
+
+async uploadMedia(file, mediaType) {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const response = await fetch(`${this.apiUrl}/sofi/upload_media`, {
+    method: 'POST',
+    body: formData,
+    credentials: 'include'
+  });
+
+  if (!response.ok) {
+    throw new Error(`Error uploading ${mediaType}`);
+  }
+
+  const data = await response.json();
+  return data.path; 
+},
+
+clearMessage() {
+  this.message = '';
+  this.imageSrc = '';
+  this.videoSrc = '';
+}
+
 async sendMessage() {
-    // Inicializar el tipo y datos
-    let type = 'text';
-    let data = {};
-
-    // Verificar el estado de los datos de entrada
-    console.log('Preparing to send message...');
-    console.log('imageSrc:', this.imageSrc);
-    console.log('videoSrc:', this.videoSrc);
-    console.log('message:', this.message);
-    console.log('chat_id:', this.chat.chat_id);
-
-    // Verificar si hay una imagen
-    if (this.imageSrc) {
-     let type;
-     type = this.message ? 'image-text' : 'image'
-
-        const response = await fetch('http://localost:3000/api/sofi/upload_media', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
- 
-          }),
-          credentials: 'include'
-        })
-
-        const data = await response.json()
-        console.log('upload media: ', data)
-
-        if(response.ok) {
-          this.$socket.emit('chatMessage', {
-            type: type,
-            message: this.message,
-            image: data.image
-          })
-        } else {
-          console.error('Something went wrong...')
-        }
-    }
-
-    // Verificar si hay un video
-    if (this.videoSrc) {
-        
-    }
-
-    if (!this.imageSrc && !this.videoSrc && this.message) {
-        console.log('Single message detected')
-        data = {
-            type: 'single_message',
-            message: this.message,
-            chat_id: this.chat.chat_id
-        };
-    }
-
-    // Función para manejar la subida de medios (imágenes o videos)
-    const uploadMedia = async (file, mediaType) => {
-        const formData = new FormData();
-        formData.append('file', file);
-
-        const response = await fetch('http://localhost:3000/api/sofi/upload_media', {
-            method: 'POST',
-            body: formData,
-            credentials: 'include'
-        });
-
-        const serverData = await response.json();
-        console.log(`Upload data for ${mediaType}: `, serverData);
-        return serverData.path;
+  try {
+    let type = this.getMessageType();
+    let data = {
+      chat_id: this.chat.chat_id,
+      message: this.message || '',
+      type: type,
     };
 
-    // Caso de imagen
     if (this.imageSrc) {
-        const imagePath = await uploadMedia(this.image, 'image');
-        console.log('Detected image');
-        type = this.message ? 'text-image' : 'image';
-        data = {
-            type: type,
-            file: imagePath,
-            message: this.message,
-            chat_id: this.chat.chat_id
-        };
+      data.file = await this.uploadMedia(this.image, 'image');
+    } else if (this.videoSrc) {
+      data.file = await this.uploadMedia(this.video, 'video');
     }
 
-    // Caso de video
-    if (this.videoSrc) {
-        const videoPath = await uploadMedia(this.video, 'video');
-        console.log('Detected video');
-        type = this.message ? 'text-video' : 'video';
-        data = {
-            type: type,
-            file: videoPath,
-            message: this.message,
-            chat_id: this.chat.chat_id
-        };
-    }
+    
+    this.$socket.emit('chatMessage', data);
 
-    // Log final de tipo y datos
-    console.log('Final type:', type);
-    console.log('Final data being sent:', data);
-
-    // Emitir el mensaje a través del socket
-    try {
-        console.log('Emitting chatMessage...');
-        this.$socket.emit('chatMessage', data);
-        console.log('Message emitted successfully');
-        this.message = ""
-    } catch (error) {
-        console.error('Error emitting chatMessage:', error);
-    }
-},
+    this.clearMessage();
+    
+  } catch (error) {
+    console.error('Error sending message:', error);
+  }
+}
 
 
 
@@ -298,22 +244,21 @@ async sendMessage() {
       }
     },
  handleFilesChanges(event) {
-    const file = event.target.files[0]; // Obtiene el primer archivo
+    const file = event.target.files[0]; 
     if (file) {
-        const reader = new FileReader(); // Crea un nuevo FileReader
+        const reader = new FileReader(); 
 
         reader.onload = (e) => {
-            // Verifica si es una imagen
+    
             if (file.type.startsWith("image/")) {
-                this.imageSrc = e.target.result; // Asigna el Data URL a imageSrc
+                this.imageSrc = e.target.result; 
                 
-                this.image = file; // Almacena el archivo para otros usos
+                this.image = file; 
             } 
-            // Verifica si es un video
             else if (file.type.startsWith("video/")) {
-                this.videoSrc = e.target.result; // Asigna el Data URL a videoSrc
+                this.videoSrc = e.target.result; 
                 console.log('new video src::', this.videoSrc);
-                this.video = file; // Almacena el archivo para otros usos
+                this.video = file; 
             }
         };
 
@@ -321,7 +266,7 @@ async sendMessage() {
             console.error('Error reading file:', error);
         };
 
-        reader.readAsDataURL(file); // Lee el archivo como Data URL
+        reader.readAsDataURL(file); 
     }
 },
     
@@ -362,15 +307,13 @@ async sendMessage() {
     this.mediaRecorder.stop();
 
     this.mediaRecorder.onstop = async () => {
-        // Creamos un Blob a partir de los chunks de audio grabados
         const audioBlob = new Blob(this.audioChunks, { type: 'audio/webm' });
 
-        // Creamos un FormData y agregamos el archivo Blob con un nombre de archivo
+    
         const formData = new FormData();
         formData.append('file', audioBlob, 'recording.webm');
 
         try {
-            // Enviamos el FormData al servidor usando fetch
             const response = await fetch('http://localhost:3000/api/sofi/upload_media', {
                 method: 'POST',
                 body: formData,
