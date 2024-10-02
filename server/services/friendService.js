@@ -132,18 +132,10 @@ const acceptFriendRequest = async (user, friend_request) => {
     }
 }
 
-const denyFriendRequest = async () => {
-    try {
-         
-    } catch(e) {
-        throw new Error(e)
-    }
-}
- 
+
 module.exports = {
     handleFriendRequest,
     getFriendRequestsByUserId,
     getUserFriendsAndRequests,
-    acceptFriendRequest,
-    denyFriendRequest
+    acceptFriendRequest
 }

@@ -115,8 +115,9 @@ const acceptFriendRequest = async (jwt_token, req_id) => {
             where: { id: req_id }
         })
         
-        console.log('Request finded: ', friend_request.friend_target)
-        console.log('user id: ', userDecoded)
+        if(!friend_request) {
+            throw new Error('The Friend Request Does Not Exist')
+        }
         
         if(friend_request.friend_target !== userDecoded.user_id) {
             throw new Error("You are not authorized to accept this request.")
@@ -124,7 +125,6 @@ const acceptFriendRequest = async (jwt_token, req_id) => {
             const friendship = await friendService.acceptFriendRequest(userDecoded, friend_request)
             return friendship
         }
-        
         
     } catch(e) {
         throw new Error(e)

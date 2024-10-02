@@ -1,9 +1,11 @@
 <template>
 
-<div v-if="success" class="success-header">
-<p>{{successMessage}}</p> 
-</div>
+<SuccessComponent v-if="successMessage" :success="successMessage"/>
 
+<ErrorComponent v-if="error" :error="error"/>
+
+<LoadingComponent v-if="loadingData || loadingSetData" 
+  :message="loadingData ? 'Loading Your Data, Please Wait...' : 'Setting Your Data, Please Wait...'"/>
 
   <header>
     <h1>Profile Settings</h1>
@@ -16,8 +18,12 @@
         <h4>Your Profile Picture</h4>
         <div @click="handlePhotoOpen" id="profile-picture-photo">
           <input @change="handleFileChanges($event, 'profile_pic')" style="display: none;" type="file" id="profilePhotoInput">
-        <img :src="userNewData.profile_pic ? userNewData.profile_pic : 'http://localhost:3000/' + usuario.user_picture" id="profile-photo">
-
+          <img :src="userNewData.profile_pic 
+           ? userNewData.profile_pic 
+           : (user.user_picture 
+               ? apiUrl + '/' + usuario.user_picture 
+               : '/images/default.jpeg')" 
+          id="profile-photo">
         </div>
       </div>
 
@@ -25,7 +31,12 @@
         <h4>Your Banner</h4>
         <input @change="handleFileChanges($event, 'profile_banner')" style="display: none;" type="file" id="profileBannerInput">
         <div class="banner-img">
-          <img :src="userNewData.profile_banner ? userNewData.profile_banner : 'http://localhost:3000/' + usuario.user_banner">
+          <img :src="userNewData.profile_banner 
+           ? userNewData.profile_banner 
+           : (user.user_banner 
+               ? apiUrl + '/' + usuario.user_banner 
+               : '/images/default_banner.webp')" 
+            id="profile-banner">
         </div>
       </div>
 
@@ -101,62 +112,102 @@
   </div>
 </template>
 
-<script>
-import userMixin from '../mixins/userMixin'
+<script> 
+import SuccessComponent from './SuccessComponent'
+import ErrorComponent from './ErrorComponent'
+import LoadingComponent from './LoadingComponent'
+
+
+import { mapGetters, mapActions } from 'vuex';
+import apiUrl from '../config'
+
 
 export default {
-  mixins: [userMixin],
+    components: {
+       SuccessComponent,
+       ErrorComponent,
+       LoadingComponent
+    },
   name: 'profileDetails',
+  computed {
+        //The actual user 
+      ...mapGetters(['user']),
+  },
   data() {
     return {
+      //The user new data Object
       userNewData: {
-        profile_pic: "",        // User profile picture
-        profile_banner: "",     // User profile banner
-        bio: "",                // User biography
-        native_city: "",        // User native city
-        ubication: "",          // User location
-        civil_status: "",       // User civil status
-        gender: "",             // User gender
-        job: ""                 // User job
+        profile_pic: "",    
+        profile_banner: "", 
+        bio: "",                
+        native_city: "",        
+        ubication: "",          
+        civil_status: "",   
+        gender: "",         
+        job: ""             
       },
       originalData: {},
       success: null,
       successMessage: "",
-      changes: []  // Array para guardar los cambios realizados
+      changes: [],
+      apiUrl: apiUrl,
+      error: "",
+      loadingData: true,
+      loadingSetData: false
     };
   },
   methods: {
+      //Method for get the actual user
+    ...mapActions(['fetchUser']),
+    
+    
     async getUserData() {
-      this.originalData = {
-        profile_pic: this.usuario.profilePicture,
-        profile_banner: this.usuario.banner,
-        bio: this.usuario.bio,
-        native_city: this.usuario.native_city,
-        ubication: this.usuario.ubication,
-        civil_status: this.usuario.civil_status,
-        gender: this.usuario.gender,
-        job: this.usuario.job
+      try {
+          await this.fetchUser()
+          this.originalData = {
+        profile_pic: this.user.profilePicture,
+        profile_banner: this.user.banner,
+        bio: this.user.bio,
+        native_city: this.user.native_city,
+        ubication: this.user.ubication,
+        civil_status: this.user.civil_status,
+        gender: this.user.gender,
+        job: this.user.job
       };
       this.userNewData = { ...this.originalData };
+      } catch(e) {
+          this.error = "Something Went Wrong While Loading Your Data..."
+          console.log('ERROR!', e)
+      } finally {
+          this.loadingData = false 
+      }
     },
+    
+    
     handlePhotoOpen() {
       document.getElementById('profilePhotoInput').click();
     },
     handleBannerOpen() {
       document.getElementById('profileBannerInput').click();
     },
+    
+    
     setUserData(event, field) {
       this.userNewData[field] = event.target.value;
     },
+    
+    
     handleFileChanges(event, target) {
       const file = event.target.files[0];
       if (file) {
         this.userNewData[target] = file; // Store the file directly
       }
     },
+    
+    
     async saveAllChanges() {
       const changes = {};
-      this.changes = []; // Reiniciamos el array de cambios
+      this.changes = []; 
 
       for (const key in this.userNewData) {
         if (this.userNewData[key] !== this.originalData[key] && this.userNewData[key] !== "") {
@@ -166,13 +217,14 @@ export default {
 
       for (const key in changes) {
         try {
+          this.loadingSetData = true
           let response;
           const formData = new FormData();
           
           switch (key) {
             case 'profile_pic':
               formData.append('profile-picture', changes[key]);
-              response = await fetch('http://localhost:3000/api/sofi/set_profile_picture', {
+              response = await fetch(apiUrl + '/api/sofi/set_profile_picture', {
                 method: 'POST',
                 body: formData,
                 credentials: 'include'
@@ -180,14 +232,14 @@ export default {
               break;
             case 'profile_banner':
               formData.append('profile-banner', changes[key]);
-              response = await fetch('http://localhost:3000/api/sofi/set_profile_banner', {
+              response = await fetch(apiUrl + '/api/sofi/set_profile_banner', {
                 method: 'POST',
                 body: formData,
                 credentials: 'include'
               });
               break;
             case 'bio':
-              response = await fetch('http://localhost:3000/api/sofi/set_bio', {
+              response = await fetch(apiUrl + '/api/sofi/set_bio', {
                 method: 'POST',
                 body: JSON.stringify({ bio: changes[key] }),
                 headers: {
@@ -197,7 +249,7 @@ export default {
               });
               break;
             case 'native_city':
-              response = await fetch('http://localhost:3000/api/sofi/set_native_city', {
+              response = await fetch(apiUrl + '/api/sofi/set_native_city', {
                 method: 'POST',
                 body: JSON.stringify({ native_city: changes[key] }),
                 headers: {
@@ -207,7 +259,7 @@ export default {
               });
               break;
             case 'ubication':
-              response = await fetch('http://localhost:3000/api/sofi/set_ubication', {
+              response = await fetch(apiUrl + '/api/sofi/set_ubication', {
                 method: 'POST',
                 body: JSON.stringify({ ubication: changes[key] }),
                 headers: {
@@ -217,7 +269,7 @@ export default {
               });
               break;
             case 'civil_status':
-              response = await fetch('http://localhost:3000/api/sofi/set_civil_status', {
+              response = await fetch(apiUrl + '/api/sofi/set_civil_status', {
                 method: 'POST',
                 body: JSON.stringify({ civil_status: changes[key] }),
                 headers: {
@@ -227,7 +279,7 @@ export default {
               });
               break;
             case 'gender':
-              response = await fetch('http://localhost:3000/api/sofi/set_gender', {
+              response = await fetch(apiUrl + '/api/sofi/set_gender', {
                 method: 'POST',
                 body: JSON.stringify({ gender: changes[key] }),
                 headers: {
@@ -237,7 +289,7 @@ export default {
               });
               break;
             case 'job':
-              response = await fetch('http://localhost:3000/api/sofi/set_job', {
+              response = await fetch(apiUrl + '/api/sofi/set_job', {
                 method: 'POST',
                 body: JSON.stringify({ job: changes[key] }),
                 headers: {
@@ -252,17 +304,19 @@ export default {
           }
 
           if (response.ok) {
-            this.changes.push(key); // Añadimos el campo al array de cambios
+            this.changes.push(key); 
           } else {
             const errorData = await response.json();
             console.error(`Error saving ${key}: ${response.statusText}`, errorData);
           }
         } catch (error) {
+            this.error = "Something Went Wrong..."
           console.error(`Error saving ${key}: `, error);
+        } finally {
+            this.loadingSetData = false
         }
       }
 
-      // Construir el mensaje de éxito
       if (this.changes.length > 0) {
         const changesList = this.changes.join(', ');
         this.successMessage = `Your ${changesList} has been changed successfully.`;
@@ -271,8 +325,8 @@ export default {
       }
     }
   },
-  mounted() {
-    this.getUserData();
+ async mounted() {
+        await this.getUserData()
   }
 };
 </script>
