@@ -19,7 +19,7 @@ export async function startChat(user_id) {
 
 //THIS IS THE METHOD TO SERVE THE CONTACTS OF THE USER
 export async function getChats() {
-   const response = await fetch(process.env.VUE_APP_API_URL + '/api/sofi/chats', null, 'GET')
+   const response = await fetchUrl(process.env.VUE_APP_API_URL + '/api/sofi/chats', null, 'GET')
    const data = await response.json()
    if(response.ok) {
       return data
