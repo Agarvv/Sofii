@@ -130,8 +130,13 @@
 </template>
 
 <script>
+
+
+import { startChat } from '../services/chatService'
 import userMixin from '../mixins/userMixin'
 import apiUrl from '../config'
+import { mapGetters, mapState, mapActions } from 'vuex';
+
 
 export default {
   mixins: [userMixin], 
@@ -164,10 +169,11 @@ export default {
       return this.user.profilePicture 
         ? `${apiUrl}/${this.user.profilePicture}`
         : '/images/default.jpeg'; 
-    }
+    },
+    currentUser: state => state.user
   },
   methods: {
-      
+      ...mapActions(['fetchUser'])
  getMessageType() {
   if (this.imageSrc && this.message) return 'text-image';
   if (this.videoSrc && this.message) return 'text-video';
@@ -348,38 +354,26 @@ broadcastTyping() {
     this.$socket.emit('typing', this.chat_id)
 }
 
-    
+async startChat() {
+    try {
+        const data = await startChat(this.$route.params.receiver_id)
+        console.log('all went ok', data)
+        this.chat = data.chat 
+        this.chat_id = data.chat.chat_id 
+        this.messages = data.chat.messages
+        this.user = data.chat.userToDisplayInfo,
+        this.$socket.emit('joinRoom', this.chat_id);
+    } catch(e) {
+        console.error('error', e)
+        throw e
+    }
+}
     
   },
   async created() {
-    try {
-      const response = await fetch('http://localhost:3000/api/sofi/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ user_id: this.$route.params.receiver_id }),
-        credentials: 'include'
-      });
-
-      const data = await response.json();
-      console.log('data: ', data)
-      if (response.ok) {
-        this.chat = data.chat;
-        this.chat_id = data.chat.chat_id;
-        this.messages = data.chat.messages;
-        this.user = data.userToDisplayInfo;
-        this.$socket.emit('joinRoom', this.chat_id);
-      } else {
-        console.error("Error fetching chat data:", data);
-        this.error = "Failed to fetch chat data.";
-      }
-    } catch (error) {
-      console.error("Error during fetch:", error);
-      this.error = "Failed to fetch chat data.";
-    }
     
-    
+    await this.fetchUser()
+    await this.startChat()
     
     
     const unreadMessages = this.messages.filter(message => message.readed === false)
