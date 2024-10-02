@@ -24,6 +24,6 @@ export async function getChats() {
    if(response.ok) {
       return data
    } else {
-      throw new Error('Something went wrong')
+      throw new Error(data.error)
    }
 }
