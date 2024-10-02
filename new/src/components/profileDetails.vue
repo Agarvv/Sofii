@@ -224,7 +224,7 @@ export default {
           switch (key) {
             case 'profile_pic':
               formData.append('profile-picture', changes[key]);
-              response = await fetch(apiUrl + '/api/sofi/set_profile_picture', {
+              response = await fetch(this.apiUrl + '/api/sofi/set_profile_picture', {
                 method: 'POST',
                 body: formData,
                 credentials: 'include'
@@ -232,14 +232,15 @@ export default {
               break;
             case 'profile_banner':
               formData.append('profile-banner', changes[key]);
-              response = await fetch(apiUrl + '/api/sofi/set_profile_banner', {
+              response = await fetch(this
+              apiUrl + '/api/sofi/set_profile_banner', {
                 method: 'POST',
                 body: formData,
                 credentials: 'include'
               });
               break;
             case 'bio':
-              response = await fetch(apiUrl + '/api/sofi/set_bio', {
+              response = await fetch(this.apiUrl + '/api/sofi/set_bio', {
                 method: 'POST',
                 body: JSON.stringify({ bio: changes[key] }),
                 headers: {
@@ -249,7 +250,7 @@ export default {
               });
               break;
             case 'native_city':
-              response = await fetch(apiUrl + '/api/sofi/set_native_city', {
+              response = await fetch(this.apiUrl + '/api/sofi/set_native_city', {
                 method: 'POST',
                 body: JSON.stringify({ native_city: changes[key] }),
                 headers: {
@@ -259,7 +260,7 @@ export default {
               });
               break;
             case 'ubication':
-              response = await fetch(apiUrl + '/api/sofi/set_ubication', {
+              response = await fetch(this.apiUrl + '/api/sofi/set_ubication', {
                 method: 'POST',
                 body: JSON.stringify({ ubication: changes[key] }),
                 headers: {
@@ -269,7 +270,7 @@ export default {
               });
               break;
             case 'civil_status':
-              response = await fetch(apiUrl + '/api/sofi/set_civil_status', {
+              response = await fetch(this.apiUrl + '/api/sofi/set_civil_status', {
                 method: 'POST',
                 body: JSON.stringify({ civil_status: changes[key] }),
                 headers: {
@@ -279,7 +280,7 @@ export default {
               });
               break;
             case 'gender':
-              response = await fetch(apiUrl + '/api/sofi/set_gender', {
+              response = await fetch(this.apiUrl + '/api/sofi/set_gender', {
                 method: 'POST',
                 body: JSON.stringify({ gender: changes[key] }),
                 headers: {
@@ -289,7 +290,7 @@ export default {
               });
               break;
             case 'job':
-              response = await fetch(apiUrl + '/api/sofi/set_job', {
+              response = await fetch(this.apiUrl + '/api/sofi/set_job', {
                 method: 'POST',
                 body: JSON.stringify({ job: changes[key] }),
                 headers: {
