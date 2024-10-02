@@ -232,7 +232,7 @@ export default {
               break;
             case 'profile_banner':
               formData.append('profile-banner', changes[key]);
-              response = await fetch(this
+              response = await fetch(this.
               apiUrl + '/api/sofi/set_profile_banner', {
                 method: 'POST',
                 body: formData,
