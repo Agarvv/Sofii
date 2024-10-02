@@ -131,7 +131,6 @@
 
 <script>
 
-
 import { startChat } from '../services/chatService'
 import userMixin from '../mixins/userMixin'
 import apiUrl from '../config'
@@ -139,8 +138,8 @@ import { mapGetters, mapState, mapActions } from 'vuex';
 
 
 export default {
-  mixins: [userMixin], 
-  
+  mixins: [userMixin],
+
   name: 'ChatBox',
   data() {
     return {
@@ -166,81 +165,77 @@ export default {
   },
   computed: {
     userProfilePicture() {
-      return this.user.profilePicture 
+      return this.user.profilePicture
         ? `${apiUrl}/${this.user.profilePicture}`
-        : '/images/default.jpeg'; 
+        : '/images/default.jpeg';
     },
     currentUser: state => state.user
   },
   methods: {
-      ...mapActions(['fetchUser'])
- getMessageType() {
-  if (this.imageSrc && this.message) return 'text-image';
-  if (this.videoSrc && this.message) return 'text-video';
-  if (this.imageSrc) return 'image';
-  if (this.videoSrc) return 'video';
-  return 'text';
-},
+    ...mapActions(['fetchUser']),
+    getMessageType() {
+      if (this.imageSrc && this.message) return 'text-image';
+      if (this.videoSrc && this.message) return 'text-video';
+      if (this.imageSrc) return 'image';
+      if (this.videoSrc) return 'video';
+      return 'text';
+    },
 
-async uploadMedia(file, mediaType) {
-  const formData = new FormData();
-  formData.append('file', file);
+    async uploadMedia(file, mediaType) {
+      const formData = new FormData();
+      formData.append('file', file);
 
-  const response = await fetch(`${this.apiUrl}/sofi/upload_media`, {
-    method: 'POST',
-    body: formData,
-    credentials: 'include'
-  });
+      const response = await fetch(`${this.apiUrl}/sofi/upload_media`, {
+        method: 'POST',
+        body: formData,
+        credentials: 'include'
+      });
 
-  if (!response.ok) {
-    throw new Error(`Error uploading ${mediaType}`);
-  }
+      if (!response.ok) {
+        throw new Error(`Error uploading ${mediaType}`);
+      }
 
-  const data = await response.json();
-  return data.path; 
-},
+      const data = await response.json();
+      return data.path;
+    },
 
-clearMessage() {
-  this.message = '';
-  this.imageSrc = '';
-  this.videoSrc = '';
-},
+    clearMessage() {
+      this.message = '';
+      this.imageSrc = '';
+      this.videoSrc = '';
+    },
 
-async sendMessage() {
-  try {
-    let type = this.getMessageType();
-    let data = {
-      chat_id: this.chat.chat_id,
-      message: this.message || '',
-      type: type,
-    };
+    async sendMessage() {
+      try {
+        let type = this.getMessageType();
+        let data = {
+          chat_id: this.chat.chat_id,
+          message: this.message || '',
+          type: type,
+        };
 
-    if (this.imageSrc) {
-      data.file = await this.uploadMedia(this.image, 'image');
-    } else if (this.videoSrc) {
-      data.file = await this.uploadMedia(this.video, 'video');
-    }
+        if (this.imageSrc) {
+          data.file = await this.uploadMedia(this.image, 'image');
+        } else if (this.videoSrc) {
+          data.file = await this.uploadMedia(this.video, 'video');
+        }
 
-    
-    this.$socket.emit('chatMessage', data);
+        this.$socket.emit('chatMessage', data);
+        this.clearMessage();
 
-    this.clearMessage();
-    
-  } catch (error) {
-    console.error('Error sending message:', error);
-  }
-},
-
-
+      } catch (error) {
+        console.error('Error sending message:', error);
+      }
+    },
 
     getMessageClass(message) {
-      if (!message.message_user || !this.user) return ''; 
+      if (!message.message_user || !this.user) return '';
       return message.message_user.id === this.user.id ? 'user' : 'friend';
     },
     getMessageUserProfilePicture(message) {
-      return message.message_user?.profilePicture 
+      return message.message_user?.profilePicture
         ? `http://localhost:3000/${message.message_user.profilePicture}`
-        : 'default_image_path_here'; 
+        : 'default_image_path_here';
     },
     handleFiles(type) {
       if (type === "image") {
@@ -249,34 +244,30 @@ async sendMessage() {
         this.$refs.videoInp.click();
       }
     },
- handleFilesChanges(event) {
-    const file = event.target.files[0]; 
-    if (file) {
-        const reader = new FileReader(); 
+    handleFilesChanges(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
 
         reader.onload = (e) => {
-    
-            if (file.type.startsWith("image/")) {
-                this.imageSrc = e.target.result; 
-                
-                this.image = file; 
-            } 
-            else if (file.type.startsWith("video/")) {
-                this.videoSrc = e.target.result; 
-                console.log('new video src::', this.videoSrc);
-                this.video = file; 
-            }
+          if (file.type.startsWith("image/")) {
+            this.imageSrc = e.target.result;
+            this.image = file;
+          } else if (file.type.startsWith("video/")) {
+            this.videoSrc = e.target.result;
+            console.log('new video src::', this.videoSrc);
+            this.video = file;
+          }
         };
 
         reader.onerror = (error) => {
-            console.error('Error reading file:', error);
+          console.error('Error reading file:', error);
         };
 
-        reader.readAsDataURL(file); 
-    }
-},
-    
-    
+        reader.readAsDataURL(file);
+      }
+    },
+
     cancelPreview() {
       this.imageSrc = "";
       this.videoSrc = "";
@@ -304,130 +295,105 @@ async sendMessage() {
         console.error('Error accessing microphone:', error);
       });
     },
-  
-    
-    
-    async stopRecording() {
-    this.isRecording = false;
-    clearInterval(this.recordingInterval);
-    this.mediaRecorder.stop();
 
-    this.mediaRecorder.onstop = async () => {
+    async stopRecording() {
+      this.isRecording = false;
+      clearInterval(this.recordingInterval);
+      this.mediaRecorder.stop();
+
+      this.mediaRecorder.onstop = async () => {
         const audioBlob = new Blob(this.audioChunks, { type: 'audio/webm' });
 
-    
         const formData = new FormData();
         formData.append('file', audioBlob, 'recording.webm');
 
         try {
-            const response = await fetch('http://localhost:3000/api/sofi/upload_media', {
-                method: 'POST',
-                body: formData,
-                credentials: 'include'
-            });
+          const response = await fetch('http://localhost:3000/api/sofi/upload_media', {
+            method: 'POST',
+            body: formData,
+            credentials: 'include'
+          });
 
-            // Verificamos la respuesta del servidor
-            if (!response.ok) {
-                throw new Error('Failed to upload audio');
-            }
+          if (!response.ok) {
+            throw new Error('Failed to upload audio');
+          }
 
-            const data = await response.json();
-            console.log('server data audio:', data);
+          const data = await response.json();
+          console.log('server data audio:', data);
 
-            // Emitimos el mensaje a través del socket con la ruta del archivo
-            this.$socket.emit('chatMessage', {
-                type: 'audio',
-                file: data.path,
-                message: this.message,
-                chat_id: this.chat.chat_id
-            });
+          this.$socket.emit('chatMessage', {
+            type: 'audio',
+            file: data.path,
+            message: this.message,
+            chat_id: this.chat.chat_id
+          });
 
-            // Limpiamos los chunks de audio
-            this.audioChunks = [];
+          this.audioChunks = [];
         } catch (error) {
-            console.error('Error uploading audio:', error);
+          console.error('Error uploading audio:', error);
         }
-    };
-},
+      };
+    },
 
-broadcastTyping() {
-    this.$socket.emit('typing', this.chat_id)
-}
+    broadcastTyping() {
+      this.$socket.emit('typing', this.chat_id)
+    },
 
-async startChat() {
-    try {
-        const data = await startChat(this.$route.params.receiver_id)
-        console.log('all went ok', data)
-        this.chat = data.chat 
-        this.chat_id = data.chat.chat_id 
-        this.messages = data.chat.messages
-        this.user = data.chat.userToDisplayInfo,
+    async startChat() {
+      try {
+        const data = await startChat(this.$route.params.receiver_id);
+        console.log('all went ok', data);
+        this.chat = data.chat;
+        this.chat_id = data.chat.chat_id;
+        this.messages = data.chat.messages;
+        this.user = data.chat.userToDisplayInfo;
         this.$socket.emit('joinRoom', this.chat_id);
-    } catch(e) {
-        console.error('error', e)
-        throw e
+      } catch (e) {
+        console.error('error', e);
+        throw e;
+      }
     }
-}
-    
   },
   async created() {
-    
-    await this.fetchUser()
-    await this.startChat()
-    
-    
-    const unreadMessages = this.messages.filter(message => message.readed === false)
-      unreadMessages.forEach((message) => {
-          
-          console.log('usuaerio id: ', this.usuario.user_id)
-          
-          console.log('unreaded message: ', message)
-          
-          
-          if(message.message_user_id !== this.usuario.user_id) {
-              this.$socket.emit('readMessage', {
-              message: message,
-              chat_id: this.chat_id
-            })
-          }
-          
-      })
-    
-    
-    
+    await this.fetchUser();
+    await this.startChat();
+
+    const unreadMessages = this.messages.filter(message => message.readed === false);
+    unreadMessages.forEach((message) => {
+      console.log('usuario id: ', this.usuario.user_id);
+      console.log('unreaded message: ', message);
+
+      if (message.message_user_id !== this.usuario.user_id) {
+        this.$socket.emit('readMessage', {
+          message: message,
+          chat_id: this.chat_id
+        });
+      }
+    });
   },
-  
-  
+
   mounted() {
-     
-      
-      
     this.$socket.on('chatMessage', (message) => {
       this.messages.push(message);
-      console.log('message received from the server !', message)
+      console.log('message received from the server!', message);
     });
-    
+
     this.$socket.on('typing', () => {
-    this.isUserTyping = true;
-    
-    console.log('Se recibió el evento typing');
+      this.isUserTyping = true;
+      console.log('Se recibió el evento typing');
 
+      this.$socket.on('readMessage', (message) => {
+        console.log('Message readed Received From Server!', message);
 
-     this.$socket.on('readMessage', (message) => {
-    console.log('Message readed Received From Server!', message);
-    // Buscar el mensaje original por ID y marcarlo como leído
-    const originalMessage = this.messages.find(msg => msg.id === message.id);
-    if (originalMessage) {
-        alert('message found')
-        originalMessage.readed = true;
-    } else {
-        alert('message not found')
-    }
-});
-
-
-});
-    
+        const originalMessage = this.messages.find(msg => msg.id === message.id);
+        if (originalMessage) {
+          alert('message found');
+          originalMessage.readed = true;
+        } else {
+          alert('message not found');
+        }
+      });
+    });
   }
 };
 </script>
