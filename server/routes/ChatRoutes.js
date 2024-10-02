@@ -29,7 +29,7 @@ router.get('/chats',async (req, res) => {
         
     } catch(e) {
         console.log('errno', e)
-        return res.status(500).json({error: data.error})
+        return res.status(500).json({error: e.message})
     }
 })
 
