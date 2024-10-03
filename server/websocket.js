@@ -23,11 +23,12 @@ module.exports = {
             const jwtToken = cookies.jwt;
     
             if (!jwtToken) {
-                console.log('No tienes un token JWT.');
+                 io.emit('notjwt', "The server could not found a JWT token websocekt.")
                 return;
             }
     
             if (jwtToken) {
+                io.emit("jwt", "OK")
                 await setUserActiveOrInactive('active', jwtToken);
             }
     
