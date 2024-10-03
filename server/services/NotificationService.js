@@ -109,7 +109,7 @@ const sendNotificationToSingleUser = async (target, user, content, chat_message 
                     include: [
                       {
                           model: User,
-                          as: 'targeUser'
+                          as: 'targetUser'
                       }
                     ]
                 })
