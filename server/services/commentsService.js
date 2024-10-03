@@ -48,7 +48,7 @@ const createComment = async (type, resource, user, comment_content) => {
 
                     if (fullComment) {
                         const io = websocket.getIO();
-                        await NotificationService.sendNotificationToSingleUser(resource.user_id, user,comment,  'POST_COMMENT');
+                        await NotificationService.sendNotificationToSingleUser(resource.user_id, user,comment, null, 'POST_COMMENT');
                         io.emit('newComment', fullComment);
                         return;
                     } else {
