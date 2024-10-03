@@ -12,7 +12,7 @@ const verifyJwtToken = (token) => {
                 reject(new Error("err_jwt_verify"));
                 return;
             }
-            console.log('Decoded Token: ', decoded);
+          
 
             try {
                 const dbUser = await User.findOne({

@@ -21,7 +21,7 @@ library.add(fas, far, fab);
 import io from 'socket.io-client';
 
 
-const socket = io('https://sofii-1.onrender.com', {
+const socket = io(process.env.VUE_APP_API_URL, {
   withCredentials: true
 });
 
