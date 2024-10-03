@@ -26,7 +26,7 @@ const likeVideo = async (user, video) => {
         console.log(user); // Para verificar que user es lo que esperamos
         
         
-        await sendNotificationToSingleUser(video.user_id, user, video, null, 'VIDEO_LIKED')
+        await sendNotificationToSingleUser(video.video_user_id, user, video, null, 'VIDEO_LIKED')
 
         const io = websocket.getIO()
         io.emit('videoLiked', newLike)
