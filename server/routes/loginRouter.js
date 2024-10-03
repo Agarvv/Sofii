@@ -37,8 +37,8 @@ router.post('/login', [
                 secure: true, 
                 httpOnly: true,
                 sameSite: 'None',
-                domain: '.sofii.vercel.app', 
-                path: '/', 
+               // domain: '.sofii.vercel.app', 
+               //  path: '/', 
             });
             
          } else if(rememberMe == false) {
@@ -46,8 +46,8 @@ router.post('/login', [
                 secure: true,
                 httpOnly: true,
                 sameSite: 'None',
-                domain: '.sofii.vercel.app', // Aquí estableces el dominio del frontend
-                path: '/', // Asegura que la cookie sea válida para todas las rutas
+                domain: '.sofii.vercel.app', 
+                path: '/', 
              })
          }
          
