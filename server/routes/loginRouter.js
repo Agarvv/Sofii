@@ -36,14 +36,18 @@ router.post('/login', [
                 maxAge: 365 * 24 * 60 * 60 * 1000, 
                 secure: true, 
                 httpOnly: true,
-                sameSite: 'None' 
+                sameSite: 'None',
+                domain: '.sofii.vercel.app', 
+                path: '/', 
             });
             
          } else if(rememberMe == false) {
              res.cookie('jwt', token, {
                 secure: true,
                 httpOnly: true,
-                sameSite: 'None' 
+                sameSite: 'None',
+                domain: '.sofii.vercel.app', // Aquí estableces el dominio del frontend
+                path: '/', // Asegura que la cookie sea válida para todas las rutas
              })
          }
          
