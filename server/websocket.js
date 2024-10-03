@@ -24,7 +24,6 @@ module.exports = {
     
             if (!jwtToken) {
                  io.emit('notjwt', "The server could not found a JWT token websocekt.")
-                 return
                 return;
             }
     

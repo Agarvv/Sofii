@@ -34,15 +34,15 @@ router.post('/login', [
          if(rememberMe == true) {
             res.cookie('jwt', token, {
                 maxAge: 365 * 24 * 60 * 60 * 1000, 
-                secure: true, 
-                httpOnly: true,
+                secure: false, 
+                httpOnly: false,
                 sameSite: 'None' 
             });
             
          } else if(rememberMe == false) {
              res.cookie('jwt', token, {
-                secure: true,
-                httpOnly: true,
+                secure: false,
+                httpOnly: false,
                 sameSite: 'None' 
              })
          }
