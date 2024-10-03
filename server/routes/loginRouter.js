@@ -46,8 +46,8 @@ router.post('/login', [
                 secure: true,
                 httpOnly: true,
                 sameSite: 'None',
-                domain: '.sofii.vercel.app', 
-                path: '/', 
+                //domain: '.sofii.vercel.app', 
+                //path: '/', 
              })
          }
          
