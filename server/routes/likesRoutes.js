@@ -36,7 +36,7 @@ router.post('/like_content', async (req, res) => {
                     return res.status(400).json({ error: 'Post ID, Comment ID, or Answer ID is missing.' });
                 }
                 data = await likesController.likeCommentAnswer(token, req.body.post_id, req.body.comment_id, req.body.awnser_id);
-                break;
+                break; 
             case "VIDEO_COMMENT":
                 if (!req.body.video_id || !req.body.comment_id) {
                     return res.status(400).json({ error: 'Video ID or Comment ID is missing.' });

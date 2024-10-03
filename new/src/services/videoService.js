@@ -79,9 +79,8 @@ export async function likeVideo(video_id) {
         },
         'POST'
         )
-        
+        const data = await response.json()
         if(response.ok) {
-            const data = await response.json()
             return data
         } else {
             throw new Error(data.error)
