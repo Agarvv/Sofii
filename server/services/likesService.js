@@ -23,7 +23,7 @@ const likeVideo = async (user, video) => {
         
         console.log('conyroler udrr: ', user)
 
-        console.log(user); // Para verificar que user es lo que esperamos
+        console.log(user); 
         
         
         await sendNotificationToSingleUser(video.video_user_id, user, video, null, 'VIDEO_LIKED')
