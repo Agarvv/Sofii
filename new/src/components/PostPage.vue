@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div>
     <header>
       <i class="fa fa-arrow-left"></i>
      
