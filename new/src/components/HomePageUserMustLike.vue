@@ -4,7 +4,7 @@
       <div class="user-picture">
         <img 
           style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" 
-          :src="user.profilePicture ? apiUrl + '/' + user.profilePicture : '/images/default.jpeg'"
+          :src="user.profilePicture || '/images/default.jpeg'"
           alt="User Picture"
         />
       </div>

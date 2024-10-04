@@ -1,7 +1,8 @@
 <template>
 <div class="user-card">
   <div class="user-card-user-img">
-    <img style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" :src="'http://localhost:3000/' + user.profilePicture">
+    <img style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;"
+     :src="user.profilePicture || '/images/default.jpeg'">
   </div>
   <div class="user-card-details">
     <h3>{{user.username}}</h3>

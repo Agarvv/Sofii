@@ -7,7 +7,7 @@
                   height: 40px;
                   border-radius: 50%;
                   object-fit: cover;
-                 " :src="post.user.profilePicture ? apiUrl + '/' + post.user.profilePicture : '/images/default.jpeg'" alt="Post Image">
+                 " :src="post.user.profilePicture ? post.user.profilePicture : '/images/default.jpeg'" alt="Post Image">
               </div>
               <div class="post-user-detail">
                 <h4>{{ post.user.username }}</h4>
@@ -23,7 +23,7 @@
                 <p>{{ post.description }}</p>
               </div>
               <div @click="goToPost(post.id)" class="post-image">
-                <img :src="post.postPicture ? apiUrl + '/' + post.postPicture : '/images/default_banner.webp'" alt="Post Image">
+                <img :src="post.postPicture ? post.postPicture : '/images/default_banner.webp'" alt="Post Image">
               </div>
             </div>
             
