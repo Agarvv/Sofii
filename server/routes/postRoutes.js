@@ -17,34 +17,53 @@ const CommentAwnsersDislikes = require('../models/CommentAwnsersDislikes');
 const sequelize = require('../config/database');
 const cloudinary = require('../config/cloudinary')
 const uploadImage = require('../config/cloudinary')
+const formidable = require('formidable'); 
 
-router.post('/createPost', [
-    body("description").escape().trim(),
-    body("privatePost").isBoolean(),
-    body("only_friends").isBoolean(),
-], async (req, res) => {
-    try {
-        const jwt = req.cookies.jwt;
-        const decoded = await tokenController.verifyJwtToken(jwt);
-        console.log('Decoded create post user: ', decoded)
-        const user_id = decoded.user_id;
-        const user_name = decoded.username;
-        const user_img = decoded.user_picture;
 
-        const postPicture = req.files.postPicture ? req.files.postPicture[0].path : null;
-        const videoSource = req.files.videoSource ? req.files.videoSource[0].path : null;
-         
-        await postController.createPost(req.body,decoded, user_id, user_name, user_img, postPicture, videoSource);
-        
-        await uploadImage(postPicture)
-        
-        
-        return res.status(201).json({ detail: 'Your Post Has Been Submitted To Our System.' });
-    } catch (e) {
-        console.log(e);
-        return res.status(500).json({ error: e.message });
-    }
+router.post('/createPost', async (req, res) => {
+    const form = formidable({ multiples: false });
+
+    form.parse(req, async (err, fields, files) => {
+        if (err) {
+            return res.status(400).json({ error: 'Error al procesar el formulario.' });
+        }
+
+        try {
+            const jwt = req.cookies.jwt;
+            const decoded = await tokenController.verifyJwtToken(jwt);
+            console.log('Decoded create post user: ', decoded);
+            const user_id = decoded.user_id;
+            const user_name = decoded.username;
+            const user_img = decoded.user_picture;
+
+            let postPictureUrl = null;
+            if (files.postPicture) {
+                const uploadResult = await cloudinary.uploader.upload(files.postPicture.path, {
+                    folder: '/images', 
+                });
+                postPictureUrl = uploadResult.secure_url; 
+            }
+
+            
+            let videoSourceUrl = null;
+            if (files.videoSource) {
+                const uploadResult = await cloudinary.uploader.upload(files.videoSource.path, {
+                    folder: '/videos',
+                    resource_type: 'video', 
+                });
+                videoSourceUrl = uploadResult.secure_url; 
+            }
+
+            await postController.createPost(fields, decoded, user_id, user_name, user_img, postPictureUrl, videoSourceUrl);
+
+            return res.status(201).json({ detail: 'Your Post Has Been Submitted To Our System.' });
+        } catch (e) {
+            console.log(e);
+            return res.status(500).json({ error: e.message });
+        }
+    });
 });
+
 
 router.post('/destroy_post', async (req, res) => {
     try {
