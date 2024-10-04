@@ -12,8 +12,9 @@ const sdata = await response.json()
 if(response.ok) {
     return sdata
 } else {
-    throw new Error('Something Went Wrong...')
+    throw new Error(sdata.error)
 }
+
 }
 
 export async function getPosts(user) {

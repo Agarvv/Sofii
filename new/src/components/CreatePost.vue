@@ -150,7 +150,7 @@ export default {
           this.$router.push('/')
      
         } catch (e) {
-           console.log("Something Went Wrong...")
+           console.log("errorrrrr", e)
            this.error = "Something Went Wrong..."
         } finally {
             this.loading = false
@@ -167,7 +167,7 @@ export default {
           this.$router.push('/')
         } catch(e) {
            this.loading = false
-           this.error = "Something Went Wrong..."
+           console.error('error', e)
         }
       }
 
