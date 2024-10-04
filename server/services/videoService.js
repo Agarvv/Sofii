@@ -14,8 +14,8 @@ const handleVideoCreation = async (user, videoPath, data) => {
             video_content: videoPath
         })
         
-        const success = "success video creation"
-        return success
+     
+        return true
         
     } catch(e) {
         throw new Error(e)

@@ -19,14 +19,8 @@ const VideoCommentAwnsersDislikes = require('../models/VideoCommentAwnsersDislik
 const handleVideoCreation = async (jwt_token, video, data) => {
     try {
         const userDecoded = await tokenController.verifyJwtToken(jwt_token)
-        
-        const videoPath = video.path
-        console.log('VideoPath: ', videoPath)
-        
-        
-        const success = await videoService.handleVideoCreation(userDecoded, videoPath, data)
-        return success
-        
+        await videoService.handleVideoCreation(userDecoded, video, data)
+        return true
         
     } catch(e) {
         throw new Error(e)

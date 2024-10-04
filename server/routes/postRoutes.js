@@ -16,53 +16,74 @@ const CommentAwnsersLikes = require('../models/CommentAwnsersLikes')
 const CommentAwnsersDislikes = require('../models/CommentAwnsersDislikes');
 const sequelize = require('../config/database');
 const cloudinary = require('../config/cloudinary')
-const uploadImage = require('../config/cloudinary')
-const formidable = require('formidable'); 
-
+const { formidable } = require('formidable'); 
+const { uploadImage, uploadVideo } = require('../config/cloudinary');
 
 router.post('/createPost', async (req, res) => {
     const form = formidable({ multiples: false });
 
     form.parse(req, async (err, fields, files) => {
         if (err) {
-            return res.status(400).json({ error: 'Error form' });
+            return res.status(400).json({ error: 'Error al procesar el formulario' });
         }
+
+        console.log(`form fields: ${JSON.stringify(fields)}, files: ${JSON.stringify(files)}`);
 
         try {
             const jwt = req.cookies.jwt;
             const decoded = await tokenController.verifyJwtToken(jwt);
-            console.log('Decoded create post user: ', decoded);
+            console.log('Usuario decodificado del JWT: ', decoded);
+
             const user_id = decoded.user_id;
             const user_name = decoded.username;
             const user_img = decoded.user_picture;
 
             let postPictureUrl = null;
-            if (files.postPicture) {
-                const uploadResult = await cloudinary.uploader.upload(files.postPicture.path, {
-                    folder: '/images', 
-                });
-                postPictureUrl = uploadResult.secure_url; 
-            }
-
-            
             let videoSourceUrl = null;
-            if (files.videoSource) {
-                const uploadResult = await cloudinary.uploader.upload(files.videoSource.path, {
-                    folder: '/videos',
-                    resource_type: 'video', 
-                });
-                videoSourceUrl = uploadResult.secure_url; 
+
+            if (files.postPicture && files.postPicture[0].filepath) {
+                console.log('Subiendo imagen desde:', files.postPicture[0].filepath);
+                const uploadResult = await uploadImage(files.postPicture[0].filepath);
+                postPictureUrl = uploadResult.secure_url;
+            } else {
+                console.log('No se ha enviado una imagen');
             }
 
-            await postController.createPost(fields, decoded, user_id, user_name, user_img, postPictureUrl, videoSourceUrl);
+            if (files.videoSource && files.videoSource[0].filepath) {
+                console.log('Subiendo video desde:', files.videoSource[0].filepath);
+                const uploadResult = await uploadVideo(files.videoSource[0].filepath);
+                videoSourceUrl = uploadResult.secure_url;
+            } else {
+                console.log('No se ha enviado un video');
+            }
 
-            return res.status(201).json({ detail: 'Your Post Has Been Submitted To Our System.' });
+            // Normaliza los campos de entrada
+            const normalizedFields = {};
+            for (const key in fields) {
+                // Si el campo es un array, toma el primer elemento, de lo contrario, lo deja como está
+                normalizedFields[key] = Array.isArray(fields[key]) ? fields[key][0] : fields[key];
+            }
+
+            // Llama a createPost con los campos normalizados
+            await postController.createPost(
+                normalizedFields, 
+                decoded, 
+                user_id, 
+                user_name, 
+                user_img, 
+                postPictureUrl, 
+                videoSourceUrl
+            );
+
+            return res.status(201).json({ detail: 'Your post has been sent sucesfuly' });
+
         } catch (e) {
-            console.log(e);
+            console.error('Error al crear la publicación:', e);
             return res.status(500).json({ error: e.message });
         }
     });
 });
+
 
 
 router.post('/destroy_post', async (req, res) => {

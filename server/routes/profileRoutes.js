@@ -1,20 +1,11 @@
 const express = require('express');
 const userService = require('../services/userService');
 const userController = require('../controllers/userController')
-const multer = require('multer');
-const path = require('path');
 const router = express.Router();
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'media/images');
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  }
-});
-const upload = multer({ storage });
 const { body } = require('express-validator')
+const { formidable } = require('formidable'); 
+const { uploadImage } = require('../config/cloudinary');
+
 
 
 router.get('/user/:userId', async (req, res) => {
@@ -27,40 +18,65 @@ router.get('/user/:userId', async (req, res) => {
     }
 });
 
-router.post('/set_profile_banner', upload.single('profile-banner'), async (req, res) => {
+router.post('/set_profile_banner', async (req, res) => {
     try {
-        console.log(req.file)
-        await userService.handleProfileDataChange('banner', req.file.path, req.cookies.jwt);
-        return res.status(201).json({ success: 'Your Profile Banner Has Been Changed Successfully!' });
+        const form = formidable({ multiples: false });
+
+        
+        form.parse(req, async (err, fields, files) => {
+            if (err) {
+                return res.status(400).json({ error: 'Error FORM' });
+            }
+
+            if (files['profile-banner'] && files['profile-banner'][0].filepath) {
+                
+                const uploadResult = await uploadImage(files['profile-banner'][0].filepath);
+                
+                
+                await userService.handleProfileDataChange('banner', uploadResult.secure_url, req.cookies.jwt);
+                
+                return res.status(201).json({ success: 'OK' });
+            } else {
+                return res.status(400).json({ error: 'NO BANNER PROVIDED' });
+            }
+        });
     } catch (e) {
         return res.status(500).json({ error: e.message });
     }
 });
 
-router.post('/set_profile_picture', upload.single('profile-picture'), async (req, res) => {
+
+router.post('/set_profile_picture', async (req, res) => {
     try {
-        
-        
-        if (!req.cookies.jwt) {
-            return res.status(404).json({ err: "no token" });
-        } else {
-            console.log('endpoint token', req.cookies.jwt);
-        }
-        
-        
-       
         const token = req.cookies.jwt;
-        
-        await userService.handleProfileDataChange('profilePicture', req.file.path, token);
-        
-        return res.status(201).json({ success: 'Your Profile Picture Has Been Changed Successfully!' });
-        
-        
+
+        const form = formidable({ multiples: false });
+
+        // Parsear el formulario
+        form.parse(req, async (err, fields, files) => {
+            if (err) {
+                return res.status(400).json({ error: 'Error FORM' });
+            }
+            
+       
+            if (files['profile-picture'] && files['profile-picture'][0].filepath) {
+                // Subir la imagen a Cloudinary
+                const uploadResult = await uploadImage(files['profile-picture'][0].filepath);
+                
+          
+                await userService.handleProfileDataChange('profilePicture', uploadResult.secure_url, token);
+                
+                return res.status(201).json({ success: 'OK' });
+            } else {
+                return res.status(400).json({ error: 'NO PROFILE PIC PROVIDED' });
+            }
+        });
     } catch (e) {
         console.log(e);
         return res.status(500).json({ error: e.message });
     }
 });
+
 
 router.post('/set_native_city', async (req, res) => {
     try {
