@@ -29,7 +29,7 @@ export default {
             if (this.searchQ.trim() !== "") {
                 this.$router.push(`/search/${encodeURIComponent(this.searchQ)}`);
             }
-        }
+        },
         toggleFilterButton() {
             this.$emit("toggleFilters")
         }
