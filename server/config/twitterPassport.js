@@ -13,7 +13,7 @@ passport.deserializeUser((user, done) => {
 passport.use(new TwitterStrategy({
     consumerKey: process.env.TWITTER_API_KEY,
     consumerSecret: process.env.TWITTER_SECRET,
-    callbackURL: 'https://sofii-1.onrender.com/auth/twitter/callback',
+    callbackURL: '',
     includeEmail: true
   },
   (token, tokenSecret, profile, done) => {
