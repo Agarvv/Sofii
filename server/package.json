@@ -2,11 +2,13 @@
   "name": "server",
   "version": "1.0.0",
   "main": "index.js",
+  
   "scripts": {
-    "start": "node index.js",
+    "start": "npm install --legacy-peer-deps && node index.js",
     "build": "npm install --legacy-peer-deps && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+
   "author": "",
   "license": "ISC",
   "description": "",
