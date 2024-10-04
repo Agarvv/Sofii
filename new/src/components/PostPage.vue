@@ -354,6 +354,7 @@ header {
     display: flex;
     align-items: center;
     justify-content: center; 
+    border: 4px solid black;
 }
 
 .post-ctn{
@@ -362,7 +363,7 @@ header {
     padding: 10px;
     min-height: auto; 
     max-height: 600px;
-    
+    border: 3px solid red;
 }
 
 .post-user-img img {
