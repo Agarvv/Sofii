@@ -15,27 +15,10 @@ const CommentDislikes = require('../models/CommentDislikes')
 const CommentAwnsersLikes = require('../models/CommentAwnsersLikes')
 const CommentAwnsersDislikes = require('../models/CommentAwnsersDislikes');
 const sequelize = require('../config/database');
-const { CloudinaryStorage } = require('multer-storage-cloudinary');
-const cloudinary = require('../config')
+const cloudinary = require('../config/cloudinary')
+const uploadImage = require('../config/cloudinary')
 
-
-const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
-    folder: 'images', 
-    allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
-    public_id: (req, file) => Date.now() + '-' + file.originalname, 
-  },
-});
-
-const upload = multer({ storage }).fields([
-  { name: 'postPicture', maxCount: 1 },
-  { name: 'videoSource', maxCount: 1 }
-]);
-
-
-
-router.post('/createPost', upload, [
+router.post('/createPost', [
     body("description").escape().trim(),
     body("privatePost").isBoolean(),
     body("only_friends").isBoolean(),
@@ -50,8 +33,12 @@ router.post('/createPost', upload, [
 
         const postPicture = req.files.postPicture ? req.files.postPicture[0].path : null;
         const videoSource = req.files.videoSource ? req.files.videoSource[0].path : null;
-
+         
         await postController.createPost(req.body,decoded, user_id, user_name, user_img, postPicture, videoSource);
+        
+        await uploadImage(postPicture)
+        
+        
         return res.status(201).json({ detail: 'Your Post Has Been Submitted To Our System.' });
     } catch (e) {
         console.log(e);
