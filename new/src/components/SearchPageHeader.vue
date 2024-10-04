@@ -16,11 +16,12 @@
 </template>
 
 <script>
+import { handleSearch } from '../services/searchService'
 export default {
     name: 'SearchPageHeader',
     data() {
         return {
-            searchQ: ""
+            searchQ: "",
         }
     },
     methods: {
@@ -28,7 +29,7 @@ export default {
             if (this.searchQ.trim() !== "") {
                 this.$router.push(`/search/${encodeURIComponent(this.searchQ)}`);
             }
-        },
+        }
         toggleFilterButton() {
             this.$emit("toggleFilters")
         }

@@ -18,6 +18,7 @@ const { sendNotificationToSingleUser } = require('../services/NotificationServic
 
 const createComment = async (type, resource, user, comment_content) => {
     try {
+        //RESOURCE MEANS EITHER VIDEO OR POST.
         let comment;
         switch (type) {
             case 'POST':
@@ -48,7 +49,13 @@ const createComment = async (type, resource, user, comment_content) => {
 
                     if (fullComment) {
                         const io = websocket.getIO();
+                        
+                        //Like that user will not send self notifications 
+                        if(!resource.user_id == user.user_id) {
                         await NotificationService.sendNotificationToSingleUser(resource.user_id, user,comment, null, 'POST_COMMENT');
+                        } 
+                        
+                        
                         io.emit('newComment', fullComment);
                         return;
                     } else {
@@ -88,7 +95,10 @@ const createComment = async (type, resource, user, comment_content) => {
                     if (fullComment) {
                         const io = websocket.getIO();
                         io.emit('newVideoComment', fullComment);
+                        
+                        if(!resource.video_user_id == user.user_id) {
                         await NotificationService.sendNotificationToSingleUser(resource.video_user_id, user, comment, null, 'VIDEO_COMMENT');
+                        }
                     }
                 }
                 break;
@@ -133,7 +143,12 @@ const awnserToPostComment = async (user, post_id, comment, awnser_content) => {
             });
     
             if (fullComment) {
+                
+                if(!comment.user_id == user.user_id) {
                 await sendNotificationToSingleUser(comment.user_id, user, newCommentAwnser, null, "AWNSERED_COMMENT")
+                }
+                
+                
                 const io = websocket.getIO();
                 io.emit('newCommentAwnser', fullComment);
                 return;
@@ -170,8 +185,12 @@ const awnserToVideoComment = async (user, video_id, comment, awnser_content) => 
         // const sendNotificationToSingleUser = async (target, user, content, type) => {
 
         if (fullAwnser) {
+            
+            if(!comment.user_id == user.user_id) {
             await sendNotificationToSingleUser(comment.user_id, user, awnser,null, "VIDEO_COMMENT_AWNSERED")
-
+            }
+            
+            
             const io = websocket.getIO();
             io.emit('newVideoCommentAwnser', fullAwnser);
             return;

@@ -353,15 +353,15 @@ header {
     height: 100vh;
     display: flex;
     align-items: center;
-    justify-content: center;
+    /* justify-content: center; */
 }
 
 .post-ctn{
     background: white;
     width: 70%;
     padding: 10px;
-    min-height: auto; /* Permite que crezca según el contenido */
-    max-height: 600px; /* No te pases del 100% de la altura de la pantalla */
+    min-height: auto; 
+    max-height: 600px;
     
 }
 

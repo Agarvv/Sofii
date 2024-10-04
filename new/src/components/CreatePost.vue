@@ -5,177 +5,166 @@
     
     <LoadingComponent v-if="loading" message="Creating, Please wait..."/>
     <!-- vercel -->
-<div class="container">
-    
-  <div class="create-container">
-    <div class="f-column">
-      <img style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" :src="user.user_picture ? apiUrl + '/' + user.user_picture : '/images/default.jpeg' ">
-      <div class="fc-inp"> 
-       <input v-model="content" placeholder="What's Up?">
-      </div>
+    <div class="container">
+        <div class="create-container">
+            <div class="f-column">
+                <img style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" 
+                     :src="user.user_picture ? apiUrl + '/' + user.user_picture : '/images/default.jpeg'">
+                <div class="fc-inp"> 
+                    <input v-model="content" placeholder="What's Up?">
+                </div>
+            </div>
+            <div class="demostration-content">
+                <img v-if="imageSource" style="width: 100%; height: 250px; object-fit: cover; border-radius: 15px;" 
+                     :src="imageSource">
+                <video v-if="videoSource" 
+                       :key="videoSource"  
+                       :src="videoSource"  
+                       style="width: 100%; height: 250px; object-fit: cover; border-radius: 15px;" 
+                       controls>
+                </video>
+            </div>
+            <div class="s-column">
+                <div @click="openFileInput('imageInp')" class="sce-one">
+                    <font-awesome-icon icon="image"/>
+                    <input style="display: none" @change="handleImageChange" type="file" id="imageInp">
+                </div>
+                <div @click="openFileInput('videoInp')" class="sce-two">
+                    <font-awesome-icon icon="video"/>
+                    <input style="display: none" @change="handleVideoChange" id="videoInp" type="file">
+                </div>
+                <div @click="submitForm" class="sce-three">
+                    <font-awesome-icon icon="paper-plane"/>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="demostration-content">
-      <img v-if="imageSource" style="
-       width: 100%;
-       height: 250px;
-       object-fit: cover;
-       border-radius: 15px;
-      " :src="imageSource">
-      <video v-if="videoSource"
-       :key="videoSource"  
-       :src="videoSource"  
-       style="width: 100%; height: 250px; object-fit: cover; border-radius: 15px;"
-       controls>
-     </video>
-    </div>
-    <div class="s-column">
-     <div @click="openFileInput('imageInp')" class="sce-one">
-      <font-awesome-icon icon="image"/>
-       <input  style="display: none" @change="handleImageChange" type="file" id="imageInp">
-     </div>
-     <div @click="openFileInput('videoInp')" class="sce-two">
-      <font-awesome-icon icon="video"/>
-       <input style="display: none" @change="handleVideoChange" id="videoInp" type="file">
-     </div>
-     <div @click="submitForm" class="sce-three">
-        <font-awesome-icon icon="paper-plane"/>
-     </div>
-    </div>
-  </div>
-
-
-</div>
 </template>
 
 <script>
 import ErrorComponent from './ErrorComponent'
 import LoadingComponent from './LoadingComponent'
 import HeaderComponent from './HeaderComponent'
-
 import apiUrl from '../config'
 import { createPost } from '../services/postService'
 import { createVideo } from '../services/videoService'
 import { mapGetters, mapActions } from 'vuex';
 
-
 export default {
-  
     components: {
-          HeaderComponent,
-          LoadingComponent,
-          ErrorComponent
-      },
-  data() {
-    return {
-      photos: [],
-      content: '',
-      videoSource: null,
-      imageSource: null,
-      loading: false,
-      error: "",
-      apiUrl: apiUrl
-    };
-  },
-  computed: {
-      ...mapGetters(['user'])
-  },
-  methods: {
-      ...mapActions(['fetchUser']),
-    openFileInput(inputId) {
-      document.getElementById(inputId).click();
+        HeaderComponent,
+        LoadingComponent,
+        ErrorComponent
     },
-    handleImageChange(e) {
-      if (this.videoSource) {
-        return;
-      }
-
-      if (this.imageSource) {
-        return;
-      }
-
-      const file = e.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-
-      reader.onload = (ev) => {
-        this.imageSource = ev.target.result;
-        console.log('image source: ', this.imageSource);
-      };
+    data() {
+        return {
+            photos: [],
+            content: '',
+            videoSource: null,
+            imageSource: null,
+            loading: false,
+            error: "",
+            apiUrl: apiUrl
+        };
     },
-    handleVideoChange(e) {
-      if (this.imageSource) {
-        return;
-      }
-
-      if (this.videoSource) {
-        return;
-      }
-
-      const file = e.target.files[0];
-      if (!file) return;
-
-
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-
-      reader.onload = (ev) => {
-        this.videoSource = ev.target.result;
-        console.log('video source', this.videoSource)
-      };
+    computed: {
+        ...mapGetters(['user'])
     },
-    async submitForm() {
-        
-        if(this.loading) {
-            alert('please wait')
-        }
-        
-        if(this.error) {
-            this.error = ""
-        }
-       
-      this.loading = true 
-      const formData = new FormData();
-      formData.append('description', this.content);
-      formData.append('privatePost', false);
-      formData.append('only_friends', false);
+    methods: {
+        ...mapActions(['fetchUser']),
+        openFileInput(inputId) {
+            document.getElementById(inputId).click();
+        },
+        handleImageChange(e) {
+            // Limpiar video si existe
+            if (this.videoSource) {
+                this.videoSource = null;
+            }
 
-      if (this.imageSource) {
-        const imageBlob = await fetch(this.imageSource).then(res => res.blob());
-        formData.append('postPicture', imageBlob, 'image.jpg');
-        try {
-          const data = await createPost(formData)
-          console.log('all ok', data)
-          this.$router.push('/')
-     
-        } catch (e) {
-           console.log("errorrrrr", e)
-           this.error = "Something Went Wrong..."
-        } finally {
-            this.loading = false
-        }
-      }
+            const file = e.target.files[0];
+            if (!file) return;
 
-      if (this.videoSource) {
-        const videoBlob = await fetch(this.videoSource).then(res => res.blob());
-        formData.append('video', videoBlob, 'video.mp4');
-        try {
-          const data = await createVideo(formData) 
-          console.log('all ok', data)
-          this.loading = false 
-          this.$router.push('/')
-        } catch(e) {
-           this.loading = false
-           console.error('error', e)
-        }
-      }
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
 
+            reader.onload = (ev) => {
+                this.imageSource = ev.target.result;
+                console.log('image source: ', this.imageSource);
+            };
+        },
+        handleVideoChange(e) {
+            // Limpiar imagen si existe
+            if (this.imageSource) {
+                this.imageSource = null;
+            }
+
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+
+            reader.onload = (ev) => {
+                this.videoSource = ev.target.result;
+                console.log('video source', this.videoSource);
+            };
+        },
+        async submitForm() {
+            if (this.loading) {
+                alert('please wait');
+                return; // Salir de la función si ya está cargando
+            }
+
+            if (this.error) {
+                this.error = "";
+            }
+
+            // Si no hay imagen ni video, informar al usuario
+            if (!this.imageSource && !this.videoSource) {
+                alert('Please select an image or video to upload.');
+                return;
+            }
+
+            this.loading = true;
+            const formData = new FormData();
+            formData.append('description', this.content);
+            formData.append('privatePost', false);
+            formData.append('only_friends', false);
+
+            if (this.imageSource) {
+                const imageBlob = await fetch(this.imageSource).then(res => res.blob());
+                formData.append('postPicture', imageBlob, 'image.jpg');
+                try {
+                    const data = await createPost(formData);
+                    console.log('all ok', data);
+                    this.$router.push('/');
+                } catch (e) {
+                    console.log("errorrrrr", e);
+                    this.error = "Something Went Wrong...";
+                } finally {
+                    this.loading = false;
+                }
+            }
+
+            if (this.videoSource) {
+                const videoBlob = await fetch(this.videoSource).then(res => res.blob());
+                formData.append('video', videoBlob, 'video.mp4');
+                try {
+                    const data = await createVideo(formData);
+                    console.log('all ok', data);
+                    this.$router.push('/');
+                } catch (e) {
+                    console.error('error', e);
+                    this.error = "Something Went Wrong...";
+                } finally {
+                    this.loading = false;
+                }
+            }
+        }
+    },
+    async mounted() {
+        await this.fetchUser();
     }
-  },
-  async mounted() {
-      await this.fetchUser()
-  }
 };
 </script>
 

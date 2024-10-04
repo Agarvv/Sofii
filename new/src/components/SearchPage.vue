@@ -432,6 +432,19 @@ export default {
             showFiltersButton: false
         };
     },
+    watch: {
+        '$route.params.query': async function(newQuery) {
+           try {
+               const data = await handleSearch(newQuery, this.user)
+               this.content = data.results.results;
+               this.filteredContent = { ...this.content };
+           
+           } catch(e) {
+              console.log(e)
+              this.error = "Oops, something went wrong.."
+           }
+        }
+    },
     methods: {
         ...mapActions(['fetchUser']), 
         

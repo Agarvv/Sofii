@@ -518,14 +518,14 @@ aside .aside-logo i {
     top: 0;
     left: 0;
     z-index: 777;
-    width: 250px; /* Ajusta según necesites */
-    height: 100vh; /* Asegúrate de que ocupa toda la altura */
-    overflow: auto; /* Agrega desplazamiento si el contenido excede la altura */
+    width: 250px; 
+    height: 100vh;
+    overflow: auto; 
     display: block;
 
 }
 
-@media (max-width: 600px) {
+@media (max-width: 700px) {
   .container {
     grid-template-columns: 1fr;
   }
