@@ -15,25 +15,26 @@ const CommentDislikes = require('../models/CommentDislikes')
 const CommentAwnsersLikes = require('../models/CommentAwnsersLikes')
 const CommentAwnsersDislikes = require('../models/CommentAwnsersDislikes');
 const sequelize = require('../config/database');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const cloudinary = require('../config')
 
-// executing files upload
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'media/images');
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'images', 
+    allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
+    public_id: (req, file) => Date.now() + '-' + file.originalname, 
   },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  }
 });
 
-// Configurar Multer para aceptar múltiples campos con diferentes nombres
 const upload = multer({ storage }).fields([
   { name: 'postPicture', maxCount: 1 },
   { name: 'videoSource', maxCount: 1 }
 ]);
 
-// Ruta para crear un post
+
+
 router.post('/createPost', upload, [
     body("description").escape().trim(),
     body("privatePost").isBoolean(),
