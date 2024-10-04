@@ -1,11 +1,11 @@
 <template>
-  <div>
+  <div class="container">
     <header>
       <i class="fa fa-arrow-left"></i>
      
     </header>
     
-    <div class="container"> 
+    <div> 
       <div class="post-ctn">
           <PostCard :post="post"/>
           <UploadComment :id="$route.params.id" type="POST"/>
@@ -353,7 +353,7 @@ header {
     height: 100vh;
     display: flex;
     align-items: center;
-    /* justify-content: center; */
+    justify-content: center; 
 }
 
 .post-ctn{
