@@ -525,7 +525,7 @@ aside .aside-logo i {
 
 }
 
-@media (max-width: 700px) {
+@media (max-width: 800px) {
   .container {
     grid-template-columns: 1fr;
   }
