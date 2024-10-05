@@ -1,8 +1,8 @@
 <template>
   <div>
+  <h1 v_if="isFriend">Friends</h1>
     <header>
-    <h1 v-if="sentFriendRequest">REQUEST SENT</h1>
-    <h1 v-if="receivedFriendRequest">REQUEST RECEIIVED</h1>
+
     <div @click="toggleBlock" class="openBlockCard">
         <font-awesome-icon icon="ellipsis"/> 
 
@@ -86,7 +86,7 @@
   <p>Request pending...</p>
 </button>
 
-<button @click="sendFriendRequest(user.id)"  v-if="!receivedFriendRequest && !sentFriendRequest" style="background: transparent;">
+<button @click="sendFriendRequest(user.id)"  v-if="!receivedFriendRequest && !sentFriendRequest">
  <font-awesome-icon :icon="['fas', 'user-plus']"/> Send Friend Request
 </button>
 
