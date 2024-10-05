@@ -74,7 +74,7 @@ router.get('/get_user_saved_content', async (req, res) => {
          return res.status(201).json({saved: saved})
     } catch(e) {
         console.log(e)
-        return res.status(500)
+        return res.status(500).json({error: e.message})
     }
 })
 

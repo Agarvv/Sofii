@@ -7,15 +7,13 @@
     </div>
      
     
-
-
       <div class="profile-banner">
-        <img :src="user.banner ? apiUrl + '/' + user.banner : '/images/default_banner.webp'" alt="Profile Banner">
+        <img :src="user.banner || '/images/default_banner.webp'" alt="Profile Banner">
       </div>
     
       <div class="user">
         <div class="user-img">
-         <img :src="user.profilePicture ? apiUrl + '/' + user.profilePicture : '/images/default.jpeg'" alt="Foto de Perfil">
+         <img :src="user.profilePicture || '/images/default.jpeg'" alt="Foto de Perfil">
         </div>
 
         <div class="user-details">
@@ -96,7 +94,7 @@
 </div>
        
          
-          
+        
         </div>
       </div>
     </header>
@@ -193,9 +191,10 @@
            font-size: 20px;
            padding: 10px;
            color: gray" v-if="userPosts.length == 0">This User Does Not Have Posts...</h4>
-             <div v-if="userPosts.length > 0" class="posts">
-                 
-          <div  v-for="post in userPosts" :key="post.id" class="post" >
+             <div v-if="user.posts.length > 0" class="posts">
+                
+          <div  v-for="post in user.posts" :key="post.id" class="post" >
+              <h1>Post</h1>
               <PostCard :post="post"/>
           </div>
         </div> 

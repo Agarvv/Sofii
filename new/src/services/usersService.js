@@ -1,4 +1,6 @@
 import fetchUrl from "../helpers/fetchUrl"
+import { checkIfUserLikedPost, checkIfUserSavedPost } from './postService'
+
 
 
 //FUNCTION TO REGISTER USER 
@@ -211,6 +213,23 @@ export async function getUserFriends() {
         throw new Error(data.error)
     }
 }
+
+export async function getUserSaveds(currentUser) {
+    const response = await fetchUrl(process.env.VUE_APP_API_URL + '/get_user_saved_content')
+    const data = await response.json()
+    
+    if(response.ok) {
+        for(const post of data.saved.savedPosts) {
+      post.isLiked = await checkIfUserLikedPost(post, currentUser)
+      
+      post.isSaved = await checkIfUserSavedPost(post, currentUser)
+   }
+    
+        return data
+    } else {
+        throw new Error(data.error)
+    }
+} 
 
 
 export async function checkIfUserIsFollowed(user, currentUser) {

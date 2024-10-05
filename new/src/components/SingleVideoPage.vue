@@ -59,6 +59,12 @@ import { getVideo } from '../services/videoService'
                     const data = await getVideo(id,user)
                     this.video = data.video
                     console.log("All went ok: ",  this.video)
+                    video.video_comments.forEach((comment) => {
+                        this.commentsById[comment.id] = comment;
+                        comment.awnsers.forEach((awnser) => {
+                            
+                        })
+                    })
                 } catch(e) {
                     console.log('Something went wrtonv', e)
                     this.error = "Something Went Wrong..."
@@ -163,35 +169,6 @@ import { getVideo } from '../services/videoService'
                     alert('nvca failed')
                 }
             })
-        },
-        async mounted() {
-            console.log('mounted video', this.video)
-            this.video.video_comments.forEach((comment) => {
-                this.commentsById[comment.id] = comment;
-            })
-            
-           // comment.isLiked = comment.comment_likes.some(like => like.user_id == this.usuario.user_id)
-            
-          //  comment.isDisliked = comment.comment_dislikes.some(dislike => dislike.user_id == this.usuario.user_id)
-            
-            
-         
-            comment.awnsers.forEach(awnser => {
-            this.awnsersById[awnser.id] = awnser; 
-            
-           // awnser.isLiked = awnser.awnser_likes.some(like => like.user_id == this.usuario.user_id)
-            
-         //   awnser.isDisliked = awnser.awnser_dislikes.some(dislike => dislike.user_id == this.usuario.user_id)
-            
-            
-          });
-          
-          console.log('final comment: ', comment)
-          
-         
-          
-          
-          // 
         }
     }
 </script>
