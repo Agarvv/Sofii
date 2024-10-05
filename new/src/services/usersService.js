@@ -58,10 +58,11 @@ export async function getUser(user_id, currentUser) {
       data.user.isFollowing = data.user.followers.some(follower => follower.Follower.follower_id == currentUser.user_id)
         
      // Here we check if our current user is friend with the user that he is seeing
-     //data.user.isFriend = data.user.friends.some(friend =>
-       // (friend.friend_one_id == currentUser.user_id || friend.friend_two_id == currentUser.user_id) ||
-     //   (friend.friend_one_id == data.user.id || friend.friend_two_id == data.user.id)
-   // );
+     data.user.isFriend = data.user.friends.some(friend =>
+        (friend.Friend.friend_one_id == currentUser.user_id ||
+             friend.Friend.friend_two_id == currentUser.user_id) ||
+       (friend.Friend.friend_one_id == data.user.id || friend.Friend.friend_two_id == data.user.id)
+   );
       data.user.friends.forEach((friend) => {
         console.log('user friend_one_id', friend)
       })
