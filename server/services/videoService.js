@@ -3,7 +3,8 @@ const User = require('../models/User')
 const VideoComments = require('../models/VideoComments')
 const VideoLikes = require('../models/VideoLikes')
 const SavedVideo = require('../models/SavedVideo')
-
+const Blocked = require('../models/Blocked')
+const tokenController = require('../controllers/tokenController')
 
 const handleVideoCreation = async (user, videoPath, data) => {
     try {
@@ -31,11 +32,19 @@ const deleteVideo = async (video, user) => {
     }
 }
 
-const getVideos = async () => {
+const getVideos = async (jwtToken) => {
     try {
-        
+        const userDecoded = await tokenController.verifyJwtToken(jwtToken)
+        const userBlockeds = await Blocked.findAll({
+            where: {
+                blocker_id: user.user_id
+            }
+        })
      const videos = await Video.findAll({
-    where: { video_private: false },
+    where: { 
+        video_private: false,
+        video_user_id: { [Op.notIn]: userBlockeds.map(b => b.blocked_id) } 
+     },
     include: [
         {
             model: User,

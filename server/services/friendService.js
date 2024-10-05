@@ -115,7 +115,6 @@ const getFriendRequestsByUserId = async (user_id) => {
 
 const acceptFriendRequest = async (user, friend_request) => {
     try {
-
       
        const friendship =  await Friends.create({
             friend_one_id: user.user_id,
@@ -123,11 +122,12 @@ const acceptFriendRequest = async (user, friend_request) => {
         })
 
         await friend_request.destroy()
-        await  sendNotificationToSingleUser(request.friend_target, user, friendship, "ACCEPTED_FRIEND_REQUEST")
+        await  sendNotificationToSingleUser(friend_request.friend_target, user, friendship, null, "ACCEPTED_FRIEND_REQUEST")
 
         return friendship
         
     } catch(e) {
+        console.log('error in friends service', e)
         throw new Error(e)
     }
 }

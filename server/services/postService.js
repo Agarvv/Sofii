@@ -11,13 +11,25 @@ const tokenController = require('../controllers/tokenController')
 const Post = require('../models/Post')
 const websocket = require('../websocket')
 const { Op } = require('sequelize');
-
+const Blocked = require('../models/Blocked')
 
 
 const serveHomePage = async (user) => {
     try { 
+        const userBlockeds = await Blocked.findAll({
+            where: {
+                blocker_id: user.user_id
+            }
+        })
+
+
         const posts = await Post.findAll({
-            where: { private: false },
+            where: { 
+                private: false,
+                user_id: {
+                    [Op.notIn]: userBlockeds.map(b => b.blocked_id)
+                }
+           },
             include: [
                 {
                     model: User,

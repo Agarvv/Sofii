@@ -49,7 +49,9 @@ export default {
   padding: 15px;
   width: 150px;
   display: flex;
+  gap: 10px;
   align-items: center;
   background: white;
+  cursor: pointer;
 }
 </style>

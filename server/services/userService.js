@@ -5,7 +5,7 @@ const FriendRequest = require('../models/FriendRequest')
 const Comment = require('../models/Comment')
 const Likes = require('../models/Likes')
 const Follower = require('../models/Followers')
-
+const { op } = require('sequelize');
 const Saved = require('../models/Saved')
 const Friends = require('../models/Friends')
 const Blocked = require('../models/Blocked')

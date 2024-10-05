@@ -50,7 +50,7 @@ router.post('/add_video', async (req, res) => {
 
 router.get('/videos', async (req, res) => {
     try {
-        const videos = await videoService.getVideos();
+        const videos = await videoService.getVideos(req.cookies.jwt);
         if (videos.length == 0) {
             return res.status(404).json({
                 detail: "We dont have still videos, Post One!"

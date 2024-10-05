@@ -1,8 +1,11 @@
 <template>
   <div>
     <header>
+    <h1 v-if="sentFriendRequest">REQUEST SENT</h1>
+    <h1 v-if="receivedFriendRequest">REQUEST RECEIIVED</h1>
     <div @click="toggleBlock" class="openBlockCard">
         <font-awesome-icon icon="ellipsis"/> 
+
     </div>
         
     <!-- Div for block the user -->

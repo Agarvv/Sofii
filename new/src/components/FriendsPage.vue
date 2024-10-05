@@ -84,7 +84,7 @@
           
           <div @click="goToUserPage(request.sender.id)" class="friend-img">
             <img style="width: 80px; border-radius: 50%" 
-            :src="request.sender.profilePicture ? aiUrl + '/' + request.sender.profilePicture : '/images/default.jpeg' ">
+            :src="request.sender.profilePicture || '/images/default.jpeg' ">
           </div>
           
           <div class="friend-username-and-buttons">
@@ -129,8 +129,7 @@
           <div class="friend-img"> 
             
             <img 
-            :src="friend.friendToDisplayInfo.profilePicture ? apiUrl +
-            '/' + friend.friendToDisplayInfo.profilePicture : '/images/default.jpeg' ">
+            :src="friend.friendToDisplayInfo.profilePicture || '/images/default.jpeg' ">
             ">
             
           </div>
