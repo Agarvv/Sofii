@@ -25,7 +25,7 @@
         >
           <div class="main-chat-user">
             <div class="user-img">
-              <img :src="chat.userToDisplayInfo.profilePicture ? apiUrl + '/' + chat.userToDisplayInfo.profilePicture : '/images/default.jpeg'">
+              <img :src="chat.userToDisplayInfo.profilePicture || '/images/default.jpeg'">
             </div>
             <div class="user-details">
               <h4>{{chat.userToDisplayInfo.username || 'Someone'}}</h4>
@@ -117,7 +117,7 @@ header p {
 
 .mh-search {
   background: #7289DA;
-  padding: 10px;
+  padding: 15px;
   margin: 10px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
