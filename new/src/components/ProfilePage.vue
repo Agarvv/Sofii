@@ -215,7 +215,7 @@ import {
 import {
   startChat
 } from '../services/chatService'
-import { PostCard } from './PostCard'
+import  PostCard  from './PostCard'
 
 
 
