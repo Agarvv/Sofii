@@ -49,7 +49,8 @@ export default {
 <style scoped>
     .block-user {
     width: 200px;
-    border-radius: 10px;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     background-color: #ffffff;
     overflow: hidden;
@@ -75,6 +76,7 @@ export default {
     justify-content: center;
     padding: 10px;
     transition: .4s;
+    text-align: center;
 }
 
 .block-user-card:hover {

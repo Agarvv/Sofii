@@ -1,8 +1,12 @@
 <template>
   <div>
     <header>
+    <div @click="toggleBlock" class="openBlockCard">
+        <font-awesome-icon icon="ellipsis"/> 
+    </div>
+        
     <!-- Div for block the user -->
-    <div class="block-user">
+    <div v-show="showBlock" class="block-user">
      <BlockUserCard :user="user"/>
     </div>
      
@@ -241,7 +245,7 @@ export default {
       sentFriendRequest: false,
       receivedFriendRequest: false,
       isFriend: false,
-      showBlockCard: false
+      showBlock: false,
      
       // sentFriendRequest means that a user sent a friend request to the user that is showing on
       //receivedFriendRequest means that a user received a friend request from the user that s showing up and he can Accept or Deny the request
@@ -252,6 +256,9 @@ export default {
   },
   methods: {
     ...mapActions(['fetchUser']),
+    toggleBlock() {
+        this.showBlock = !this.showBlock
+    },
     async getUser() {
       try {
        await this.fetchUser()
@@ -536,6 +543,13 @@ aside .description {
     display: flex;
     align-items: center;
     gap: 5px;
+}
+
+.openBlockCard {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    font-size: 20px;
 }
 
 .block-user {
