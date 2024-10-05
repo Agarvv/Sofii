@@ -76,7 +76,7 @@
  
  <!-- friend buttons -->
 <button 
-  v-if="isFriend"
+  v-if="isFriend && !isFriendRequest && !sentFriendRequest">
   style="background: lightblue; color: blue;"
 >
   <font-awesome-icon :icon="['fas', 'user-friends']" /> Friends
@@ -86,7 +86,7 @@
   <p>Request pending...</p>
 </button>
 
-<button @click="sendFriendRequest(user.id)"  v-if="!receivedFriendRequest && !sentFriendRequest">
+<button @click="sendFriendRequest(user.id)"  v-if="!receivedFriendRequest && !sentFriendRequest && !isFriend">
  <font-awesome-icon :icon="['fas', 'user-plus']"/> Send Friend Request
 </button>
 
