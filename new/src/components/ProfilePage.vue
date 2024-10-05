@@ -1,6 +1,6 @@
 <template>
   <div>
-  <h1 v_if="isFriend">Friends</h1>
+  <h1 v-if="isFriend">Friends</h1>
     <header>
 
     <div @click="toggleBlock" class="openBlockCard">
