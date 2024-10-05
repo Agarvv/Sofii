@@ -1,12 +1,9 @@
 <template>
 <div> 
   <div class="block-user">
-    <div class="block-user-header">
-      <font-awesome-icon :icon="close"/>
-    </div>
     
  <div @click="blockUser" class="block-card">
-  <font-awesome-icon :icon="isBlocked ? 'fas fa-unlock': 'fas-fa-lock'"/>
+<font-awesome-icon :icon="[isBlocked ? 'fas' : 'far', isBlocked ? 'unlock' : 'lock']"/>
   <p>Block User</p>
   
 </div>
@@ -53,6 +50,6 @@ export default {
   width: 150px;
   display: flex;
   align-items: center;
-  
+  background: white;
 }
 </style>
