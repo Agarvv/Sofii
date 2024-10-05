@@ -186,8 +186,6 @@
       </aside>
 
       <main>
-          
-
           <h4 style="width: 100%;
            display: flex;
            align-items: center;
@@ -198,7 +196,6 @@
              <div v-if="user.posts.length > 0" class="posts">
                 
           <div  v-for="post in user.posts" :key="post.id" class="post" >
-              <h1>Post</h1>
               <PostCard :post="post"/>
           </div>
         </div> 
@@ -549,7 +546,8 @@ aside .description {
     position: absolute;
     top: 25px;
     right: 25px;
-    font-size: 20px;
+    font-size: 25px;
+    color: white;
 }
 
 .block-user {
