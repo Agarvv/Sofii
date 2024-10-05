@@ -116,7 +116,8 @@ header p {
   padding: 10px;
   margin: 10px;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 100%;
 }
 
 .mh-search input {
@@ -124,6 +125,7 @@ header p {
   border: none;
   color: white;
   outline: none;
+  width: 100%;
 }
 
 .mh-search input::placeholder {
@@ -172,8 +174,6 @@ header p {
     width: 100%;
     
   }
-
-  
 
   .main-chat-user .user-img img {
     width: 35px;
