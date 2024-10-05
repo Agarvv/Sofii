@@ -3,8 +3,8 @@
   <div class="block-user">
     
  <div @click="blockUser" class="block-card">
-<font-awesome-icon :icon="[isBlocked ? 'fas' : 'far', isBlocked ? 'unlock' : 'lock']"/>
-  <p>Block User</p>
+<font-awesome-icon :icon="isBlocked ? 'lock' : 'unlock'"/>
+  <p>{{isBlocked ? 'Unblock User' : 'Block User'}}</p>
   
 </div>
     

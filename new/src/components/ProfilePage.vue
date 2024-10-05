@@ -65,7 +65,7 @@
           </div>
           
           
-          <div v-else class="interact-buttons">
+ <div v-else class="interact-buttons">
   <!-- Chat -->
   <button @click="sendChat(user.id)" style="background: purple;">
     <font-awesome-icon :icon="['fas', 'comment']" /> Chat
