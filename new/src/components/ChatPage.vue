@@ -105,6 +105,10 @@ header p {
   color: #B9BBBE; 
 }
 
+.container{
+    width: 70%;
+}
+
 .main-header {
   display: flex;
   align-items: center;
@@ -118,6 +122,8 @@ header p {
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   width: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .mh-search input {
