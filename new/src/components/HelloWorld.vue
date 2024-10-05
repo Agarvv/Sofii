@@ -260,7 +260,6 @@ img {
 .container {
     display: grid;
     grid-template-columns: 1fr 3fr 1fr;
-    min-height: 100vh;
     width: 100%;
 }
 

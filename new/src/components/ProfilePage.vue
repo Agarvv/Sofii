@@ -1,6 +1,6 @@
 <template>
   <div>
-  <h1 v-if="isFriend">Friends</h1>
+
     <header>
 
     <div @click="toggleBlock" class="openBlockCard">
@@ -75,10 +75,9 @@
   </button>
  
  <!-- friend buttons -->
-<button 
+<button style="background: lightblue; color: black;"
+> 
   v-if="isFriend && !isFriendRequest && !sentFriendRequest">
-  style="background: lightblue; color: blue;"
->
   <font-awesome-icon :icon="['fas', 'user-friends']" /> Friends
 </button>
 
