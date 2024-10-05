@@ -58,9 +58,13 @@ export async function getUser(user_id, currentUser) {
       data.user.isFollowing = data.user.followers.some(follower => follower.Follower.follower_id == currentUser.user_id)
         
      // Here we check if our current user is friend with the user that he is seeing
-    
+     data.user.isFriend = data.user.friends.some(friend => 
+        friend.Friends.friend_one_id == currentUser.user_id ||
+        friend.Friends.friend_two_id == currentUser.user_id
+     )
+
       data.user.friends.forEach((friend) => {
-        console.log('user friend_one_id', friend)
+        console.log('user friend_one_id', friend.Friends)
       })
 
      // here we check if our current user blocked the user that he is seeing
