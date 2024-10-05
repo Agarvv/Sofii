@@ -74,7 +74,6 @@ export default {
   async getPost(currentUser) {
    try { 
       const post = await getPost(this.$route.params.id, currentUser)
-      console.log('post from service', post)
       this.post = post
    } catch(e) {
        this.error = "Oops, Something Went Wrong..."
@@ -297,18 +296,13 @@ this.$socket.on('newCommentAwnser', newAwnser => {
       console.log('this post: ', this.post)
       this.post.postComments.forEach(comment => {
             this.commentsById[comment.id] = comment;
-          //  comment.isLiked = comment.comment_likes.some(like => like.user_id == this.usuario.user_id)
-            
-         //   comment.isDisliked = comment.comment_dislikes.some(dislike => dislike.user_id == this.usuario.user_id)
+
             
             
          
             comment.awnsers.forEach(awnser => {
             this.awnsersById[awnser.id] = awnser; 
             
-          //  awnser.isLiked = awnser.awnser_likes.some(like => like.user_id == this.usuario.user_id)
-            
-         //   awnser.isDisliked = awnser.awnser_dislikes.some(dislike => dislike.user_id == this.usuario.user_id)
             
             
           });
@@ -359,7 +353,7 @@ header {
 
 .post-ctn{
     background: white;
-    width: 70%;
+    width: 100%;
     padding: 10px;
     min-height: auto; 
     max-height: 600px;
