@@ -45,8 +45,14 @@ export async function getUser(user_id, currentUser) {
   console.log('all data', currentUser)
   if(response.ok) {
 
-      data.user.isPendingFriendRequestSent = data.user.sentRequests.some(req => req.request_sender_id == currentUser.user_id)
-       data.user.isPendingRequestReceived = data.user.receivedRequests.some(req => req.request_sender_id == currentUser.user_id)
+   data.user.isPendingFriendRequestSent = data.user.sentRequests.some(
+    req => req.request_sender_id == currentUser.user_id ||
+    req. friend_target == currentUser.user_id
+    )
+   data.user.isPendingRequestReceived = data.user.receivedRequests.some(
+    req => req.request_sender_id == currentUser.user_id ||
+    req.friend_target == currentUser.user_id
+    )
 
      // Here we just check if a user is following the user of the request
       data.user.isFollowing = data.user.followers.some(follower => follower.Follower.follower_id == currentUser.user_id)
