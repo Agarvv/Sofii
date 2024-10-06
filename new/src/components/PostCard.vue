@@ -68,11 +68,17 @@ export default {
     data() {
         return {
             error: "",
-            isLiked: this.post.isLiked,
-            isSaved: this.post.isSaved,
             apiUrl: apiUrl
         }
     },
+    computed: {
+    isLiked() {
+        return this.post.isLiked;
+    },
+    isSaved() {
+        return this.post.isSaved;
+    }
+     },
     methods: {
         async likeAPost(post_id) {
             try {
