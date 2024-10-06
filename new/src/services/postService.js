@@ -17,6 +17,7 @@ if(response.ok) {
 
 }
 
+// METHOD TO GET POST AND RECOMMENDED USERS
 export async function getPosts(user) {
     console.log('Method called ¡')
     const response = await fetch(process.env.VUE_APP_API_URL + '/api/sofi/posts', {
@@ -239,28 +240,28 @@ export async function dislikeCommentAwnser(type, comment_id, awnser_id, post_id)
     }
 }
 
-export async function checkIfUserLikedPost(post, user) {
+export function checkIfUserLikedPost(post, user) {
     return post.postLikes.some(like => like.user_id === user.user_id);
 }
 
-export async function checkIfUserSavedPost(post, user) {
+export function checkIfUserSavedPost(post, user) {
     return post.saved_post.some(saved => saved.user_id === user.user_id);
 }
 
-export async function checkIfCommentIsLiked(comment, user) {
+export function checkIfCommentIsLiked(comment, user) {
     return comment.comment_likes.some(like => like.user_id == user.user_id)
 }
 
-export async function checkIfCommentIsDisliked(comment, user) {
+export function checkIfCommentIsDisliked(comment, user) {
     return comment.comment_dislikes.some(dislike => dislike.user_id == user.user_id)
 }
 
 
-export async function checkIfAwnserIsLiked(awnser, user) {
+export function checkIfAwnserIsLiked(awnser, user) {
     return awnser.awnser_likes.some(like => like.user_id == user.user_id)
 }
 
-export async function checkIfAwnserIsDisliked(awnser, user) {
+export function checkIfAwnserIsDisliked(awnser, user) {
     return awnser.awnser_dislikes.some(dislike => dislike.user_id == user.user_id)
 }
 

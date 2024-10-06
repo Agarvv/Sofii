@@ -245,7 +245,7 @@ export async function getUserSaveds(currentUser) {
 } 
 
 
-export async function checkIfUserIsFollowed(user, currentUser) {
+export function checkIfUserIsFollowed(user, currentUser) {
   // USER IS THE USER TO COMPARE THE DATA
   // current user is the current user of the session 
   console.log('user:vv', user)
@@ -253,7 +253,7 @@ export async function checkIfUserIsFollowed(user, currentUser) {
   return isFollowing
 }
 
-export async function checkIfUserIsFriend(user, currentUser) {
+export function checkIfUserIsFriend(user, currentUser) {
   // USER IS THE USER TO COMPARE THE DATA
   // current user is the current user of the session
   const isFriend = user.friends.some(friend => friend.friend_one_id == currentUser.user_id || friend.friend_two_id == currentUser.user_id)

@@ -14,25 +14,22 @@ import {
 export async function handleSearch(query, currentUser) {
     const response = await fetchUrl(process.env.VUE_APP_API_URL + `/api/sofi/search/${query}`, null, 'GET');
     const data = await response.json();
+    
     if (response.ok) {
-        
-     
-await Promise.all(data.results.results.users.map(async (user) => {
-    user.following = await checkIfUserIsFollowed(user, currentUser);
-    user.isYourFriend = await checkIfUserIsFriend(user, currentUser);
-}));
+        data.results.results.users.forEach(user => {
+            user.following = checkIfUserIsFollowed(user, currentUser);
+            user.isYourFriend = checkIfUserIsFriend(user, currentUser);
+        });
 
+        data.results.results.posts.forEach(post => {
+            post.isLiked = checkIfUserLikedPost(post, currentUser);
+            post.isSaved = checkIfUserSavedPost(post, currentUser);
+        });
 
-await Promise.all(data.results.results.posts.map(async (post) => {
-    post.isLiked = await checkIfUserLikedPost(post, currentUser);
-    post.isSaved = await checkIfUserSavedPost(post, currentUser);
-}));
-
-
-await Promise.all(data.results.results.videos.map(async (video) => {
-    video.isLiked = await checkIfUserLikedVideo(video, currentUser);
-    video.isSaved = await checkIfUserSavedVideo(video, currentUser);
-}));
+        data.results.results.videos.forEach(video => {
+            video.isLiked = checkIfUserLikedVideo(video, currentUser);
+            video.isSaved = checkIfUserSavedVideo(video, currentUser);
+        });
 
         return data;
     } else {

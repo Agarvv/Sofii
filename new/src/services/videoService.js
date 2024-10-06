@@ -237,27 +237,27 @@ export async function dislikeVideoCommentAwnser(comment_id, awnser_id, video_id,
     }
 }
 
-export async function checkIfUserLikedVideo(video, user) {
+export function checkIfUserLikedVideo(video, user) {
     return video.video_likes.some(like => like.user_id == user.user_id)
 }
 
-export async function checkIfUserSavedVideo(video, user) {
+export function checkIfUserSavedVideo(video, user) {
     return video.videos_saved.some(saved => saved.user_id == user.user_id)
 }
 
-export async function checkIfCommentLiked(comment, user) {
+export function checkIfCommentLiked(comment, user) {
     return comment.comment_likes.some(like => like.user_id == user.user_id)
 }
 
-export async function checkIfCommentDisliked(comment, user) {
+export function checkIfCommentDisliked(comment, user) {
     return comment.comment_dislikes.some(dislike => dislike.user_id == user.user_id)
 }
 
 
-export async function checkIfAwnserLiked(awnser, user) {
+export function checkIfAwnserLiked(awnser, user) {
     return awnser.awnser_likes.some(like => like.user_id == user.user_id)
 }
 
-export async function checkIfAwnserDisliked(awnser, user) {
+export function checkIfAwnserDisliked(awnser, user) {
     return awnser.awnser_dislikes.some(dislike => dislike.user_id == user.user_id)
 }
