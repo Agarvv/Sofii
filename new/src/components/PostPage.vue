@@ -125,51 +125,6 @@ export default {
          });
 
 
-this.$socket.on('likeCommentAwnser', newLike => {
-       alert('jwjf')
-        const targetAwnser = 
-        this.awnsersById[newLike.awnser_id]
-        
-        if(targetAwnser) {
-            alert('ok')
-            targetAwnser.awnser_likes.push(newLike)
-        } else {
-            alert('not ok')
-        }
- })
-        
-this.$socket.on('unlikeCommentAwnser', newLike => {
-    const targetAwnser = 
-        this.awnsersById[newLike.awnser_id]
-        
-        if(targetAwnser) {
-            targetAwnser.awnser_likes = targetAwnser.awnser_likes.filter(l => l.id !== newLike.id)
-        }
-})
-
-this.$socket.on('dislikeCommentAwnser', dislike => {
-        const targetAwnser = 
-        this.awnsersById[dislike.awnser_id]
-        
-        if(targetAwnser) {
-            targetAwnser.awnser_dislikes.push(dislike)
-        }
-        
-       
- })
-        
-this.$socket.on('undislikeCommentAwnser', dislike => {
-    const targetAwnser = 
-        this.awnsersById[dislike.awnser_id]
-        
-        if(targetAwnser) {
-            targetAwnser.awnser_dislikes = targetAwnser.awnser_dislikes.filter(l => l.id !== dislike.id)
-          
-        }
-        
-    
-})
-
 this.$socket.on('newComment', newComment => {
     this.post.postComments.push(newComment)
     this.commentsById[newComment.id] = newComment;
@@ -184,10 +139,6 @@ this.$socket.on('newCommentAwnser', newAwnser => {
         this.awnsersById[newAwnser.id] = newAwnser
     }
 })
-
-
-
-
 
   },
 };

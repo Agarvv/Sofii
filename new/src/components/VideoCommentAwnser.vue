@@ -87,6 +87,43 @@ import {
                     this.error = "Internal Server Error"
                 }
             }
+        }, 
+        async created() {
+             this.$socket.on('likeVideoCommentAnswer', newLike => {
+                console.log('new like: ', newLike)
+
+                if(newLike.awnser_id === this.awnser.id) {
+                    this.awnser.awnser_likes.push(newLike)
+                } 
+            })
+            
+            this.$socket.on('unlikedVideoCommentAwnser', newLike => {
+                
+                console.log('new unlike: ', newLike)
+                if(newLike.awnser_id === this.awnser.id) {
+                    this.awnser.awnser_likes =
+                     this.awnser.awnser_likes.filter(like => like.id !== newLike.id)
+                } else {
+                    alert('not found uvca')
+                }
+            })
+
+               this.$socket.on('dislikeVideoCommentAwnser', newDislike => {
+                console.log('new dislike: ', newDislike)
+
+                if(newDislike.awnser_id === this.awnser.id) {
+                    this.awnser.awnser_dislikes.push(newDislike)
+                } 
+            })
+            
+            this.$socket.on('undislikedVideoCommentAwnser', newDislike => {
+                console.log('new undislike: ', newDislike)
+                if(newDislike.awnser_id === this.awnser.id) {
+                    this.awnser.awnser_dislikes =
+                     this.awnser.awnser_dislikes.filter(dislike => dislike.id !== newDislike.id)
+                } 
+            })
+            
         }
     }
 </script>

@@ -175,7 +175,7 @@ import { getVideo } from '../services/videoService'
             })
         }
     }
-</script>
+</script> <!-- 178 -->
 
 <style scoped>
 .wrapper {

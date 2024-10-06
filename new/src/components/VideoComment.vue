@@ -141,6 +141,49 @@ import VideoCommentAwnser from './VideoCommentAwnser'
             toggleAwnsers(index) {
               this.comment.showAwnsers = !this.comment.showAwnsers
             }
+        },
+        async created() {
+            this.$socket.on('likeVideoComment', newLike => {
+                console.log('newLike', newLike)
+
+                if(newLike.comment_id === this.comment.id) {
+                    this.comment.comment_likes.push(newLike)
+                } 
+            })
+            
+            this.$socket.on('unlikedVideoComment', newLike => {
+                console.log('newLike', newLike)
+
+                if(newLike.comment_id === this.comment.id) {
+                    this.comment.comment_likes =
+                     this.comment.comment_likes.filter(like => like.id !== newLike.id)
+                } 
+            })
+
+             this.$socket.on('dislikeVideoComment', newDislike => {
+                console.log('newDislike', newDislike)
+
+                if(newDislike.comment_id === this.comment.id) {
+                    this.comment.comment_dislikes.push(newDislike)
+                } 
+            })
+            
+            this.$socket.on('undislikedVideoComment', newDislike => {
+                console.log('newDislike', newDislike)
+
+                if(newDislike.comment_id === this.comment.id) {
+                    this.comment.comment_dislikes = 
+                    this.comment.comment_dislikes.filter(dislike => dislike.id !== newDislike.id)
+                } 
+            })
+
+
+ 
+
+
+
+
+
         }
     }
 </script>
