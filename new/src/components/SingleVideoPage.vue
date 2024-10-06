@@ -62,9 +62,12 @@ import { getVideo } from '../services/videoService'
                     video.video_comments.forEach((comment) => {
                         this.commentsById[comment.id] = comment;
                         comment.awnsers.forEach((awnser) => {
-                            
+                            this.awnsersById[awnser.id] = awnser;
                         })
                     })
+
+                    console.log('final cbid', this.commentsById)
+                    console.log('final cbawnser', this.awnsersById)
                 } catch(e) {
                     console.log('Something went wrtonv', e)
                     this.error = "Something Went Wrong..."
@@ -84,7 +87,7 @@ import { getVideo } from '../services/videoService'
               this.$socket.on('videoLiked', newLike => {
                   console.log('new like: ', newLike)
                   if(newLike.video_id === this.video.id) {
-                    this.video.likes.push(newLike)
+                    this.video.video_likes.push(newLike)
                   }
             })
 
