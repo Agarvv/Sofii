@@ -114,7 +114,13 @@ export default {
           await this.fetchUser() 
           await this.getPost(this.user)
           
-          
+          this.post.postComments.forEach(comment => {
+            this.commentsById[comment.id] = comment;
+            comment.awnsers.forEach(awnser => {
+            this.awnsersById[awnser.id] = awnser; 
+          });
+          console.log('final comment: ', comment)
+         });
 
     this.$socket.on('likePost', newLike => {
     console.log('Like Recibido!', newLike);
@@ -288,16 +294,6 @@ this.$socket.on('newCommentAwnser', newAwnser => {
 
 
   },
-  created() {
-      console.log('this post: ', this.post)
-      this.post.postComments.forEach(comment => {
-            this.commentsById[comment.id] = comment;
-            comment.awnsers.forEach(awnser => {
-            this.awnsersById[awnser.id] = awnser; 
-          });
-          console.log('final comment: ', comment)
-         });
-  }
 };
 </script>
 
