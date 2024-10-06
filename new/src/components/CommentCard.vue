@@ -154,10 +154,6 @@ export default {
         }
     },
 
-        
-        
-        
-    
     toggleResponses(index) {
     this.comment.showResponses = !this.comment.showResponses;
   },
@@ -165,11 +161,49 @@ export default {
   toggleShowAwnserInp(index) {
     this.comment.showAwnserInp = !this.comment.showAwnserInp;
   }
-  
-  
-  
-  
+
+    },
+    async created() {
+
+
+  this.$socket.on('likeComment', like => {
+          console.log('likeComment', like)
+        
+    if(like.comment_id === this.comment.id) {
     
+        this.comment_likes.push(like)
+    } else {
+        return
+    }
+})
+
+this.$socket.on('unlikeComment', like => {
+   console.log('unlikeComment', like)
+
+    if(like.comment_id === this.comment.id) {
+        this.comment.comment_likes = this.comment.comment_likes.filter(l => l.id !== like.id)
+    }
+})
+
+
+this.$socket.on('dislikeComment', dislike => {
+    console.log('dislikeComment', dislike)
+
+    if(dislike.comment_id === this.comment.id) {
+        this.comment.comment_dislikes.push(dislike)
+    } 
+})
+
+this.$socket.on('undislikeComment', dislike => {
+    console.log('undislikeComment', dislike)
+
+    if(dislike.comment_id === this.comment.id) {
+        this.comment.comment_dislikes = this.comment.comment_dislikes.filter(d => d.id !== dislike.id)
+    }
+})
+
+
+
     }
 }
 </script>
