@@ -114,8 +114,16 @@ export default {
         }
     },
     mounted() {
-        console.log('post prop: ', this.post)
-    }
+  console.log('Post al montarse en el hijo:', this.post); // Verifica aquí
+},
+created() {
+  console.log('Post al crearse en el hijo:', this.post); // Verifica en created
+},
+watch: {
+  post(newPost) {
+    console.log('Nuevo post en el hijo:', newPost); // Verifica cambios
+  },
+},
 }
 </script>
 
