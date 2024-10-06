@@ -28,7 +28,7 @@
                     <p>You Do Not Have Posts Saved, <a href="/">Go And Explore !</a></p>
                 </div>
                 <div v-for="post in posts" key="post.saved_post.id" class="post">
-                    <PostCard :post="post"/> 
+                    <PostCard :post="post.saved_post"/> 
                 </div>
             </div>
                 <div v-if="contentToDisplay == 'videos'"  class="saved-videos">
@@ -37,7 +37,7 @@
                 </div>
                 
                 <div v-for="video in videos" :key="video.video_id" class="post">
-                    <VideoCard :video="video"/> 
+                    <VideoCard :video="video.saved_video_video"/> 
                 </div>
             </div>
         </div>
@@ -89,6 +89,7 @@ computed: {
         async serveSavedPage() {
             try {
                 const data = await getUserSaveds(this.user)
+                console.log("DATA RECEIVED: ", data)
                 this.posts = data.saved.savedPosts
                 this.videos = data.saved.savedVideos
             } catch(e) {
