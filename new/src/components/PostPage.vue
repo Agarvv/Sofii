@@ -105,14 +105,18 @@ export default {
            }
        },
   },
+  
+  async mounted() {
+                
+          await this.fetchUser() 
+          await this.getPost(this.user)
+  }, 
 
   async created() {
       
           console.log('comments by id: ', this.commentsById)
           console.log('awnsers by id: ', this.awnsersById)
-          
-          await this.fetchUser() 
-          await this.getPost(this.user)
+         
           
           this.post.postComments.forEach(comment => {
             this.commentsById[comment.id] = comment;
