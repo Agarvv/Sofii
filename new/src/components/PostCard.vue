@@ -7,7 +7,7 @@
                   height: 40px;
                   border-radius: 50%;
                   object-fit: cover;
-                 " :src="post.user.profilePicture ? post.user.profilePicture : '/images/default.jpeg'" alt="Post Image">
+                 " :src="post.user.profilePicture || '/images/default.jpeg'" alt="Post Image">
               </div>
               <div class="post-user-detail">
                 <h4>{{ post.user.username }}</h4>
@@ -115,7 +115,7 @@ export default {
             this.$router.push('/post/' + id)
         }
     },
-    created() {
+    mounted() {
         console.log('post prop: ', this.post)
     }
 }
