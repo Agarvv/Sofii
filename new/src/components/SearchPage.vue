@@ -381,9 +381,11 @@ export default {
         LoadingComponent,
         SearchPageHeader
     }, 
+    computed: {
+        ...mapGetters(['user']),
+    }, 
     data() {
         return {
-            ...mapGetters(['user']),
             searchQ: "",
             error: "",
             loading: true,
