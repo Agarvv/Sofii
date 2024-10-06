@@ -12,42 +12,32 @@ import {
 } from './videoService'
 
 export async function handleSearch(query, currentUser) {
-    const response = await fetchUrl(process.env.VUE_APP_API_URL + `/api/sofi/search/${query}`, null, 'GET');
-    const data = await response.json();
-    
-    if (response.ok) {
-        console.log('Data results', data.results)
-        console.log('data results resutls', data.results.results)
-        console.log('data.results.results.users', data.results.results.users)
-        console.log('data.results.results.posts', data.results.results.posts)
-        console.log('data.results.results.videos', data.results.results.videos)
-        console.log("currentUser", currentUser.user_id)
-        
-        
-       data.results.results.users.forEach(user => {
-           user.following = user.followers.some(follower => follower.Follower.follower_id == currentUser.user_id);
-            
-            user.isYourFriend = user.friends.some(friend => 
-                friend.friend_one_id == currentUser.user_id || 
-              friend.friend_two_id == currentUser.user_id
-            );
-        });
+    try {
+        const response = await fetchUrl(process.env.VUE_APP_API_URL + `/api/sofi/search/${query}`, null, 'GET');
+        const data = await response.json();
+        if (response.ok) {
 
+            await Promise.all(data.results.results.users.map(async (user) => {
+                user.following = await checkIfUserIsFollowed(user, currentUser);
+                user.isYourFriend = await checkIfUserIsFriend(user, currentUser);
+            }));
 
-        data.results.results.posts.forEach(post => {
-            post.isLiked = post.postLikes.some(like => like.user_id == currentUser.user_id);
-            post.isSaved = post.saved_post.some(saved => saved.user_id == currentUser.user_id);
-        });
+            await Promise.all(data.results.results.posts.map(async (post) => {
+                post.isLiked = await checkIfUserLikedPost(post, currentUser);
+                post.isSaved = await checkIfUserSavedPost(post, currentUser);
+            }));
 
+            await Promise.all(data.results.results.videos.map(async (video) => {
+                video.isLiked = await checkIfUserLikedVideo(video, currentUser);
+                video.isSaved = await checkIfUserSavedVideo(video, currentUser);
+            }));
 
-
-        data.results.results.videos.forEach(video => {
-            video.isLiked = video.video_likes.some(like => like.user_id == currentUser.user_id);
-            video.isSaved = video.videos_saved.some(saved => saved.user_id == currentUser.user_id);
-        });
-
-        return data;
-    } else {
-        throw new Error(data.error);
+            return data;
+        } else {
+            throw new Error(data.error);
+        }
+    } catch (error) {
+        console.error("Error en handleSearch:", error);
+        throw error;
     }
 }
