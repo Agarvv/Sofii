@@ -72,17 +72,11 @@ export default {
     return {
       comment: "",
       error: "",
-      apiUrl: apiUrl
+      apiUrl: apiUrl,
+      isLiked: this.video.isLiked,
+      isSaved: this.video.isSaved
     };
-  },
-  computed: {
-      isLiked() {
-                return this.video.isLiked
-      },
-      isSaved() {
-          return this.video.isSaved
-      }
-  },
+  }
   methods: {
     async likeAVideo(video_id) {
       try {
@@ -132,7 +126,13 @@ export default {
   },
   created() {
       console.log('video prop: ', this.video)
-  }
+  },
+  watch: {
+  videi(newVideo) {
+    this.isLiked = newVideo.isLiked
+    this.isSaved = newVideo.isSaved
+  },
+},
 };
 </script>
 
