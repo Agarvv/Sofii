@@ -17,18 +17,25 @@ export async function handleSearch(query, currentUser) {
     
     if (response.ok) {
         data.results.results.users.forEach(user => {
-            user.following = checkIfUserIsFollowed(user, currentUser);
-            user.isYourFriend = checkIfUserIsFriend(user, currentUser);
+            user.following = user.followers.some(follower => follower.Follower.follower_id === currentUser.user_id);
+            
+            user.isYourFriend = user.friends.some(friend => 
+                friend.friend_one_id === currentUser.user_id || 
+                friend.friend_two_id === currentUser.user_id
+            );
         });
+
 
         data.results.results.posts.forEach(post => {
-            post.isLiked = checkIfUserLikedPost(post, currentUser);
-            post.isSaved = checkIfUserSavedPost(post, currentUser);
+            post.isLiked = post.postLikes.some(like => like.user_id === currentUser.user_id);
+            post.isSaved = post.saved_post.some(saved => saved.user_id === currentUser.user_id);
         });
 
+
+
         data.results.results.videos.forEach(video => {
-            video.isLiked = checkIfUserLikedVideo(video, currentUser);
-            video.isSaved = checkIfUserSavedVideo(video, currentUser);
+            video.isLiked = video.video_likes.some(like => like.user_id === currentUser.user_id);
+            video.isSaved = video.videos_saved.some(saved => saved.user_id === currentUser.user_id);
         });
 
         return data;
