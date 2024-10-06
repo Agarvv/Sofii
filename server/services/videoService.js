@@ -37,7 +37,7 @@ const getVideos = async (jwtToken) => {
         const userDecoded = await tokenController.verifyJwtToken(jwtToken)
         const userBlockeds = await Blocked.findAll({
             where: {
-                blocker_id: user.user_id
+                blocker_id: userDecoded.user_id
             }
         })
      const videos = await Video.findAll({
