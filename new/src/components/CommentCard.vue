@@ -65,8 +65,6 @@
                   
                 <div v-for="awnser in comment.awnsers" :key="awnser.id" class="response">
                 
-                 
-                 
                  <AwnserCard :awnser="awnser"/>
 
                 </div> <!-- <-- END OF AWNSERS FOR -->
@@ -171,7 +169,7 @@ export default {
         
     if(like.comment_id === this.comment.id) {
     
-        this.comment_likes.push(like)
+        this.comment.comment_likes.push(like)
     } else {
         return
     }
