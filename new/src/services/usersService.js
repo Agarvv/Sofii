@@ -230,7 +230,7 @@ export async function getUserFriends() {
 export async function getUserSaveds(currentUser) {
     const response = await fetchUrl(process.env.VUE_APP_API_URL + '/api/sofi/get_user_saved_content')
     const data = await response.json()
-    
+    console.log('server data from saved content', data)
     if(response.ok) {
         for(const post of data.saved.savedPosts) {
       post.isLiked = await checkIfUserLikedPost(post, currentUser)
