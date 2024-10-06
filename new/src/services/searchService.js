@@ -16,20 +16,23 @@ export async function handleSearch(query, currentUser) {
     const data = await response.json();
     if (response.ok) {
         
-        for (const user of data.results.results.users) {
-            user.following = await checkIfUserIsFollowed(user, currentUser);
-            user.isYourFriend = await checkIfUserIsFriend(user, currentUser);
-        }
+     
+await Promise.all(data.results.results.users.map(async (user) => {
+    user.following = await checkIfUserIsFollowed(user, currentUser);
+    user.isYourFriend = await checkIfUserIsFriend(user, currentUser);
+}));
 
-        for (const post of data.results.results.posts) {
-            post.isLiked = await checkIfUserLikedPost(post, currentUser);
-            post.isSaved = await checkIfUserSavedPost(post, currentUser);
-        }
 
-        for (const video of data.results.results.videos) {
-            video.isLiked = await checkIfUserLikedVideo(video, currentUser);
-            video.isSaved = await checkIfUserSavedVideo(video, currentUser);
-        }
+await Promise.all(data.results.results.posts.map(async (post) => {
+    post.isLiked = await checkIfUserLikedPost(post, currentUser);
+    post.isSaved = await checkIfUserSavedPost(post, currentUser);
+}));
+
+
+await Promise.all(data.results.results.videos.map(async (video) => {
+    video.isLiked = await checkIfUserLikedVideo(video, currentUser);
+    video.isSaved = await checkIfUserSavedVideo(video, currentUser);
+}));
 
         return data;
     } else {
