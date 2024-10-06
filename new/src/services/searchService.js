@@ -16,12 +16,19 @@ export async function handleSearch(query, currentUser) {
     const data = await response.json();
     
     if (response.ok) {
-        data.results.results.users.forEach(user => {
-            user.following = user.followers.some(follower => follower.Follower.follower_id == currentUser.user_id);
+        console.log('Data results', data.results)
+        console.log('data results resutls', data.results.results)
+        console.log('data.results.results.users', data.results.results.users)
+        console.log('data.results.results.posts', data.results.results.posts)
+        console.log('data.results.results.videos', data.results.results.videos)
+        
+        
+       data.results.results.users.forEach(user => {
+           user.following = user.followers.some(follower => follower.Follower.follower_id == currentUser.user_id);
             
             user.isYourFriend = user.friends.some(friend => 
                 friend.friend_one_id == currentUser.user_id || 
-                friend.friend_two_id == currentUser.user_id
+              friend.friend_two_id == currentUser.user_id
             );
         });
 
