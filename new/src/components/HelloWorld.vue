@@ -512,16 +512,18 @@ aside .aside-logo i {
   justify-content: center;
 }
 
+.pc-sidebar {
+    border: 2px solid blue;
+}
 .rs-aside {
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 777;
     width: 250px; 
     height: 100vh;
     overflow: auto; 
     display: block;
-
+    border: 2px solid red;
 }
 
 @media (max-width: 800px) {
