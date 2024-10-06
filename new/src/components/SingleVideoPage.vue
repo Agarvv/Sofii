@@ -59,7 +59,7 @@ import { getVideo } from '../services/videoService'
                     const data = await getVideo(id,user)
                     this.video = data.video
                     console.log("All went ok: ",  this.video)
-                    video.video_comments.forEach((comment) => {
+                    this.video.video_comments.forEach((comment) => {
                         this.commentsById[comment.id] = comment;
                         comment.awnsers.forEach((awnser) => {
                             this.awnsersById[awnser.id] = awnser;
@@ -93,9 +93,10 @@ import { getVideo } from '../services/videoService'
 
              this.$socket.on('unlikeVideo', like => {
                console.log('Like to remove:', like); 
+
                 
                  if (like.video_id === this.video.id) {
-                        console.log('Current likes:', videoTarget.video_likes); 
+                        console.log('Current likes:', this.video.video_likes); 
                          this.video.video_likes = this.video.video_likes.filter(
                             l => l.user_id !== like.user_id);
                         console.log('Updated likes:', videoTarget.video_likes);
