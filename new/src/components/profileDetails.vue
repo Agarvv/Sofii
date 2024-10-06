@@ -19,8 +19,8 @@
         <h4>Your Profile Picture</h4>
         <div @click="handlePhotoOpen" id="profile-picture-photo">
           <input @change="handleFileChanges($event, 'profile_pic')" style="display: none;" type="file" id="profilePhotoInput">
-          <img :src="userNewData.profile_pic 
-           ? userNewData.profile_pic 
+          <img :src="previewProfilePic 
+           ? previewProfilePic
            : (user.user_picture 
               
                || '/images/default.jpeg')" 
@@ -32,8 +32,8 @@
         <h4>Your Banner</h4>
         <input @change="handleFileChanges($event, 'profile_banner')" style="display: none;" type="file" id="profileBannerInput">
         <div class="banner-img">
-          <img :src="userNewData.profile_banner 
-           ? userNewData.profile_banner 
+          <img :src=" previewBanner 
+           ?  previewBanner 
            : (user.user_banner 
           
                || '/images/default_banner.webp')" 
@@ -153,7 +153,9 @@ export default {
       apiUrl: apiUrl,
       error: "",
       loadingData: true,
-      loadingSetData: false
+      loadingSetData: false,
+      previewBanner: null,
+      previewProfilePic: null
     };
   },
   methods: {
@@ -200,13 +202,21 @@ export default {
     },
     
     
-  handleFileChanges(event, target) {
-   const file = event.target.files[0];
+handleFileChanges(event, target) {
+  console.log('target', target) 
+  const file = event.target.files[0];
    if (file) {
-     // Si selecciona una imagen, muestra una URL temporal
-     this.userNewData[target] = URL.createObjectURL(file); 
+     this.userNewData[target] = file;
+
+     const previewURL = URL.createObjectURL(file);
+     if (target === 'profile_pic') {
+       this.previewProfilePic = previewURL;  
+     } else if (target === 'profile_banner') {
+       this.previewBanner = previewURL;
+     }
    }
- },
+}
+
 
     
     async saveAllChanges() {
