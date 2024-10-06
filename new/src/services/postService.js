@@ -1,5 +1,5 @@
 import fetchUrl from '../helpers/fetchUrl'
-
+import { checkIfUserIsFollowed } from './usersService'
 
 export async function createPost(vdata) {
 const response = await fetch(process.env.VUE_APP_API_URL + '/api/sofi/createPost', {
