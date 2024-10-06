@@ -122,34 +122,35 @@ export async function postComment(post_id, type, comment_content) {
 }
 
 export async function getPost(post_id, currentUser) {
-      const response = await fetchUrl(process.env.VUE_APP_API_URL + `/api/sofi/post/${post_id}`, null, 'GET')
-      const data = await response.json()
+    const response = await fetchUrl(process.env.VUE_APP_API_URL + `/api/sofi/post/${post_id}`, null, 'GET');
+    const data = await response.json();
 
-      if(response.ok) {
-          
-          data.post.isLiked = await checkIfUserLikedPost(data.post, currentUser)
-          data.post.isSaved = await checkIfUserSavedPost(data.post, currentUser)
+    if (response.ok) {
+        console.log('get post current user', currentUser)
+        console.log('get post data', data)
+        data.post.isLiked = await checkIfUserLikedPost(data.post, currentUser);
+        data.post.isSaved = await checkIfUserSavedPost(data.post, currentUser);
 
-         for(const comment of data.post.postComments) {
-             comment.isLiked = await checkIfCommentIsLiked(comment, currentUser)
-             comment.isDisliked = await checkIfCommentIsDisliked(comment, currentUser)
-             if(comment.awnsers) {
-                 for(const awnser of comment.awnsers) {
-                     awnser.isLiked = await checkIfAwnserIsLiked(awnser, currentUser)
-                     awnser.isDisliked = await checkIfAwnserIsDisliked(awnser, currentUser)
-                 }
-             }
-         }
+        
+        await Promise.all(data.post.postComments.map(async (comment) => {
+            comment.isLiked = await checkIfCommentIsLiked(comment, currentUser);
+            comment.isDisliked = await checkIfCommentIsDisliked(comment, currentUser);
+            
 
-        return data.post
+            if (comment.awnsers) {
+                await Promise.all(comment.awnsers.map(async (awnser) => {
+                    awnser.isLiked = await checkIfAwnserIsLiked(awnser, currentUser);
+                    awnser.isDisliked = await checkIfAwnserIsDisliked(awnser, currentUser);
+                }));
+            }
+        }));
 
-      } else {
-          console.log('not ok')
-          throw new Error("intern_serv_err")
-      }
-    
+        return data.post;
+    } else {
+        console.log('not ok');
+        throw new Error("intern_serv_err");
+    }
 }
-
 
 export async function awnserToComment(type, post_id, comment_id, awnser_content) {
     const response = await fetchUrl(process.env.VUE_APP_API_URL + '/api/sofi/awnser_to_comment', 
@@ -240,28 +241,28 @@ export async function dislikeCommentAwnser(type, comment_id, awnser_id, post_id)
     }
 }
 
-export function checkIfUserLikedPost(post, user) {
+export async function checkIfUserLikedPost(post, user) {
     return post.postLikes.some(like => like.user_id === user.user_id);
 }
 
-export function checkIfUserSavedPost(post, user) {
+export async function checkIfUserSavedPost(post, user) {
     return post.saved_post.some(saved => saved.user_id === user.user_id);
 }
 
-export function checkIfCommentIsLiked(comment, user) {
+export async function checkIfCommentIsLiked(comment, user) {
     return comment.comment_likes.some(like => like.user_id == user.user_id)
 }
 
-export function checkIfCommentIsDisliked(comment, user) {
+export async function checkIfCommentIsDisliked(comment, user) {
     return comment.comment_dislikes.some(dislike => dislike.user_id == user.user_id)
 }
 
 
-export function checkIfAwnserIsLiked(awnser, user) {
+export async function checkIfAwnserIsLiked(awnser, user) {
     return awnser.awnser_likes.some(like => like.user_id == user.user_id)
 }
 
-export function checkIfAwnserIsDisliked(awnser, user) {
+export async function checkIfAwnserIsDisliked(awnser, user) {
     return awnser.awnser_dislikes.some(dislike => dislike.user_id == user.user_id)
 }
 
