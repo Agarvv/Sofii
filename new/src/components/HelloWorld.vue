@@ -171,43 +171,7 @@ export default {
       this.postsById[newPost.id] = newPost;
     });
 
-    this.$socket.on('likePost', newLike => {
-      const postTarget = this.postsById[newLike.post_id];
-      if (postTarget) {
-        postTarget.postLikes.push({ ...newLike });
-      } else {
-        console.warn(`Post con ID ${newLike.post_id} no encontrado.`);
-      }
-    });
-
-    this.$socket.on('unlikePost', like => {
-      const postTarget = this.postsById[like.post_id];
-      if (postTarget) {
-        postTarget.postLikes = postTarget.postLikes.filter(l => l.id !== like.id);
-      } else {
-        console.warn(`Post con ID ${like.post_id} no encontrado.`);
-      }
-    });
-
-    this.$socket.on('savedPost', saved => {
-      const postTarget = this.postsById[saved.post_id];
-      if (postTarget && saved.user_id === this.user.id) {
-        postTarget.isSaved = true; // Actualizar solo si es para el usuario actual
-        postTarget.saved_post.push(saved);
-      }
-    });
-
-    this.$socket.on('unsavedPost', saved => {
-      const postTarget = this.postsById[saved.post_id];
-      if (postTarget) {
-        postTarget.saved_post = postTarget.saved_post.filter(s => 
-          !(s.user_id === saved.user_id && s.post_id === saved.post_id)
-        );
-        if (saved.user_id === this.user.id) {
-          postTarget.isSaved = false;
-        }
-      }
-    });
+  
 
     this.$socket.on('newNotification', notification => {
       this.notification = notification;

@@ -345,7 +345,7 @@
 
         <div class="posts" v-if="filteredContent.posts.length > 0 && content_to_show == 'posts' || content_to_show == 'all' ">
           <h4 v-if="content.posts.length > 0">Posts</h4>
-          <div v-for="post in filteredContent.posts" :key="post.id" class="post" @click="goToPostPage(post.id)">
+          <div v-for="post in filteredContent.posts" :key="post.id" class="post">
             <PostCard :post="post"/>
           </div>
         </div>

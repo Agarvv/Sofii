@@ -113,11 +113,39 @@ export default {
             this.$router.push('/post/' + id)
         }
     },
-    mounted() {
-  console.log('Post al montarse en el hijo:', this.post);
-},
 created() {
-  console.log('Post al crearse en el hijo:', this.post); 
+  this.$socket.on('likePost', newLike => {
+    console.log('new like', newLike);
+      if (newLike.post_id === this.post.id) {
+        this.post.postLikes.push({ ...newLike });
+      } 
+    });
+
+    this.$socket.on('unlikePost', like => {
+      console.log('unlike', like);
+      if (like.post_id === this.post.id) {
+        this.post.postLikes = this.post.postLikes.filter(l => l.id !== like.id);
+      } 
+    });
+
+     this.$socket.on('savedPost', saved => {
+      console.log('saved', saved);
+      if (saved.post_id === this.post.id) {
+        this.post.saved_post.push(saved);
+      }
+    });
+
+    this.$socket.on('unsavedPost', saved => {
+      console.log('unsaved', saved);
+      if (saved.post_id === this.post.id) {
+        this.post.saved_post = this.post.saved_post.filter(s => 
+          !(s.user_id === saved.user_id && s.post_id === saved.post_id)
+        );
+        //if (saved.user_id === this.user.id) {
+       //   postTarget.isSaved = false;
+       // }
+      }
+    });
 },
 watch: {
   post(newPost) {
