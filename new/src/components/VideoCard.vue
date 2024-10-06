@@ -76,7 +76,7 @@ export default {
       isLiked: this.video.isLiked,
       isSaved: this.video.isSaved
     };
-  }
+  },
   methods: {
     async likeAVideo(video_id) {
       try {
