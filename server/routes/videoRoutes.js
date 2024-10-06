@@ -59,7 +59,7 @@ router.get('/videos', async (req, res) => {
         return res.status(201).json({ videos: videos });
     } catch (e) {
         console.log(e);
-        return res.status(500).json({ error: e });
+        return res.status(500).json({ error: e.message });
     }
 });
 
