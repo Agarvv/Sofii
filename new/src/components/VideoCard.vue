@@ -128,7 +128,7 @@ export default {
       console.log('video prop: ', this.video)
   },
   watch: {
-  videi(newVideo) {
+  video(newVideo) {
     this.isLiked = newVideo.isLiked
     this.isSaved = newVideo.isSaved
   },
