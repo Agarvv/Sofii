@@ -54,8 +54,8 @@ export default {
       postComment: "",
       comment_awnser: "",
       error: "",
-      isLiked: this.post.isLiked,
-      isSaved: this.post.isSaved,
+      isLiked: false,
+      isSaved: false,
       commentsById: {},
       awnsersById: {}
     };
