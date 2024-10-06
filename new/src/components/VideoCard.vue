@@ -125,7 +125,38 @@ export default {
     }
   },
   created() {
-      console.log('video prop: ', this.video)
+      this.$socket.on('videoLiked', newLike => {
+        console.log('new like: ', newLike)
+        if(newLike.video_id === this.video.id) {
+            this.video.video_likes.push(newLike) 
+        }
+    })
+    
+    this.$socket.on('unlikeVideo', like => {
+    console.log('Like to remove:', like); 
+   
+
+    if (like.video_id === this.video.id) {
+       this.video.video_likes = this.video.video_likes.filter(l => l.user_id !== like.user_id);
+    }
+});
+
+this.$socket.on('savedVideo', saved => {
+        console.log('new saved: ', saved)
+        
+        if(saved.video_id === this.video.id) {
+            this.video.videos_saved.push(saved)
+        }
+    })
+    
+    this.$socket.on('unsavedVideo', saved => {
+    console.log('saved to remove:', saved);
+    
+    if (saved.video_id === this.video.id) {
+        this.video.videos_saved = this.video.videos_saved.filter(s => s.id !== saved.id);
+    }
+});
+
   },
   watch: {
   video(newVideo) {

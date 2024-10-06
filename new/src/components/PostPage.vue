@@ -124,80 +124,12 @@ export default {
           console.log('final comment: ', comment)
          });
 
-    this.$socket.on('likePost', newLike => {
-    console.log('Like Recibido!', newLike);
-    alert('like received')
-
-    const postTarget = this.post
-
-    if (postTarget) {
-        console.log('post target: ', postTarget);
-        console.log('new liker: ', newLike);
-        console.log('likes from post:', postTarget.postLikes);
-        
-
-        postTarget.postLikes.push({ ...newLike });
-
-
-    } else {
-        console.warn(`Post con ID ${newLike.post_id} no encontrado.`);
-    }
-});
-
-
-this.$socket.on('unlikePost', like => {
-        console.log('Unlike Recibido!', like);
-
-        // Encontramos el post en cuestión
-        const postTarget = this.post
-
-        if (postTarget) {
-            // Filtramos el like que corresponde al unlike
-            postTarget.postLikes = postTarget.postLikes.filter(l => l.id !== like.id);
-        } else {
-            console.warn(`Post con ID ${like.post_id} no encontrado.`);
-        }
-  });
-
-
-this.$socket.on('savedPost', saved => {
-    console.log('Saved Received!', saved);
-
-    const postTarget = this.post
-
-    if (postTarget) {
-        // Verificar si el evento pertenece al usuario actual
-        if (saved.user_id === this.user.user_id) {
-            postTarget.isSaved = true;  // Solo actualizamos isSaved si es para el usuario actual
-        }
-        postTarget.saved_post.push(saved);
-    }
-});
-
-
-this.$socket.on('unsavedPost', saved => {
-    const postTarget = this.post
-    
-    if (postTarget) {
-        console.log('Unsaved recibido:', saved);
-
-        // Eliminar el guardado del usuario específico
-        postTarget.saved_post = postTarget.saved_post.filter(s => 
-            !(s.user_id === saved.user_id && s.post_id === saved.post_id)
-        );
-
-        // Si el evento es para el usuario actual, actualizamos el estado `isSaved`
-        if (saved.user_id === this.user.user_id) {
-            postTarget.isSaved = false;
-        }
-    }
-});
 
 this.$socket.on('likeComment', like => {
 
     const commentTarget = this.commentsById[like.comment_id]
     if(commentTarget) {
-      
+    
         commentTarget.comment_likes.push(like)
     } else {
         return

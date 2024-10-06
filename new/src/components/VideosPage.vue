@@ -59,50 +59,6 @@ export default {
               this.getVideos()
           }
       }
-  }, 
-  created() {
-    this.$socket.on('videoLiked', newLike => {
-        console.log('new like: ', newLike)
-        const videoTarget = this.videosById[newLike.video_id]
-        
-        if(videoTarget) {
-            videoTarget.video_likes.push(newLike) // Agrega directamente el objeto
-            console.log('new liekdbsjeh: ', videoTarget.video_likes)
-        }
-    })
-    
-    this.$socket.on('unlikeVideo', like => {
-    console.log('Like to remove:', like); // Verifica el objeto que intentas usar
-    const videoTarget = this.videosById[like.video_id];
-
-    if (videoTarget) {
-        console.log('Current likes:', videoTarget.video_likes); // Verifica los likes actuales
-
-        // Ahora intenta filtrar
-        videoTarget.video_likes = videoTarget.video_likes.filter(l => l.user_id !== like.user_id);
-
-        // Verifica el resultado
-        console.log('Updated likes:', videoTarget.video_likes);
-    }
-});
-    
-    this.$socket.on('savedVideo', saved => {
-        const videoTarget = this.videosById[saved.video_id]
-        
-        if(videoTarget) {
-            videoTarget.videos_saved.push(saved)
-        }
-    })
-    
-    this.$socket.on('unsavedVideo', saved => {
-    const videoTarget = this.videosById[saved.video_id];
-    
-    if (videoTarget) {
-        // Filtrar el saved específico
-        videoTarget.videos_saved = videoTarget.videos_saved.filter(s => s.id !== saved.id);
-    }
-});
-
   }
 }
 </script>
