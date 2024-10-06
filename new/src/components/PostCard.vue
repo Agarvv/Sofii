@@ -1,6 +1,10 @@
 <template>
      <div  class="post" >
+         
             <div class="post-header">
+                <p>{{post.isLiked}}</p>
+                <p>{{post.isSaved}}</p>
+                <p>{{post}}</p>
               <div>
                  <img style="
                   width: 40px;
@@ -59,10 +63,7 @@ export default {
     mixins: [userMixin],
     name: 'PostCard',
     props: {
-        post: {
-            type: Object,
-            required: true
-        }
+        post: {}
     },
     data() {
         return {

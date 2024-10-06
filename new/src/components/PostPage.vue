@@ -71,6 +71,7 @@ export default {
    try { 
       const post = await getPost(this.$route.params.id, currentUser)
       this.post = post
+      console.log('thos.potd', this.post)
    } catch(e) {
        this.error = "Oops, Something Went Wrong..."
        console.log('ERROR!', e)
@@ -105,14 +106,11 @@ export default {
            }
        },
   },
-  
-  async mounted() {
-                
-          await this.fetchUser() 
-          await this.getPost(this.user)
-  }, 
 
   async created() {
+      
+      await this.fetchUser() 
+          await this.getPost(this.user)
       
           console.log('comments by id: ', this.commentsById)
           console.log('awnsers by id: ', this.awnsersById)
