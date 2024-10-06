@@ -1,6 +1,6 @@
 import fetchUrl from "../helpers/fetchUrl"
 import { checkIfUserLikedPost, checkIfUserSavedPost } from './postService'
-
+import { checkIfUserLikedVideo, checkIfUserSavedVideo } from './videoService'
 
 
 //FUNCTION TO REGISTER USER 
@@ -230,12 +230,18 @@ export async function getUserFriends() {
 export async function getUserSaveds(currentUser) {
     const response = await fetchUrl(process.env.VUE_APP_API_URL + '/api/sofi/get_user_saved_content')
     const data = await response.json()
-    console.log('server data from saved content', data)
+    console.log('server data from saved content',)
     if(response.ok) {
         for(const post of data.saved.savedPosts) {
-      post.isLiked = await checkIfUserLikedPost(post, currentUser)
+      post.saved_post.isLiked = await checkIfUserLikedPost(post.saved_post, currentUser)
       
-      post.isSaved = await checkIfUserSavedPost(post, currentUser)
+      post.saved_post.isSaved = await checkIfUserSavedPost(post.saved_post, currentUser)
+   }
+
+   for(const video of data.saved.savedVideos) {
+    //saved_video_video
+    video.saved_video_video.isLiked = await checkIfUserLikedVideo(video.saved_video_video, currentUser)
+    video.saved_video_video.isSaved = await checkIfUserSavedVideo(video.saved_video_video, currentUser)
    }
     
         return data

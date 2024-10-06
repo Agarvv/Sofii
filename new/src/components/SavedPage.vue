@@ -1,4 +1,5 @@
 <template>
+<div>
 <header>
     <h1>Saved Page</h1>
 </header>
@@ -23,7 +24,7 @@
         </div>
         <div class="saved">
             <div v-if="contentToDisplay == 'posts'"  class="saved-posts">
-                            <div class="content_length_zero" v-if="posts.length == 0">
+                            <div class="content_length_zero" v-if="posts.length == 0 && !loading">
                     <p>You Do Not Have Posts Saved, <a href="/">Go And Explore !</a></p>
                 </div>
                 <div v-for="post in posts" key="post.saved_post.id" class="post">
@@ -31,7 +32,7 @@
                 </div>
             </div>
                 <div v-if="contentToDisplay == 'videos'"  class="saved-videos">
-                                  <div class="content_length_zero" v-if="videos.length == 0">
+                                  <div class="content_length_zero" v-if="videos.length == 0 && !loading">
                     <p>You Do Not Have Videos Saved, <a href="/watch">Go And Explore !</a></p>
                 </div>
                 
@@ -41,6 +42,7 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 </template>
 
