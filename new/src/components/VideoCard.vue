@@ -75,7 +75,7 @@ export default {
       apiUrl: apiUrl
     };
   },
-  computed() {
+  computed: {
       isLiked() {
                 return this.video.isLiked
       },
