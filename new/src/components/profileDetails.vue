@@ -200,12 +200,14 @@ export default {
     },
     
     
-    handleFileChanges(event, target) {
-      const file = event.target.files[0];
-      if (file) {
-        this.userNewData[target] = file; // Store the file directly
-      }
-    },
+  handleFileChanges(event, target) {
+   const file = event.target.files[0];
+   if (file) {
+     // Si selecciona una imagen, muestra una URL temporal
+     this.userNewData[target] = URL.createObjectURL(file); 
+   }
+ },
+
     
     async saveAllChanges() {
     const changes = {};
