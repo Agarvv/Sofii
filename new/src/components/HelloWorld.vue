@@ -130,6 +130,7 @@ export default {
           this.postsById[post.id] = post;
         });
       } catch (e) {
+        console.error(e);
          this.error = "Oops, Something Went Wrong..."
       } finally {
           this.loading = false
