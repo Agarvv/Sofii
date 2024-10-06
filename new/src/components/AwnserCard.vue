@@ -92,7 +92,39 @@ export default {
     },
     async created() {
         
+        this.$socket.on('likeCommentAwnser', newLike => {
+       console.log('like ok: ', newLike)
         
+        if(newLike.awnser_id === this.awnser.id) {
+            this.awnser.awnser_likes.push(newLike)
+        } 
+ })
+        
+this.$socket.on('unlikeCommentAwnser', newLike => {
+      console.log('unlike ok: ', newLike)
+
+        if(newLike.awnser_id === this.awnser.id) {
+            this.awnser.awnser_likes = this.awnser.awnser_likes.filter(l => l.id !== newLike.id)
+        }
+})
+
+this.$socket.on('dislikeCommentAwnser', dislike => {
+        console.log('dislike ok: ', dislike)
+        
+        if(dislike.awnser_id === this.awnser.id) {
+            this.awnser.awnser_dislikes.push(dislike)
+        }
+ })
+        
+this.$socket.on('undislikeCommentAwnser', dislike => {
+    console.log('undislike ok: ', dislike)
+        
+        if(dislike.awnser_id === this.awnser.id) {
+           this.awnser.awnser_dislikes = this.awnser.awnser_dislikes.filter(l => l.id !== dislike.id)
+        }
+})
+
+
     }
 }
 </script>

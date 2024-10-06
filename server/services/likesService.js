@@ -124,7 +124,7 @@ const likeCommentAnswer = async (user, post, comment, answer) => {
         
         
             //Like that user will not send self notifications 
-     if(!awnser.user_id == user.user_id) {
+     if(!answer.user_id == user.user_id) {
         await sendNotificationToSingleUser(answer.user_id, user, answer, null, "COMMENT_AWNSER_LIKED")
      }
 
@@ -182,7 +182,7 @@ const likeVideoCommentAnswer = async (user, video, comment, answer) => {
         });
         
            //Like that user will not send self notifications 
-      if(!awnser.user_id == user.user_id) {
+      if(!answer.user_id == user.user_id) {
         await sendNotificationToSingleUser(answer.user_id, user, answer, null, "VIDEO_COMMENT_AWNSER_LIKED")
       }
         

@@ -16,7 +16,8 @@ const CommentAwnsersDislikes = require('../models/CommentAwnsersDislikes')
 const VideoCommentLikes = require('../models/VideoCommentLikes');
 const VideoCommentDislikes = require('../models/VideoCommentDislikes')
 const VideoCommentAwnsersLikes = require('../models/VideoCommentAwnsersLikes');
-const VideoCommentAwnsersDislikes = require('../models/VideoCommentAwnsersDislikes')
+const VideoCommentAwnsersDislikes = require('../models/VideoCommentAwnsersDislikes');
+const express = require('express');
 
 const likeVideo = async (jwt_token, video_id) => {
     try {
@@ -149,6 +150,7 @@ const likeCommentAnswer = async (jwt_token, post_id, comment_id, answer_id) => {
         return { liked: true, unliked: false };
 
     } catch (e) {
+        console.log('error', express)
         throw new Error(e.message);
     }
 };
