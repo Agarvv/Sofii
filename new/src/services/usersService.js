@@ -249,7 +249,7 @@ export function checkIfUserIsFollowed(user, currentUser) {
   // USER IS THE USER TO COMPARE THE DATA
   // current user is the current user of the session 
   console.log('user:vv', user)
-  const isFollowing = user.followers.some(follower => follower.Follower.follower_id == currentUser.user_id)
+  const isFollowing = user.followers.some(follower => follower.follower_id == currentUser.user_id)
   return isFollowing
 }
 
