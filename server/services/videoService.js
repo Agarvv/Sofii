@@ -5,6 +5,7 @@ const VideoLikes = require('../models/VideoLikes')
 const SavedVideo = require('../models/SavedVideo')
 const Blocked = require('../models/Blocked')
 const tokenController = require('../controllers/tokenController')
+const { Op } = require('sequelize')
 
 const handleVideoCreation = async (user, videoPath, data) => {
     try {

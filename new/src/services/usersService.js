@@ -228,7 +228,7 @@ export async function getUserFriends() {
 }
 
 export async function getUserSaveds(currentUser) {
-    const response = await fetchUrl(process.env.VUE_APP_API_URL + '/get_user_saved_content')
+    const response = await fetchUrl(process.env.VUE_APP_API_URL + '/api/sofi/get_user_saved_content')
     const data = await response.json()
     
     if(response.ok) {
