@@ -8,7 +8,6 @@
     <h3>{{user.username}}</h3>
     <p style="color: gray">{{user.job}}</p>
     <div v-show="!isSelf" class="user-buttons">
-      <button @click="followUser(user.id)" class="follow-btn">{{isFollowing ? 'Unfollow' : 'Follow'}}</button>
       <button class="view-profile-btn">View Profile</button>
     </div>
   </div>
@@ -27,26 +26,12 @@ import { followUser } from '../services/usersService'
         }, 
         data() {
             return {
-                isFollowing: this.user.following,
                 isSelf: this.user.isSelf
             }
         },
         methods: {
             goToPage(route) {
                 this.$router.push(route)
-            },
-            async followUser(user_id) {
-                try {
-                    const data = await followUser(user_id)
-                    if(data.followed && !data.unfollowed) {
-                        this.isFollowing = true
-                    } else if(data.unfollowed && !data.followed) {
-                        this.isFollowing = false
-                    }
-                } catch(e) {
-                    return 
-                    console.log("ERROR!!", e)
-                }
             }
         }
     }
@@ -70,8 +55,7 @@ import { followUser } from '../services/usersService'
 
 .user-buttons {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-gap: 10px;
+  grid-template-columns: 1fr;
   width: 100%;
 }
 
@@ -82,10 +66,5 @@ import { followUser } from '../services/usersService'
   border-radius: 10px;
 }
 
-.user-buttons .follow-btn {
-  background: black;
-  color: white;
-  
-}
 
 </style>
