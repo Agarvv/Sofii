@@ -288,26 +288,15 @@ this.$socket.on('newCommentAwnser', newAwnser => {
 
 
   },
-  mounted() {
+  created() {
       console.log('this post: ', this.post)
       this.post.postComments.forEach(comment => {
             this.commentsById[comment.id] = comment;
-
-            
-            
-         
             comment.awnsers.forEach(awnser => {
             this.awnsersById[awnser.id] = awnser; 
-            
-            
-            
           });
-          
           console.log('final comment: ', comment)
-          
          });
-          
-          
   }
 };
 </script>
