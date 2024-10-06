@@ -21,6 +21,7 @@ export async function handleSearch(query, currentUser) {
         console.log('data.results.results.users', data.results.results.users)
         console.log('data.results.results.posts', data.results.results.posts)
         console.log('data.results.results.videos', data.results.results.videos)
+        console.log("currentUser", currentUser)
         
         
        data.results.results.users.forEach(user => {
