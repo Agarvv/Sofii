@@ -72,10 +72,16 @@ export default {
     return {
       comment: "",
       error: "",
-      isLiked: this.video.isLiked,
-      isSaved: this.video.isSaved,
       apiUrl: apiUrl
     };
+  },
+  computed() {
+      isLiked() {
+                return this.video.isLiked
+      },
+      isSaved() {
+          return this.video.isSaved
+      }
   },
   methods: {
     async likeAVideo(video_id) {

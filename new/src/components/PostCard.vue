@@ -2,9 +2,6 @@
      <div  class="post" >
          
             <div class="post-header">
-                <p>{{post.isLiked}}</p>
-                <p>{{post.isSaved}}</p>
-                <p>{{post}}</p>
               <div>
                  <img style="
                   width: 40px;
