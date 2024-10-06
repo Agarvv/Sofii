@@ -83,81 +83,6 @@ import { getVideo } from '../services/videoService'
             if(this.user) {
                 await this.getVideo(this.user, this.$route.params.video_id)
             }
-
-            
-            this.$socket.on('likeVideoComment', newLike => {
-                const commentTarget = this.commentsById[newLike.comment_id]
-                if(commentTarget) {
-                    commentTarget.comment_likes.push(newLike)
-                } else {
-                    alert('not found lvc')
-                }
-            })
-            
-            this.$socket.on('unlikedVideoComment', newLike => {
-          
-                const commentTarget = this.commentsById[newLike.comment_id]
-                if(commentTarget) {
-                    commentTarget.comment_likes = commentTarget.comment_likes.filter(like => like.id !== newLike.id)
-                } else {
-                    alert('not found uvc')
-                }
-            })
-            
-            this.$socket.on('likeVideoCommentAnswer', newLike => {
-                const awnserTarget = this.awnsersById[newLike.awnser_id]
-                if(awnserTarget) {
-                    awnserTarget.awnser_likes.push(newLike)
-                } else {
-                    alert('not found lvca')
-                }
-            })
-            
-            this.$socket.on('unlikedVideoCommentAwnser', newLike => {
-                
-                const awnserTarget = this.awnsersById[newLike.awnser_id]
-                if(awnserTarget) {
-                    awnserTarget.awnser_likes = awnserTarget.awnser_likes.filter(like => like.id !== newLike.id)
-                } else {
-                    alert('not found uvca')
-                }
-            })
-            
-            this.$socket.on('dislikeVideoComment', newDislike => {
-                const commentTarget = this.commentsById[newDislike.comment_id]
-                if(commentTarget) {
-                    commentTarget.comment_dislikes.push(newDislike)
-                } else {
-                    alert('dvc not found')
-                }
-            })
-            
-            this.$socket.on('undislikedVideoComment', newDislike => {
-                const commentTarget = this.commentsById[newDislike.comment_id]
-                if(commentTarget) {
-                    commentTarget.comment_dislikes = commentTarget.comment_dislikes.filter(dislike => dislike.id !== newDislike.id)
-                } else {
-                    alert('uvc not found')
-                }
-            })
-            
-            this.$socket.on('dislikeVideoCommentAwnser', newDislike => {
-                const awnserTarget = this.awnsersById[newDislike.awnser_id]
-                if(awnserTarget) {
-                    awnserTarget.awnser_dislikes.push(newDislike)
-                } else {
-                    alert('dvca not found')
-                }
-            })
-            
-            this.$socket.on('undislikedVideoCommentAwnser', newDislike => {
-                const awnserTarget = this.awnsersById[newDislike.awnser_id]
-                if(awnserTarget) {
-                    awnserTarget.awnser_dislikes = awnserTarget.awnser_dislikes.filter(dislike => dislike.id !== newDislike.id)
-                } else {
-                    alert('uvca not found')
-                }
-            })
             
             this.$socket.on('newVideoComment', newComment => {
                 this.video.video_comments.push(newComment)
@@ -175,7 +100,7 @@ import { getVideo } from '../services/videoService'
             })
         }
     }
-</script> <!-- 178 -->
+</script> 
 
 <style scoped>
 .wrapper {

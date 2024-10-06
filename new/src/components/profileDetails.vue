@@ -1,4 +1,5 @@
 <template>
+<div>
 
 <SuccessComponent v-if="successMessage" :success="successMessage"/>
 
@@ -21,8 +22,8 @@
           <img :src="userNewData.profile_pic 
            ? userNewData.profile_pic 
            : (user.user_picture 
-               ? apiUrl + '/' + usuario.user_picture 
-               : '/images/default.jpeg')" 
+              
+               || '/images/default.jpeg')" 
           id="profile-photo">
         </div>
       </div>
@@ -34,8 +35,8 @@
           <img :src="userNewData.profile_banner 
            ? userNewData.profile_banner 
            : (user.user_banner 
-               ? apiUrl + '/' + usuario.user_banner 
-               : '/images/default_banner.webp')" 
+          
+               || '/images/default_banner.webp')" 
             id="profile-banner">
         </div>
       </div>
@@ -43,7 +44,7 @@
       <div class="bio">
         <h4>Your Bio</h4>
         <div class="bio-inputs">
-          <input :value="usuario.user_bio" @input="setUserData($event, 'bio')" type="text" placeholder="Set BIO">
+          <input :value="user.user_bio || 'You No Have Bio'" @input="setUserData($event, 'bio')" type="text" placeholder="Set BIO">
         </div>
         <div class="bio-submit">
           <button @click="saveAllChanges">SET AS BIO</button>
@@ -53,7 +54,7 @@
       <div class="native-city">
         <h4>Your Native City</h4>
         <div class="native-city-inputs">
-          <input :value="usuario.user_native_city" @input="setUserData($event, 'native_city')" type="text" placeholder="Enter Your Native City">
+          <input :value="user.user_native_city || 'You Have Not Specified Native City'" @input="setUserData($event, 'native_city')" type="text" placeholder="Enter Your Native City">
         </div>
         <div class="native-city-btn">
           <button @click="saveAllChanges">Set As Native City</button>
@@ -63,7 +64,7 @@
       <div class="ubication">
         <h4>Your Ubication</h4>
         <div class="ubication-inputs">
-          <input :value="usuario.user_ubication" @input="setUserData($event, 'ubication')" type="text" placeholder="Enter Your Ubication">
+          <input :value="user.user_ubication || 'You Have Not Specified Your Ubication'" @input="setUserData($event, 'ubication')" type="text" placeholder="Enter Your Ubication">
         </div>
         <div class="ubication-btn">
           <button @click="saveAllChanges">Save</button>
@@ -73,7 +74,7 @@
       <div class="civil-status">
         <h4>Your Civil Status</h4>
         <div class="civil-status-select">
-          <select :value="usuario.user_civil_status" v-model="userNewData.civil_status">
+          <select :value="user.user_civil_status || 'You Have Not Specified Your Civil Status'" v-model="userNewData.civil_status">
             <option value="In couple">In Couple</option>
             <option value="Married">Married</option>
             <option value="Single">Single</option>
@@ -84,7 +85,7 @@
       <div class="gender">
         <h4>Your Gender</h4>
         <div class="gender-select">
-          <select :value="usuario.user_gender" v-model="userNewData.gender">
+          <select :value="user.user_gender || 'You Have Not Specified Your Gender'" v-model="userNewData.gender">
             <option value="Male">Male</option>
             <option value="Female">Female</option>
             <option value="Other">Other</option>
@@ -96,7 +97,7 @@
       <div class="job">
         <h4>Your Job</h4>
         <div class="job-inputs">
-          <input :value="usuario.user_job" @input="setUserData($event, 'job')" type="text" placeholder="Enter Your Job Title">
+          <input :value="user.user_job || 'You Have Not Specified Your Job'" @input="setUserData($event, 'job')" type="text" placeholder="Enter Your Job Title">
         </div>
         <div class="job-btn">
           <button @click="saveAllChanges">Set As Job</button>
@@ -110,6 +111,7 @@
   </div>
 
   </div>
+</div>
 </template>
 
 <script> 
@@ -173,6 +175,9 @@ export default {
         job: this.user.job
       };
       this.userNewData = { ...this.originalData };
+      console.log('Original Data:', this.originalData);
+      console.log('User New Data:', this.userNewData);
+
       } catch(e) {
           this.error = "Something Went Wrong While Loading Your Data..."
           console.log('ERROR!', e)
