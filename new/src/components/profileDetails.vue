@@ -215,7 +215,7 @@ handleFileChanges(event, target) {
        this.previewBanner = previewURL;
      }
    }
-}
+},
 
 
     
