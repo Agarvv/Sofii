@@ -114,14 +114,15 @@ export default {
         }
     },
     mounted() {
-  console.log('Post al montarse en el hijo:', this.post); // Verifica aquí
+  console.log('Post al montarse en el hijo:', this.post);
 },
 created() {
-  console.log('Post al crearse en el hijo:', this.post); // Verifica en created
+  console.log('Post al crearse en el hijo:', this.post); 
 },
 watch: {
   post(newPost) {
-    console.log('Nuevo post en el hijo:', newPost); // Verifica cambios
+    this.isLiked = newPost.isLiked
+    this.isSaved = newPost.isSaved
   },
 },
 }
