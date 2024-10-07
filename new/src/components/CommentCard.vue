@@ -4,7 +4,7 @@
                 <div class="user-comment-img"> 
                   <img 
                   :src="
-                   comment.commentUser.profilePicture ? apiUrl + '/' + comment.commentUser.profilePicture  :
+                   comment.commentUser.profilePicture ||
                    '/images/default.jpeg'
                   " alt="User Picture">
                 </div>

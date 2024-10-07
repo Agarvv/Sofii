@@ -3,8 +3,7 @@
         <div class="response-user">
                     <div class="response-user-img">
                       <img style="width: 40px; height: 40px; border-radius: 50%"
-                       :src="awnser.awnser_user.profilePicture ? 
-                       apiUrl + '/' + awnser.awnser_user.profilePicture : 
+                       :src="awnser.awnser_user.profilePicture ||
                        '/images/default.jpeg'
                        ">
                     </div>

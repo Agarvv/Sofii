@@ -2,7 +2,7 @@
 <div> 
 <HeaderComponent :activePage="'notifications'" :user="usuario"/>
 
-<LoadingComponent v-if="loading"/>
+<LoadingComponent v-if="loading" message="Searching Your Notifications, Please Wait..."/>
     
 <div class="container"> 
   
@@ -270,15 +270,11 @@ header {
   color: #777;
 }
 
-.notification-close i {
+.notification-close {
   font-size: 20px;
   color: #999;
   cursor: pointer;
   transition: color 0.3s;
-}
-
-.notification-close i:hover {
-  color: #e74c3c;
 }
 
 .empty-notifications {

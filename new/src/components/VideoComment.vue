@@ -5,7 +5,7 @@
                   
                  
                 <div class="user-comment-img"> 
-                  <img style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;" :src="'http://localhost:3000/' + comment.video_comment_user.profilePicture" alt="User Picture">
+                  <img style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;" :src="comment.video_comment_user.profilePicture || '/images/default.jpeg'" alt="User Picture">
                 </div>
                 <div class="user-comment-username">
                   <h4>{{comment.video_comment_user.username}}</h4>

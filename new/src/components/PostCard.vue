@@ -149,6 +149,7 @@ created() {
 },
 watch: {
   post(newPost) {
+      console.log('post fron watch', newPost)
     this.isLiked = newPost.isLiked
     this.isSaved = newPost.isSaved
   },

@@ -2,7 +2,7 @@
    <div class="upload-comment">
        
             <div class="user-picture">
-              <img src="/images/default.jpeg" alt="">
+              <img src="user.user_picture || '/images/default.jpeg'" alt="">
             </div>
             
             <div class="input">
@@ -15,22 +15,24 @@
 </template>
 
 <script>
-import userMixin from '../mixins/userMixin'
 import { postComment } from '../services/postService'
 import {
     uploadVideoComment
 } from '../services/videoService'
-
+import { mapGetters } from 'vuex';
 
 export default {
-    mixins: [userMixin],
     name: 'UploadComment',
     data() {
         return {
            comment: ""
         }
     },
+    computed: {
+        ...mapGetters(['user'])
+    },
     props: {
+        // VIDEO OR POST
       type: String,
       id: Number
     },

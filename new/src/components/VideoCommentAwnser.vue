@@ -2,7 +2,7 @@
      <div  class="response">
                   <div class="response-user">
                     <div class="response-user-img">
-                      <img :src="'http://localhost:3000/' + awnser.comment_awnser_user.profilePicture">
+                      <img :src="awnser.comment_awnser_user.profilePicture || '/images/default.jpeg'">
                     </div>
                     
                     <div class="response-username">

@@ -160,6 +160,7 @@ this.$socket.on('savedVideo', saved => {
   },
   watch: {
   video(newVideo) {
+      console.log('video from watcg', newVideo)
     this.isLiked = newVideo.isLiked
     this.isSaved = newVideo.isSaved
   },

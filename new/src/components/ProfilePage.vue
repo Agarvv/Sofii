@@ -9,7 +9,7 @@
     </div>
         
     <!-- Div for block the user -->
-    <div v-show="showBlock" class="block-user">
+    <div v-if="showBlock && !isSelfUser" class="block-user">
      <BlockUserCard :user="user"/>
     </div>
      
