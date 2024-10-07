@@ -1,8 +1,15 @@
 <template>
 <div> 
-<HeaderComponent :activePage="'notifications'" :user="usuario"/>
+<HeaderComponent :activePage="'notifications'" :user="usuario" @showAside="showAside"/>
+
+ <div v-if="showSidebar" class="rs-aside">
+        <SidebarComponent activePage="home"/>
+    </div>
+
 
 <LoadingComponent v-if="loading" message="Searching Your Notifications, Please Wait..."/>
+
+
     
 <div class="container"> 
   
@@ -63,7 +70,8 @@ import { mapGetters, mapActions } from 'vuex';
             return {
                 notifications: [],
                 error: "",
-                loading: true 
+                loading: true ,
+                showSidebar: false
             }
         },
         computed: {
@@ -71,6 +79,9 @@ import { mapGetters, mapActions } from 'vuex';
         },
         methods: {
             ...mapActions(['fetchUser']),
+            showAside() {
+                this.showSidebar = !this.showSidebar
+            },
             async getUserNotifications() {
                 try {
                     const data = await getUserNotifications() 
@@ -285,6 +296,18 @@ header {
     color: gray;
     
 }
+
+.rs-aside {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px; 
+    height: 100vh;
+    overflow: auto; 
+    display: block;
+    border: 2px solid red;
+}
+
 
 @media (max-width: 600px) {
   .container .notifications {

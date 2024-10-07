@@ -13,7 +13,7 @@
         <div class="create-container">
             <div class="f-column">
                 <img style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" 
-                     :src="user.user_picture ? apiUrl + '/' + user.user_picture : '/images/default.jpeg'">
+                     :src="user.user_picture || '/images/default.jpeg'">
                 <div class="fc-inp"> 
                     <input v-model="content" placeholder="What's Up?">
                 </div>
@@ -261,6 +261,17 @@ html, body {
   max-height: 250px; 
   object-fit: cover;
   border-radius: 15px;
+}
+
+.rs-aside {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px; 
+    height: 100vh;
+    overflow: auto; 
+    display: block;
+    border: 2px solid red;
 }
 
 @media(max-width: 600px) {
