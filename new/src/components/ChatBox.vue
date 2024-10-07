@@ -257,8 +257,8 @@ export default {
     },
     getMessageUserProfilePicture(message) {
       return message.message_user?.profilePicture
-        ? `http://localhost:3000/${message.message_user.profilePicture}`
-        : 'default_image_path_here';
+        ? message.message_user.profilePicture
+        : '/images/default.jpeg';
     },
     handleFiles(type) {
       if (type === "image") {
