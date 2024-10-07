@@ -375,6 +375,7 @@ main {
   flex-direction: column;
   height: 100vh;
   padding-bottom: 80px;
+  box-sizing: border-box;
 }
 
 .main-header, .main-footer {
@@ -423,11 +424,9 @@ main {
   right: 0;
   background: white;
   box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
-  border: 3px solid red;
 }
 
 .footer-buttons {
-  border: 3px solid blue;
   display: flex;
   gap: 15px;
 }
@@ -436,6 +435,7 @@ main {
   flex-grow: 1;
   display: flex;
   gap: 10px;
+  align-items: center; /* Alinea el input y el botón de enviar verticalmente */
 }
 
 .footer-message-input input {
@@ -447,6 +447,7 @@ main {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  box-sizing: border-box; /* Para que el padding no rompa el layout */
 }
 
 .footer-send-message-button {
@@ -457,6 +458,7 @@ main {
   background-color: #4CAF50;
   border-radius: 50%;
   color: white;
+  cursor: pointer; /* Cursor de mano para indicar que es clickeable */
 }
 
 .footer-send-message-button:hover {
@@ -514,6 +516,7 @@ main {
   padding-top: 80px;
   padding-bottom: 90px;
   overflow-y: auto;
+  flex-grow: 1;
 }
 
 .messages .message {
@@ -526,20 +529,19 @@ main {
 .message.friend {
   align-items: flex-start; /* Mensajes de amigos a la izquierda */
   flex-direction: row-reverse;
- 
 }
 
 .message.friend .message-img {
-    display: none;
+  display: none;
 }
 
 .message.user {
-    display: flex;
-    flex-direction: row;
+  display: flex;
+  flex-direction: row;
 }
 
 .message.user .msgIcon {
-    display: none;
+  display: none;
 }
 
 .message .msg_content {
@@ -574,13 +576,11 @@ main {
 .message.user p {
   background-color: #4CAF50;
   color: white;
-  text-align: left;
 }
 
 .message.friend p {
   background-color: #E0E0E0;
   color: black;
-  text-align: left;
 }
 
 .message-wrapper {
@@ -614,4 +614,5 @@ main {
     padding-bottom: 70px;
   }
 }
+
 </style>
