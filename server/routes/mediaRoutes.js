@@ -2,49 +2,26 @@ const express = require('express')
 const router = express.Router() 
 const multer = require('multer');
 const path = require('path');
+const cloudinary = require('../config/cloudinary')
+const { formidable } = require('formidable'); 
+const { uploadImage, uploadVideo, uploadAudio } = require('../config/cloudinary');
 
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        if (file.mimetype.startsWith('image/')) {
-            cb(null, 'media/images/');
-        } else if (file.mimetype.startsWith('video/')) {
-            cb(null, 'media/videos/');
-        } else if (file.mimetype.startsWith('audio/')) {
-            cb(null, 'media/audio/');
-        } else {
-            cb(new Error('Not Supported File'), false);
-        }
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname));
-    }
-});
-
-const upload = multer({ storage: storage });
-
-module.exports = upload;
-
-
-
-
-
-
-
-
-router.post('/upload_media', upload.single('file'), (req, res) => {
-    console.log('headers', req.headers); // Aquí se muestra si el servidor recibe correctamente los headers
+router.post('/upload_media', (req, res) => {
     try {
-        console.log('Endpoint upload called, file received:', req.file); // Debes ver detalles del archivo
-        if(req.file) {
-            return res.status(201).json({
-                path: req.file.path
-            });
-        } else {
-            return res.status(400).json({
-                error: "No file received"
-            });
+        const form = formidable({ multiples: false })
+        
+        form.parse(req, async (err, fields, files) => {
+        if (err) {
+            return res.status(400).json({ error: 'while processing form' });
         }
+     }
+     
+     if(files.)
+        
+        
+
+        
     } catch(e) {
         console.log('Error:', e);
         return res.status(500).json({

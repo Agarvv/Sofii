@@ -1,132 +1,153 @@
 <template>
+
   <div class="container">
-    <main>
-      <div class="main-header">
-        <div class="user-details">
-          <div class="user-img">
-            <img style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;" :src="user.profilePicture || '/images/default.jpeg'" class="profile-img">
-          </div>
-          <div class="user-username">
-            
-            <h4>{{ user.username || 'Someone' }}</h4>
-            <p v-if="isUserTyping">{{user.username}} Is Typing...</p>
-             <p  style="color: green;" v-if=" !isUserTyping && user.active" class="status">Online</p>
-            <p style="color: gray" v-if=" !isUserTyping && !user.active">Offline</p>
-          </div>
+  <main>
+    <div class="main-header">
+      <div class="user-details">
+        <div class="user-img">
+          <img 
+            style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;" 
+            :src="user.profilePicture || '/images/default.jpeg'" 
+            class="profile-img" 
+          />
         </div>
-        <div class="header-interact">
-          <div class="options">
-            <font-awesome-icon icon="bars"></font-awesome-icon>
-          </div>
+        <div class="user-username">
+          <h4>{{ user.username || 'Someone' }}</h4>
+          <p v-if="isUserTyping">{{ user.username }} Is Typing...</p>
+          <p 
+            v-if="!isUserTyping && user.active" 
+            style="color: green;" 
+            class="status"
+          >
+            Online
+          </p>
+          <p 
+            v-if="!isUserTyping && !user.active" 
+            style="color: gray"
+          >
+            Offline
+          </p>
         </div>
       </div>
+      <div class="header-interact">
+        <div class="options">
+          <font-awesome-icon icon="bars"></font-awesome-icon>
+        </div>
+      </div>
+    </div>
 
-      <div class="main-chatbox">
-        <div class="messages">
-          <div
-            v-for="message in messages"
-            :key="message.id"
-            class="message"
-            :class="getMessageClass(message)"
-          >
-            
-              
-         <div class="msg_content"> 
-            <div v-if="message.message_content.length > 0" class="message-user-img">
-              <img :src="getMessageUserProfilePicture(message)" class="message-img">
+    <div class="main-chatbox">
+      <div class="messages">
+        <div
+          v-for="message in messages"
+          :key="message.id"
+          class="message"
+          :class="getMessageClass(message)"
+        >
+          <div class="msg_content">
+            <div 
+              v-if="message.message_content.length > 0" 
+              class="message-user-img"
+            >
+              <img 
+                :src="getMessageUserProfilePicture(message)" 
+                class="message-img"
+              />
             </div>
-            <p v-if="message.message_content.length > 0">{{ message.message_content }}</p>
-           <font-awesome-icon 
-  icon="check" 
-  size="1x" 
-  :style="{ color: message.readed ? '#1DA1F2' : '#000000' }" 
-   class="msgIcon"/>
-        </div>
-            
-            
-          <div v-if="message.withFile">
-              <img v-if="message.fileType === 'image' || message.fileType === 'text-image' " style="width: 200px; height: 200px; object-fit: cover;" :src="
-              'http://localhost:3000/' + message.fileSource
-              ">
-              
-              <video controls v-if="message.fileType === 'video' || message.fileType === 'text-video'">
-                  
-                  <source :src="'http://localhost:3000/' + message.fileSource">
-              </video>
-              
-             <audio v-if="message.fileType == 'audio'" ref="audioDemo" controls>
-               <source :src="'http://localhost:3000/' + message.fileSource" type="audio/webm">
-            </audio>
+            <p v-if="message.message_content.length > 0">
+              {{ message.message_content }}
+            </p>
+            <font-awesome-icon 
+              icon="check" 
+              size="1x" 
+              :style="{ color: message.readed ? '#1DA1F2' : '#000000' }" 
+              class="msgIcon" 
+            />
           </div>
-          
-         
-          
-          
-          
-          
-          
-            
-          </div>
-         
-          
-        </div>
-      </div>
-      
-      
-        
-      <div class="demo-content">
-        <div class="preview-container" v-if="imageSrc || videoSrc">
-          <img ref="demoImage" v-if="imageSrc" :src="imageSrc" class="preview-image">
-          
-          
-          <video ref="demoVideo" v-if="videoSrc" controls class="preview-video">
-            <source :src="videoSrc">
-          </video>
-          
-          
-          <div class="cancel-preview" @click="cancelPreview">
-            <font-awesome-icon icon="times-circle"></font-awesome-icon>
-          </div>
-        </div>
-      </div>
 
-      <div class="main-footer">
-        <div v-if="isRecording" class="recording-ui">
-          <div class="timer">{{ formatTime(recordingTime) }}</div>
-          <button @click="stopRecording" class="stop-button">
-            <font-awesome-icon icon="stop"></font-awesome-icon>
-          </button>
-        </div>
-        <div v-else class="footer-buttons">
-          <div @click="handleFiles('video')" class="video">
-            <input @change="handleFilesChanges" ref="videoInp" type="file" accept="video/*" hidden>
-            <font-awesome-icon icon="video"></font-awesome-icon>
-          </div>
-          <div @click="handleFiles('image')" class="image">
-            <input @change="handleFilesChanges" ref="imageInp" type="file" accept="image/*" hidden>
-            <font-awesome-icon icon="image"></font-awesome-icon>
-          </div>
-          <div @click="startRecording" class="micro">
-            <font-awesome-icon icon="microphone"></font-awesome-icon>
-          </div>
-          
-          
-        </div>
-        <div class="footer-message-input">
-          <input
-            @input="broadcastTyping"
-            v-model="message"
-            id="inp"
-            type="text"
-            placeholder="Send a message..."
-          >
-          <div @click="sendMessage" class="footer-send-message-button">
-            <font-awesome-icon icon="paper-plane"></font-awesome-icon>
+          <div v-if="message.withFile">
+            <img 
+              v-if="message.fileType === 'image' || message.fileType === 'text-image'" 
+              style="width: 200px; height: 200px; object-fit: cover;" 
+              :src="message.fileSource" 
+            />
+            <video 
+              controls 
+              v-if="message.fileType === 'video' || message.fileType === 'text-video'"
+            >
+              <source :src="message.fileSource" />
+            </video>
           </div>
         </div>
       </div>
-    </main>
-  </div>
+    </div>
+
+    <div class="demo-content">
+      <div class="preview-container" v-if="imageSrc || videoSrc">
+        <img 
+          ref="demoImage" 
+          v-if="imageSrc" 
+          :src="imageSrc" 
+          class="preview-image" 
+        />
+        <video 
+          ref="demoVideo" 
+          v-if="videoSrc" 
+          controls 
+          class="preview-video"
+        >
+          <source :src="videoSrc" />
+        </video>
+        <div 
+          class="cancel-preview" 
+          @click="cancelPreview"
+        >
+          <font-awesome-icon icon="times-circle"></font-awesome-icon>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-buttons">
+      <div @click="handleFiles('video')" class="video">
+        <input 
+          @change="handleFilesChanges" 
+          ref="videoInp" 
+          type="file" 
+          accept="video/*" 
+          hidden 
+        />
+        <font-awesome-icon icon="video"></font-awesome-icon>
+      </div>
+      <div @click="handleFiles('image')" class="image">
+        <input 
+          @change="handleFilesChanges" 
+          ref="imageInp" 
+          type="file" 
+          accept="image/*" 
+          hidden 
+        />
+        <font-awesome-icon icon="image"></font-awesome-icon>
+      </div>
+    </div>
+
+    <div class="footer-message-input">
+      <input 
+        @input="broadcastTyping" 
+        v-model="message" 
+        id="inp" 
+        type="text" 
+        placeholder="Send a message..." 
+      />
+      <div 
+        @click="sendMessage" 
+        class="footer-send-message-button"
+      >
+        <font-awesome-icon icon="paper-plane"></font-awesome-icon>
+      </div>
+    </div>
+  </main>
+</div>
+  
 </template>
 
 <script>
@@ -150,12 +171,6 @@ export default {
       chat_id: null,
       videoSrc: "",
       imageSrc: "",
-      audioSrc: "",
-      isRecording: false,
-      mediaRecorder: null,
-      audioChunks: [],
-      recordingTime: 0,
-      recordingInterval: null,
       image: null,
       video: null,
       isUserTyping: false,
@@ -177,9 +192,18 @@ export default {
 
     async uploadMedia(file, mediaType) {
       const formData = new FormData();
-      formData.append('file', file);
+      switch(mediaType) {
+          case "image":
+              formData.append('image', file)
+              break;
+          case "video":
+              formData.append('video', file)
+              break;
+          default: 
+               alert('File tipe undefined')
+      }
 
-      const response = await fetch(`${this.apiUrl}/sofi/upload_media`, {
+      const response = await fetch(process.env.VUE_APP_API_URL, '/sofi/upload_media', {
         method: 'POST',
         body: formData,
         credentials: 'include'
@@ -212,11 +236,11 @@ export default {
           data.file = await this.uploadMedia(this.image, 'image');
         } else if (this.videoSrc) {
           data.file = await this.uploadMedia(this.video, 'video');
-        }
-
+        } 
+        //check
         this.$socket.emit('chatMessage', data);
         this.clearMessage();
-
+        // end check
       } catch (error) {
         console.error('Error sending message:', error);
       }
@@ -270,63 +294,6 @@ export default {
       const minutes = Math.floor(seconds / 60);
       const secs = seconds % 60;
       return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
-    },
-    startRecording() {
-      this.isRecording = true;
-      this.recordingTime = 0;
-
-      navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-        this.mediaRecorder = new MediaRecorder(stream);
-        this.mediaRecorder.ondataavailable = (event) => {
-          this.audioChunks.push(event.data);
-        };
-        this.mediaRecorder.start();
-
-        this.recordingInterval = setInterval(() => {
-          this.recordingTime++;
-        }, 1000);
-      }).catch(error => {
-        console.error('Error accessing microphone:', error);
-      });
-    },
-
-    async stopRecording() {
-      this.isRecording = false;
-      clearInterval(this.recordingInterval);
-      this.mediaRecorder.stop();
-
-      this.mediaRecorder.onstop = async () => {
-        const audioBlob = new Blob(this.audioChunks, { type: 'audio/webm' });
-
-        const formData = new FormData();
-        formData.append('file', audioBlob, 'recording.webm');
-
-        try {
-          const response = await fetch('http://localhost:3000/api/sofi/upload_media', {
-            method: 'POST',
-            body: formData,
-            credentials: 'include'
-          });
-
-          if (!response.ok) {
-            throw new Error('Failed to upload audio');
-          }
-
-          const data = await response.json();
-          console.log('server data audio:', data);
-
-          this.$socket.emit('chatMessage', {
-            type: 'audio',
-            file: data.path,
-            message: this.message,
-            chat_id: this.chat.chat_id
-          });
-
-          this.audioChunks = [];
-        } catch (error) {
-          console.error('Error uploading audio:', error);
-        }
-      };
     },
 
     broadcastTyping() {
