@@ -2,7 +2,7 @@
     
     <HeaderComponent :activePage="'watch'" :user="usuario" @showAside="showAside"/>
     
-    <div v-if="showAside" class="rs-aside">
+    <div v-show="showAside" class="rs-aside">
         <SidebarComponent activePage="home"/>
     </div>
 
