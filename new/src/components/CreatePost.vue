@@ -1,5 +1,9 @@
 <template>
-    <HeaderComponent activePage="create"/> 
+    <HeaderComponent @showAside="showAside" activePage="create"/> 
+    
+    <div v-if="showSidebar" class="rs-aside">
+        <SidebarComponent activePage="home"/>
+    </div>
     
     <ErrorComponent v-if="error" :error="error"/>
     
@@ -45,6 +49,7 @@
 import ErrorComponent from './ErrorComponent'
 import LoadingComponent from './LoadingComponent'
 import HeaderComponent from './HeaderComponent'
+import SidebarComponent from './SidebarComponent'
 import apiUrl from '../config'
 import { createPost } from '../services/postService'
 import { createVideo } from '../services/videoService'
@@ -54,7 +59,8 @@ export default {
     components: {
         HeaderComponent,
         LoadingComponent,
-        ErrorComponent
+        ErrorComponent,
+        SidebarComponent
     },
     data() {
         return {
@@ -64,7 +70,8 @@ export default {
             imageSource: null,
             loading: false,
             error: "",
-            apiUrl: apiUrl
+            apiUrl: apiUrl,
+            showSidebar: false
         };
     },
     computed: {
@@ -72,6 +79,9 @@ export default {
     },
     methods: {
         ...mapActions(['fetchUser']),
+        showAside() {
+            this.showSidebar = !this.showSidebar
+        },
         openFileInput(inputId) {
             document.getElementById(inputId).click();
         },
