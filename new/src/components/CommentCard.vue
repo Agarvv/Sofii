@@ -88,13 +88,11 @@ import {
 } from '../services/postService'
 
 
-import userMixin from '../mixins/userMixin'
 import AwnserCard from './AwnserCard'
 export default {
     components: {
         AwnserCard
     }, 
-    mixins: [userMixin],
     name: 'CommentCard',
     data() {
         return {
@@ -107,8 +105,8 @@ export default {
     },
     props: {
        comment: {
-           showResponses: false,  // Inicializa como un objeto con la propiedad necesaria
-            showAwnserInp: false   // Igualmente aquí
+           showResponses: false,  
+            showAwnserInp: false  
        }
     },
     methods: {

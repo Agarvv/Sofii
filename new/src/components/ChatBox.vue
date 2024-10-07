@@ -132,13 +132,12 @@
 <script>
 
 import { startChat } from '../services/chatService'
-import userMixin from '../mixins/userMixin'
 import apiUrl from '../config'
 import { mapGetters, mapState, mapActions } from 'vuex';
 
 
 export default {
-  mixins: [userMixin],
+
 
   name: 'ChatBox',
   data() {

@@ -41,11 +41,10 @@
 <script>
 import apiUrl from '../config'
 import HeaderComponent from './HeaderComponent'
-import userMixin from '../mixins/userMixin'
 import { getChats } from '../services/chatService'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
-  mixins: [userMixin],
   components: {
     HeaderComponent
   },

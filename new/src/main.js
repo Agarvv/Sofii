@@ -12,7 +12,7 @@ import userStore from './stores/userStore'
 
 
 import '@fortawesome/fontawesome-svg-core/styles.css';
-import userMixin from './mixins/userMixin';
+
 
 
 library.add(fas, far, fab);
@@ -53,7 +53,6 @@ app.config.productionTip = false;
 
 app.use(router);
 app.use(userStore)
-app.mixin(userMixin);
 
 app.component('font-awesome-icon', FontAwesomeIcon);
 

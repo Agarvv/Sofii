@@ -6,7 +6,7 @@
       
   <div class="videos-wrapper"> 
     <div v-for="video in videos" :key="video.id" class="videos">
-      <VideoCard :video="video" /> <!-- Cambié :videos="videos" a :video="video" -->
+      <VideoCard :video="video" /> 
     </div>
     
     <div v-if="videos.length > 1" class="end-videos">
@@ -22,8 +22,7 @@
 import { findVideos } from '../services/videoService'
 import VideoCard from './VideoCard.vue';
 import HeaderComponent from './HeaderComponent'
-import userMixin from '../mixins/userMixin'
-
+import { mapGetters, mapActions } from 'vuex'
 
 
 export default {
@@ -31,7 +30,6 @@ export default {
     VideoCard,
     HeaderComponent
   },
-  mixins: [userMixin],
   data() {
     return {
       videos: [], // Empty
@@ -39,26 +37,24 @@ export default {
       videosById: {}
     };
   },
+  computed: {
+      ...mapGetters(['user'])
+  },
   methods: {
+      ...mapActions(['fetchUser']),
     async getVideos() {
       try {
-          const data = await findVideos(this.usuario) 
+          await this.fetchUser()
+          const data = await findVideos(this.user) 
           this.videos = data.videos
           this.videos.forEach(video => {
             this.videosById[video.id] = video;
           });
-          console.log('videos by id: ', this.videosById) 
+          
       } catch(e) {
           this.error = "Internal Server Error"
       }
     }
-  },
-  watch: {
-      usuario(newValue) {
-          if(newValue) {
-              this.getVideos()
-          }
-      }
   }
 }
 </script>
