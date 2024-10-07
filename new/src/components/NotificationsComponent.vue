@@ -54,6 +54,8 @@
 import HeaderComponent from './HeaderComponent'
 import ErrorComponent from './ErrorComponent'
 import LoadingComponent from './LoadingComponent'
+import { SidebarComponent } from './SidebarComponent'
+
 
 import { getUserNotifications, destroyUserNotification } from '../services/usersService'
 import { mapGetters, mapActions } from 'vuex';
@@ -63,7 +65,8 @@ import { mapGetters, mapActions } from 'vuex';
         components: {
             HeaderComponent,
             LoadingComponent,
-            ErrorComponent
+            ErrorComponent,
+            SidebarComponent
         }, 
         name: 'NotificationsComponent',
         data() {
