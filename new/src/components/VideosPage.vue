@@ -1,6 +1,6 @@
 <template>
     
-    <HeaderComponent :activePage="'watch'" :user="usuario" @showAside="showAside"/>
+    <HeaderComponent :activePage="'watch'" :user="usuario" @showAside="showSidebar"/>
     
     <div v-show="showAside" class="rs-aside">
         <SidebarComponent activePage="home"/>
@@ -62,7 +62,7 @@ export default {
           this.error = "Internal Server Error"
       }
     },
-    showAside() {
+    showSidebar() {
         this.showAside = !this.showAside
     }
   }
