@@ -1,9 +1,11 @@
 <template>
     
-    <HeaderComponent :activePage="'watch'" :user="usuario"/>
+    <HeaderComponent :activePage="'watch'" :user="usuario" @showAside="showAside"/>
     
-    <SidebarComponent activePage="watch" v-if="showAside" @showAside="showAside"/> 
-    
+    <div v-if="showAside" class="rs-aside">
+        <SidebarComponent activePage="home"/>
+    </div>
+
   <div class="container">
       
   <div class="videos-wrapper"> 
@@ -87,6 +89,17 @@ export default {
     align-items: center;
     justify-content: center;
    color: gray;
+}
+
+.rs-aside {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px; 
+    height: 100vh;
+    overflow: auto; 
+    display: block;
+    border: 2px solid red;
 }
 
 @media(max-width: 600px) {

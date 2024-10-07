@@ -98,6 +98,7 @@ aside {
   border-radius: 8px;
   width: 250px;
   height: 100vh;
+  
 }
 
 .aside-logo {
