@@ -213,8 +213,9 @@ export default {
       if (!response.ok) {
         throw new Error(`Error uploading ${mediaType}`);
       }
-        console.log('data path from server: ;', data)
+        
       const data = await response.json();
+      console.log('data path from server: ;', data)
       return data.filepath;
     },
 
