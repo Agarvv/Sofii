@@ -1,25 +1,25 @@
 <template>
     
-    <HeaderComponent :activePage="'watch'" :user="usuario" @showAside="showSidebar"/>
+    <HeaderComponent :activePage="'watch'" :user="usuario" @showAside="toggleAside"/>
     
     <div v-show="showAside" class="rs-aside">
         <SidebarComponent activePage="home"/>
     </div>
 
-  <div class="container">
+    <div class="container">
       
-  <div class="videos-wrapper"> 
-    <div v-for="video in videos" :key="video.id" class="videos">
-      <VideoCard :video="video" /> 
+        <div class="videos-wrapper"> 
+            <div v-for="video in videos" :key="video.id" class="videos">
+                <VideoCard :video="video" /> 
+            </div>
+    
+            <div v-if="videos.length > 1" class="end-videos">
+                <p>There Are No More Videos...</p>
+            </div>
+    
+        </div>
+    
     </div>
-    
-    <div v-if="videos.length > 1" class="end-videos">
-        <p>There Are No More Videos...</p>
-    </div>
-    
-  </div>
-    
-  </div>
 </template>
 
 <script>
@@ -28,7 +28,6 @@ import VideoCard from './VideoCard.vue';
 import HeaderComponent from './HeaderComponent'
 import SidebarComponent from './SidebarComponent'
 import { mapGetters, mapActions } from 'vuex'
-
 
 export default {
   components: {
@@ -49,22 +48,23 @@ export default {
   },
   methods: {
       ...mapActions(['fetchUser']),
-    async getVideos() {
-      try {
-          await this.fetchUser()
-          const data = await findVideos(this.user) 
-          this.videos = data.videos
-          this.videos.forEach(video => {
-            this.videosById[video.id] = video;
-          });
-          
-      } catch(e) {
-          this.error = "Internal Server Error"
+      async getVideos() {
+        try {
+            await this.fetchUser();
+            const data = await findVideos(this.user);
+            this.videos = data.videos;
+            this.videos.forEach(video => {
+              this.videosById[video.id] = video;
+            });
+            
+        } catch(e) {
+            this.error = "Internal Server Error";
+        }
+      },
+      // Renombramos este método para evitar el conflicto con la propiedad "showAside"
+      toggleAside() {
+        this.showAside = !this.showAside;
       }
-    },
-    showSidebar() {
-        this.showAside = !this.showAside
-    }
   }
 }
 </script>
@@ -88,7 +88,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-   color: gray;
+    color: gray;
 }
 
 .rs-aside {
