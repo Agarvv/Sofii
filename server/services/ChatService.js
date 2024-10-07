@@ -7,7 +7,9 @@ const User = require('../models/User')
 
 const handleSindleMessage = async (user, data) => {
     try {
-        const { sendNotificationToSingleUser } = require('./NotificationService');
+        // circular depenendcy issue, I have to require this file here
+        const { sendNotificationToSingleUser } = require('./NotificationService')
+        console.log('user: ', user, 'data: ', data)
         const createdMessage = await Message.create({
             message_room_id: data.chat_id,
             message_user_id: user.user_id,
@@ -40,7 +42,8 @@ const handleSindleMessage = async (user, data) => {
 
 
      
-        await sendNotificationToSingleUser(notificationReceiver, user, chatRoom, data.message, "CHAT_MESSAGE")
+        await sendNotificationToSingleUser(
+            notificationReceiver, user, chatRoom, data.message, "CHAT_MESSAGE")
         return newMessage
         
     } catch(e) {
@@ -50,6 +53,11 @@ const handleSindleMessage = async (user, data) => {
 
 const handleMessageWithFile = async (user, data, fileType) => {
     try {
+           // circular depenendcy issue, I have to require this file here
+           const { sendNotificationToSingleUser } = require('./NotificationService')
+           console.log('data: ', data)
+           console.log('fileType: ', fileType)
+           console.log('user: ', user)
         const createdMessage = await
         Message.create({
             message_room_id: data.chat_id,
@@ -84,7 +92,8 @@ const handleMessageWithFile = async (user, data, fileType) => {
         const notificationReceiver = chatRoom.sender_id == user.user_id ? chatRoom.receiver_id : chatRoom.sender_id
         
            // // const sendNotificationToSingleUser = async (target, user, content, type) => {
-        await sendNotificationToSingleUser(notificationReceiver, user, chatRoom, "CHAT_MESSAGE_WITH_FILE")
+        await sendNotificationToSingleUser(
+            notificationReceiver, user, chatRoom, null, "CHAT_MESSAGE_WITH_FILE")
 
         return newMessage
     } catch(e) {
