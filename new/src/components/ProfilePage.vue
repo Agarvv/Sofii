@@ -75,9 +75,7 @@
   </button>
  
  <!-- friend buttons -->
-<button style="background: lightblue; color: black;"
-> 
-  v-if="isFriend && !isFriendRequest && !sentFriendRequest">
+<button v-if="isFriend && !isFriendRequest && !sentFriendRequest" style="background: lightblue; color: black;"> 
   <font-awesome-icon :icon="['fas', 'user-friends']" /> Friends
 </button>
 
