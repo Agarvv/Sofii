@@ -30,6 +30,7 @@ export async function getPosts(user) {
         data.posts.forEach((post) => { 
             post.isLiked = post.postLikes.some((like) => like.user_id == user.user_id);
             post.isSaved = post.saved_post.some(saved => saved.user_id == user.user_id )
+           // post.isOwn = post.user_id == user.user_id
         })
         // IS FOLLOWING MEANS IF YOU AR FOLLOWING THIS USER.
         data.users.forEach(otherUser => {
@@ -130,6 +131,7 @@ export async function getPost(post_id, currentUser) {
         console.log('get post data', data)
         data.post.isLiked = await checkIfUserLikedPost(data.post, currentUser);
         data.post.isSaved = await checkIfUserSavedPost(data.post, currentUser);
+       // data.post.isOwn = data.post.user_id == currentUser.user_id
 
         
         await Promise.all(data.post.postComments.map(async (comment) => {
@@ -265,4 +267,5 @@ export async function checkIfAwnserIsLiked(awnser, user) {
 export async function checkIfAwnserIsDisliked(awnser, user) {
     return awnser.awnser_dislikes.some(dislike => dislike.user_id == user.user_id)
 }
+
 

@@ -15,7 +15,7 @@
                 <p style="color: gray">{{ post.userHandle }}</p>
               </div>
              
-              <div @click="deleteAPost(post.id)" class="post-button-delete">
+              <div v-if="isOwn" @click="deleteAPost(post.id)" class="post-button-delete">
                 <font-awesome-icon icon="close" />
               </div>
             </div>
@@ -53,11 +53,10 @@
 
 <script>
 import { likePost, savePost, deletePost } from '../services/postService'
-import userMixin from '../mixins/userMixin'
+import { mapGetters, mapActions } from 'vuex'
 import { apiUrl } from '../config'
 
 export default {
-    mixins: [userMixin],
     name: 'PostCard',
     props: {
         post: {}
@@ -67,10 +66,16 @@ export default {
             error: "",
             apiUrl: apiUrl,
             isLiked: this.post.isLiked,
-            isSaved: this.post.isSaved
+            isSaved: this.post.isSaved,
+            isOwn: false
         }
     },
+    computed: {
+        ...mapGetters(['user'])
+    },
     methods: {
+        
+        ...mapActions(['fetchUser']),
         async likeAPost(post_id) {
             try {
                 const data = await likePost(post_id)
@@ -147,11 +152,15 @@ created() {
       }
     });
 },
+async mounted() {
+    await this.fetchUser()
+},
 watch: {
   post(newPost) {
       console.log('post fron watch', newPost)
     this.isLiked = newPost.isLiked
     this.isSaved = newPost.isSaved
+    this.isOwn = newPost.user_id == this.user.user_id
   },
 },
 }

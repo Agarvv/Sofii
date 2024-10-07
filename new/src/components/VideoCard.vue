@@ -10,7 +10,7 @@
       <div class="video-user-detail">
         <h4>{{ video.user_video.username }}</h4>
       </div>
-      <div @click="deleteAVideo(video.id)" class="video-button-delete">
+      <div v-if="isOwn" @click="deleteAVideo(video.id)" class="video-button-delete">
         <font-awesome-icon icon="fas fa-close" />
       </div>
     </div>
@@ -74,10 +74,15 @@ export default {
       error: "",
       apiUrl: apiUrl,
       isLiked: this.video.isLiked,
-      isSaved: this.video.isSaved
+      isSaved: this.video.isSaved,
+      isOwn: false
     };
   },
+  computed: {
+      ...mapGetters(['user'])
+  },
   methods: {
+      ...mapActions(['fetchUser']),
     async likeAVideo(video_id) {
       try {
           const data = await likeVideo(video_id)
@@ -158,11 +163,15 @@ this.$socket.on('savedVideo', saved => {
 });
 
   },
+  async mounted() {
+      await this.fetchUser()
+  },
   watch: {
   video(newVideo) {
       console.log('video from watcg', newVideo)
     this.isLiked = newVideo.isLiked
     this.isSaved = newVideo.isSaved
+    this.isOwn == newVideo.video_user_id == this.user.user_id
   },
 },
 };
