@@ -10,6 +10,7 @@
       
         <div class="videos-wrapper"> 
             <div v-for="video in videos" :key="video.id" class="videos">
+                <h1>Video</h1>
                 <VideoCard :video="video" /> 
             </div>
     
@@ -24,7 +25,7 @@
 
 <script>
 import { findVideos } from '../services/videoService'
-import VideoCard from './VideoCard.vue';
+import VideoCard from './VideoCard';
 import HeaderComponent from './HeaderComponent'
 import SidebarComponent from './SidebarComponent'
 import { mapGetters, mapActions } from 'vuex'
@@ -37,9 +38,8 @@ export default {
   },
   data() {
     return {
-      videos: [], // Empty
+      videos: [], 
       error: "",
-      videosById: {},
       showAside: false
     };
   },
@@ -52,19 +52,19 @@ export default {
         try {
             await this.fetchUser();
             const data = await findVideos(this.user);
+            console.log('data', data)
             this.videos = data.videos;
-            this.videos.forEach(video => {
-              this.videosById[video.id] = video;
-            });
-            
         } catch(e) {
+            console.log('error?', e)
             this.error = "Internal Server Error";
         }
       },
-      // Renombramos este método para evitar el conflicto con la propiedad "showAside"
       toggleAside() {
         this.showAside = !this.showAside;
       }
+  },
+  async mounted() {
+      await this.getVideos()
   }
 }
 </script>
