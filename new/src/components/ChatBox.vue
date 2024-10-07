@@ -203,11 +203,12 @@ export default {
                alert('File tipe undefined')
       }
 
-      const response = await fetch(process.env.VUE_APP_API_URL, '/sofi/upload_media', {
-        method: 'POST',
-        body: formData,
-        credentials: 'include'
-      });
+      const response = await fetch(`${process.env.VUE_APP_API_URL}/sofi/upload_media`, {
+  method: 'POST',
+  body: formData,
+  credentials: 'include'
+});
+
 
       if (!response.ok) {
         throw new Error(`Error uploading ${mediaType}`);
@@ -321,10 +322,10 @@ export default {
 
     const unreadMessages = this.messages.filter(message => message.readed === false);
     unreadMessages.forEach((message) => {
-      console.log('usuario id: ', this.usuario.user_id);
+      console.log('usuario id: ', this.user.user_id);
       console.log('unreaded message: ', message);
 
-      if (message.message_user_id !== this.usuario.user_id) {
+      if (message.message_user_id !== this.user.user_id) {
         this.$socket.emit('readMessage', {
           message: message,
           chat_id: this.chat_id

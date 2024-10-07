@@ -62,7 +62,7 @@ module.exports = {
                 try {
                     let newMessage;
                     switch (data.type) {
-                        case "single_message":
+                        case "text":
                             newMessage = await ChatController.handleSindleMessage(jwtToken, data);
                             io.to(chat_id).emit('chatMessage', newMessage);
                             break;
