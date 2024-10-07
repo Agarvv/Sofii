@@ -106,7 +106,8 @@
         </div>
       </div>
     </div>
-
+  
+   <div class="footer-chat">
     <div class="footer-buttons">
       <div @click="handleFiles('video')" class="video">
         <input 
@@ -144,6 +145,8 @@
       >
         <font-awesome-icon icon="paper-plane"></font-awesome-icon>
       </div>
+    </div>
+
     </div>
   </main>
 </div>
@@ -215,7 +218,7 @@ export default {
       }
         
       const data = await response.json();
-      console.log('data path from server: ;', data)
+      
       return data.filepath;
     },
 
@@ -596,6 +599,14 @@ main {
 
 .message-wrapper.friend {
   border-color: #E0E0E0;
+}
+
+.footer-chat {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  
 }
 
 @media(max-width: 600px) {
