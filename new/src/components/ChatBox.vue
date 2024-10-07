@@ -423,9 +423,11 @@ main {
   right: 0;
   background: white;
   box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+  border: 3px solid red;
 }
 
 .footer-buttons {
+  border: 3px solid blue;
   display: flex;
   gap: 15px;
 }
