@@ -203,7 +203,7 @@ export default {
                alert('File tipe undefined')
       }
 
-      const response = await fetch(`${process.env.VUE_APP_API_URL}/sofi/upload_media`, {
+      const response = await fetch(`${process.env.VUE_APP_API_URL}/api/sofi/upload_media`, {
   method: 'POST',
   body: formData,
   credentials: 'include'
