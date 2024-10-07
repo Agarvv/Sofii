@@ -130,7 +130,7 @@
             
             <img 
             :src="friend.friendToDisplayInfo.profilePicture || '/images/default.jpeg' ">
-            ">
+            
             
           </div>
           

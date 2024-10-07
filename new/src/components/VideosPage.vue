@@ -2,6 +2,8 @@
     
     <HeaderComponent :activePage="'watch'" :user="usuario"/>
     
+    <SidebarComponent activePage="watch" v-if="showAside" @showAside="showAside"/> 
+    
   <div class="container">
       
   <div class="videos-wrapper"> 
@@ -22,19 +24,22 @@
 import { findVideos } from '../services/videoService'
 import VideoCard from './VideoCard.vue';
 import HeaderComponent from './HeaderComponent'
+import SidebarComponent from './SidebarComponent'
 import { mapGetters, mapActions } from 'vuex'
 
 
 export default {
   components: {
     VideoCard,
-    HeaderComponent
+    HeaderComponent,
+    SidebarComponent
   },
   data() {
     return {
       videos: [], // Empty
       error: "",
-      videosById: {}
+      videosById: {},
+      showAside: false
     };
   },
   computed: {
@@ -54,6 +59,9 @@ export default {
       } catch(e) {
           this.error = "Internal Server Error"
       }
+    },
+    showAside() {
+        this.showAside = !this.showAside
     }
   }
 }
