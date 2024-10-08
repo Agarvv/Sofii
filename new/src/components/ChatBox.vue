@@ -569,16 +569,12 @@ main {
   flex-direction: row-reverse;
 }
 
-.message.friend .message-img {
-  display: none;
-}
-
 .message.user {
   display: flex;
   flex-direction: row;
 }
 
-.message.user .msgIcon {
+.message.friend .msgIcon {
   display: none;
 }
 
