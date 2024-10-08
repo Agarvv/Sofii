@@ -124,11 +124,12 @@ export default {
         this.posts = data.posts;
         this.recommendedUsers = data.users;
         this.nonReadedNotifications = data.nonReadedNotifications;
+        console.log('data service', data)
         
-        this.postsById = {};
-        this.posts.forEach(post => {
-          this.postsById[post.id] = post;
-        });
+       // this.postsById = {}
+       // this.posts.forEach(post => {
+         // this.postsById[post.id] = post;
+      //  });
       } catch (e) {
         console.error(e);
          this.error = "Oops, Something Went Wrong..."
