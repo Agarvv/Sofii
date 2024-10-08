@@ -59,29 +59,39 @@
   </div>
   
   
-  <div class="login-social-media"> 
+    <div class="login-social-media"> 
   
-   <div class="social-buttons">
+   
+<div class="social-buttons">
   
   <div @click="googleLogin" class="google">
-    <font-awesome-icon :icon="['fab', 'google']" />
     <span>Continue With Google</span>
+        <font-awesome-icon :icon="['fab', 'google']" />
   </div>
 
   <div @click="githubLogin" class="github">
-    <font-awesome-icon :icon="['fab', 'github']" />
     <span>Continue With Github</span>
+        <font-awesome-icon :icon="['fab', 'github']" />
   </div>
 
   <div @click="twitterLogin" class="twitter">
-    <font-awesome-icon :icon="['fab', 'twitter']" />
     <span>Continue With Twitter</span>
+        <font-awesome-icon :icon="['fab', 'twitter']" />
   </div>
 
 </div>
 
 
-  </div>
+
+
+  
+</div>
+  
+  
+  
+  
+  
+  
     
   </div>
 
@@ -328,8 +338,8 @@ export default {
 
 .social-buttons .google {
   background: white;
-  color: black;
-  border: 1px solid #ddd;
+  color: red;
+  border: 1px solid #ddd; 
 }
 
 
