@@ -4,25 +4,25 @@
       <main>
         <div class="main-header">
           <div class="user-details">
-            <div @click="goToPage('/user/' + user.id)" class="user-img">
+            <div @click="goToPage('/user/' + userToInfo.id)" class="user-img">
               <img 
                 style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;" 
-                :src="user.profilePicture || '/images/default.jpeg'" 
+                :src="userToInfo.profilePicture || '/images/default.jpeg'" 
                 class="profile-img" 
               />
             </div>
             <div class="user-username">
-              <h4>{{ user.username || 'Someone' }}</h4>
-              <p v-if="isUserTyping">{{ user.username }} Is Typing...</p>
+              <h4>{{ userToInfo.username || 'Someone' }}</h4>
+              <p v-if="isUserTyping">{{ userToInfo.username }} Is Typing...</p>
               <p 
-                v-if="!isUserTyping && user.active" 
+                v-if="!isUserTyping && userToInfo.active" 
                 style="color: green;" 
                 class="status"
               >
                 Online
               </p>
               <p 
-                v-if="!isUserTyping && !user.active" 
+                v-if="!isUserTyping && !userToInfo.active" 
                 style="color: gray"
               >
                 Offline
@@ -168,7 +168,7 @@ export default {
   data() {
     return {
       messages: [],
-      user: {},
+      userToInfo: {},
       message: "",
       error: "",
       chat: {},
@@ -182,7 +182,7 @@ export default {
     };
   },
   computed: {
-    currentUser: state => state.user
+    ...mapGetters(['user'])
   },
   methods: {
     ...mapActions(['fetchUser']),
@@ -318,7 +318,7 @@ export default {
         this.chat = data.chat;
         this.chat_id = data.chat.chat_id;
         this.messages = data.chat.messages;
-        this.user = data.userToDisplayInfo;
+        this.userToInfo = data.userToDisplayInfo;
         this.$socket.emit('joinRoom', this.chat_id);
       } catch (e) {
         console.error('error', e);
@@ -329,15 +329,15 @@ export default {
   async created() {
     await this.fetchUser();
     await this.startChat();
-    console.log('currengthis', this.currentUser)
-    console.log('user', this.user)
+    console.log('currengthis', this.user)
+    console.log('user', this.userToInfo)
 
     const unreadMessages = this.messages.filter(message => message.readed === false);
     unreadMessages.forEach((message) => {
-      console.log('usuario id: ', this.currentUser.user_id);
+      console.log('usuario id: ', this.user.id);
       console.log('unreaded message: ', message);
 
-      if (message.message_user_id !== this.currentUser.user_id) {
+      if (message.message_user_id !== this.user.user_id) {
         this.$socket.emit('readMessage', {
           message: message,
           chat_id: this.chat_id
