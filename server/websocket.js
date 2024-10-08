@@ -103,6 +103,13 @@ module.exports = {
                 socket.to(chatId).emit('typing');
                 console.log('Emitido typing a:', chatId);
             });
+
+            socket.on('stopTyping', (chatid) => {
+                socket.join(chatid);
+                console.log('Parando de escribir en:', chatid);
+                socket.to(chatid).emit('stopTyping');
+                console.log('Emitido stopTyping a:', chatid);
+            })
     
             // Evento para marcar mensajes como leídos
             socket.on('readMessage', async (data) => {

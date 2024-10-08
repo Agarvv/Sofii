@@ -313,7 +313,8 @@ export default {
      if(this.message.trim()!== '') {
         this.$socket.emit('typing', this.chat_id)
      } else {
-      this.isUserTyping = false
+        console.log('emiting stop typing')
+        this.$socket.emit('stopTyping', this.chat_id)
      }
     },
 
@@ -361,6 +362,10 @@ export default {
     this.$socket.on('typing', () => {
       this.isUserTyping = true;
     });
+
+    this.$socket.on('stopTyping', () => {
+       this.isUserTyping = false;
+    })
 
      this.$socket.on('readMessage', (message) => {
         console.log('Message readed Received From Server!', message);
