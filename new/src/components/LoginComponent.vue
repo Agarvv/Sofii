@@ -64,21 +64,23 @@
    
     <div class="social-buttons">
       
-      <div class="google">
+      <div @click="googleLogin" class="google">
         <span>Continue With Google</span>
-                <i class="fa fa-google"></i>        
+        <font-awesome-icon icon="google"/>
+                
       </div>
       
-      <div class="facebook">
+      <div @click="githubLogin" class="github">
 
-        <span>Continue With Facebook</span>
-                <i class="fa fa-facebook"></i> 
+        <span>Continue With Github</span>
+               <font-awesome-icon icon="github"/>
+               
       </div>
       
-      <div class="apple">
+      <div @click="twitterLogin" class="twitter">
         
-        <span>Continue With Apple</span>
-         <i class="fa fa-apple"></i> 
+        <span>Continue With Twitter</span>
+                 <font-awesome-icon icon="twitter" />
       </div>
       
     </div>
@@ -122,14 +124,24 @@ export default {
                   password: this.password, 
                   rememberMe: this.rememberMe
                 })
-                 setTimeout(() => {
-                  this.$router.push('/')
-                 }, 3000)
+                 this.$router.push('/')
             } catch(e) {
               this.error = e
             } finally {
               this.loading = false
             }
+        },
+        
+        googleLogin() {
+            window.location.href = process.env.VUE_APP_API_URL + '/auth/google'
+        },
+        
+        githubLogin() {
+            window.location.href = process.env.VUE_APP_API_URL + '/auth/github'
+        },
+        
+        twitterLogin() {
+            window.location.href = process.env.VUE_APP_API_URL + '/auth/twitter'
         },
 
         goToRoute(route) {
@@ -298,18 +310,16 @@ export default {
   border: 1px solid #ddd; /* Borde de la tarjeta */
 }
 
-.social-buttons .google i {
-  color: #db4437; /* Color del ícono de Google */
-}
 
-.social-buttons .facebook {
-  background: #1877F2;
+.social-buttons .github {
+  background: black;
+  color: white;
   border: 1px solid #ddd; /* Borde de la tarjeta */
 }
 
-.social-buttons .apple {
+.social-buttons .twitter {
   background: #000;
-  border: 1px solid #ddd; /* Borde de la tarjeta */
+  border: 1px solid #ddd; 
 }
 
 form .remember-me {

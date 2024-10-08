@@ -1,4 +1,5 @@
 <template>
+    <div> 
   <div class="container">
   
 <div class="wrapper">
@@ -61,26 +62,30 @@
   <div class="login-social-media"> 
   
    
-    <div class="social-buttons">
+       <div class="social-buttons">
       
-      <div class="google">
+      <div @click="googleLogin" class="google">
         <span>Continue With Google</span>
-                <font-awesome-icon icon="google"/>       
+        <font-awesome-icon icon="google"/>
+                
       </div>
       
-      <div class="facebook">
+      <div @click="githubLogin" class="github">
 
-        <span>Continue With Facebook</span>
-            <font-awesome-icon icon="facebook"/> 
+        <span>Continue With Github</span>
+               <font-awesome-icon icon="github"/>
+               
       </div>
       
-      <div class="apple">
+      <div @click="twitterLogin" class="twitter">
         
-        <span>Continue With Apple</span>
-            <font-awesome-icon icon="apple"/>
+        <span>Continue With Twitter</span>
+                 <font-awesome-icon icon="twitter" />
       </div>
       
     </div>
+    
+  </div>
     
   </div>
 
@@ -144,9 +149,9 @@ export default {
             password: this.password
         });
 
-        setTimeout(() => {
+    
             this.$router.push('/login');
-        }, 3000);
+
 
     } catch (e) {
        this.error = e;
@@ -157,7 +162,19 @@ export default {
 
     goToRoute(route) {
           this.$router.push(route)
-    }
+    },
+    
+    googleLogin() {
+            window.location.href = process.env.VUE_APP_API_URL + '/auth/google'
+        },
+        
+        githubLogin() {
+            window.location.href = process.env.VUE_APP_API_URL + '/auth/github'
+        },
+        
+        twitterLogin() {
+            window.location.href = process.env.VUE_APP_API_URL + '/auth/twitter'
+        },
   }
 };
 </script>
@@ -309,30 +326,27 @@ export default {
   gap: 15px;
   width: 100%;
   padding: 10px;
-}
-
-.social-buttons i {
   font-size: 25px;
 }
+
 
 .social-buttons .google {
   background: white;
   color: black;
-  border: 1px solid #ddd; /* Borde de la tarjeta */
+  border: 1px solid #ddd;
 }
 
-.social-buttons .google i {
-  color: #db4437; /* Color del ícono de Google */
+
+.social-buttons .github {
+  background: black;
+  color: white;
+  border: 1px solid #ddd; 
 }
 
-.social-buttons .facebook {
-  background: #1877F2;
-  border: 1px solid #ddd; /* Borde de la tarjeta */
-}
-
-.social-buttons .apple {
-  background: #000;
-  border: 1px solid #ddd; /* Borde de la tarjeta */
+.social-buttons .twitter {
+  background: #1DA1F2;
+  color: white;
+  border: 1px solid #ddd; 
 }
 
 
