@@ -61,30 +61,26 @@
   
   <div class="login-social-media"> 
   
-   
-       <div class="social-buttons">
-      
-      <div @click="googleLogin" class="google">
-        <span>Continue With Google</span>
-        <font-awesome-icon icon="google"/>
-                
-      </div>
-      
-      <div @click="githubLogin" class="github">
+   <div class="social-buttons">
+  
+  <div @click="googleLogin" class="google">
+    <font-awesome-icon :icon="['fab', 'google']" />
+    <span>Continue With Google</span>
+  </div>
 
-        <span>Continue With Github</span>
-               <font-awesome-icon icon="github"/>
-               
-      </div>
-      
-      <div @click="twitterLogin" class="twitter">
-        
-        <span>Continue With Twitter</span>
-                 <font-awesome-icon icon="twitter" />
-      </div>
-      
-    </div>
-    
+  <div @click="githubLogin" class="github">
+    <font-awesome-icon :icon="['fab', 'github']" />
+    <span>Continue With Github</span>
+  </div>
+
+  <div @click="twitterLogin" class="twitter">
+    <font-awesome-icon :icon="['fab', 'twitter']" />
+    <span>Continue With Twitter</span>
+  </div>
+
+</div>
+
+
   </div>
     
   </div>
@@ -310,7 +306,7 @@ export default {
   margin-bottom: 20px;
 }
 
-.login-social-media .social-buttons .google, .facebook, .apple {
+.login-social-media .social-buttons .google, .github, .twitter {
   padding: 15px;
   display: flex;
   justify-content: space-between;
