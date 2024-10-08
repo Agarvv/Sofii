@@ -34,7 +34,7 @@ export async function getPosts(user) {
         })
         // IS FOLLOWING MEANS IF YOU AR FOLLOWING THIS USER.
         data.users.forEach(otherUser => {
-            otherUser.isFollowing =otherUser.followers.some(follower => follower.follower_id == user.user_id)
+            otherUser.isFollowing = otherUser.followers.some(follower => follower.Follower.follower_id == user.user_id)
         })
         
         return data 
