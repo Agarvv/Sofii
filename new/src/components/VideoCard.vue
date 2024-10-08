@@ -10,7 +10,9 @@
       <div class="video-user-detail">
         <h4>{{ video.user_video.username }}</h4>
       </div>
-      <div v-if="isOwn" @click="deleteAVideo(video.id)" class="video-button-delete">
+      <div v-if="
+      video.user_video.id == user.user_id
+      " @click="deleteAVideo(video.id)" class="video-button-delete">
         <font-awesome-icon icon="fas fa-close" />
       </div>
     </div>
@@ -75,7 +77,7 @@ export default {
       apiUrl: apiUrl,
       isLiked: this.video.isLiked,
       isSaved: this.video.isSaved,
-      isOwn: false
+     // isOwn: false
     };
   },
   computed: {
@@ -168,7 +170,7 @@ this.$socket.on('savedVideo', saved => {
       console.log('video from watcg', newVideo)
     this.isLiked = newVideo.isLiked
     this.isSaved = newVideo.isSaved
-    this.isOwn == newVideo.video_user_id == this.user.user_id
+    //this.isOwn == newVideo.video_user_id == this.user.user_id
   },
 },
 };

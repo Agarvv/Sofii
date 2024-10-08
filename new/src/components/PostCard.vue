@@ -15,7 +15,9 @@
                 <p style="color: gray">{{ post.userHandle }}</p>
               </div>
              
-              <div v-if="isOwn" @click="deleteAPost(post.id)" class="post-button-delete">
+              <div v-if="
+              post.user_id == user.user_id
+              " @click="deleteAPost(post.id)" class="post-button-delete">
                 <font-awesome-icon icon="close" />
               </div>
             </div>
@@ -66,7 +68,7 @@ export default {
             apiUrl: apiUrl,
             isLiked: this.post.isLiked,
             isSaved: this.post.isSaved,
-            isOwn: false
+            // isOwn: false
         }
     },
     computed: {
@@ -162,7 +164,7 @@ watch: {
       console.log('user from watch', this.user)
     this.isLiked = newPost.isLiked
     this.isSaved = newPost.isSaved
-    this.isOwn = newPost.user_id == this.user.user_id
+   // this.isOwn = newPost.user_id == this.user.user_id
   },
 },
 }
