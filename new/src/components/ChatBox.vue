@@ -249,7 +249,9 @@ export default {
           data.file = await this.uploadMedia(this.video, 'video');
         } 
         //check
+          
         this.$socket.emit('chatMessage', data);
+          this.$socket.emit('stopTyping', this.chat_id)
         this.clearMessage();
         // end check
       } catch (error) {
