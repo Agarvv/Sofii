@@ -329,6 +329,8 @@ export default {
   async created() {
     await this.fetchUser();
     await this.startChat();
+    console.log('currengthis', this.currentUser)
+    console.log('current', currentUser)
 
     const unreadMessages = this.messages.filter(message => message.readed === false);
     unreadMessages.forEach((message) => {
