@@ -154,9 +154,6 @@ export default {
       this.showSidebar = !this.showSidebar;
     },
 
-    handleResize() {
-      this.showSidebar = window.innerWidth > 768; 
-    }
   },
   async created() {
     await this.fetchUser(); 
@@ -188,12 +185,10 @@ export default {
       }, 5000);
     });
 
-    window.addEventListener('resize', this.handleResize); // Escuchar cambios de tamaño
+   
   },
 
-  beforeDestroy() {
-    window.removeEventListener('resize', this.handleResize); // Limpiar listener
-  }
+  
 };
 </script>
 
@@ -490,7 +485,7 @@ aside .aside-logo i {
     overflow: auto; 
     display: block;
     border: 2px solid red;
-    z-index: 100; /* Asegúrate de que no esté por encima de otros elementos */
+    z-index: 100; 
 }
 
 @media (max-width: 800px) {
