@@ -238,6 +238,7 @@ this.$socket.on('savedVideo', saved => {
     display: flex;
     align-items: flex-end;
     border: 1px solid black;
+    width: 100%;
 }
 
 </style> 
