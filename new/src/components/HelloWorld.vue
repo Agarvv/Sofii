@@ -482,7 +482,7 @@ aside .aside-logo i {
     border: 2px solid blue;
 }
 .rs-aside {
-    position: fixed;
+    position: absolute; /* Cambiar de fixed a absolute para evitar superposiciones */
     top: 0;
     left: 0;
     width: 250px; 
@@ -490,6 +490,7 @@ aside .aside-logo i {
     overflow: auto; 
     display: block;
     border: 2px solid red;
+    z-index: 100; /* Asegúrate de que no esté por encima de otros elementos */
 }
 
 @media (max-width: 800px) {
