@@ -1,160 +1,157 @@
 <template>
-
-  <div class="container">
-  <main>
-    <div class="main-header">
-      <div class="user-details">
-        <div @click="goToPage('/user/' + user.id)" class="user-img">
-          <img 
-            style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;" 
-            :src="user.profilePicture || '/images/default.jpeg'" 
-            class="profile-img" 
-          />
-        </div>
-        <div class="user-username">
-          <h4>{{ user.username || 'Someone' }}</h4>
-          <p v-if="isUserTyping">{{ user.username }} Is Typing...</p>
-          <p 
-            v-if="!isUserTyping && user.active" 
-            style="color: green;" 
-            class="status"
-          >
-            Online
-          </p>
-          <p 
-            v-if="!isUserTyping && !user.active" 
-            style="color: gray"
-          >
-            Offline
-          </p>
-        </div>
-      </div>
-      <div class="header-interact">
-          
-        </div>
-      </div>
-    </div>
-
-    <div class="main-chatbox">
-      <div class="messages">
-        <div
-          v-for="message in messages"
-          :key="message.id"
-          class="message"
-          :class="getMessageClass(message)"
-        >
-          <div class="msg_content">
-            <div 
-              v-if="message.message_content.length > 0" 
-              class="message-user-img"
-            >
+  <div> 
+    <div class="container">
+      <main>
+        <div class="main-header">
+          <div class="user-details">
+            <div @click="goToPage('/user/' + user.id)" class="user-img">
               <img 
-                :src="getMessageUserProfilePicture(message)" 
-                class="message-img"
+                style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;" 
+                :src="user.profilePicture || '/images/default.jpeg'" 
+                class="profile-img" 
               />
             </div>
-            <p v-if="message.message_content.length > 0">
-              {{ message.message_content }}
-            </p>
-            <font-awesome-icon 
-              icon="check" 
-              size="1x" 
-              :style="{ color: message.readed ? '#1DA1F2' : '#000000' }" 
-              class="msgIcon" 
-            />
+            <div class="user-username">
+              <h4>{{ user.username || 'Someone' }}</h4>
+              <p v-if="isUserTyping">{{ user.username }} Is Typing...</p>
+              <p 
+                v-if="!isUserTyping && user.active" 
+                style="color: green;" 
+                class="status"
+              >
+                Online
+              </p>
+              <p 
+                v-if="!isUserTyping && !user.active" 
+                style="color: gray"
+              >
+                Offline
+              </p>
+            </div>
           </div>
+          <div class="header-interact">
+            
+          </div>
+        </div>
+        <div class="main-chatbox">
+          <div class="messages">
+            <div
+              v-for="message in messages"
+              :key="message.id"
+              class="message"
+              :class="getMessageClass(message)"
+            >
+              <div class="msg_content">
+                <div 
+                  v-if="message.message_content.length > 0" 
+                  class="message-user-img"
+                >
+                  <img 
+                    :src="getMessageUserProfilePicture(message)" 
+                    class="message-img"
+                  />
+                </div>
+                <p v-if="message.message_content.length > 0">
+                  {{ message.message_content }}
+                </p>
+                <font-awesome-icon 
+                  icon="check" 
+                  size="1x" 
+                  :style="{ color: message.readed ? '#1DA1F2' : '#000000' }" 
+                  class="msgIcon" 
+                />
+              </div>
 
-          <div v-if="message.withFile">
+              <div v-if="message.withFile">
+                <img 
+                  v-if="message.fileType === 'image' || message.fileType === 'text-image'" 
+                  style="width: 200px; height: 200px; object-fit: cover;" 
+                  :src="message.fileSource" 
+                />
+                <video 
+                  controls 
+                  v-if="message.fileType === 'video' || message.fileType === 'text-video'"
+                  style="
+                   width: 250px;
+                   height: 250px;
+                   object-fit: cover;
+                  "
+                >
+                  <source :src="message.fileSource" />
+                </video>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="demo-content">
+          <div class="preview-container" v-if="imageSrc || videoSrc">
             <img 
-              v-if="message.fileType === 'image' || message.fileType === 'text-image'" 
-              style="width: 200px; height: 200px; object-fit: cover;" 
-              :src="message.fileSource" 
+              ref="demoImage" 
+              v-if="imageSrc" 
+              :src="imageSrc" 
+              class="preview-image" 
             />
             <video 
+              ref="demoVideo" 
+              v-if="videoSrc" 
               controls 
-              v-if="message.fileType === 'video' || message.fileType === 'text-video'"
-              style="
-               width: 250px;
-               height: 250px;
-               object-fit: cover;
-              "
+              class="preview-video"
             >
-              <source :src="message.fileSource" />
+              <source :src="videoSrc" />
             </video>
+            <div 
+              class="cancel-preview" 
+              @click="cancelPreview"
+            >
+              <font-awesome-icon icon="times-circle"></font-awesome-icon>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
 
-    <div class="demo-content">
-      <div class="preview-container" v-if="imageSrc || videoSrc">
-        <img 
-          ref="demoImage" 
-          v-if="imageSrc" 
-          :src="imageSrc" 
-          class="preview-image" 
-        />
-        <video 
-          ref="demoVideo" 
-          v-if="videoSrc" 
-          controls 
-          class="preview-video"
-        >
-          <source :src="videoSrc" />
-        </video>
-        <div 
-          class="cancel-preview" 
-          @click="cancelPreview"
-        >
-          <font-awesome-icon icon="times-circle"></font-awesome-icon>
+        <div class="footer-chat">
+          <div class="footer-buttons">
+            <div @click="handleFiles('video')" class="video">
+              <input 
+                @change="handleFilesChanges" 
+                ref="videoInp" 
+                type="file" 
+                accept="video/*" 
+                hidden 
+              />
+              <font-awesome-icon icon="video"></font-awesome-icon>
+            </div>
+            <div @click="handleFiles('image')" class="image">
+              <input 
+                @change="handleFilesChanges" 
+                ref="imageInp" 
+                type="file" 
+                accept="image/*" 
+                hidden 
+              />
+              <font-awesome-icon icon="image"></font-awesome-icon>
+            </div>
+          </div>
+
+          <div class="footer-message-input">
+            <input 
+              @input="broadcastTyping" 
+              v-model="message" 
+              id="inp" 
+              type="text" 
+              placeholder="Send a message..." 
+            />
+            <div 
+              @click="sendMessage" 
+              class="footer-send-message-button"
+            >
+              <font-awesome-icon icon="paper-plane"></font-awesome-icon>
+            </div>
+          </div>
         </div>
-      </div>
+      </main>
     </div>
-  
-   <div class="footer-chat">
-    <div class="footer-buttons">
-      <div @click="handleFiles('video')" class="video">
-        <input 
-          @change="handleFilesChanges" 
-          ref="videoInp" 
-          type="file" 
-          accept="video/*" 
-          hidden 
-        />
-        <font-awesome-icon icon="video"></font-awesome-icon>
-      </div>
-      <div @click="handleFiles('image')" class="image">
-        <input 
-          @change="handleFilesChanges" 
-          ref="imageInp" 
-          type="file" 
-          accept="image/*" 
-          hidden 
-        />
-        <font-awesome-icon icon="image"></font-awesome-icon>
-      </div>
-    </div>
-
-    <div class="footer-message-input">
-      <input 
-        @input="broadcastTyping" 
-        v-model="message" 
-        id="inp" 
-        type="text" 
-        placeholder="Send a message..." 
-      />
-      <div 
-        @click="sendMessage" 
-        class="footer-send-message-button"
-      >
-        <font-awesome-icon icon="paper-plane"></font-awesome-icon>
-      </div>
-    </div>
-
-    </div>
-  </main>
-</div>
-  
+  </div>
 </template>
 
 <script>
