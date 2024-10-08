@@ -237,7 +237,6 @@ this.$socket.on('savedVideo', saved => {
 .video-button-delete {
     display: flex;
     justify-content: flex-end;
-    border: 1px solid black;
     width: 100%;
 }
 

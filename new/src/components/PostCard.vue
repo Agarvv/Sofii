@@ -229,8 +229,11 @@ watch: {
     color: #555; /* Color de los íconos de interacción */
 }
 
-.post-interactions i {
-  font-size: 25px;
+.post-button-delete {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
 }
+
 
 </style>

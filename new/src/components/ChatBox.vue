@@ -30,8 +30,7 @@
         </div>
       </div>
       <div class="header-interact">
-        <div class="options">
-          <font-awesome-icon icon="bars"></font-awesome-icon>
+          
         </div>
       </div>
     </div>
@@ -74,6 +73,11 @@
             <video 
               controls 
               v-if="message.fileType === 'video' || message.fileType === 'text-video'"
+              style="
+               width: 250px;
+               height: 250px;
+               object-fit: cover;
+              "
             >
               <source :src="message.fileSource" />
             </video>
@@ -438,7 +442,7 @@ main {
 
 .footer-buttons {
   display: flex;
-  gap: 15px;
+  gap: 5px;
 }
 
 .footer-message-input {
