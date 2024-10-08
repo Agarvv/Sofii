@@ -113,6 +113,7 @@ export default {
             try {
                 const data = await deletePost(post_id)
                 console.log('Data from deleting post: ', data)
+                alert('Your post will be deleted in less than 5 minutes.')
             } catch(e) {
                 this.error = "Internal Server Error"
             }

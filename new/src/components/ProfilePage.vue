@@ -3,7 +3,7 @@
 
     <header>
 
-    <div @click="toggleBlock" class="openBlockCard">
+    <div v-if="!isSelfUser" @click="toggleBlock" class="openBlockCard">
         <font-awesome-icon icon="ellipsis"/> 
 
     </div>
@@ -68,7 +68,7 @@
           </div>
           
           
- <div v-else class="interact-buttons">
+ <div v-else class="interact-buttons" v-if="!isBlocked">
   <!-- Chat -->
   <button @click="sendChat(user.id)" style="background: purple;">
     <font-awesome-icon :icon="['fas', 'comment']" /> Chat
@@ -103,7 +103,7 @@
       </div>
     </header>
     
-    <div style="display: none" class="responsive-user-details">
+    <div class="responsive-user-details">
         
         <div class="r-bio">
             <p>{{user.bio ? user.bio : 'BIO Not Provided'}}</p>
@@ -229,7 +229,10 @@ export default {
     computed: {
       ...mapState({
         currentUser: state => state.user
-      })
+      }),
+      isBlocked() {
+          return this.user.isBlocked
+      }
     },
   data() {
     return {
@@ -243,7 +246,6 @@ export default {
       receivedFriendRequest: false,
       isFriend: false,
       showBlock: false,
-     
       // sentFriendRequest means that a user sent a friend request to the user that is showing on
       //receivedFriendRequest means that a user received a friend request from the user that s showing up and he can Accept or Deny the request
       //isFriend means that a user is friend with the user that is showing on
@@ -251,6 +253,7 @@ export default {
       // so easy, right? :p
     };
   },
+  
   methods: {
     ...mapActions(['fetchUser']),
     toggleBlock() {
@@ -520,7 +523,7 @@ aside .description {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    
+    display: none;
 }
 
 

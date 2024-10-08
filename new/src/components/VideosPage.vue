@@ -7,6 +7,10 @@
     </div>
 
     <div class="container">
+        
+        <div class="zero" v-if="videos.length === 0">
+            <p>There are No Videos Avaibable, <a href="/create">Go And Create !</a></p>
+        </div>
       
         <div class="videos-wrapper"> 
             <div v-for="video in videos" :key="video.id" class="videos">
@@ -100,6 +104,14 @@ export default {
     overflow: auto; 
     display: block;
     border: 2px solid red;
+}
+
+.zero {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
 }
 
 @media(max-width: 600px) {

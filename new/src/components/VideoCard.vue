@@ -119,6 +119,7 @@ export default {
         try {
           const data = await deleteVideo(video_id)
           console.log('Data received from method!', data)
+          alert('Your Video Will Be Deleted In less Than 5 Minutes.')
       } catch(e) {
           this.error = "Internal Server Error !"
           console.log(e)
