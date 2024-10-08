@@ -559,8 +559,9 @@ main {
 .messages .message {
   display: flex;
   width: 100%;
-  flex-direction: column;
+  flex-direction: column!important;
   /* align-items: flex-end;  */
+  border: 1px solid red;
 }
 
 .message.friend {
