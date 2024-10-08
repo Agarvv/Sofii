@@ -330,7 +330,7 @@
       </aside>
 
       <div class="content">
-        <div v-if="!filteredContent.posts.length && !filteredContent.users.length && !filteredContent.videos.length" class="zero_content_found">
+        <div v-if="!filteredContent.posts.length && !filteredContent.users.length && !filteredContent.videos.length && !loading" class="zero_content_found">
           <h4>No Content Found...</h4>
         </div>
 
@@ -620,14 +620,11 @@ export default {
     try {
         await this.fetchUser();
         if (this.user) {
-            alert("user")
             const data = await handleSearch(this.$route.params.query, this.user);
             console.log('all went ok', data);
             this.content = data.results.results;
             this.filteredContent = { ...this.content };
-        } else {
-            alert("not user")
-        }
+        } 
     } catch (e) {
         this.error = 'Something Went Wrong...'
         console.error('ERROR?', e);

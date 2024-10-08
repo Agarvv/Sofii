@@ -7,7 +7,7 @@
   <div class="user-card-details">
     <h3>{{user.username}}</h3>
     <p style="color: gray">{{user.job}}</p>
-    <div v-show="!isSelf" class="user-buttons">
+    <div @click="goToPage('/user/' + user.id)" v-show="!isSelf" class="user-buttons">
       <button class="view-profile-btn">View Profile</button>
     </div>
   </div>

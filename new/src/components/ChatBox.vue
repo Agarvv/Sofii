@@ -4,7 +4,7 @@
   <main>
     <div class="main-header">
       <div class="user-details">
-        <div class="user-img">
+        <div @click="goToPage('/user/' + user.id)" class="user-img">
           <img 
             style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;" 
             :src="user.profilePicture || '/images/default.jpeg'" 
@@ -185,6 +185,11 @@ export default {
   },
   methods: {
     ...mapActions(['fetchUser']),
+    
+    goToPage(route) {
+        this.$router.push(route)
+    },
+    
     getMessageType() {
       if (this.imageSrc && this.message) return 'text-image';
       if (this.videoSrc && this.message) return 'text-video';

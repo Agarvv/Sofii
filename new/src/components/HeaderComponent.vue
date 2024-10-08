@@ -46,7 +46,7 @@
               border-radius: 50%;
               object-fit: cover;
             "
-            :src="user.user_picture ? 'http://localhost:3000/' + user.user_picture : '/images/default.jpeg'"
+            :src="user.user_picture || '/images/default.jpeg'"
           />
         </div>
       </div>

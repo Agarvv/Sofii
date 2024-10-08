@@ -44,7 +44,6 @@
                   <font-awesome-icon icon="fas fa-bookmark"
                    :style="{ color: isSaved ? 'blue' : ''}"
                   /> <span :style="{ color: isSaved ? 'blue' : ''}">{{post.saved_post.length}}</span> </div>
-              <div class="share"><font-awesome-icon icon="fas fa-share" /></div>
             </div>
             
           </div>
@@ -76,6 +75,8 @@ export default {
     methods: {
         
         ...mapActions(['fetchUser']),
+        
+    
         async likeAPost(post_id) {
             try {
                 const data = await likePost(post_id)
@@ -158,6 +159,7 @@ async mounted() {
 watch: {
   post(newPost) {
       console.log('post fron watch', newPost)
+      console.log('user from watch', this.user)
     this.isLiked = newPost.isLiked
     this.isSaved = newPost.isSaved
     this.isOwn = newPost.user_id == this.user.user_id

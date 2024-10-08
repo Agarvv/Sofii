@@ -86,6 +86,9 @@ import {
                 } catch(e) {
                     this.error = "Internal Server Error"
                 }
+            },
+            goToPage(route) {
+                this.$router.push(route)
             }
         }, 
         async created() {

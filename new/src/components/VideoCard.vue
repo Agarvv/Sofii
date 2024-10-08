@@ -123,7 +123,7 @@ export default {
       }
     },
     goToPage(route) {
-        this.$route.push(route)
+        this.$router.push(route)
     }
   },
   created() {
