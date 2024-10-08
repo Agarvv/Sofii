@@ -260,8 +260,10 @@ export default {
     },
 
     getMessageClass(message) {
+      console.log('message class', message);
+      console.log('user', this.user)
       if (!message.message_user || !this.user) return '';
-      return message.message_user.id === this.user.id ? 'user' : 'friend';
+      return message.message_user.id === this.user.user_id ? 'user' : 'friend';
     },
     getMessageUserProfilePicture(message) {
       return message.message_user?.profilePicture
