@@ -488,6 +488,16 @@ aside .aside-logo i {
     z-index: 100; 
 }
 
+@media(max-width: 850px) {
+ .right-aside {
+    display: none;
+  }
+
+  .container {
+    grid-template-columns: 1fr 4fr;
+  }
+}
+
 @media (max-width: 800px) {
   .container {
     grid-template-columns: 1fr;
@@ -497,9 +507,6 @@ aside .aside-logo i {
        display: none;
    }
   
-  .right-aside {
-    display: none;
-  }
 }
 
 </style>
