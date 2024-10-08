@@ -81,6 +81,16 @@
                 </video>
               </div>
             </div>
+
+
+
+
+
+
+
+
+
+
           </div>
         </div>
 
@@ -550,7 +560,7 @@ main {
   display: flex;
   width: 100%;
   flex-direction: column;
-  align-items: flex-end;
+  /* align-items: flex-end;  */
 }
 
 .message.friend {
@@ -580,14 +590,14 @@ main {
 
 .message-user-img {
   width: 40px;
-  border-radius: 50%;
-  overflow: hidden;
+  height: 40px;
 }
 
 .message-img {
   width: 100%;
-  height: auto;
+  height: 100%;
   border-radius: 50%;
+  object-fit: cover;
 }
 
 .message p {
