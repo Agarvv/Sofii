@@ -1,7 +1,7 @@
 <template>
      <div  class="response">
                   <div class="response-user">
-                    <div class="response-user-img">
+                    <div @click="goToPage('/user/' + awnser.comment_awnser_user.id)" class="response-user-img">
                       <img :src="awnser.comment_awnser_user.profilePicture || '/images/default.jpeg'">
                     </div>
                     

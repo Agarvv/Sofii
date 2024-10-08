@@ -1,7 +1,7 @@
 <template>
   <div  class="video">
     <div class="video-header">
-      <div @click="goToUserPage(video.user_video.id)" class="video-user-img">
+      <div @click="goToPage('/user/' + video.user_video.id)" class="video-user-img">
         <img style="width: 50px;
                 height: 50px;
                 border-radius: 50%;
@@ -18,7 +18,7 @@
       <div class="video-description">
         <p>{{ video.video_description }}</p>
       </div>
-      <div @click="goToVideoPage(video.id)" class="video-file">
+      <div @click="goToPage('/watch/' + video.id)" class="video-file">
         <video controls>
           <source :src="video.video_content" type="video/mp4" />
           Your browser does not support Videos.
@@ -122,11 +122,8 @@ export default {
           console.log(e)
       }
     },
-    goToVideoPage(video_id) {
-      this.$router.push('/watch/' + video_id);
-    },
-    goToUserPage(user_id) {
-      this.$router.push('/user/' + user_id);
+    goToPage(route) {
+        this.$route.push(route)
     }
   },
   created() {

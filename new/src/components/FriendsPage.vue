@@ -163,7 +163,7 @@
 <script>
 import { getUserFriends,  acceptFriendRequest, denyFriendRequest } from '../services/usersService'
 import apiUrl from '../config'
-
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
     name: 'FriendsPage',
@@ -177,7 +177,11 @@ export default {
             apiUrl: apiUrl
         };
     },
+    computed: {
+        ...mapGetters(['user'])
+    },
     methods: {
+        ...mapActions(['fetchUser']),
         async getFriends() {
             try {
                const data = await getUserFriends()
@@ -223,6 +227,7 @@ toggleSelectedOption(option) {
 }
     },
     async created() {
+        await this.fetchUser()
         await this.getFriends();
     }
 };

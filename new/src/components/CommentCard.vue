@@ -1,7 +1,7 @@
 <template>
        <div  class="comment">
               <div class="comment-user-details">
-                <div class="user-comment-img"> 
+                <div @click="goToPage('/user/' + comment.commentUser.id)" class="user-comment-img"> 
                   <img 
                   :src="
                    comment.commentUser.profilePicture ||
@@ -41,7 +41,7 @@
               <div v-if="comment.showAwnserInp" class="comment-awnser">
                 <div class="comment-awnser-user">
                   <div class="comment-awnswer-user-img">
-                    <img style="border-radius: 50%; width: 50px; height: 50px; object-fit: cover" :src="`http://localhost:3000/${usuario.user_picture}`" alt="User Picture">
+                    <img style="border-radius: 50%; width: 50px; height: 50px; object-fit: cover" :src="user.user_picture || '/images/default.jpeg'" alt="User Picture">
                   </div>
                 </div>
                 
@@ -86,7 +86,7 @@ import {
     
     
 } from '../services/postService'
-
+import { mapGetters, mapActions } from 'vuex'
 
 import AwnserCard from './AwnserCard'
 export default {
@@ -103,6 +103,9 @@ export default {
            apiUrl: apiUrl
         }
     },
+    computed: {
+        ...mapGetters(['user'])
+    },
     props: {
        comment: {
            showResponses: false,  
@@ -110,7 +113,7 @@ export default {
        }
     },
     methods: {
-        
+        ...mapActions(['fetchUser']),
     async likeComment(comment_id) {
       try {
           const data = await likeComment("COMMENT", comment_id, this.$route.params.id)
@@ -156,7 +159,11 @@ export default {
 
   toggleShowAwnserInp(index) {
     this.comment.showAwnserInp = !this.comment.showAwnserInp;
-  }
+  },
+  
+  goToPage(route) {
+      this.$router.push(route)
+  },
 
     },
     async created() {
@@ -200,6 +207,9 @@ this.$socket.on('undislikeComment', dislike => {
 
 
 
+    },
+    async mounted() {
+        await this.fetchUser()
     }
 }
 </script>

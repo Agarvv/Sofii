@@ -2,7 +2,7 @@
      <div  class="post" >
          
             <div class="post-header">
-              <div>
+              <div @click="goToPage('/user/' + post.user.id)">
                  <img style="
                   width: 40px;
                   height: 40px;
@@ -23,7 +23,7 @@
               <div class="post-description">
                 <p>{{ post.description }}</p>
               </div>
-              <div @click="goToPost(post.id)" class="post-image">
+              <div @click="goToPage('/post/' + post.id)" class="post-image">
                 <img :src="post.postPicture ? post.postPicture : '/images/default_banner.webp'" alt="Post Image">
               </div>
             </div>
@@ -114,8 +114,8 @@ export default {
                 this.error = "Internal Server Error"
             }
         },
-        goToPost(id) {
-            this.$router.push('/post/' + id)
+        goToPage(route) {
+            this.$router.push(route)
         }
     },
 created() {

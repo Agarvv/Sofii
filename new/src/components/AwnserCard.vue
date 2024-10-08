@@ -1,7 +1,7 @@
 <template>
     <div class="awnser">
         <div class="response-user">
-                    <div class="response-user-img">
+                    <div @click="goToPage('/user/' + awnser.awnser_user.id)" class="response-user-img">
                       <img style="width: 40px; height: 40px; border-radius: 50%"
                        :src="awnser.awnser_user.profilePicture ||
                        '/images/default.jpeg'
@@ -87,6 +87,10 @@ export default {
             } catch(e) {
                 this.error = "Internal Server Error"
             }
+        },
+        
+        goToPage(route) {
+            this.$router.push(route)
         }
     },
     async created() {

@@ -4,7 +4,7 @@
               <div class="comment-user-details">
                   
                  
-                <div class="user-comment-img"> 
+                <div @click="goToPage('/user/' + comment.video_comment_user.id)" class="user-comment-img"> 
                   <img style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;" :src="comment.video_comment_user.profilePicture || '/images/default.jpeg'" alt="User Picture">
                 </div>
                 <div class="user-comment-username">
@@ -44,7 +44,7 @@
               <div v-show="comment.showAwnserInp" class="comment-awnser-input">
                   
                   <div class="comment-awnser-input-userImg">
-                      <img style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;" :src="'http://localhost:3000/' + comment.id">
+                      <img style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;" :src="user.user_picture || '/images/default.jpeg'">
                   </div>
                   
                   <div class="comment-awnser-input-inp">
@@ -87,6 +87,9 @@ import {
     awnserToVideoComment
 } from '../services/videoService'
 import VideoCommentAwnser from './VideoCommentAwnser'
+import { mapGetters, mapActions } from 'vuex'
+
+
     export default {
         components: {
             VideoCommentAwnser
@@ -102,6 +105,9 @@ import VideoCommentAwnser from './VideoCommentAwnser'
                 isLiked: this.comment.isLiked,
                 isDisliked: this.comment.isDisliked
             }
+        },
+        computed: {
+            ...mapGetters(['user'])
         },
         methods: {
             async likeAComment(comment_id) {
@@ -140,6 +146,9 @@ import VideoCommentAwnser from './VideoCommentAwnser'
             },
             toggleAwnsers(index) {
               this.comment.showAwnsers = !this.comment.showAwnsers
+            },
+            goToPage(route) {
+                this.$router.push(route)
             }
         },
         async created() {
