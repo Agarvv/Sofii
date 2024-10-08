@@ -560,8 +560,8 @@ main {
   display: flex;
   width: 100%;
   flex-direction: column!important;
-  /* align-items: flex-end;  */
-  border: 1px solid red;
+  align-items: flex-end; 
+ 
 }
 
 .message.friend {
