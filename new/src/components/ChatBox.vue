@@ -308,7 +308,13 @@ export default {
     },
 
     broadcastTyping() {
-      this.$socket.emit('typing', this.chat_id)
+      // isUserTyping
+     // this.$socket.emit('typing', this.chat_id)
+     if(this.message.trim()!== '') {
+        this.$socket.emit('typing', this.chat_id)
+     } else {
+      this.isUserTyping = false
+     }
     },
 
     async startChat() {
@@ -354,9 +360,9 @@ export default {
 
     this.$socket.on('typing', () => {
       this.isUserTyping = true;
-      console.log('Se recibió el evento typing');
+    });
 
-      this.$socket.on('readMessage', (message) => {
+     this.$socket.on('readMessage', (message) => {
         console.log('Message readed Received From Server!', message);
 
         const originalMessage = this.messages.find(msg => msg.id === message.id);
@@ -367,7 +373,6 @@ export default {
           alert('message not found');
         }
       });
-    });
   }
 };
 </script>
