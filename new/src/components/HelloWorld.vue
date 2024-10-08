@@ -473,9 +473,6 @@ aside .aside-logo i {
   justify-content: center;
 }
 
-.pc-sidebar {
-    border: 2px solid blue;
-}
 .rs-aside {
     position: absolute; /* Cambiar de fixed a absolute para evitar superposiciones */
     top: 0;
@@ -484,7 +481,6 @@ aside .aside-logo i {
     height: 100vh;
     overflow: auto; 
     display: block;
-    border: 2px solid red;
     z-index: 100; 
 }
 
