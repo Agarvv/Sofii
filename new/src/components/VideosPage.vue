@@ -10,7 +10,7 @@
       
         <div class="videos-wrapper"> 
             <div v-for="video in videos" :key="video.id" class="videos">
-                <h1>Video</h1>
+            
                 <VideoCard :video="video" /> 
             </div>
     

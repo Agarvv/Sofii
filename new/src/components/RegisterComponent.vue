@@ -332,7 +332,7 @@ export default {
   gap: 15px;
   width: 100%;
   padding: 10px;
-  font-size: 25px;
+  
 }
 
 

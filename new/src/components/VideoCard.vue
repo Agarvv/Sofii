@@ -5,7 +5,7 @@
         <img style="width: 50px;
                 height: 50px;
                 border-radius: 50%;
-                object-fit: cover;" :src="video.user_video.profilePicture ? video.user_video.profile_picture : '/images/default.jpeg'">
+                object-fit: cover;" :src="video.user_video.profilePicture || '/images/default.jpeg'">
       </div>
       <div class="video-user-detail">
         <h4>{{ video.user_video.username }}</h4>
@@ -234,5 +234,10 @@ this.$socket.on('savedVideo', saved => {
   font-size: 25px;
 }
 
+.video-button-delete {
+    display: flex;
+    align-items: flex-end;
+    border: 1px solid black;
+}
 
 </style> 
