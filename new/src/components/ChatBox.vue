@@ -332,10 +332,10 @@ export default {
 
     const unreadMessages = this.messages.filter(message => message.readed === false);
     unreadMessages.forEach((message) => {
-      console.log('usuario id: ', this.user.user_id);
+      console.log('usuario id: ', this.currentUser.user_id);
       console.log('unreaded message: ', message);
 
-      if (message.message_user_id !== this.user.user_id) {
+      if (message.message_user_id !== this.currentUser.user_id) {
         this.$socket.emit('readMessage', {
           message: message,
           chat_id: this.chat_id
@@ -534,7 +534,7 @@ main {
   display: flex;
   width: 100%;
   flex-direction: column;
-  align-items: flex-end; /* Alinea los mensajes a la derecha */
+  align-items: flex-end;
 }
 
 .message.friend {
