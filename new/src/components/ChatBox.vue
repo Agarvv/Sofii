@@ -574,9 +574,15 @@ main {
   flex-direction: row;
 }
 
+
+
 .message.friend .msgIcon {
   display: none;
 }
+.message.user .message-user-img {
+  display: none;
+}
+
 
 .message .msg_content {
   margin-bottom: 15px;
