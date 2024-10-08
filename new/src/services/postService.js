@@ -36,6 +36,7 @@ export async function getPosts(user) {
         data.users.forEach(otherUser => {
             otherUser.isFollowing = checkIfUserIsFollowed(otherUser, user)
         })
+        
         return data 
     } else {
         throw new Error("Internal Server Error")
