@@ -26,7 +26,7 @@ passport.use(new TwitterStrategy({
           email: profile.emails ? profile.emails[0].value : null,
           profilePicture: profile.photos[0].value
         };
-        return done(null, user);
+        done(null, user);
     }
   }
 ));

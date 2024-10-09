@@ -77,6 +77,8 @@ export default {
       apiUrl: apiUrl,
       isLiked: this.video.isLiked,
       isSaved: this.video.isSaved,
+      isLiking: false,
+      isSaving: false
      // isOwn: false
     };
   },
@@ -86,7 +88,10 @@ export default {
   methods: {
       ...mapActions(['fetchUser']),
     async likeAVideo(video_id) {
+      if(this.isLiking) return
       try {
+        
+        this.isLiking = true
           const data = await likeVideo(video_id)
           console.log('Data received from method!', data)
           
@@ -99,10 +104,15 @@ export default {
       } catch(e) {
           this.error = "Internal Server Error !"
           console.log(e)
+      } finally {
+        this.isLiking = false
       }
     },
     async saveAVideo(video_id) {
+      if(this.isSaving) return
       try {
+        
+        this.isSaving = true
           const data = await saveVideo(video_id)
           console.log('Data received from method! sage', data)
           if(data.saved) {
@@ -113,6 +123,8 @@ export default {
       } catch(e) {
           this.error = "Internal Server Error !"
           console.log(e)
+      } finally {
+        this.isSaving = false 
       }
     },
     async deleteAVideo(video_id) {
