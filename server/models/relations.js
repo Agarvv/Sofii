@@ -24,7 +24,7 @@ const VideoCommentDislikes = require('./VideoCommentDislikes')
 const VideoCommentAwnsersLikes = require('./VideoCommentAwnsersLikes')
 const VideoCommentAwnsersDislikes = require('./VideoCommentAwnsersDislikes')
  const Blocked = require('./Blocked')
-// const PasswordResetToken = require('./PasswordResetToken')
+
 
 
 User.hasMany(Post, { 
