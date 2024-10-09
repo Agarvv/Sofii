@@ -5,12 +5,10 @@ const FriendRequest = require('../models/FriendRequest')
 const Comment = require('../models/Comment')
 const Likes = require('../models/Likes')
 const Follower = require('../models/Followers')
-const { Op } = require('sequelize');
 const Saved = require('../models/Saved')
 const Friends = require('../models/Friends')
 const Blocked = require('../models/Blocked')
-
-
+const { Sequelize, Op } = require('sequelize');
 
 const handleProfileDataChange = async (field, value, token) => {
     try {
@@ -42,6 +40,8 @@ const handleProfileDataChange = async (field, value, token) => {
     }
 }
 
+
+
 const findUserById = async (user_id) => {
     try {
         const databaseUser = await User.findOne({
@@ -51,22 +51,10 @@ const findUserById = async (user_id) => {
                     model: Post,
                     as: 'posts',
                     include: [
-                        {
-                            model: User,
-                            as: 'user'
-                        },
-                        {
-                            model: Comment,
-                            as: 'postComments'
-                        },
-                        {
-                            model: Likes,
-                            as: 'postLikes'
-                        },
-                        {
-                            model: Saved,
-                            as: 'saved_post'
-                        }
+                        { model: User, as: 'user' },
+                        { model: Comment, as: 'postComments' },
+                        { model: Likes, as: 'postLikes' },
+                        { model: Saved, as: 'saved_post' }
                     ]
                 },
                 {
@@ -79,33 +67,27 @@ const findUserById = async (user_id) => {
                 },
                 {
                     model: User,
-                    as: 'followers'  // Cambiamos aquí el alias a 'followers'
+                    as: 'followers'
                 },
                 {
                     model: User,
-                    as: 'following'  // Y aquí a 'following'
+                    as: 'following'
                 },
                 {
-                    model: Friends,  // Aquí debe ser Friends, no User
-                    as: 'friends',
-                    where: {
-                        [Op.or]: [  // Asegúrate de que los corchetes y dos puntos estén en su lugar
-                            { friend_one_id: user_id },
-                            { friend_two_id: user_id }
-                        ]
-                    },
-                    include: [  // Asegúrate de incluir la información de los amigos
-                        {
-                            model: User,
-                            as: 'friendOne', // Aquí puedes poner los alias que quieras
-                            attributes: ['id', 'name'] // Atributos que quieras de friendOne
-                        },
-                        {
-                            model: User,
-                            as: 'friendTwo',
-                            attributes: ['id', 'name'] // Atributos que quieras de friendTwo
-                        }
-                    ]
+                    model: User,
+                    as: 'friends', // Cambia esto a 'friends'
+                    through: {
+                        model: Friends,
+                        attributes: [] // Sin atributos adicionales
+                    }
+                },
+                {
+                    model: User,
+                    as: 'friendsOf', // Agregar esta línea para incluir amigos en la otra dirección
+                    through: {
+                        model: Friends,
+                        attributes: []
+                    }
                 },
                 {
                     model: Blocked,
@@ -125,6 +107,7 @@ const findUserById = async (user_id) => {
         throw new Error(e);
     }
 };
+
 
 const blockUser = async (target, user) => {
     try {

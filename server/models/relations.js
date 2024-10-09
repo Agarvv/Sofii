@@ -162,34 +162,16 @@ User.belongsToMany(User, {
   otherKey: 'friend_two_id'     
 });
 
-
-
-
-
-// Relación de amistad
-// Relación de amistad (Asegúrate de que el alias coincida)
-// Un Usuario puede tener muchas relaciones de amistad como user_one
-User.hasMany(Friends, { 
-  foreignKey: 'friend_one_id', 
-  as: 'friendOne'
+User.belongsToMany(User, {
+    through: Friends,
+    as: 'friendsOf',  // Alias para los amigos en la otra dirección
+    foreignKey: 'friend_two_id',
+    otherKey: 'friend_one_id'
 });
 
-// Un Usuario puede tener muchas relaciones de amistad como user_two
-User.hasMany(Friends, { 
-  foreignKey: 'friend_two_id', 
-  as: 'friendTwo'
-});
 
-// Configura las asociaciones inversas en Friends
-Friends.belongsTo(User, { 
-  foreignKey: 'friend_one_id', 
-  as: 'friendOne'
-});
 
-Friends.belongsTo(User, { 
-  foreignKey: 'friend_two_id', 
-  as: 'friendTwo'
-});
+
 
 FriendRequest.belongsTo(User, {
   as: 'sender',
