@@ -72,7 +72,6 @@ const findUserById = async (user_id) => {
                 {
                     model: FriendRequest,
                     as: 'sentRequests'
-                 
                 },
                 {
                     model: FriendRequest,
@@ -87,9 +86,26 @@ const findUserById = async (user_id) => {
                     as: 'following'  // Y aquí a 'following'
                 },
                 {
-                    model: User,
-                    through: Friends,
-                    as: 'friends'
+                    model: Friends,  // Aquí debe ser Friends, no User
+                    as: 'friends',
+                    where: {
+                        [Op.or]: [  // Asegúrate de que los corchetes y dos puntos estén en su lugar
+                            { friend_one_id: user_id },
+                            { friend_two_id: user_id }
+                        ]
+                    },
+                    include: [  // Asegúrate de incluir la información de los amigos
+                        {
+                            model: User,
+                            as: 'friendOne', // Aquí puedes poner los alias que quieras
+                            attributes: ['id', 'name'] // Atributos que quieras de friendOne
+                        },
+                        {
+                            model: User,
+                            as: 'friendTwo',
+                            attributes: ['id', 'name'] // Atributos que quieras de friendTwo
+                        }
+                    ]
                 },
                 {
                     model: Blocked,
