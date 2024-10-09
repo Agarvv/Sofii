@@ -59,11 +59,11 @@ export async function getUser(user_id, currentUser) {
         
      
     data.user.isFriend = data.user.friends.some(friend =>
-      friend.friend_one_id === currentUser.user_id || 
-      friend.friend_two_id === currentUser.user_id
+      friend.Friends.friend_one_id === currentUser.user_id || 
+      friend.Friends.friend_two_id === currentUser.user_id
     ) || data.user.friendsOf.some(friendOf =>
-      friendOf.friend_one_id === currentUser.user_id || 
-      friendOf.friend_two_id === currentUser.user_id
+      friendOf.Friends.friend_one_id === currentUser.user_id || 
+      friendOf.Friends.friend_two_id === currentUser.user_id
     );
 
 
