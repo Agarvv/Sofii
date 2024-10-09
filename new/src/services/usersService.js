@@ -44,7 +44,13 @@ export async function getUser(user_id, currentUser) {
   console.log('data from the server', data)
   console.log('all data', currentUser)
   if(response.ok) {
-
+   
+   data.user.posts.forEach((post) => {
+       post.isLiked == post.postLikes.some(like => like.user_id == currentUser.user_id)
+       post.isSaved = post.saved_post.some(saved => saved.user_id == currentUser.user_id)
+   })
+   
+   
    data.user.isPendingFriendRequestSent = data.user.sentRequests.some(
     req => req.request_sender_id == currentUser.user_id ||
     req. friend_target == currentUser.user_id

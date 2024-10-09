@@ -1,7 +1,7 @@
 <template>
   <div  @click="goToNTarget(notification.type_id)" class="notification-card">
     <div class="profile">
-        <img :src="'http://localhost:3000/' + notification.targetUser.profilePicture" class="profile-pic">
+        <img :src="notification.targetUser.profilePicture || '/images/default.jpeg'" class="profile-pic">
     </div>
     <div class="notification-content">
         <h4 class="username">{{notification.targetUser.username}}</h4>

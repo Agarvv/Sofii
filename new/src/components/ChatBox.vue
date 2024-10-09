@@ -386,11 +386,8 @@ export default {
 
         const originalMessage = this.messages.find(msg => msg.id === message.id);
         if (originalMessage) {
-          alert('message found');
           originalMessage.readed = true;
-        } else {
-          alert('message not found');
-        }
+        } 
       });
   }
 };
