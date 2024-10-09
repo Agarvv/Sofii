@@ -77,16 +77,15 @@ const findUserById = async (user_id) => {
                     model: User,
                     as: 'friends', // Cambia esto a 'friends'
                     through: {
-                        model: Friends,
-                        attributes: [] // Sin atributos adicionales
+                        model: Friends
                     }
                 },
                 {
                     model: User,
                     as: 'friendsOf', // Agregar esta línea para incluir amigos en la otra dirección
                     through: {
-                        model: Friends,
-                        attributes: []
+                        model: Friends
+                    
                     }
                 },
                 {
