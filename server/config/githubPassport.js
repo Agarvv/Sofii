@@ -4,7 +4,7 @@ const passport = require('passport')
 passport.use(new GitHubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret:  process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: 'https://sofii-1.onrender.com/auth/github/callback',
+    callbackURL: 'https://sofii.onrender.com/auth/github/callback',
     scope: ['user:email']  
   },
   (accessToken, refreshToken, profile, done) => {
