@@ -309,7 +309,7 @@ header {
     height: 100vh;
     overflow: auto; 
     display: block;
-    border: 2px solid red;
+
 }
 
 

@@ -271,7 +271,7 @@ html, body {
     height: 100vh;
     overflow: auto; 
     display: block;
-    border: 2px solid red;
+    
 }
 
 @media(max-width: 600px) {

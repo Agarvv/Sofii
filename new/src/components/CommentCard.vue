@@ -56,7 +56,7 @@
 
 
               
-              <div class="view-responses-button" @click="toggleResponses(index)">
+              <div v-if="comment.awnsers.length > 0" class="view-responses-button" @click="toggleResponses(index)">
                 <p>{{ comment.showResponses ? 'Hide Responses' : 'See Responses' }}</p>
                 <font-awesome-icon :icon="comment.showResponses ? 'chevron-up' : 'chevron-down'"/>
               </div>

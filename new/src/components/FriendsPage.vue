@@ -82,7 +82,7 @@
         
         <div class="friend-details">
           
-          <div @click="goToUserPage(request.sender.id)" class="friend-img">
+          <div @click="goToPage('/user/' + request.sender.id)" class="friend-img">
             <img style="width: 80px; border-radius: 50%" 
             :src="request.sender.profilePicture || '/images/default.jpeg' ">
           </div>
@@ -120,7 +120,7 @@
            color: gray" v-if="selectedOption === 'friends' && friends.length === 0">You Do Not Have Friends Yet</h4>
 
       
-      <div  v-for="friend in friends" :key="friend.friendToDisplayInfo.id"class="friend" @click="goToUserPage(friend.friendToDisplayInfo.id)">
+      <div  v-for="friend in friends" :key="friend.friendToDisplayInfo.id"class="friend" @click="goToPage('/user/' + friend.friendToDisplayInfo.id)">
           
           
         
@@ -141,7 +141,7 @@
           
         </div> 
         
-        <div class="friend-chat">
+        <div @click="goToPage('/chat/' + friend.friendToDisplayInfo.id)" class="friend-chat">
            <font-awesome-icon icon="message"/>
          
         </div>
@@ -216,8 +216,8 @@ async declineRequest(request_id) {
     }
 },
 
-goToUserPage(user_id) {
-    this.$router.push('/user/' + user_id)
+goToPage(route) {
+    this.$router.push(route)
 },
 toggleSelectedOption(option) {
     if(this.friends.length == 0 && this.friend_requests.length == 0) {

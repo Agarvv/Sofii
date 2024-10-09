@@ -16,7 +16,7 @@
         <font-awesome-icon icon="fas fa-close" />
       </div>
     </div>
-    <div class="video-content">
+    <div  @click="goToPage('/watch/' + video.id)" class="video-content">
       <div class="video-description">
         <p>{{ video.video_description }}</p>
       </div>

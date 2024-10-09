@@ -28,13 +28,11 @@ export default {
            comment: ""
         }
     },
-    computed: {
-        ...mapGetters(['user'])
-    },
     props: {
         // VIDEO OR POST
       type: String,
-      id: Number
+      id: Number,
+      user: {}
     },
     methods: {
       async postAComment() {

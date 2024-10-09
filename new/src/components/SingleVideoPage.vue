@@ -4,7 +4,7 @@
   <LoadingComponent v-if="loading"/>
   <ErrorComponent v-if="error" :error="error"/> 
  <VideoCard :video="video"/>
-    <UploadComment type="VIDEO" :id="$route.params.video_id"/> 
+    <UploadComment type="VIDEO" :id="$route.params.video_id" :user="user"/> 
      <div class="comments">
           <div class="comment-section">
             <div v-for="(comment, index) in video.video_comments" class="comment">

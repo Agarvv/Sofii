@@ -474,7 +474,7 @@ aside .aside-logo i {
 }
 
 .rs-aside {
-    position: absolute; /* Cambiar de fixed a absolute para evitar superposiciones */
+    position: fixed; 
     top: 0;
     left: 0;
     width: 250px; 

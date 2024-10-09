@@ -75,7 +75,6 @@ export default {
   },
   methods: {
     goToPage(page) {
-        alert('Method called', page)
       this.$router.push(`/${page}`);
     }
   }

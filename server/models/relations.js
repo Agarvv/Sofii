@@ -170,6 +170,27 @@ User.belongsToMany(User, {
 });
 
 
+User.hasMany(Friends, { 
+  foreignKey: 'friend_one_id', 
+  as: 'friendOne'
+});
+
+// Un Usuario puede tener muchas relaciones de amistad como user_two
+User.hasMany(Friends, { 
+  foreignKey: 'friend_two_id', 
+  as: 'friendTwo'
+});
+
+// Configura las asociaciones inversas en Friends
+Friends.belongsTo(User, { 
+  foreignKey: 'friend_one_id', 
+  as: 'friendOne'
+});
+
+Friends.belongsTo(User, { 
+  foreignKey: 'friend_two_id', 
+  as: 'friendTwo'
+});
 
 
 

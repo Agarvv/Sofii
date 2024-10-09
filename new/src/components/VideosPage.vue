@@ -103,7 +103,7 @@ export default {
     height: 100vh;
     overflow: auto; 
     display: block;
-    border: 2px solid red;
+    
 }
 
 .zero {
@@ -112,6 +112,7 @@ export default {
     align-items: center;
     justify-content: center;
     padding: 15px;
+    border: 1px solid black;
 }
 
 @media(max-width: 600px) {

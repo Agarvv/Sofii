@@ -4,7 +4,7 @@
     <div> 
       <div class="post-ctn">
           <PostCard :post="post"/>
-          <UploadComment :id="$route.params.id" type="POST"/>
+          <UploadComment :id="$route.params.id" type="POST" :user="user"/>
         <div class="comments">
           <div class="comment-section">
             <div v-for="(comment, index) in post.postComments" :key="comment.id" class="comment">
@@ -131,7 +131,7 @@ this.$socket.on('newComment', newComment => {
 })
 
 this.$socket.on('newCommentAwnser', newAwnser => {
-    alert('new awnser')
+    
     console.log('commemta wnser received: ', newAwnser)
     const commentTarget = this.commentsById[newAwnser.comment_id]
     if(commentTarget) {
