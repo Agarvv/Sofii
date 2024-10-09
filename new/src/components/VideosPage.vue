@@ -1,4 +1,5 @@
 <template>
+<div> 
     
     <HeaderComponent :activePage="'watch'" :user="usuario" @showAside="toggleAside"/>
     
@@ -15,7 +16,9 @@
         <div class="videos-wrapper"> 
             <div v-for="video in videos" :key="video.id" class="videos">
             
-                <VideoCard :video="video" /> 
+                <VideoCard :video="video" 
+                 @delete="handleVideoRemoval"
+                /> 
             </div>
     
             <div v-if="videos.length > 1" class="end-videos">
@@ -25,6 +28,7 @@
         </div>
     
     </div>
+</div>
 </template>
 
 <script>
@@ -62,6 +66,9 @@ export default {
             console.log('error?', e)
             this.error = "Internal Server Error";
         }
+      },
+      handleVideoRemoval(v_id) {
+         this.videos = this.videos.filter(v => v.id!== v_id);
       },
       toggleAside() {
         this.showAside = !this.showAside;

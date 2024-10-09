@@ -47,7 +47,9 @@
       <main>
         <div v-if="posts.length > 0" class="posts">
           <div v-for="post in posts" :key="post.id" class="post">
-            <PostCard :post="post"/> 
+            <PostCard :post="post"
+            @delete="handlePostRemoval"
+            /> 
           </div>
         </div>
         <div class="no-content" v-if="posts.length == 0 && !loading">
@@ -136,6 +138,10 @@ export default {
       } finally {
           this.loading = false
       }
+    },
+
+    handlePostRemoval(p_id) {
+     this.posts = this.posts.filter(post => post.id !== p_id);
     },
 
     goToPage(route) {

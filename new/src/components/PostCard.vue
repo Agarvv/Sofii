@@ -110,12 +110,17 @@ export default {
        },
        
         async deleteAPost(post_id) {
-            try {
+            const wants = confirm('Are you sure you want to delete this post?')
+            if(wants) {
+              try {
                 const data = await deletePost(post_id)
                 console.log('Data from deleting post: ', data)
-                alert('Your post will be deleted in less than 5 minutes.')
+                this.$emit('delete', this.post.id)
             } catch(e) {
                 this.error = "Internal Server Error"
+            }
+            } else {
+              return
             }
         },
         goToPage(route) {

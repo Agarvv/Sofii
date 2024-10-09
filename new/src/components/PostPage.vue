@@ -3,7 +3,9 @@
     
     <div> 
       <div class="post-ctn">
-          <PostCard :post="post"/>
+          <PostCard :post="post"
+           @delete="handlePostRemoval"
+          />
           <UploadComment :id="$route.params.id" type="POST" :user="user"/>
         <div class="comments">
           <div class="comment-section">
@@ -105,6 +107,10 @@ export default {
                this.isSaved = false
            }
        },
+
+       handlePostRemoval(post_id) {
+         this.$router.push('/')
+       }
   },
 
   async created() {

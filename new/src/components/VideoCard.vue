@@ -116,14 +116,19 @@ export default {
       }
     },
     async deleteAVideo(video_id) {
-        try {
-          const data = await deleteVideo(video_id)
-          console.log('Data received from method!', data)
-          alert('Your Video Will Be Deleted In less Than 5 Minutes.')
+       const wants = confirm('Are you sure you want to delete this video?')
+       if(wants) {
+           try {
+              const data = await deleteVideo(video_id)
+              console.log('Data received from method!', data)
+              this.$emit('delete', this.video.id)
       } catch(e) {
-          this.error = "Internal Server Error !"
-          console.log(e)
-      }
+              this.error = "Internal Server Error !"
+             console.log(e)
+        }
+       } else {
+        return
+       }
     },
     goToPage(route) {
         this.$router.push(route)

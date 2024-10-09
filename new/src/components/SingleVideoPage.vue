@@ -3,7 +3,9 @@
   <div class="container"> 
   <LoadingComponent v-if="loading"/>
   <ErrorComponent v-if="error" :error="error"/> 
- <VideoCard :video="video"/>
+ <VideoCard :video="video"
+ @delete="handleVideoRemoval"
+ />
     <UploadComment type="VIDEO" :id="$route.params.video_id" :user="user"/> 
      <div class="comments">
           <div class="comment-section">
@@ -74,8 +76,10 @@ import { getVideo } from '../services/videoService'
                 } finally {
                     this.loading = false
                 }
+            },
+            handleVideoRemoval(v_id) {
+                this.$router.push('/watch')
             }
-            
         },
         async created() {
             console.log("Route param", this.$route.params.video_id)
