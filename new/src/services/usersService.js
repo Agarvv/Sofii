@@ -46,7 +46,7 @@ export async function getUser(user_id, currentUser) {
   if(response.ok) {
    
    data.user.posts.forEach((post) => {
-       post.isLiked == post.postLikes.some(like => like.user_id == currentUser.user_id)
+       post.isLiked = post.postLikes.some(like => like.user_id == currentUser.user_id)
        post.isSaved = post.saved_post.some(saved => saved.user_id == currentUser.user_id)
    })
    
