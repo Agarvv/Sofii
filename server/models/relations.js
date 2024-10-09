@@ -156,10 +156,10 @@ User.belongsToMany(User, {
 });
 
 User.belongsToMany(User, {
-  through: Friends, // Usamos el nombre del modelo, que es "Follower"
-  as: 'friends',  // Alias para los que siguen al usuario
-  foreignKey: 'friend_one_id', 
-  otherKey: 'friend_two_id'
+  through: Friends,
+  as: 'friends',
+  foreignKey: 'friend_one_id',  
+  otherKey: 'friend_two_id'     
 });
 
 
