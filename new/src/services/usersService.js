@@ -63,7 +63,7 @@ export async function getUser(user_id, currentUser) {
       friend.Friends.friend_two_id === currentUser.user_id
     ) || data.user.friendsOf.some(friendOf =>
       friendOf.Friends.friend_one_id === currentUser.user_id || 
-      friendOf.Friends.friend_two_id === currentUser.user_id
+      friendOf.friend_two_id === currentUser.user_id
     );
 
 
