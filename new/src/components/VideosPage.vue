@@ -68,7 +68,7 @@ export default {
         }
       },
       handleVideoRemoval(v_id) {
-         this.videos = this.videos.filter(v => v.id!== v_id);
+         this.videos = this.videos.filter(v => v.id !== v_id);
       },
       toggleAside() {
         this.showAside = !this.showAside;

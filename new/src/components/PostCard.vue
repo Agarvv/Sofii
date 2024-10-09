@@ -68,6 +68,8 @@ export default {
             apiUrl: apiUrl,
             isLiked: this.post.isLiked,
             isSaved: this.post.isSaved,
+            isLiking: false,
+            isSaving: false,
             // isOwn: false
         }
     },
@@ -80,7 +82,9 @@ export default {
         
     
         async likeAPost(post_id) {
+           if(this.isLiking) return
             try {
+              this.isLiking = true
                 const data = await likePost(post_id)
                 console.log('Like Post Method: ', data)
                 
@@ -96,16 +100,28 @@ export default {
             } catch(e) {
                 alert(e)
                 this.error = "Oops, Something Went Wrong!"
+            } finally {
+              this.isLiking = false
             }
         },
        
        async saveAPost(post_id) {
-           const data = await savePost(post_id)
+        if(this.isSaving) return
+           try {
+            this.isSaving = true
+            const data = await savePost(post_id)
            
            if(data.saved) {
                this.isSaved = true
            } else {
                this.isSaved = false
+           }
+
+           } catch(e) {
+            console.error(e)
+
+           } finally {
+            this.isSaving = false
            }
        },
        

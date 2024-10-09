@@ -346,13 +346,17 @@
         <div class="posts" v-if="filteredContent.posts.length > 0 && content_to_show == 'posts' || content_to_show == 'all' ">
           <h4 v-if="content.posts.length > 0">Posts</h4>
           <div v-for="post in filteredContent.posts" :key="post.id" class="post">
-            <PostCard :post="post"/>
+            <PostCard :post="post"
+             @delete="handlePostRemoval"
+            />
           </div>
         </div>
 <!-- v-if="filteredContent.videos.length > 0 && content_to_show == 'videos' || content_to_show == 'all'" -->
         <div class="videos">
           <div v-for="video in filteredContent.videos" :key="video.id" class="video">
-            <VideoCard :video="video" />
+            <VideoCard  :video="video" 
+              @delete="handleVideoRemoval"
+             />
           </div>
         </div>
 
@@ -478,6 +482,14 @@ export default {
         }, 
         goToPostPage(post_id) {
             this.$router.push('/post/' + post_id);
+        },
+
+        handleVideoRemoval(v_id) {
+          this.filteredContent.videos = this.filteredContent.videos.filter(video => video.id !== v_id);
+        },
+
+        handlePostRemoval(p_id) {
+          this.filteredContent.posts = this.filteredContent.posts.filter(post => post.id !== p_id);
         },
       
       applyFilters() {

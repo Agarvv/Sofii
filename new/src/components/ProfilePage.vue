@@ -200,7 +200,9 @@
              <div v-if="user.posts.length > 0" class="posts">
                 
           <div  v-for="post in user.posts" :key="post.id" class="post" >
-              <PostCard :post="post"/>
+              <PostCard :post="post"
+                @delete="handlePostRemoval"
+              />
           </div>
         </div> 
       </main>
@@ -262,6 +264,9 @@ export default {
     ...mapActions(['fetchUser']),
     toggleBlock() {
         this.showBlock = !this.showBlock
+    },
+    handlePostRemoval(p_id) {
+      this.user.posts = this.user.posts.filter(post => post.id !== p_id)
     },
     async getUser() {
       try {
