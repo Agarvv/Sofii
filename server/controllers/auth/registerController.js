@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs');
-const registerService = require('../services/registerService.js');
+const registerService = require('../../services/auth/registerService');
 const User = require('../models/User');
 const CustomError = require('@outils/CustomError');
 

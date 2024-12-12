@@ -14,7 +14,7 @@ const ChatController = require('./controllers/ChatController')
 const socketIo = require('socket.io');
 const cookie = require('cookie');
 const Tests = require('./models/Tests')
-const  CommentAnswer  = require('./models/CommentAwnser'); // Importa el
+const  CommentAnswer  = require('./models/CommentAwnser'); 
 const setUserActiveOrInactive = require('./outils/setUserActiveOrInactive')
 const tokenController = require('./controllers/tokenController')
 const websocket = require('./websocket')
@@ -41,6 +41,15 @@ app.use(errorHandler)
 
 const server = http.createServer(app);
 
+moduleAlias.addAliases({
+    '@controllers': path.resolve(__dirname, './controllers'),
+    '@models': path.resolve(__dirname, './models'),
+    '@routes': path.resolve(__dirname, './routes'),
+    '@middlewares': path.resolve(__dirname, './middlewares'),
+    '@services': path.resolve(__dirname, './services'),
+    '@outils': path.resolve(__dirname, './outils')
+  });
+
 websocket.init(server)
 
 app.use('/media', express.static(path.join(__dirname, 'media')));
@@ -58,15 +67,7 @@ app.use(cookieParser());
 app.use(passport.initialize());
 setupRoutes(app);
 
-moduleAlias.addAliases({
-  '@controllers': path.resolve(__dirname, './controllers'),
-  '@models': path.resolve(__dirname, './models'),
-  '@routes': path.resolve(__dirname, './routes'),
-  '@middlewares': path.resolve(__dirname, './middlewares'),
-  '@services': path.resolve(__dirname, './services'),
-  '@outils': path.resolve(__dirname, './outils')
-});
-
+console.log('path',path.resolve(__dirname, './controllers'))
 
   sequelize.authenticate().then(() => {
    console.log('DATABASE OK');
