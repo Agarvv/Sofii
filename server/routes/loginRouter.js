@@ -10,28 +10,10 @@ router.post('/login', [
     body("email").escape().trim().isEmail(),
     body("password").escape().trim()
 ], async (req, res) => {
-    const { email, password, rememberMe } = req.body;
-    
-    console.log('Login req.body', req.body)
-
-    if(!email) {
-        return res.status(400).json({ 
-            error: "Please Enter Email."
-        })
-    }
-    
-    if(!password) {
-        return res.status(400).json({
-            error: "Please Enter Password."
-        })
-    }
-
-
+    const { email, password } = req.body;
     try {
         const token = await loginController.handleLogin(email, password);
         
-        
-         if(rememberMe == true) {
             res.cookie('jwt', token, {
                 maxAge: 365 * 24 * 60 * 60 * 1000, 
                 secure: true, 
@@ -39,18 +21,7 @@ router.post('/login', [
                 sameSite: 'None',
                // domain: '.sofii.vercel.app', 
                //  path: '/', 
-            });
-            
-         } else if(rememberMe == false) {
-             res.cookie('jwt', token, {
-                secure: true,
-                httpOnly: true,
-                sameSite: 'None',
-                //domain: '.sofii.vercel.app', 
-                //path: '/', 
-             })
-         }
-         
+        
         return res.status(200).json({ welcome: 'Welcome Back To Sofii, Have a Good Session.' });
     } catch (e) {
         console.log(e.message)
