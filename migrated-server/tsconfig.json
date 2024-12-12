@@ -8,5 +8,11 @@
     "skipLibCheck": true,
     "outDir": "./dist"
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "paths": {
+    "@controllers/*": ["controllers/*"],
+    "@routes/*": ["routes/*"],
+    "@models/*": ["models/*"],
+    "@services/*": ["services/*"]
+  }
 }
