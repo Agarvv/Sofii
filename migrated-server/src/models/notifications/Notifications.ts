@@ -1,6 +1,7 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '@config/database';
 
+
 interface NotificationsAttributes {
   id?: number;
   user_id: number;
