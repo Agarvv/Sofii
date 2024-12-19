@@ -1,5 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
-import sequelize from '../config/database';
+import sequelize from '@config/database';
 
 interface CommentAwnsersLikesAttributes {
   awnser_id: number;
