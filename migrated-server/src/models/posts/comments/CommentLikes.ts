@@ -1,5 +1,5 @@
-const sequelize = require('@config/database');
-const { DataTypes } = require('sequelize');
+import { Sequelize, DataTypes } from 'sequelize';
+import sequelize from '../../../config/database';
 
 const CommentLikes = sequelize.define('CommentLikes', {
     comment_id: {
@@ -14,6 +14,6 @@ const CommentLikes = sequelize.define('CommentLikes', {
         type: DataTypes.INTEGER,
         allowNull: false
     }
-})
+});
 
-module.exports = CommentLikes
+export default CommentLikes;

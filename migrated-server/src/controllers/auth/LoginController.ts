@@ -1,7 +1,7 @@
-import { User } from '@models/users/User';  
-import findByEmail from '@outils/findByEmail'; 
-import * as loginService from '@services/auth/loginService';
-import { PasswordResetToken } from '@models/users/PasswordResetToken';
+import User from '../../models/users/User';  
+import findByEmail from '../../outils/findByEmail'; 
+import * as loginService from '../../services/auth/LoginService';
+import PasswordResetToken from '../../models/users/PasswordResetToken';
 import { Op } from 'sequelize';
 import * as tokenController from './TokenController';
 import bcrypt from 'bcryptjs';
@@ -11,7 +11,7 @@ interface IUser {
     email: string;
     password?: string;
 }
-
+ 
 const handleLogin = async (email: string, password: string): Promise<string> => {
     
     const user = await findByEmail(email);
@@ -25,15 +25,15 @@ const handleLogin = async (email: string, password: string): Promise<string> => 
 const loginBySocialMedia = async (socialMediaUser: IUser): Promise<string> => {
     const user = await findByEmail(socialMediaUser.email);
     
-    let jwtToken: string;
+   // let jwtToken: string;
 
-    if (user) {
-        jwtToken = await loginService.makeLogin(user, socialMediaUser.password || '');
-    } else {
-        jwtToken = await createNewUserBySocialMedia(socialMediaUser);
-    }
+   // if (user) {
+    //    jwtToken = await loginService.makeLogin(user, socialMediaUser.password || '');
+   // } else {
+   //     jwtToken = await createNewUserBySocialMedia(socialMediaUser);
+  //  }
 
-    return jwtToken;
+  //  return jwtToken;
 };
 
 

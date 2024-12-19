@@ -8,6 +8,6 @@ const app = (0, express_1.default)();
 app.get('/', (req, res) => {
     res.send('Sofii API Migration to TypeScript is OK!');
 });
-app.listen(3000, () => {
+app.listen(process.env.PORT || 3000, () => {
     console.log('Sofii API started on port 3000');
 });
