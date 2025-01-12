@@ -19,6 +19,7 @@ const setUserActiveOrInactive = require('./outils/setUserActiveOrInactive')
 const tokenController = require('./controllers/tokenController')
 const websocket = require('./websocket')
 const errorHandler = require('./middleware/errorHandler')
+const authenticate = require('./middleware/authentication')
 const moduleAlias = require('module-alias');
 
 require('./config/googlePassport'); 
@@ -37,6 +38,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(errorHandler)
+app.use(authenticate)
 
 
 const server = http.createServer(app);

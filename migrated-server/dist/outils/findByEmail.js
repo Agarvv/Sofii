@@ -8,13 +8,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const User_1 = require("@models/users/User");
-const CustomError_1 = require("./CustomError");
+const User_1 = __importDefault(require("../models/users/User"));
 const findByEmail = (email) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = yield User_1.User.findOne({ where: { email } });
+    const user = yield User_1.default.findOne({ where: { email } });
     if (!user) {
-        throw new CustomError_1.CustomError('User not found with that email.', 404);
+        throw new Error("user not found");
     }
     return user;
 });

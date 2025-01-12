@@ -38,8 +38,7 @@ Likes.init(
     },
   },
   {
-    sequelize: '@config/database',
-    modelName: 'Likes',
+    sequelize,  
     tableName: 'likes',
   }
 );

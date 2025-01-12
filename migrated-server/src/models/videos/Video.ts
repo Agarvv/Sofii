@@ -1,7 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
-import sequelize from '@config/database';
 import sequelize from '../../config/database';
-
+import User from '../users/User'
 
 interface VideoAttributes {
   id?: number;

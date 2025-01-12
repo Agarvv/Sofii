@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 const registerService = require('../../services/auth/registerService');
-const User = require('../models/User');
-const CustomError = require('@outils/CustomError');
+const User = require('../../models/User');
+const CustomError = require('../../outils/CustomError');
 
 const createUser = async (name, email, password) => {
     await validateUniqueField('username', name, 'Username already taken');

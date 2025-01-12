@@ -1,7 +1,7 @@
 const express = require('express');
 const { body } = require('express-validator');
-const loginController = require('@controllers/auth/loginController');
-const tokenController = require('@controllers/auth/tokenController');
+const loginController = require('../controllers/auth/loginController');
+const tokenController = require('../controllers/auth/tokenController');
 
 // router
 const router = express.Router();
@@ -13,19 +13,20 @@ router.post('/login', [
     const { email, password } = req.body;
     try {
         const token = await loginController.handleLogin(email, password);
-        
-            res.cookie('jwt', token, {
-                maxAge: 365 * 24 * 60 * 60 * 1000, 
-                secure: true, 
-                httpOnly: true,
-                sameSite: 'None',
-               // domain: '.sofii.vercel.app', 
-               //  path: '/', 
-        
+
+        res.cookie('jwt', token, {
+            maxAge: 365 * 24 * 60 * 60 * 1000,
+            secure: true,
+            httpOnly: true,
+            sameSite: 'None',
+            // domain: '.sofii.vercel.app', 
+            // path: '/', 
+        });
+
         return res.status(200).json({ welcome: 'Welcome Back To Sofii, Have a Good Session.' });
     } catch (e) {
-        console.log(e.message)
-        return res.status(500).json({error: e.message})
+        console.log(e.message);
+        return res.status(500).json({ error: e.message });
     }
 });
 

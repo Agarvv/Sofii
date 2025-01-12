@@ -1,11 +1,11 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const PasswordResetToken = require('../models/PasswordResetToken')
-const transporter = require('../index')
-const User = require('../models/User')
+const PasswordResetToken = require('../../models/PasswordResetToken')
+const transporter = require('../../index')
+const User = require('../../models/User')
 const crypto = require('crypto')
-const { sendEmail } = require('../config/mailer')
-const CustomError = require('@outils/CustomError')
+const { sendEmail } = require('../../config/mailer')
+const CustomError = require('../../outils/CustomError')
 
 const makeLogin = async (user, userPassword) => {
       await passwordMatch(userPassword, user.password)

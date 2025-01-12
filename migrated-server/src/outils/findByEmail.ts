@@ -1,13 +1,14 @@
-import { User } from '@models/users/User'
-import { CustomError } from './CustomError'
+import  User from '../models/users/User'
+
 
 const findByEmail = async (email: string): Promise<User> => {  
     const user = await User.findOne({ where: { email } });
-    if (!user) {
-        throw new CustomError('User not found with that email.', 404);
+    
+    if(!user) {
+        throw new Error("user not found");
     }
-
-    return user;
+    
+    return user 
 };
 
 export default findByEmail; 

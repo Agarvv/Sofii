@@ -4,7 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
-const database_1 = __importDefault(require("@config/database"));
+const database_1 = __importDefault(require("../../config/database"));
+const User_1 = __importDefault(require("../users/User"));
 const Video = database_1.default.define('Video', {
     id: {
         type: sequelize_1.DataTypes.INTEGER,
@@ -15,7 +16,7 @@ const Video = database_1.default.define('Video', {
         type: sequelize_1.DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: User,
+            model: User_1.default,
             key: 'id'
         }
     },
