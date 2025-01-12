@@ -1,13 +1,21 @@
-import express from 'express';
-import { Request, Response } from 'express'
-import * as dotenv from 'dotenv'
+import express, { Request, Response } from 'express';
+import * as dotenv from 'dotenv';
+import router from './routes';
+
+dotenv.config(); 
 
 const app = express();
 
+app.use(express.json());
+app.use(router);
+
 app.get('/', (req: Request, res: Response) => {
-    res.send('Sofii API Migration to TypeScript is OK!');
+  res.send('Sofii API Migration to TypeScript is OK!');
 });
 
-app.listen(process.env.PORT || 3000, () => {
-    console.log('Sofii API started on port 3000');
-})
+
+const port = process.env.PORT || 3000;
+
+app.listen(port, () => {
+  console.log(`Sofii API started on port ${port}`);
+});
