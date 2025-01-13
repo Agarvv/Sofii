@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const AuthService_1 = __importDefault(require("../../services/auth/AuthService"));
+const AuthService_1 = __importDefault(require("@services/auth/AuthService"));
 class AuthController {
     static registerUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {

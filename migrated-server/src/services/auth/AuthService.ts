@@ -1,11 +1,11 @@
 import bcrypt from 'bcryptjs';
-import User from  'models/users/User'; 
-import PasswordResetToken from 'models/users/PasswordResetToken';
-import userRepository from 'repositories/user/UserRepository';
+import User from  '@models/users/User'; 
+import PasswordResetToken from '@models/users/PasswordResetToken';
+import userRepository from '@repositories/user/UserRepository';
 import { v4 as uuidv4 } from 'uuid';
-import CustomError from 'outils/CustomError';
-import JwtHelper from 'helpers/JwtHelper';
-import MailHelper from 'helpers/MailHelper';
+import CustomError from '@outils/CustomError';
+import JwtHelper from '@helpers/JwtHelper';
+import MailHelper from '@helpers/MailHelper';
 
 class AuthService {
   public static async registerUser(username: string, email: string, password: string): Promise<void> {

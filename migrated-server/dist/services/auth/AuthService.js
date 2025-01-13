@@ -13,13 +13,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
-const User_1 = __importDefault(require("../../models/users/User"));
-const PasswordResetToken_1 = __importDefault(require("../../models/users/PasswordResetToken"));
-const UserRepository_1 = __importDefault(require("../../repositories/user/UserRepository"));
+const User_1 = __importDefault(require("@models/users/User"));
+const PasswordResetToken_1 = __importDefault(require("@models/users/PasswordResetToken"));
+const UserRepository_1 = __importDefault(require("@repositories/user/UserRepository"));
 const uuid_1 = require("uuid");
-const CustomError_1 = __importDefault(require("../../outils/CustomError"));
-const JwtHelper_1 = __importDefault(require("../../helpers/JwtHelper"));
-const MailHelper_1 = __importDefault(require("../../helpers/MailHelper"));
+const CustomError_1 = __importDefault(require("@outils/CustomError"));
+const JwtHelper_1 = __importDefault(require("@helpers/JwtHelper"));
+const MailHelper_1 = __importDefault(require("@helpers/MailHelper"));
 class AuthService {
     static registerUser(username, email, password) {
         return __awaiter(this, void 0, void 0, function* () {
