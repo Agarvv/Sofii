@@ -14,9 +14,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const User_1 = __importDefault(require("../../models/users/User"));
+const PasswordResetToken_1 = __importDefault(require("../../models/users/PasswordResetToken"));
 const UserRepository_1 = __importDefault(require("../../repositories/user/UserRepository"));
+const uuid_1 = require("uuid");
 const CustomError_1 = __importDefault(require("../../outils/CustomError"));
 const JwtHelper_1 = __importDefault(require("../../helpers/JwtHelper"));
+const MailHelper_1 = __importDefault(require("../../helpers/MailHelper"));
 class AuthService {
     static registerUser(username, email, password) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -25,9 +28,9 @@ class AuthService {
             }
             const hashedPassword = yield this.hashPassword(password);
             yield User_1.default.create({
-                username: username,
-                email: email,
-                password: hashedPassword
+                username,
+                email,
+                password: hashedPassword,
             });
         });
     }
@@ -40,6 +43,41 @@ class AuthService {
             yield this.ensurePasswordMatch(password, user.password);
             const jwtPayload = this.generateJwtPayload(user);
             return JwtHelper_1.default.generateToken(jwtPayload);
+        });
+    }
+    static sendResetPassword(email) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (yield UserRepository_1.default.existsByEmail(email)) {
+                const resetToken = this.generateResetToken();
+                const expiresAt = new Date();
+                expiresAt.setHours(expiresAt.getHours() + 1);
+                yield PasswordResetToken_1.default.create({
+                    token: resetToken,
+                    expires_at: expiresAt,
+                    used: false,
+                    user_email: email,
+                });
+                yield this.sendResetEmail(email, resetToken);
+            }
+        });
+    }
+    static resetPassword(email, newPassword, resetToken) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const user = yield UserRepository_1.default.findByEmail(email);
+            if (user) {
+                const dbResetToken = yield PasswordResetToken_1.default.findOne({
+                    where: {
+                        user_email: email,
+                        token: resetToken,
+                    },
+                });
+                if (dbResetToken && !this.isResetTokenExpired(dbResetToken)) {
+                    user.password = yield this.hashPassword(newPassword);
+                    yield user.save();
+                    return;
+                }
+                throw new CustomError_1.default("Your Reset Password Link Has Expired...", 400);
+            }
         });
     }
     static hashPassword(rawPassword) {
@@ -67,8 +105,25 @@ class AuthService {
             gender: user.gender,
             nativeCity: user.native_city,
             ubication: user.ubication,
-            job: user.job
+            job: user.job,
         };
+    }
+    static sendResetEmail(email, resetToken) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const resetUrl = `https://sofii.vercel.app/reset-password/${email}/${resetToken}`;
+            yield MailHelper_1.default.sendMail(email, // Corregido
+            'Reset Your Password At Sofii', `Enter this link to reset your password: ${resetUrl}`);
+        });
+    }
+    static generateResetToken() {
+        const uuid = (0, uuid_1.v4)();
+        let base64Token = Buffer.from(uuid).toString('base64');
+        base64Token = base64Token.replace(/\//g, '_').replace(/\+/g, '-').replace(/\?/g, '');
+        return base64Token;
+    }
+    static isResetTokenExpired(resetToken) {
+        const now = new Date();
+        return resetToken.expires_at <= now;
     }
 }
 exports.default = AuthService;

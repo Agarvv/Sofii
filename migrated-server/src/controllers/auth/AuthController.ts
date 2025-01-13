@@ -17,6 +17,27 @@ class AuthController {
 
     res.status(200).json({ accessToken: jwtToken });
   }
+  
+  public static async sendResetPassword(req: Request, res: Response) {
+      const { email } = req.body; 
+      
+      await AuthService.sendResetPassword(email);
+      
+      res.status(200).json({
+          "message": "¡Check Your Email!"
+      })
+  }
+  
+  public static async resetPassword(req: Request, res: Response) {
+      const { email, password, resetToken } = req.body; 
+      
+      await AuthService.resetPassword(email, password, resetToken); 
+      
+      res.status(200).json({
+          "message": "¡Your Password Is Set!"
+      })
+      
+  }
 }
 
 export default AuthController;

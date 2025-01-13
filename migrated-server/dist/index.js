@@ -64,7 +64,7 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => __awaiter(void 0, void 0, void 0, function* () {
     console.log(`Sofii API started on port ${port}`);
     try {
-        yield database_1.default.sync();
+        yield database_1.default.sync({ force: false });
         console.log("Database Connected Successfully.");
     }
     catch (error) {

@@ -28,5 +28,23 @@ class AuthController {
             res.status(200).json({ accessToken: jwtToken });
         });
     }
+    static sendResetPassword(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { email } = req.body;
+            yield AuthService_1.default.sendResetPassword(email);
+            res.status(200).json({
+                "message": "¡Check Your Email!"
+            });
+        });
+    }
+    static resetPassword(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { email, password, resetToken } = req.body;
+            yield AuthService_1.default.resetPassword(email, password, resetToken);
+            res.status(200).json({
+                "message": "¡Your Password Is Set!"
+            });
+        });
+    }
 }
 exports.default = AuthController;

@@ -21,8 +21,9 @@ PasswordResetToken.init({
         allowNull: false,
         defaultValue: false,
     },
-    user_id: {
-        type: sequelize_1.DataTypes.INTEGER,
+    user_email: {
+        type: sequelize_1.DataTypes.STRING,
+        allowNull: false,
     },
 }, {
     sequelize: database_1.default,

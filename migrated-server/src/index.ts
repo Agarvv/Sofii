@@ -28,8 +28,9 @@ app.listen(port, async () => {
   console.log(`Sofii API started on port ${port}`);
   
   try {
-    await sequelize.sync();  
+    await sequelize.sync({ force: false })
     console.log("Database Connected Successfully.");
+    
   } catch (error) {
     console.error("Error connecting to the database:", error);
   }

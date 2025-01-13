@@ -1,11 +1,13 @@
 import bcrypt from 'bcryptjs';
 import User from '../../models/users/User'; 
+import PasswordResetToken from '../../models/users/PasswordResetToken';
 import userRepository from '../../repositories/user/UserRepository';
+import { v4 as uuidv4 } from 'uuid';
 import CustomError from '../../outils/CustomError';
 import JwtHelper from '../../helpers/JwtHelper';
+import MailHelper from '../../helpers/MailHelper';
 
 class AuthService {
-    
   public static async registerUser(username: string, email: string, password: string): Promise<void> {
     if (await userRepository.existsByEmail(email)) {
       throw new CustomError("That email is already taken.", 409);
@@ -14,9 +16,9 @@ class AuthService {
     const hashedPassword = await this.hashPassword(password);
 
     await User.create({
-      username: username,
-      email: email,
-      password: hashedPassword
+      username,
+      email,
+      password: hashedPassword,
     });
   }
 
@@ -31,6 +33,45 @@ class AuthService {
     const jwtPayload = this.generateJwtPayload(user);
 
     return JwtHelper.generateToken(jwtPayload);
+  }
+
+  public static async sendResetPassword(email: string): Promise<void> {
+    if (await userRepository.existsByEmail(email)) {
+      const resetToken = this.generateResetToken();
+
+      const expiresAt = new Date();
+      expiresAt.setHours(expiresAt.getHours() + 1);
+
+      await PasswordResetToken.create({
+        token: resetToken,
+        expires_at: expiresAt,
+        used: false,
+        user_email: email,
+      });
+
+      await this.sendResetEmail(email, resetToken);
+    }
+  }
+
+  public static async resetPassword(email: string, newPassword: string, resetToken: string): Promise<void> {
+    const user = await userRepository.findByEmail(email);
+
+    if (user) {
+      const dbResetToken = await PasswordResetToken.findOne({
+        where: {
+          user_email: email,
+          token: resetToken, 
+        },
+      });
+
+      if (dbResetToken && !this.isResetTokenExpired(dbResetToken)) {
+        user.password = await this.hashPassword(newPassword);
+        await user.save();
+        return;
+      }
+
+      throw new CustomError("Your Reset Password Link Has Expired...", 400);
+    }
   }
 
   private static async hashPassword(rawPassword: string): Promise<string> {
@@ -56,8 +97,30 @@ class AuthService {
       gender: user.gender,
       nativeCity: user.native_city,
       ubication: user.ubication,
-      job: user.job
+      job: user.job,
     };
+  }
+
+  private static async sendResetEmail(email: string, resetToken: string): Promise<void> {
+    const resetUrl = `https://sofii.vercel.app/reset-password/${email}/${resetToken}`;
+
+    await MailHelper.sendMail(
+      email, // Corregido
+      'Reset Your Password At Sofii',
+      `Enter this link to reset your password: ${resetUrl}`,
+    );
+  }
+
+  private static generateResetToken(): string {
+    const uuid = uuidv4();
+    let base64Token = Buffer.from(uuid).toString('base64');
+    base64Token = base64Token.replace(/\//g, '_').replace(/\+/g, '-').replace(/\?/g, '');
+    return base64Token;
+  }
+
+  private static isResetTokenExpired(resetToken: PasswordResetToken): boolean {
+    const now = new Date();
+    return resetToken.expires_at <= now;
   }
 }
 
