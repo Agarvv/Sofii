@@ -51,6 +51,10 @@ const routes_1 = __importDefault(require("./routes"));
 const database_1 = __importDefault(require("./config/database"));
 dotenv.config();
 const app = (0, express_1.default)();
+app.use((err, req, res, next) => {
+    console.error(err);
+    res.status(err.status || 500).json({ message: err.message || 'Internal Server Error' });
+});
 app.use(express_1.default.json());
 app.use(routes_1.default);
 app.get('/', (req, res) => {

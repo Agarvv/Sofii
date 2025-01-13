@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express, { Express, Request, Response, NextFunction } from 'express';
 import * as dotenv from 'dotenv';
 import router from './routes';
 import sequelize from './config/database';
@@ -6,6 +6,11 @@ import sequelize from './config/database';
 dotenv.config(); 
 
 const app = express();
+
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  console.error(err);  
+  res.status(err.status || 500).json({ message: err.message || 'Internal Server Error' });
+});
 
 app.use(express.json());
 app.use(router);
