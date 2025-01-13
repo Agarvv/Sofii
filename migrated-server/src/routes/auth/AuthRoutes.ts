@@ -7,7 +7,7 @@ import AuthController from '../../controllers/auth/AuthController';
 const authRouter = express.Router();
 
 authRouter.post('/register', 
-  //validateRequest(registerSchema), 
+  validateRequest(registerSchema), 
   AuthController.registerUser
 );
 
