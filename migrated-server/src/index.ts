@@ -1,3 +1,4 @@
+import 'module-alias/register';
 import express, { Express, Request, Response, NextFunction } from 'express';
 import * as dotenv from 'dotenv';
 import router from './routes';

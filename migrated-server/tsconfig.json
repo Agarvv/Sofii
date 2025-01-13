@@ -1,17 +1,17 @@
 {
   "compilerOptions": {
-    "baseUrl": "./",
+    "baseUrl": "./src",
     "paths": {
-      "@controllers/*": ["src/controllers/*"],
-      "@routes/*": ["src/routes/*"],
-      "@models/*": ["src/models/*"],
-      "@services/*": ["src/services/*"],
-      "@config/*": ["src/config/*"],
-      "@validation/*": ["src/validation/*"],
-      "@middleware/*": ["src/middleware/*"],
-      "@helpers/*": ["src/helpers/*"],
-      "@repositories/*": ["src/repositories/*"],
-      "@outils/*": ["src/outils/*"],
+      "@controllers/*": ["controllers/*"],
+      "@routes/*": ["routes/*"],
+      "@models/*": ["models/*"],
+      "@services/*": ["services/*"],
+      "@config/*": ["config/*"],
+      "@validation/*": ["validation/*"],
+      "@middleware/*": ["middleware/*"],
+      "@helpers/*": ["helpers/*"],
+      "@repositories/*": ["repositories/*"],
+      "@outils/*": ["outils/*"]
     },
     "target": "es2016",
     "module": "commonjs",
@@ -20,6 +20,5 @@
     "strict": true,
     "skipLibCheck": true,
     "outDir": "./dist"
-  },
+  }
 }
-
