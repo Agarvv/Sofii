@@ -25,7 +25,10 @@ interface UserAttributes {
   active: boolean;
 }
 
-interface UserCreationAttributes extends Optional<UserAttributes, 'id' | 'profilePicture' | 'bio' | 'gender' | 'last_login' | 'birth_date' | 'ubication' | 'native_city' | 'civil_status' | 'tag' | 'job' | 'banner'> {}
+interface UserCreationAttributes extends Optional<UserAttributes, 
+  'id' | 'profilePicture' | 'bio' | 'gender' | 'last_login' | 'birth_date' | 
+  'ubication' | 'native_city' | 'civil_status' | 'tag' | 'job' | 'banner' | 
+  'private' | 'only_friends' | 'verified' | 'banned' | 'active'> {}
 
 class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
   public id!: number;
@@ -148,8 +151,7 @@ User.init(
     },
     active: {
       type: DataTypes.BOOLEAN,
-      allowNull: true,
-      defaultValue: false,
+      defaultValue: true,
     },
   },
   {

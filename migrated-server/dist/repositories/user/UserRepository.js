@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const User_1 = __importDefault(require("../../models/users/User"));
+const sequelize_1 = require("sequelize");
 class UserRepository {
     findByEmail(email) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -21,6 +22,14 @@ class UserRepository {
                     email: email
                 }
             });
+        });
+    }
+    existsByEmail(email) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const count = yield User_1.default.count({
+                where: { email: { [sequelize_1.Op.eq]: email } }
+            });
+            return count > 0;
         });
     }
 }

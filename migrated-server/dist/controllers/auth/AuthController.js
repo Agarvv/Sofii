@@ -8,11 +8,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const AuthService_1 = __importDefault(require("../../services/auth/AuthService"));
 class AuthController {
-    static RegisterUser(req, res) {
+    static registerUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            res.status(500).json("Not Implemented");
+            const { username, email, password } = req.body;
+            yield AuthService_1.default.registerUser(username, email, password);
+            res.status(201).json({ message: "¡Welcome To Sofii!" });
+        });
+    }
+    static loginUser(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { email, password } = req.body;
+            const jwtToken = yield AuthService_1.default.loginUser(email, password);
+            res.status(200).json({ accessToken: jwtToken });
         });
     }
 }

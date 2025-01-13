@@ -101,8 +101,7 @@ User.init({
     },
     active: {
         type: sequelize_1.DataTypes.BOOLEAN,
-        allowNull: true,
-        defaultValue: false,
+        defaultValue: true,
     },
 }, {
     sequelize: database_1.default,
