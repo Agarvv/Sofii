@@ -67,6 +67,7 @@ class AuthService {
       if (dbResetToken && !this.isResetTokenExpired(dbResetToken)) {
         user.password = await this.hashPassword(newPassword);
         await user.save();
+        await dbResetToken.destroy(); 
         return;
       }
 

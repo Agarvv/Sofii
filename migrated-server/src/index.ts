@@ -4,6 +4,7 @@ import * as dotenv from 'dotenv';
 import router from './routes';
 import sequelize from './config/database';
 import bodyParser from 'body-parser'; 
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
 
@@ -14,7 +15,7 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   res.status(err.status || 500).json({ message: err.message || 'Internal Server Error' });
 });
 
-
+app.use(cookieParser());
 app.use(express.json()); 
 
 app.use(router);

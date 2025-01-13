@@ -14,7 +14,7 @@ class AuthController {
     const { email, password } = req.body;
 
     const jwtToken = await AuthService.loginUser(email, password);
-
+    res.cookie('jwt', jwtToken, { httpOnly: true, secure: true, sameSite: 'none', maxAge: 3600000 });
     res.status(200).json({ accessToken: jwtToken });
   }
   
