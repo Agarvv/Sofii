@@ -12,7 +12,13 @@ import authMiddleware from '@middleware/AuthMiddleware'
 dotenv.config();
 
 const app: Express = express();
-app.use(authMiddleware); 
+router.use((req, res, next) => {
+  if (req.path.startsWith('/api/sofii/auth')) {
+    return next(); 
+  }
+  authMiddleware(req, res, next); 
+});
+
 
 const server = http.createServer(app); 
 

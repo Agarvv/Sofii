@@ -1,6 +1,7 @@
 import express from 'express';
 import authRouter from './auth/AuthRoutes';
 import postsRouter from './content/posts/PostsRoutes'
+import authMiddleware from '@middleware/AuthMiddleware'
 
 const router = express.Router();
 
