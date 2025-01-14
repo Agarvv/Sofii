@@ -15,8 +15,6 @@ class JwtHelper {
       throw new Error('Invalid or expired token');
     }
   }
-
- 
 }
 
 export default JwtHelper;

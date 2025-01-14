@@ -7,10 +7,11 @@ import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import http from 'http'; 
 import websocket from './websocket/websocket'; 
-
+import authMiddleware from '@middleware/AuthMiddleware'
 dotenv.config();
 
 const app: Express = express();
+app.use(authMiddleware); 
 
 const server = http.createServer(app); 
 
