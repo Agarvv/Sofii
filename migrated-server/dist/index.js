@@ -50,13 +50,13 @@ const express_1 = __importDefault(require("express"));
 const dotenv = __importStar(require("dotenv"));
 const routes_1 = __importDefault(require("./routes"));
 const database_1 = __importDefault(require("./config/database"));
+require("@models/relations");
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const http_1 = __importDefault(require("http"));
 const websocket_1 = __importDefault(require("./websocket/websocket"));
-const AuthMiddleware_1 = __importDefault(require("@middleware/AuthMiddleware"));
 dotenv.config();
 const app = (0, express_1.default)();
-app.use(AuthMiddleware_1.default);
+//app.use(authMiddleware); 
 const server = http_1.default.createServer(app);
 websocket_1.default.init(server);
 app.use((err, req, res, next) => {

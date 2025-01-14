@@ -3,6 +3,7 @@ import express, { Express, Request, Response, NextFunction } from 'express';
 import * as dotenv from 'dotenv';
 import router from './routes';
 import sequelize from './config/database';
+import '@models/relations'
 import bodyParser from 'body-parser'; 
 import cookieParser from 'cookie-parser';
 import http from 'http'; 
