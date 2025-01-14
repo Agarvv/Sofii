@@ -26,7 +26,7 @@ import VideoCommentDislikes from './videos/comments/VideoCommentDislikes';
 import VideoCommentAwnsersLikes from './videos/comments/VideoCommentAwnsersLikes';
 import VideoCommentAwnsersDislikes from './videos/comments/VideoCommentAwnsersDislikes';
 import Blocked from './users/Blocked';
-
+    
 User.hasMany(Post, {
   as: 'posts',
   foreignKey: 'user_id'
@@ -396,3 +396,4 @@ User.hasMany(Blocked, {
   foreignKey: 'blocked_id',
   as: 'users_blocked_me'
 });
+
