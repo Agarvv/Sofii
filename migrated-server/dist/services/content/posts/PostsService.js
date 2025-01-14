@@ -13,9 +13,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Post_1 = __importDefault(require("@models/posts/Post"));
-const websocket_1 = __importDefault(require("@websocket/websocket"));
+//import websocket from '@websocket/websocket';
 const PostsRepository_1 = __importDefault(require("@repositories/posts/PostsRepository"));
 class PostsService {
+    // private static io = websocket.getIO();
     static createPost(description, picture, userId) {
         return __awaiter(this, void 0, void 0, function* () {
             const newPost = yield Post_1.default.create({
@@ -25,7 +26,7 @@ class PostsService {
             });
             // i need to emit back to the client a post with likes saved and comment relations.
             const fullPost = yield PostsRepository_1.default.getPostById(newPost.id);
-            this.io.emit('createdPost', fullPost);
+            // this.io.emit('createdPost', fullPost);
         });
     }
     static getPosts() {
@@ -47,5 +48,4 @@ class PostsService {
         });
     }
 }
-PostsService.io = websocket_1.default.getIO();
 exports.default = PostsService;

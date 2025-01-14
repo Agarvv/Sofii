@@ -1,9 +1,9 @@
 import Post from '@models/posts/Post';
-import websocket from '@websocket/websocket';
+//import websocket from '@websocket/websocket';
 import PostRepository from '@repositories/posts/PostsRepository'
 
 class PostsService {
-    private static io = websocket.getIO();
+   // private static io = websocket.getIO();
 
     public static async createPost(description: string, picture: string, userId: number): Promise<void> {
         
@@ -15,7 +15,7 @@ class PostsService {
         // i need to emit back to the client a post with likes saved and comment relations.
         const fullPost = await PostRepository.getPostById(newPost.id); 
         
-        this.io.emit('createdPost', fullPost);
+      // this.io.emit('createdPost', fullPost);
     }
     
     public static async getPosts(): Promise<any> {
