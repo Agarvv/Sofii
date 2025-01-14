@@ -3,6 +3,7 @@ import commentRoutes from './CommentRoutes';
 import PostsController from '@controllers/content/posts/PostsController'
 import { postCreationSchema } from '@validation/posts/PostCreationSchema'
 import { validateRequest } from '@middleware/ValidationMiddleware'
+import likePostSchema from '@validation/posts/LikePostSchema';
 
 const postsRouter = express.Router(); 
 postsRouter.use('/comments', commentRoutes)
@@ -21,7 +22,7 @@ postsRouter.post('/',
 );
 
 postsRouter.post('/like', 
-  validateRequest(postCreationSchema),
+  validateRequest(likePostSchema),
   PostsController.likeOrUnlike
 );
 
