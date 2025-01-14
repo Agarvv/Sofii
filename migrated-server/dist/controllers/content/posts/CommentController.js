@@ -28,7 +28,7 @@ class CommentController {
         return __awaiter(this, void 0, void 0, function* () {
             const { commentId, postId } = req.body;
             const userId = 1;
-            const likedOrUnliked = yield CommentsService.likeOrUnlikeComment(commentId, postId, userId);
+            const likedOrUnliked = yield CommentService_1.default.likeOrUnlikeComment(commentId, postId, userId);
             res.status(200).json({
                 "message": likedOrUnliked
             });
@@ -38,9 +38,9 @@ class CommentController {
         return __awaiter(this, void 0, void 0, function* () {
             const { commentId, postId } = req.body;
             const userId = 1;
-            const dislikedOrUndisliked = yield CommentsService.dislikeOrUndislikeComment(commentId, postId, userId);
+            const dislikedOrUndisliked = yield CommentService_1.default.dislikeOrUndislikeComment(commentId, postId, userId);
             res.status(200).json({
-                "message": likedOrUnliked
+                "message": dislikedOrUndisliked
             });
         });
     }
@@ -48,8 +48,8 @@ class CommentController {
         return __awaiter(this, void 0, void 0, function* () {
             const { answerValue, commentId, postId } = req.body;
             const userId = 1;
-            yield CommentsService.answerComment(commentId, postId, userId, answerValue);
-            return res.status(201).json({
+            yield CommentService_1.default.answerComment(commentId, postId, userId, answerValue);
+            res.status(201).json({
                 "message": "¡Comment Answered!"
             });
         });
@@ -58,8 +58,8 @@ class CommentController {
         return __awaiter(this, void 0, void 0, function* () {
             const { commentId, answerId, postId } = req.body;
             const userId = 1;
-            const likedOrUnliked = yield CommentsService.likeOrUnlikeAnswer(answerId, commentId, postId, userId);
-            return res.status(201).json({
+            const likedOrUnliked = yield CommentService_1.default.likeOrUnlikeAnswer(answerId, commentId, postId, userId);
+            res.status(201).json({
                 "message": likedOrUnliked
             });
         });
@@ -68,8 +68,8 @@ class CommentController {
         return __awaiter(this, void 0, void 0, function* () {
             const { commentId, answerId, postId } = req.body;
             const userId = 1;
-            const dislikedOrUndisliked = yield CommentsService.dislikeOrUndislikeAnswer(answerId, commentId, postId, userId);
-            return res.status(201).json({
+            const dislikedOrUndisliked = yield CommentService_1.default.dislikeOrUndislikeAnswer(answerId, commentId, postId, userId);
+            res.status(201).json({
                 "message": dislikedOrUndisliked
             });
         });

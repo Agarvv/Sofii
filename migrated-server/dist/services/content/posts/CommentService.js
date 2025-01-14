@@ -40,7 +40,7 @@ class CommentService {
     }
     static likeOrUnlikeComment(commentId, postId, userId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const commentLike = yield LikesRepository_1.default.getCommentLike();
+            const commentLike = yield LikesRepository_1.default.getCommentLike(userId, postId, commentId);
             if (commentLike) {
                 yield commentLike.destroy();
                 // io.emit('unlikeComment', like)

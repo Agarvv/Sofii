@@ -19,10 +19,10 @@ class DislikesRepository {
                 user_id: userId,
                 comment_id: commentId,
                 post_id: postId,
-                answer_id: answerId 
+                awnser_id: answerId 
             }
         })
     }
 }
 
-export default LikesRepository; 
+export default DislikesRepository; 

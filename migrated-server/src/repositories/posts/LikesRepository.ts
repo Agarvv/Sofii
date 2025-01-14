@@ -4,7 +4,7 @@ import CommentAwnsersLikes from '@models/posts/comments/CommentAwnsersLikes';
 
 
 class LikesRepository {
-    public static async getPostLike(postId: number, userId:  number): Promise<Likes> {
+    public static async getPostLike(postId: number, userId:  number): Promise<Likes | null> {
         return await Likes.findOne({
             where: {
                 user_id: userId,
@@ -13,7 +13,8 @@ class LikesRepository {
         })
     }
     
-    public static async getCommentLike(userId: number, postId: number, commentId: number): Promise<CommentLike> {
+    public static async getCommentLike(userId: number, postId: number, commentId: number)
+    : Promise<CommentLikes | null> {
         return await CommentLikes.findOne({
             where: {
                 user_id: userId,
@@ -23,7 +24,8 @@ class LikesRepository {
         })
     }
     
-    public static async getAnswerLike(userId: number, postId: number, commentId: number, answerId: number): Promise<CommentAwnsersLikes> {
+    public static async getAnswerLike(userId: number, postId: number, commentId: number, answerId: number)
+    : Promise<CommentAwnsersLikes | null> {
         return await CommentAwnsersLikes.findOne({
             where: {
                 user_id: userId,

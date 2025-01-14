@@ -1,6 +1,10 @@
 import Post from '@models/posts/Post';
 //import websocket from '@websocket/websocket';
 import PostRepository from '@repositories/posts/PostsRepository'
+import LikesRepository from '@repositories/posts/LikesRepository';
+import Likes from '@models/posts/Likes';
+import CustomError from '@outils/CustomError';
+import NotificationsService from '@services/notifications/NotificationsService';
 
 class PostsService {
    // private static io = websocket.getIO();
@@ -33,6 +37,30 @@ class PostsService {
     public static async deletePostById(id: number): Promise<void> {
        const post = await PostRepository.getPostById(id); 
        await post.destroy(); 
+    }
+
+    public static async likeOrDislike(postId: number, user: any): Promise<string> {
+       const postLike = await LikesRepository.getPostLike(postId, user.user_id); 
+
+       const post = await PostRepository.getPostWithoutDetails(postId); 
+
+       if(!post) {
+        throw new CustomError("Post not found", 404)
+       }
+
+       if(postLike) {
+          await postLike.destroy();
+          // io.emit('unlikePost', postLike); 
+          return "Post Unliked!"
+       }
+
+       const newLike = await Likes.create({
+        post_id: postId,
+        user_id: user.user_id
+       })
+       //  io.emit('likePost', newLike)
+       await NotificationsService.sendNotificationToUser(post.user_id, user.username, user.user_id, post, null, 'POST_LIKED')
+       return "Post Liked!"
     }
 }
 

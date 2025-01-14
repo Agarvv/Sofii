@@ -5,13 +5,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const ValidationMiddleware_1 = require("@middleware/ValidationMiddleware");
-const CommentController_1 = __importDefault(require("@controllers/content/posts/comments/CommentController"));
-const CreateCommentSchema_1 = require("@validation/content/comments/CreateCommentSchema");
-const AnswerCommentSchema_1 = require("@validation/content/comments/AnswerCommentSchema");
-const LikeCommentSchema_1 = require("@validation/content/comments/LikeCommentSchema");
-const DislikeCommentSchema_1 = require("@validation/content/comments/DislikeCommentSchema");
-const LikeCommentAnswerSchema_1 = require("@validation/content/comments/LikeCommentAnswerSchema");
-const DislikeCommentAnswerSchema_1 = require("@validation/content/comments/DislikeCommentAnswerSchema");
+const CommentController_1 = __importDefault(require("@controllers/content/posts/CommentController"));
+const CreateCommentSchema_1 = require("@validation/posts/comments/CreateCommentSchema");
+const AnswerCommentSchema_1 = require("@validation/posts/comments/AnswerCommentSchema");
+const LikeCommentSchema_1 = require("@validation/posts/comments/LikeCommentSchema");
+const DislikeCommentSchema_1 = require("@validation/posts/comments/DislikeCommentSchema");
+const LikeCommentAnswerSchema_1 = require("@validation/posts/comments/LikeCommentAnswerSchema");
+const DislikeCommentAnswerSchema_1 = require("@validation/posts/comments/DislikeCommentAnswerSchema");
 const commentRoutes = express_1.default.Router();
 // create comment 
 commentRoutes.post('/', (0, ValidationMiddleware_1.validateRequest)(CreateCommentSchema_1.createCommentSchema), CommentController_1.default.comment);

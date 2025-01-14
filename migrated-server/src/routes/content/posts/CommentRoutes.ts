@@ -1,12 +1,12 @@
 import express from 'express';
 import { validateRequest } from '@middleware/ValidationMiddleware'
-import CommentController from '@controllers/content/posts/comments/CommentController'
-import { createCommentSchema } from '@validation/content/comments/CreateCommentSchema'
-import { answerCommentSchema } from '@validation/content/comments/AnswerCommentSchema'
-import { likeCommentSchema } from '@validation/content/comments/LikeCommentSchema'
-import { dislikeCommentSchema } from '@validation/content/comments/DislikeCommentSchema'
-import { likeCommentAnswerSchema } from '@validation/content/comments/LikeCommentAnswerSchema'
-import { dislikeCommentAnswerSchema } from '@validation/content/comments/DislikeCommentAnswerSchema'
+import CommentController from '@controllers/content/posts/CommentController';
+import { createCommentSchema } from '@validation/posts/comments/CreateCommentSchema';
+import { answerCommentSchema } from '@validation/posts/comments/AnswerCommentSchema'
+import { likeCommentSchema } from '@validation/posts/comments/LikeCommentSchema'
+import { dislikeCommentSchema } from '@validation/posts/comments/DislikeCommentSchema'
+import { likeCommentAnswerSchema } from '@validation/posts/comments/LikeCommentAnswerSchema'
+import { dislikeCommentAnswerSchema } from '@validation/posts/comments/DislikeCommentAnswerSchema'
 
 const commentRoutes = express.Router(); 
 

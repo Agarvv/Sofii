@@ -52,6 +52,7 @@
     "@middleware": "dist/middleware",
     "@helpers": "dist/helpers",
     "@repositories": "dist/repositories",
-    "@outils": "dist/outils"
+    "@outils": "dist/outils",
+    "@websocket": "dist/websocket"
   }
 }

@@ -142,5 +142,14 @@ class PostsRepository {
             });
         });
     }
+    static getPostWithoutDetails(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return Post_1.default.findOne({
+                where: {
+                    id: id
+                }
+            });
+        });
+    }
 }
 exports.default = PostsRepository;

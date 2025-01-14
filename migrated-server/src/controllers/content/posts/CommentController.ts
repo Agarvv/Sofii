@@ -20,7 +20,7 @@ class CommentController {
         
         const userId = 1; 
         
-        const likedOrUnliked = await CommentsService.likeOrUnlikeComment(commentId, postId, userId); 
+        const likedOrUnliked = await CommentService.likeOrUnlikeComment(commentId, postId, userId); 
         
         res.status(200).json({
             "message": likedOrUnliked
@@ -32,10 +32,10 @@ class CommentController {
         
         const userId = 1; 
         
-        const dislikedOrUndisliked = await CommentsService.dislikeOrUndislikeComment(commentId, postId, userId); 
+        const dislikedOrUndisliked = await CommentService.dislikeOrUndislikeComment(commentId, postId, userId); 
         
         res.status(200).json({
-            "message": likedOrUnliked
+            "message": dislikedOrUndisliked
         })
     }
     
@@ -44,9 +44,9 @@ class CommentController {
         
         const userId = 1; 
         
-        await CommentsService.answerComment(commentId, postId, userId, answerValue); 
+        await CommentService.answerComment(commentId, postId, userId, answerValue); 
         
-        return res.status(201).json({
+        res.status(201).json({
             "message": "¡Comment Answered!"
         })
     }
@@ -56,9 +56,9 @@ class CommentController {
         
         const userId = 1; 
         
-        const likedOrUnliked = await CommentsService.likeOrUnlikeAnswer(answerId, commentId, postId, userId);
+        const likedOrUnliked = await CommentService.likeOrUnlikeAnswer(answerId, commentId, postId, userId);
         
-        return res.status(201).json({
+        res.status(201).json({
             "message": likedOrUnliked 
         })
     }
@@ -68,9 +68,9 @@ class CommentController {
         
         const userId = 1; 
         
-        const dislikedOrUndisliked = await CommentsService.dislikeOrUndislikeAnswer(answerId, commentId, postId, userId);
+        const dislikedOrUndisliked = await CommentService.dislikeOrUndislikeAnswer(answerId, commentId, postId, userId);
         
-        return res.status(201).json({
+        res.status(201).json({
             "message": dislikedOrUndisliked 
         }) 
     }

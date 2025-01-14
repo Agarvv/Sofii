@@ -15,6 +15,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Post_1 = __importDefault(require("@models/posts/Post"));
 //import websocket from '@websocket/websocket';
 const PostsRepository_1 = __importDefault(require("@repositories/posts/PostsRepository"));
+const LikesRepository_1 = __importDefault(require("@repositories/posts/LikesRepository"));
+const Likes_1 = __importDefault(require("@models/posts/Likes"));
+const CustomError_1 = __importDefault(require("@outils/CustomError"));
+const NotificationsService_1 = __importDefault(require("@services/notifications/NotificationsService"));
 class PostsService {
     // private static io = websocket.getIO();
     static createPost(description, picture, userId) {
@@ -45,6 +49,27 @@ class PostsService {
         return __awaiter(this, void 0, void 0, function* () {
             const post = yield PostsRepository_1.default.getPostById(id);
             yield post.destroy();
+        });
+    }
+    static likeOrDislike(postId, user) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const postLike = yield LikesRepository_1.default.getPostLike(postId, user.user_id);
+            const post = yield PostsRepository_1.default.getPostWithoutDetails(postId);
+            if (!post) {
+                throw new CustomError_1.default("Post not found", 404);
+            }
+            if (postLike) {
+                yield postLike.destroy();
+                // io.emit('unlikePost', postLike); 
+                return "Post Unliked!";
+            }
+            const newLike = yield Likes_1.default.create({
+                post_id: postId,
+                user_id: user.user_id
+            });
+            //  io.emit('likePost', newLike)
+            yield NotificationsService_1.default.sendNotificationToUser(post.user_id, user.username, user.user_id, post, null, 'POST_LIKED');
+            return "Post Liked!";
         });
     }
 }

@@ -127,6 +127,14 @@ class PostsRepository {
             ]
         });
     }
+
+    public static async getPostWithoutDetails(id: number): Promise<Post | null> {
+        return Post.findOne({
+            where: {
+                id: id 
+            }
+        })
+    }
 }
 
 export default PostsRepository; 

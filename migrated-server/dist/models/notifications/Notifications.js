@@ -5,41 +5,45 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const database_1 = __importDefault(require("../../config/database"));
-const Notifications = database_1.default.define('Notifications', {
+class Notifications extends sequelize_1.Model {
+}
+Notifications.init({
     id: {
         type: sequelize_1.DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
     },
     user_id: {
         type: sequelize_1.DataTypes.INTEGER,
         allowNull: false,
         references: {
             model: 'users',
-            key: 'id'
-        }
+            key: 'id',
+        },
     },
     user_target: {
         type: sequelize_1.DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
     },
     notification_type: {
         type: sequelize_1.DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
     },
     notification: {
         type: sequelize_1.DataTypes.TEXT,
-        allowNull: false
+        allowNull: false,
     },
     type_id: {
         type: sequelize_1.DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
     },
     readed: {
         type: sequelize_1.DataTypes.BOOLEAN,
-        defaultValue: false
-    }
+        defaultValue: false,
+    },
 }, {
-    timestamps: true
+    sequelize: database_1.default,
+    tableName: 'notifications',
+    timestamps: true,
 });
 exports.default = Notifications;

@@ -23,7 +23,7 @@ class CommentsRepository {
     static findCommentById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield Comment_1.default.findOne({
-                where: { id: comment.id },
+                where: { id: id },
                 include: [
                     { model: User_1.default, as: 'commentUser' },
                     { model: CommentLikes_1.default, as: 'comment_likes' },
@@ -44,7 +44,7 @@ class CommentsRepository {
     static findAnswerById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield CommentAwnser_1.default.findOne({
-                where: { id: newCommentAwnser.id },
+                where: { id: id },
                 include: [
                     { model: User_1.default, as: 'awnser_user' },
                     { model: CommentAwnsersLikes_1.default, as: 'awnser_likes' },

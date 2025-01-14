@@ -31,7 +31,13 @@ class PostsController {
     }
     
     public static async LikeOrUnlike(req: Request, res: Response) {
+        const { postId } = req.body; 
         
+        const likedOrUnliked = await PostsService.likeOrDislike(postId, req.user); 
+        
+        res.status(200).json({
+            message: likedOrUnliked
+        })
     }
     
     public static async SaveOrUnsave(req: Request, res: Response) {

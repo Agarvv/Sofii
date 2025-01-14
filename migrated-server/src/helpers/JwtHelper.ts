@@ -8,7 +8,7 @@ class JwtHelper {
     return jwt.sign(payload, this.SECRET, { expiresIn: this.EXPIRATION });
   }
 
-  public static verifyToken(token: string): object | string {
+  public static verifyToken(token: string): any {
     try {
       return jwt.verify(token, this.SECRET);
     } catch (error) {

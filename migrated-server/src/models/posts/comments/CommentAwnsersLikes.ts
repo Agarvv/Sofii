@@ -1,7 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../../../config/database';
 
-
 interface CommentAwnsersLikesAttributes {
   awnser_id: number;
   comment_id: number;
@@ -9,25 +8,37 @@ interface CommentAwnsersLikesAttributes {
   user_id: number;
 }
 
-const CommentAwnsersLikes = sequelize.define<Model<CommentAwnsersLikesAttributes>>('CommentAwnsersLikes', {
-  awnser_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false
+class CommentAwnsersLikes extends Model<CommentAwnsersLikesAttributes> 
+    implements CommentAwnsersLikesAttributes {
+  public awnser_id!: number;
+  public comment_id!: number;
+  public post_id!: number;
+  public user_id!: number;
+}
+
+CommentAwnsersLikes.init(
+  {
+    awnser_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    comment_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    post_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
   },
-  comment_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false
-  },
-  post_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false
-  },
-  user_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false
+  {
+    sequelize,
+    tableName: 'comment_awnsers_likes',
   }
-}, {
-  tableName: 'comment_awnsers_likes'
-});
+);
 
 export default CommentAwnsersLikes;

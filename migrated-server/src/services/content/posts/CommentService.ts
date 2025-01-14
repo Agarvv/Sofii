@@ -8,6 +8,7 @@ import CommentLikes from '@models/posts/comments/CommentLikes';
 import CommentDislikes from '@models/posts/comments/CommentDislikes';
 import CommentAwnsersLikes from '@models/posts/comments/CommentAwnsersLikes';
 import CommentAwnsersDislikes from '@models/posts/comments/CommentAwnsersDislikes';
+import { useRouteLoaderData } from 'react-router-dom';
 
 
 class CommentService {
@@ -30,7 +31,7 @@ class CommentService {
     
     public static async likeOrUnlikeComment(commentId: number, postId: number, userId: number): Promise<string> {
         
-        const commentLike = await LikesRepository.getCommentLike()
+        const commentLike = await LikesRepository.getCommentLike(userId, postId, commentId);
         
         if(commentLike) {
             await commentLike.destroy(); 

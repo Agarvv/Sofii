@@ -8,27 +8,65 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const JwtHelper_1 = __importDefault(require("@helpers/JwtHelper"));
 const socket_io_1 = require("socket.io");
-let io;
+const cookie_1 = __importDefault(require("cookie"));
+//import ChatController from './controllers/ChatController';
+//import setUserActiveOrInactive from './outils/setUserActiveOrInactive';
+//import tokenController from './controllers/tokenController';
+let io = null;
 exports.default = {
     init: (server) => {
         io = new socket_io_1.Server(server, {
             cors: {
                 origin: 'https://sofii.vercel.app',
                 methods: ['GET', 'POST'],
-                credentials: true,
-            },
+                credentials: true
+            }
         });
         io.on('connection', (socket) => __awaiter(void 0, void 0, void 0, function* () {
-            console.log("user connection succeded");
+            const cookies = cookie_1.default.parse(socket.request.headers.cookie || '');
+            const jwtToken = cookies.jwt;
+            if (!jwtToken) {
+                return;
+            }
+            //await setUserActiveOrInactive('active', jwtToken);
+            const userDecoded = yield JwtHelper_1.default.verifyToken(jwtToken);
+            socket.join(userDecoded.user_id);
+            socket.on('chatMessage', (data) => __awaiter(void 0, void 0, void 0, function* () {
+                const { message, chat_id } = data;
+                socket.join(chat_id);
+                // send message func soon
+            }));
+            socket.on('typing', (chatId) => {
+                socket.join(chatId);
+                socket.to(chatId).emit('typing');
+            });
+            socket.on('stopTyping', (chatId) => {
+                socket.join(chatId);
+                socket.to(chatId).emit('stopTyping');
+            });
+            socket.on('readMessage', (data) => __awaiter(void 0, void 0, void 0, function* () {
+                socket.join(data.chat_id);
+                //const readedMessage = await ChatController.readMessage(data.message, userDecoded);
+                //if (readedMessage) {
+                //    socket.to(data.chat_id).emit('readMessage', readedMessage);
+                // }
+            }));
+            socket.on('disconnect', () => __awaiter(void 0, void 0, void 0, function* () {
+                // await setUserActiveOrInactive('inactive', jwtToken);
+            }));
         }));
         return io;
     },
     getIO: () => {
         if (!io) {
-            throw new Error('Socket.io not initialized');
+            throw new Error("Socket.io not Initialized");
         }
         return io;
-    },
+    }
 };

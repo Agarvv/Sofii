@@ -42,6 +42,11 @@ class PostsController {
     }
     static LikeOrUnlike(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
+            const { postId } = req.body;
+            const likedOrUnliked = yield PostsService_1.default.likeOrDislike(postId, req.user);
+            res.status(200).json({
+                message: likedOrUnliked
+            });
         });
     }
     static SaveOrUnsave(req, res) {

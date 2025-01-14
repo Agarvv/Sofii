@@ -12,31 +12,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const CommentDislikes_1 = __importDefault(require("@models/posts/comments/CommentDislikes"));
-const CommentAwnsersDislikes_1 = __importDefault(require("@models/posts/comments/CommentAwnsersDislikes"));
-class DislikesRepository {
-    static getCommentDislike(userId, postId, commentId) {
+const Notifications_1 = __importDefault(require("@models/notifications/Notifications"));
+class NotificationsRepository {
+    static getUserNotifications(userId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield CommentDislikes_1.default.findOne({
+            return Notifications_1.default.findAll({
                 where: {
-                    user_id: userId,
-                    comment_id: commentId,
-                    post_id: postId
-                }
-            });
-        });
-    }
-    static getAnswerDislike(userId, postId, commentId, answerId) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield CommentAwnsersDislikes_1.default.findOne({
-                where: {
-                    user_id: userId,
-                    comment_id: commentId,
-                    post_id: postId,
-                    awnser_id: answerId
+                    user_target: userId
                 }
             });
         });
     }
 }
-exports.default = DislikesRepository;
+exports.default = NotificationsRepository;

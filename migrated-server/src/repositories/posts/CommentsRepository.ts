@@ -9,7 +9,7 @@ import CommentAwnsersDislikes from '@models/posts/comments/CommentAwnsersDislike
 class CommentsRepository {
     public static async findCommentById(id: number): Promise<Comment> {
         return await Comment.findOne({
-                        where: { id: comment.id },
+                        where: { id: id },
                         include: [
                             { model: User, as: 'commentUser' },
                             { model: CommentLikes, as: 'comment_likes' },
@@ -24,12 +24,13 @@ class CommentsRepository {
                     ]
                 }
             ]
-        });
+        }) as unknown as Comment;
+        
     }
     
     public static async findAnswerById(id: number) {
         return await CommentAnswer.findOne({
-                where: { id: newCommentAwnser.id },
+                where: { id: id },
                 include: [
                     { model: User, as: 'awnser_user' },
                     { model: CommentAwnsersLikes, as: 'awnser_likes' },
