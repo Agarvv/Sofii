@@ -11,3 +11,4 @@ const postsRouter = express_1.default.Router();
 postsRouter.get('/', PostsController_1.default.GetPosts);
 postsRouter.get('/:id', PostsController_1.default.GetPostById);
 postsRouter.post('/', (0, ValidationMiddleware_1.validateRequest)(PostCreationSchema_1.postCreationSchema), PostsController_1.default.createPost);
+exports.default = postsRouter;
