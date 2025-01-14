@@ -8,7 +8,6 @@ import CommentLikes from '@models/posts/comments/CommentLikes';
 import CommentDislikes from '@models/posts/comments/CommentDislikes';
 import CommentAwnsersLikes from '@models/posts/comments/CommentAwnsersLikes';
 import CommentAwnsersDislikes from '@models/posts/comments/CommentAwnsersDislikes';
-import { useRouteLoaderData } from 'react-router-dom';
 
 
 class CommentService {
