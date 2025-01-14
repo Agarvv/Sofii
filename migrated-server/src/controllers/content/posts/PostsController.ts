@@ -29,6 +29,14 @@ class PostsController {
             "post": post
         })
     }
+    
+    public static async LikeOrUnlike(req: Request, res: Response) {
+        
+    }
+    
+    public static async SaveOrUnsave(req: Request, res: Response) {
+        
+    }
 }
 
 export default PostsController; 

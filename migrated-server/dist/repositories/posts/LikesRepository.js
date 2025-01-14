@@ -12,41 +12,42 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const PostsService_1 = __importDefault(require("@services/content/posts/PostsService"));
-class PostsController {
-    static createPost(req, res) {
+const Likes_1 = __importDefault(require("@models/posts/Likes"));
+const CommentLikes_1 = __importDefault(require("@models/posts/comments/CommentLikes"));
+const CommentAwnsersLikes_1 = __importDefault(require("@models/posts/comments/CommentAwnsersLikes"));
+class LikesRepository {
+    static getPostLike(postId, userId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { description, picture } = req.body;
-            const userId = 1;
-            yield PostsService_1.default.createPost(description, picture, userId);
-            res.status(201).json({
-                message: "Post Created!"
+            return yield Likes_1.default.findOne({
+                where: {
+                    user_id: userId,
+                    post_id: postId
+                }
             });
         });
     }
-    static GetPosts(req, res) {
+    static getCommentLike(userId, postId, commentId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const posts = yield PostsService_1.default.getPosts();
-            res.status(200).json({
-                "posts": posts
+            return yield CommentLikes_1.default.findOne({
+                where: {
+                    user_id: userId,
+                    comment_id: commentId,
+                    post_id: postId
+                }
             });
         });
     }
-    static GetPostById(req, res) {
+    static getAnswerLike(userId, postId, commentId, answerId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const post = yield PostsService_1.default.getPostDetails(Number(req.params.id));
-            res.status(200).json({
-                "post": post
+            return yield CommentAwnsersLikes_1.default.findOne({
+                where: {
+                    user_id: userId,
+                    post_id: postId,
+                    comment_id: commentId,
+                    awnser_id: answerId
+                }
             });
-        });
-    }
-    static LikeOrUnlike(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-        });
-    }
-    static SaveOrUnsave(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
         });
     }
 }
-exports.default = PostsController;
+exports.default = LikesRepository;
