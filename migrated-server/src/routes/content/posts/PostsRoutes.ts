@@ -18,3 +18,5 @@ postsRouter.post('/',
   PostsController.createPost
 );
 
+
+export default postsRouter; 
