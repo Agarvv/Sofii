@@ -11,7 +11,7 @@ import authMiddleware from '@middleware/AuthMiddleware'
 dotenv.config();
 
 const app: Express = express();
-app.use(authMiddleware); 
+//app.use(authMiddleware); 
 
 const server = http.createServer(app); 
 
