@@ -12,7 +12,11 @@ interface PostAttributes {
   user_img?: string;
 }
 
-interface PostCreationAttributes extends Optional<PostAttributes, 'id' | 'postPicture' | 'user_img'> {}
+interface PostCreationAttributes
+  extends Optional<
+    PostAttributes,
+    'id' | 'postPicture' | 'user_img' | 'private' | 'only_friends' | 'user_name'
+  > {}
 
 class Post extends Model<PostAttributes, PostCreationAttributes> implements PostAttributes {
   public id!: number;
@@ -40,10 +44,12 @@ Post.init(
     },
     private: {
       type: DataTypes.BOOLEAN,
+      allowNull: true, 
       defaultValue: false,
     },
     only_friends: {
       type: DataTypes.BOOLEAN,
+      allowNull: true, 
       defaultValue: false,
     },
     user_id: {
@@ -56,7 +62,8 @@ Post.init(
     },
     user_name: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true, 
+      defaultValue: 'Anonymous', 
     },
     user_img: {
       type: DataTypes.STRING,

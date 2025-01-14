@@ -11,7 +11,8 @@
       "@middleware/*": ["middleware/*"],
       "@helpers/*": ["helpers/*"],
       "@repositories/*": ["repositories/*"],
-      "@outils/*": ["outils/*"]
+      "@outils/*": ["outils/*"],
+      "@websocket/*": ["websocket/*"]
     },
     "target": "es2016",
     "module": "commonjs",

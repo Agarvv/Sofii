@@ -50,22 +50,28 @@ const express_1 = __importDefault(require("express"));
 const dotenv = __importStar(require("dotenv"));
 const routes_1 = __importDefault(require("./routes"));
 const database_1 = __importDefault(require("./config/database"));
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const http_1 = __importDefault(require("http"));
+const websocket_1 = __importDefault(require("./websocket/websocket"));
 dotenv.config();
 const app = (0, express_1.default)();
+const server = http_1.default.createServer(app);
+websocket_1.default.init(server);
 app.use((err, req, res, next) => {
     console.error(err);
     res.status(err.status || 500).json({ message: err.message || 'Internal Server Error' });
 });
+app.use((0, cookie_parser_1.default)());
 app.use(express_1.default.json());
 app.use(routes_1.default);
 app.get('/', (req, res) => {
     res.send('Sofii API Migration to TypeScript is OK!');
 });
 const port = process.env.PORT || 3000;
-app.listen(port, () => __awaiter(void 0, void 0, void 0, function* () {
+server.listen(port, () => __awaiter(void 0, void 0, void 0, function* () {
     console.log(`Sofii API started on port ${port}`);
     try {
-        yield database_1.default.sync({ force: true });
+        yield database_1.default.sync({ force: false });
         console.log("Database Connected Successfully.");
     }
     catch (error) {

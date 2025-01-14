@@ -1,42 +1,41 @@
-const User = require('./User');
-const Post = require('./Post');
-const Comment = require('./Comment');
-const Likes = require('./Likes');
-const Follower = require('./Followers');
-const Friends = require('./Friends');  
-const FriendRequest = require('./FriendRequest')
-const Notifications = require('./Notifications')
-const Video = require('./Video')
-const VideoLikes = require('./VideoLikes')
-const VideoComments = require('./VideoComments')
-const SavedVideo = require('./SavedVideo')
-const Chat = require('./Chat')
-const Message = require('./Message')
-const Saved = require('./Saved')
-const VideoCommentAwnser = require('./VideoCommentAwnser')
-const CommentAnswer = require('./CommentAwnser');
-const CommentLikes = require('./CommentLikes')
-const CommentDislikes = require('./CommentDislikes')
-const CommentAwnsersLikes = require('./CommentAwnsersLikes')
-const CommentAwnsersDislikes = require('./CommentAwnsersDislikes')
-const VideoCommentLikes = require('./VideoCommentLikes')
-const VideoCommentDislikes = require('./VideoCommentDislikes')
-const VideoCommentAwnsersLikes = require('./VideoCommentAwnsersLikes')
-const VideoCommentAwnsersDislikes = require('./VideoCommentAwnsersDislikes')
- const Blocked = require('./Blocked')
+import { Model, DataTypes, Sequelize } from 'sequelize';
 
+import User from './users/User';
+import Post from './posts/Post';
+import Comment from './posts/comments/Comment';
+import Likes from './posts/Likes';
+import Follower from './users/Followers';
+import Friends from './users/Friends';
+import FriendRequest from './users/FriendRequest';
+import Notifications from './notifications/Notifications';
+import Video from './videos/Video';
+import VideoLikes from './videos/comments/VideoLikes';
+import VideoComments from './videos/comments/VideoComments';
+import SavedVideo from './videos/SavedVideo';
+import Chat from './chat/Chat';
+import Message from './chat/Message';
+import Saved from './posts/Saved';
+import VideoCommentAwnser from './posts/comments/VideoCommentAwnser';
+import CommentAnswer from './posts/comments/CommentAnswer';
+import CommentLikes from './posts/comments/CommentLikes';
+import CommentDislikes from './posts/comments/CommentDislikes';
+import CommentAwnsersLikes from './posts/comments/CommentAwnsersLikes';
+import CommentAwnsersDislikes from './posts/comments/CommentAwnsersDislikes';
+import VideoCommentLikes from './videos/comments/VideoCommentLikes';
+import VideoCommentDislikes from './videos/comments/VideoCommentDislikes';
+import VideoCommentAwnsersLikes from './videos/comments/VideoCommentAwnsersLikes';
+import VideoCommentAwnsersDislikes from './videos/comments/VideoCommentAwnsersDislikes';
+import Blocked from './users/Blocked';
 
-
-User.hasMany(Post, { 
-  as: 'posts', 
-  foreignKey: 'user_id' 
+User.hasMany(Post, {
+  as: 'posts',
+  foreignKey: 'user_id'
 });
-Post.belongsTo(User, { 
-  as: 'user', 
-  foreignKey: 'user_id' 
+Post.belongsTo(User, {
+  as: 'user',
+  foreignKey: 'user_id'
 });
 
-// Relación de usuario con comentarios
 User.hasMany(Comment, {
   as: 'userComments',
   foreignKey: 'user_id'
@@ -56,101 +55,95 @@ Comment.belongsTo(Post, {
 });
 
 Comment.hasMany(CommentAnswer, {
-    foreignKey: 'comment_id',
-    as: 'awnsers'
-})
+  foreignKey: 'comment_id',
+  as: 'awnsers'
+});
 
 CommentAnswer.belongsTo(Comment, {
-    foreignKey: 'comment_id',
-    as: 'comment'
-})
+  foreignKey: 'comment_id',
+  as: 'comment'
+});
 
 Post.hasMany(CommentAnswer, {
-    as: 'comment_awnsers',
-    foreignKey: 'post_id'
-})
+  as: 'comment_awnsers',
+  foreignKey: 'post_id'
+});
 
 CommentAnswer.belongsTo(Post, {
-    as: 'comment_awnser_post',
-    foreignKey: 'post_id'
-})
+  as: 'comment_awnser_post',
+  foreignKey: 'post_id'
+});
 
 User.hasMany(CommentAnswer, {
-    as: 'answers',
-    foreignKey: 'user_id'
-})
+  as: 'answers',
+  foreignKey: 'user_id'
+});
 
 CommentAnswer.belongsTo(User, {
-    as: 'awnser_user',
-    foreignKey: 'user_id'
-})
+  as: 'awnser_user',
+  foreignKey: 'user_id'
+});
 
 Video.hasMany(VideoCommentAwnser, {
-    as: 'comments_awnsers',
-    foreignKey: 'video_id'
-})
+  as: 'comments_awnsers',
+  foreignKey: 'video_id'
+});
 
 VideoCommentAwnser.belongsTo(Video, {
-    as: 'video',
-    foreignKey: 'video_id'
-})
+  as: 'video',
+  foreignKey: 'video_id'
+});
 
 User.hasMany(VideoCommentAwnser, {
-    as: 'comments_awnsers',
-    foreignKey: 'user_id'
-})
+  as: 'comments_awnsers',
+  foreignKey: 'user_id'
+});
 
 VideoCommentAwnser.belongsTo(User, {
-    as: 'comment_awnser_user',
-    foreignKey: 'user_id'
-})
-
+  as: 'comment_awnser_user',
+  foreignKey: 'user_id'
+});
 
 VideoComments.hasMany(VideoCommentAwnser, {
-    as: 'awnsers',
-    foreignKey: 'comment_id'
-})
+  as: 'awnsers',
+  foreignKey: 'comment_id'
+});
 
 VideoCommentAwnser.belongsTo(VideoComments, {
-    as: 'comment',
-    foreignKey: 'comment_id'
-})
+  as: 'comment',
+  foreignKey: 'comment_id'
+});
 
-
-// Relación de post con likes
 Post.hasMany(Likes, {
   as: 'postLikes',
   foreignKey: 'post_id'
 });
 
 Likes.belongsTo(Post, {
-  as: 'likedPost',  // Cambié el alias para mayor claridad
+  as: 'likedPost',
   foreignKey: 'post_id'
 });
 
 Post.hasMany(Saved, {
-    as: 'saved_post',
-    foreignKey: 'post_id'
-})
+  as: 'saved_post',
+  foreignKey: 'post_id'
+});
 
 Saved.belongsTo(Post, {
-    as: 'saved_post',
-    foreignKey: 'post_id'
-})
+  as: 'saved_post',
+  foreignKey: 'post_id'
+});
 
-
-
-// Relación de seguidores y siguiendo
 User.belongsToMany(User, {
-  through: Follower, // Usamos el nombre del modelo, que es "Follower"
-  as: 'followers',  // Alias para los que siguen al usuario
-  foreignKey: 'following_id', 
+  through: Follower,
+  as: 'followers',
+  foreignKey: 'following_id',
   otherKey: 'follower_id'
 });
 
 User.belongsToMany(User, {
-  through: Follower, // Usamos el nombre del modelo, que es "Follower"
-  as: 'following',  // Alias para los que el usuario sigue
+  through: Follower,
+  as: 'following',
   foreignKey: 'follower_id',
   otherKey: 'following_id'
 });
@@ -158,41 +151,36 @@ User.belongsToMany(User, {
 User.belongsToMany(User, {
   through: Friends,
   as: 'friends',
-  foreignKey: 'friend_one_id',  
-  otherKey: 'friend_two_id'     
+  foreignKey: 'friend_one_id',
+  otherKey: 'friend_two_id'
 });
 
 User.belongsToMany(User, {
-    through: Friends,
-    as: 'friendsOf',  // Alias para los amigos en la otra dirección
-    foreignKey: 'friend_two_id',
-    otherKey: 'friend_one_id'
+  through: Friends,
+  as: 'friendsOf',
+  foreignKey: 'friend_two_id',
+  otherKey: 'friend_one_id'
 });
 
-
-User.hasMany(Friends, { 
-  foreignKey: 'friend_one_id', 
+User.hasMany(Friends, {
+  foreignKey: 'friend_one_id',
   as: 'friendOne'
 });
 
-// Un Usuario puede tener muchas relaciones de amistad como user_two
-User.hasMany(Friends, { 
-  foreignKey: 'friend_two_id', 
+User.hasMany(Friends, {
+  foreignKey: 'friend_two_id',
   as: 'friendTwo'
 });
 
-// Configura las asociaciones inversas en Friends
-Friends.belongsTo(User, { 
-  foreignKey: 'friend_one_id', 
+Friends.belongsTo(User, {
+  foreignKey: 'friend_one_id',
   as: 'friendOne'
 });
 
-Friends.belongsTo(User, { 
-  foreignKey: 'friend_two_id', 
+Friends.belongsTo(User, {
+  foreignKey: 'friend_two_id',
   as: 'friendTwo'
 });
-
-
 
 FriendRequest.belongsTo(User, {
   as: 'sender',
@@ -203,7 +191,6 @@ User.hasMany(FriendRequest, {
   foreignKey: 'request_sender_id'
 });
 
-// Relación de FriendRequest con User (friend target)
 FriendRequest.belongsTo(User, {
   as: 'target',
   foreignKey: 'friend_target'
@@ -214,225 +201,198 @@ User.hasMany(FriendRequest, {
 });
 
 User.hasMany(Notifications, {
-    as: 'sentNotifications', // Notificaciones que este usuario ha enviado (ha generado)
-    foreignKey: 'user_id'
+  as: 'sentNotifications',
+  foreignKey: 'user_id'
 });
 
 User.hasMany(Notifications, {
-    as: 'receivedNotifications', // Notificaciones donde este usuario es el objetivo
-    foreignKey: 'user_target'
+  as: 'receivedNotifications',
+  foreignKey: 'user_target'
 });
 
 Notifications.belongsTo(User, {
-    as: 'sender', // El usuario que envió/generó la notificación
-    foreignKey: 'user_id'
+  as: 'sender',
+  foreignKey: 'user_id'
 });
 
 Notifications.belongsTo(User, {
-    as: 'targetUser', // El usuario objetivo (el que recibe la acción)
-    foreignKey: 'user_target'
+  as: 'targetUser',
+  foreignKey: 'user_target'
 });
 
 Notifications.belongsTo(User, {
-    as: 'notifications',
-    foreignKey: 'user_id'
-})
+  as: 'notifications',
+  foreignKey: 'user_id'
+});
 
 User.hasMany(Video, {
-    as: 'videos',
-    foreignKey: 'video_user_id'
-})
+  as: 'videos',
+  foreignKey: 'video_user_id'
+});
 
 Video.belongsTo(User, {
-    as: 'user_video',
-    foreignKey: 'video_user_id'
-})
+  as: 'user_video',
+  foreignKey: 'video_user_id'
+});
 
 Video.hasMany(VideoComments, {
-    as: 'video_comments',
-    foreignKey: 'video_id'
-})
+  as: 'video_comments',
+  foreignKey: 'video_id'
+});
 
 VideoComments.belongsTo(Video, {
-    as: 'video',
-    foreignKey: 'video_id'
-})
+  as: 'video',
+  foreignKey: 'video_id'
+});
 
 User.hasMany(VideoComments, {
-    as: 'video_comment_user',
-    foreignKey: 'user_id'
-})
+  as: 'video_comment_user',
+  foreignKey: 'user_id'
+});
 
 VideoComments.belongsTo(User, {
-    as: 'video_comment_user',
-    foreignKey: 'user_id'
-})
-
-// VIDEO LIKES
+  as: 'video_comment_user',
+  foreignKey: 'user_id'
+});
 
 Video.hasMany(VideoLikes, {
-    as: 'video_likes',
-    foreignKey: 'video_id'
+  as: 'video_likes',
+  foreignKey: 'video_id'
 });
 VideoLikes.belongsTo(Video, {
-    as: 'likedVideo',
-    foreignKey: 'video_id'
+  as: 'likedVideo',
+  foreignKey: 'video_id'
 });
-//EXAMPLE OF USE:
-// await Video.findOne({
-//   include: [
-//       Model: VideoLikes,
-//        as: 'liked'
-//   ]
-// })
-// THIS CAN BE USED FOR COUNTING THE LIKED'S LENGTH AND SET THE VIDEO LIKES.
-//
-//
-//
 
 User.hasMany(SavedVideo, {
-    as: 'saved_videos',
-    foreignKey: 'user_id'
-})
+  as: 'saved_videos',
+  foreignKey: 'user_id'
+});
 
 SavedVideo.belongsTo(User, {
-    as: 'saved_video_user',
-    foreignKey: 'user_id'
-})
+  as: 'saved_video_user',
+  foreignKey: 'user_id'
+});
 
 Video.hasMany(SavedVideo, {
-    as: 'videos_saved',
-    foreignKey: 'video_id'
-})
+  as: 'videos_saved',
+  foreignKey: 'video_id'
+});
 
 SavedVideo.belongsTo(Video, {
-    as: 'saved_video_video',
-    foreignKey: 'video_id'
-})
+  as: 'saved_video_video',
+  foreignKey: 'video_id'
+});
 
-Chat.belongsTo(User, { as: 'Sender', foreignKey: 'sender_id' })
-
-Chat.belongsTo(User, { as: 'Receiver', foreignKey: 'receiver_id' })
+Chat.belongsTo(User, { as: 'Sender', foreignKey: 'sender_id' });
+Chat.belongsTo(User, { as: 'Receiver', foreignKey: 'receiver_id' });
 
 Chat.hasMany(Message, {
-    as: 'messages',
-    foreignKey: 'message_room_id'
-})
+  as: 'messages',
+  foreignKey: 'message_room_id'
+});
 
 Message.belongsTo(Chat, {
-    as: 'chat_room',
-    key: 'message_room_id'
-})
-
-
-// User.hasMany(Chat, { as: 'SentChats', foreignKey: 'sender_id' })
-
-// User.hasMany(Chat, { as: 'ReceivedChats', foreignKey: 'receiver_id' })
-
+  as: 'chat_room',
+  key: 'message_room_id'
+});
 
 User.hasMany(Message, {
-    as: 'user_messages',
-    foreignKey: 'message_user_id' // Cambié 'key' por 'foreignKey'
+  as: 'user_messages',
+  foreignKey: 'message_user_id'
 });
 
 Message.belongsTo(User, {
-    as: 'message_user',
-    foreignKey: 'message_user_id' // Cambié 'key' por 'foreignKey'
+  as: 'message_user',
+  foreignKey: 'message_user_id'
 });
 
 Comment.hasMany(CommentLikes, {
-    foreignKey: 'comment_id',
-    as: 'comment_likes'
-})
+  foreignKey: 'comment_id',
+  as: 'comment_likes'
+});
 
 CommentLikes.belongsTo(Comment, {
-    foreignKey: 'comment_id',
-    as: 'comment'
-})
+  foreignKey: 'comment_id',
+  as: 'comment'
+});
 
 Comment.hasMany(CommentDislikes, {
-    foreignKey: 'comment_id',
-    as: 'comment_dislikes'
-})
+  foreignKey: 'comment_id',
+  as: 'comment_dislikes'
+});
 
 CommentDislikes.belongsTo(Comment, {
-    foreignKey: 'comment_id',
-    as: 'comment'
-})
+  foreignKey: 'comment_id',
+  as: 'comment'
+});
 
 CommentAnswer.hasMany(CommentAwnsersLikes, {
-    foreignKey: 'awnser_id',
-    as: 'awnser_likes'
-})
+  foreignKey: 'awnser_id',
+  as: 'awnser_likes'
+});
 
 CommentAwnsersLikes.belongsTo(CommentAnswer, {
-    foreignKey: 'awnser_id',
-    as: 'awnser_like'
-})
+  foreignKey: 'awnser_id',
+  as: 'awnser_like'
+});
 
 CommentAnswer.hasMany(CommentAwnsersDislikes, {
-    foreignKey: 'awnser_id',
-    as: 'awnser_dislikes'
-})
+  foreignKey: 'awnser_id',
+  as: 'awnser_dislikes'
+});
 
 CommentAwnsersDislikes.belongsTo(CommentAnswer, {
-    foreignKey: 'awnser_id',
-    as: 'awnser_dislike'
-})
-
-
+  foreignKey: 'awnser_id',
+  as: 'awnser_dislike'
+});
 
 VideoComments.hasMany(VideoCommentLikes, {
-    foreignKey: 'comment_id',
-    as: 'comment_likes'
-})
+  foreignKey: 'comment_id',
+  as: 'comment_likes'
+});
 
 VideoCommentLikes.belongsTo(VideoComments, {
-    foreignKey: 'comment_id',
-    as: 'comment'
-})
+  foreignKey: 'comment_id',
+  as: 'comment'
+});
 
 VideoComments.hasMany(VideoCommentDislikes, {
-    foreignKey: 'comment_id',
-    as: 'comment_dislikes'
-})
+  foreignKey: 'comment_id',
+  as: 'comment_dislikes'
+});
 
 VideoCommentDislikes.belongsTo(VideoComments, {
-    foreignKey: 'comment_id',
-    as: 'comment'
-})
+  foreignKey: 'comment_id',
+  as: 'comment'
+});
 
 VideoCommentAwnser.hasMany(VideoCommentAwnsersLikes, {
-    foreignKey: 'awnser_id',
-    as: 'awnser_likes'
-})
+  foreignKey: 'awnser_id',
+  as: 'awnser_likes'
+});
 
 VideoCommentAwnsersLikes.belongsTo(VideoCommentAwnser, {
-    foreignKey: 'awnser_id',
-    as: 'awnser_like'
-})
+  foreignKey: 'awnser_id',
+  as: 'awnser_like'
+});
 
 VideoCommentAwnser.hasMany(VideoCommentAwnsersDislikes, {
-    foreignKey: 'awnser_id',
-    as: 'awnser_dislikes'
-})
+  foreignKey: 'awnser_id',
+  as: 'awnser_dislikes'
+});
 
 VideoCommentAwnsersDislikes.belongsTo(VideoCommentAwnser, {
-    foreignKey: 'awnser_id',
-    as: 'awnser_dislike'
-})
-
-//User.hasMany(PasswordResetToken, {
-   // foreignKey: 'user_id',
-  //  as: 'password_reset_tokens',  // Plural para múltiples tokens
-//});
+  foreignKey: 'awnser_id',
+  as: 'awnser_dislike'
+});
 
 User.hasMany(Blocked, {
-    foreignKey: 'blocker_id',
-    as: 'users_blocked'
-})
+  foreignKey: 'blocker_id',
+  as: 'users_blocked'
+});
 
 User.hasMany(Blocked, {
-    foreignKey: 'blocked_id',
-    as: 'users_blocked_me' // the users that blocked this user
-})
+  foreignKey: 'blocked_id',
+  as: 'users_blocked_me'
+});

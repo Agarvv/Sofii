@@ -5,10 +5,16 @@ import router from './routes';
 import sequelize from './config/database';
 import bodyParser from 'body-parser'; 
 import cookieParser from 'cookie-parser';
+import http from 'http'; 
+import websocket from './websocket/websocket'; 
 
 dotenv.config();
 
 const app: Express = express();
+
+const server = http.createServer(app); 
+
+websocket.init(server);
 
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   console.error(err);
@@ -17,7 +23,6 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 
 app.use(cookieParser());
 app.use(express.json()); 
-
 app.use(router);
 
 app.get('/', (req: Request, res: Response) => {
@@ -26,13 +31,12 @@ app.get('/', (req: Request, res: Response) => {
 
 const port = process.env.PORT || 3000;
 
-app.listen(port, async () => {
+server.listen(port, async () => {
   console.log(`Sofii API started on port ${port}`);
   
   try {
-    await sequelize.sync({ force: false })
+    await sequelize.sync({ force: false });
     console.log("Database Connected Successfully.");
-    
   } catch (error) {
     console.error("Error connecting to the database:", error);
   }

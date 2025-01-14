@@ -18,10 +18,12 @@ Post.init({
     },
     private: {
         type: sequelize_1.DataTypes.BOOLEAN,
+        allowNull: true,
         defaultValue: false,
     },
     only_friends: {
         type: sequelize_1.DataTypes.BOOLEAN,
+        allowNull: true,
         defaultValue: false,
     },
     user_id: {
@@ -34,7 +36,8 @@ Post.init({
     },
     user_name: {
         type: sequelize_1.DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
+        defaultValue: 'Anonymous',
     },
     user_img: {
         type: sequelize_1.DataTypes.STRING,

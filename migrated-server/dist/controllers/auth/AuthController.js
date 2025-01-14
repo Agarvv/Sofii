@@ -25,6 +25,7 @@ class AuthController {
         return __awaiter(this, void 0, void 0, function* () {
             const { email, password } = req.body;
             const jwtToken = yield AuthService_1.default.loginUser(email, password);
+            res.cookie('jwt', jwtToken, { httpOnly: true, secure: true, sameSite: 'none', maxAge: 3600000 });
             res.status(200).json({ accessToken: jwtToken });
         });
     }

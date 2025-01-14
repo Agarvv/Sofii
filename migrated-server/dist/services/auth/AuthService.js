@@ -74,6 +74,7 @@ class AuthService {
                 if (dbResetToken && !this.isResetTokenExpired(dbResetToken)) {
                     user.password = yield this.hashPassword(newPassword);
                     yield user.save();
+                    yield dbResetToken.destroy();
                     return;
                 }
                 throw new CustomError_1.default("Your Reset Password Link Has Expired...", 400);
