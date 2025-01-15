@@ -32,7 +32,8 @@ class PostsController {
     
     public static async likeOrUnlike(req: Request, res: Response) {
         const { postId } = req.body; 
-        console.log("user req.user in controller", req.user)
+        
+        
         const likedOrUnliked = await PostsService.likeOrDislike(postId, req.user); 
         
         res.status(200).json({
@@ -40,8 +41,14 @@ class PostsController {
         })
     }
     
-    public static async SaveOrUnsave(req: Request, res: Response) {
+    public static async saveOrUnsave(req: Request, res: Response) {
+        const { postId } = req.body; 
         
+        const savedOrUnsaved = await PostsService.saveOrUnsave(postId, req.user.id); 
+        
+        res.status(200).json({
+            message: savedOrUnsaved
+        })
     }
 }
 

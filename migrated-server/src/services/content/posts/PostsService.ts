@@ -2,6 +2,7 @@ import Post from '@models/posts/Post';
 //import websocket from '@websocket/websocket';
 import PostRepository from '@repositories/posts/PostsRepository'
 import LikesRepository from '@repositories/posts/LikesRepository';
+import SavedRepository from '@repositories/posts/SavedRepository'
 import Likes from '@models/posts/Likes';
 import CustomError from '@outils/CustomError';
 import NotificationsService from '@services/notifications/NotificationsService';
@@ -71,6 +72,25 @@ class PostsService {
        
        
        return "Post Liked!"
+    }
+    
+    public static async saveOrUnsave(postId: number, userId: number): Promise<string> {
+        const io = websocket.getIO(); 
+        const saved = await SavedRepository.getSaved(postId, userId); 
+
+        if(!saved) {
+            await saved.destroy(); 
+            io.emit('unsavedPost', saved)
+            return "¡Post Unsaved!"
+        }
+        
+        const newSaved = await saved.Create({
+            user_id: userId,
+            post_id: postId
+        })
+        
+        io.emit('savedPost', newSaved)
+        return "¡Post Saved!"
     }
 }
 
