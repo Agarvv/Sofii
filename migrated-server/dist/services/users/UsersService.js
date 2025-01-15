@@ -86,6 +86,7 @@ class UsersService {
                 throw new CustomError_1.default('You are not authorized to accept this friend request.', 401);
             }
             yield FriendRepository_1.default.friends(friendRequest.request_sender_id, friendRequest.friend_target);
+            yield friendRequest.destroy();
             yield NotificationsService_1.default.sendNotificationToUser(friendRequest.request_sender_id, user.username, user.user_id, friendRequest, null, 'ACCEPTED_FRIEND_REQUEST');
         });
     }
