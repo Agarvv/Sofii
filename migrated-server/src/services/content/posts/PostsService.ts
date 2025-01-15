@@ -5,11 +5,13 @@ import LikesRepository from '@repositories/posts/LikesRepository';
 import Likes from '@models/posts/Likes';
 import CustomError from '@outils/CustomError';
 import NotificationsService from '@services/notifications/NotificationsService';
+import websocket from '@websocket/websocket'
 
 class PostsService {
    // private static io = websocket.getIO();
 
     public static async createPost(description: string, picture: string, userId: number): Promise<void> {
+        const io = websocket.getIO(); 
         
         const newPost = await Post.create({
             description: description,
@@ -19,7 +21,7 @@ class PostsService {
         // i need to emit back to the client a post with likes saved and comment relations.
         const fullPost = await PostRepository.getPostById(newPost.id); 
         
-      // this.io.emit('createdPost', fullPost);
+        io.emit('createdPost', fullPost);
     }
     
     public static async getPosts(): Promise<any> {
@@ -40,6 +42,8 @@ class PostsService {
     }
 
     public static async likeOrDislike(postId: number, user: any): Promise<string> {
+       const io = websocket.getIO(); 
+       
        const postLike = await LikesRepository.getPostLike(postId, user.user_id); 
 
        const post = await PostRepository.getPostWithoutDetails(postId); 
@@ -50,16 +54,22 @@ class PostsService {
 
        if(postLike) {
           await postLike.destroy();
-          // io.emit('unlikePost', postLike); 
+          io.emit('unlikePost', postLike); 
           return "Post Unliked!"
        }
 
        const newLike = await Likes.create({
         post_id: postId,
-        user_id: 1
+        user_id: user.user_id
        })
-       //  io.emit('likePost', newLike)
-       await NotificationsService.sendNotificationToUser(post.user_id, "Agarvvv", 1, post, null, 'POST_LIKED')
+       
+       io.emit('likePost', newLike)
+       
+       if(user.user_id !== post.user_id) {
+       await NotificationsService.sendNotificationToUser(post.user_id, user.username, user.user_id, post, null, 'POST_LIKED')
+       }
+       
+       
        return "Post Liked!"
     }
 }

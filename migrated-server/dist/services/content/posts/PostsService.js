@@ -19,10 +19,12 @@ const LikesRepository_1 = __importDefault(require("@repositories/posts/LikesRepo
 const Likes_1 = __importDefault(require("@models/posts/Likes"));
 const CustomError_1 = __importDefault(require("@outils/CustomError"));
 const NotificationsService_1 = __importDefault(require("@services/notifications/NotificationsService"));
+const websocket_1 = __importDefault(require("@websocket/websocket"));
 class PostsService {
     // private static io = websocket.getIO();
     static createPost(description, picture, userId) {
         return __awaiter(this, void 0, void 0, function* () {
+            const io = websocket_1.default.getIO();
             const newPost = yield Post_1.default.create({
                 description: description,
                 postPicture: picture,
@@ -30,7 +32,7 @@ class PostsService {
             });
             // i need to emit back to the client a post with likes saved and comment relations.
             const fullPost = yield PostsRepository_1.default.getPostById(newPost.id);
-            // this.io.emit('createdPost', fullPost);
+            io.emit('createdPost', fullPost);
         });
     }
     static getPosts() {
@@ -53,6 +55,7 @@ class PostsService {
     }
     static likeOrDislike(postId, user) {
         return __awaiter(this, void 0, void 0, function* () {
+            const io = websocket_1.default.getIO();
             const postLike = yield LikesRepository_1.default.getPostLike(postId, user.user_id);
             const post = yield PostsRepository_1.default.getPostWithoutDetails(postId);
             if (!post) {
@@ -60,15 +63,17 @@ class PostsService {
             }
             if (postLike) {
                 yield postLike.destroy();
-                // io.emit('unlikePost', postLike); 
+                io.emit('unlikePost', postLike);
                 return "Post Unliked!";
             }
             const newLike = yield Likes_1.default.create({
                 post_id: postId,
                 user_id: user.user_id
             });
-            //  io.emit('likePost', newLike)
-            yield NotificationsService_1.default.sendNotificationToUser(post.user_id, user.username, user.user_id, post, null, 'POST_LIKED');
+            io.emit('likePost', newLike);
+            if (user.user_id !== post.user_id) {
+                yield NotificationsService_1.default.sendNotificationToUser(post.user_id, user.username, user.user_id, post, null, 'POST_LIKED');
+            }
             return "Post Liked!";
         });
     }

@@ -6,9 +6,7 @@ class CommentController {
     public static async comment(req: Request, res: Response) {
         const { commentValue, postId } = req.body;
         
-        const userId = 1;  
-        
-        await CommentService.comment(commentValue, postId, userId); 
+        await CommentService.comment(commentValue, postId, req.user); 
         
         res.status(201).json({
             "message": "¡Comment Created!"
@@ -17,10 +15,8 @@ class CommentController {
     
     public static async likeComment(req: Request, res: Response) {
         const { commentId, postId } = req.body; 
-        
-        const userId = 1; 
-        
-        const likedOrUnliked = await CommentService.likeOrUnlikeComment(commentId, postId, userId); 
+    
+        const likedOrUnliked = await CommentService.likeOrUnlikeComment(commentId, postId, req.user); 
         
         res.status(200).json({
             "message": likedOrUnliked
@@ -30,7 +26,7 @@ class CommentController {
     public static async dislikeComment(req: Request, res: Response) {
         const { commentId, postId } = req.body; 
         
-        const userId = 1; 
+        const userId = req.user.user_id; 
         
         const dislikedOrUndisliked = await CommentService.dislikeOrUndislikeComment(commentId, postId, userId); 
         
@@ -42,9 +38,7 @@ class CommentController {
     public static async answerComment(req: Request, res: Response) {
         const { answerValue, commentId, postId } = req.body; 
         
-        const userId = 1; 
-        
-        await CommentService.answerComment(commentId, postId, userId, answerValue); 
+        await CommentService.answerComment(commentId, postId, req.user, answerValue); 
         
         res.status(201).json({
             "message": "¡Comment Answered!"

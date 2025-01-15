@@ -51,27 +51,28 @@ const dotenv = __importStar(require("dotenv"));
 const routes_1 = __importDefault(require("./routes"));
 const database_1 = __importDefault(require("./config/database"));
 require("@models/relations");
+const body_parser_1 = __importDefault(require("body-parser"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const http_1 = __importDefault(require("http"));
 const websocket_1 = __importDefault(require("./websocket/websocket"));
 const AuthMiddleware_1 = __importDefault(require("@middleware/AuthMiddleware"));
 dotenv.config();
 const app = (0, express_1.default)();
-routes_1.default.use((req, res, next) => {
+const server = http_1.default.createServer(app);
+websocket_1.default.init(server);
+app.use((0, cookie_parser_1.default)());
+app.use(body_parser_1.default.json());
+app.use((req, res, next) => {
     if (req.path.startsWith('/api/sofii/auth')) {
         return next();
     }
     (0, AuthMiddleware_1.default)(req, res, next);
 });
-const server = http_1.default.createServer(app);
-websocket_1.default.init(server);
+app.use(routes_1.default);
 app.use((err, req, res, next) => {
     console.error(err);
     res.status(err.status || 500).json({ message: err.message || 'Internal Server Error' });
 });
-app.use((0, cookie_parser_1.default)());
-app.use(express_1.default.json());
-app.use(routes_1.default);
 app.get('/', (req, res) => {
     res.send('Sofii API Migration to TypeScript is OK!');
 });

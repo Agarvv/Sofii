@@ -19,10 +19,6 @@ class NotificationsService {
         const io = websocket.getIO(); 
         const notificationText = {
             POST_LIKED: `${user_name} Liked Your Post: "${content.description}"`,
-            POST_COMMENT: `${user_name} Commented On Your Post: "${content.comment_content}"`,
-            COMMENT_LIKED: `${user_name} Liked Your Comment: "${content.comment_content}"`,
-            COMMENT_AWNSER_LIKED: `${user_name} Liked Your Comment Awnser: "${content.answer_content}"`,
-            AWNSERED_COMMENT: `${user_name} Awnsered To Your Comment: "${content.answer_content}"`,
             FRIEND_REQUEST: `${user_name} Sendt You A Friend Request!`,
             NEW_FOLLOWER: `${user_name} Started Following You!`,
             ACCEPTED_FRIEND_REQUEST: `${user_name} Acepted Your Friend Request!`,
