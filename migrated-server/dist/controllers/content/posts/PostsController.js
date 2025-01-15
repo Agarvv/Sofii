@@ -40,9 +40,10 @@ class PostsController {
             });
         });
     }
-    static LikeOrUnlike(req, res) {
+    static likeOrUnlike(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { postId } = req.body;
+            console.log("user req.user in controller", req.user);
             const likedOrUnliked = yield PostsService_1.default.likeOrDislike(postId, req.user);
             res.status(200).json({
                 message: likedOrUnliked

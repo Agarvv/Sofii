@@ -70,7 +70,7 @@ class CommentController {
         
         const dislikedOrUndisliked = await CommentService.dislikeOrUndislikeAnswer(answerId, commentId, postId, userId);
         
-        res.status(201).json({
+        res.status(200).json({
             "message": dislikedOrUndisliked 
         }) 
     }

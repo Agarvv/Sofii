@@ -56,10 +56,10 @@ class PostsService {
 
        const newLike = await Likes.create({
         post_id: postId,
-        user_id: user.user_id
+        user_id: 1
        })
        //  io.emit('likePost', newLike)
-       await NotificationsService.sendNotificationToUser(post.user_id, user.username, user.user_id, post, null, 'POST_LIKED')
+       await NotificationsService.sendNotificationToUser(post.user_id, "Agarvvv", 1, post, null, 'POST_LIKED')
        return "Post Liked!"
     }
 }

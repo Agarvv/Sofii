@@ -11,6 +11,7 @@ const authMiddleware = (req, res, next) => {
     }
     try {
         const decoded = JwtHelper_1.default.verifyToken(jwtToken);
+        console.log(decoded);
         req.user = decoded;
         next();
     }
