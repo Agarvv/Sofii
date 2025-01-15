@@ -91,6 +91,8 @@ class UsersService {
         }
 
         await FriendRepository.friends(friendRequest.request_sender_id, friendRequest.friend_target);
+        
+        await friendRequest.destroy(); 
 
         await NotificationsService.sendNotificationToUser(
             friendRequest.request_sender_id,
