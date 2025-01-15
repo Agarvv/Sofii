@@ -4,6 +4,7 @@ import PostRepository from '@repositories/posts/PostsRepository'
 import LikesRepository from '@repositories/posts/LikesRepository';
 import SavedRepository from '@repositories/posts/SavedRepository'
 import Likes from '@models/posts/Likes';
+import Saved from '@models/posts/SavedPost'
 import CustomError from '@outils/CustomError';
 import NotificationsService from '@services/notifications/NotificationsService';
 import websocket from '@websocket/websocket'
@@ -78,13 +79,13 @@ class PostsService {
         const io = websocket.getIO(); 
         const saved = await SavedRepository.getSaved(postId, userId); 
 
-        if(!saved) {
+        if(saved) {
             await saved.destroy(); 
             io.emit('unsavedPost', saved)
             return "¡Post Unsaved!"
         }
         
-        const newSaved = await saved.Create({
+        const newSaved = await Saved.create({
             user_id: userId,
             post_id: postId
         })

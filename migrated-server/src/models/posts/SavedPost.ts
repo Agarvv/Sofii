@@ -1,4 +1,4 @@
-import { DataTypes, Model } from 'sequelize';
+import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../../config/database';
 
 interface SavedAttributes {
@@ -6,17 +6,28 @@ interface SavedAttributes {
   post_id: number;
 }
 
-const Saved = sequelize.define<Model<SavedAttributes>>('Saved', {
-  user_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false
+interface SavedCreationAttributes extends Optional<SavedAttributes, 'user_id' | 'post_id'> {}
+
+class Saved extends Model<SavedAttributes, SavedCreationAttributes> implements SavedAttributes {
+  public user_id!: number;
+  public post_id!: number;
+}
+
+Saved.init(
+  {
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    post_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
   },
-  post_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false
+  {
+    sequelize, 
+    tableName: 'saves',
   }
-}, {
-  tableName: 'saves' 
-});
+);
 
 export default Saved;

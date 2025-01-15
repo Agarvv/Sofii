@@ -5,16 +5,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const database_1 = __importDefault(require("../../config/database"));
-const Saved = database_1.default.define('Saved', {
+class Saved extends sequelize_1.Model {
+}
+Saved.init({
     user_id: {
         type: sequelize_1.DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
     },
     post_id: {
         type: sequelize_1.DataTypes.INTEGER,
-        allowNull: false
-    }
+        allowNull: false,
+    },
 }, {
-    tableName: 'saves'
+    sequelize: database_1.default,
+    tableName: 'saves',
 });
 exports.default = Saved;

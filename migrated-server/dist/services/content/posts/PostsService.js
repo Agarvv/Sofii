@@ -16,7 +16,9 @@ const Post_1 = __importDefault(require("@models/posts/Post"));
 //import websocket from '@websocket/websocket';
 const PostsRepository_1 = __importDefault(require("@repositories/posts/PostsRepository"));
 const LikesRepository_1 = __importDefault(require("@repositories/posts/LikesRepository"));
+const SavedRepository_1 = __importDefault(require("@repositories/posts/SavedRepository"));
 const Likes_1 = __importDefault(require("@models/posts/Likes"));
+const SavedPost_1 = __importDefault(require("@models/posts/SavedPost"));
 const CustomError_1 = __importDefault(require("@outils/CustomError"));
 const NotificationsService_1 = __importDefault(require("@services/notifications/NotificationsService"));
 const websocket_1 = __importDefault(require("@websocket/websocket"));
@@ -75,6 +77,23 @@ class PostsService {
                 yield NotificationsService_1.default.sendNotificationToUser(post.user_id, user.username, user.user_id, post, null, 'POST_LIKED');
             }
             return "Post Liked!";
+        });
+    }
+    static saveOrUnsave(postId, userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const io = websocket_1.default.getIO();
+            const saved = yield SavedRepository_1.default.getSaved(postId, userId);
+            if (saved) {
+                yield saved.destroy();
+                io.emit('unsavedPost', saved);
+                return "¡Post Unsaved!";
+            }
+            const newSaved = yield SavedPost_1.default.create({
+                user_id: userId,
+                post_id: postId
+            });
+            io.emit('savedPost', newSaved);
+            return "¡Post Saved!";
         });
     }
 }

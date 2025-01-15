@@ -10,3 +10,5 @@ class SavedRepository {
         })
     }
 }
+
+export default SavedRepository; 

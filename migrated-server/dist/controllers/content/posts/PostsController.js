@@ -43,15 +43,19 @@ class PostsController {
     static likeOrUnlike(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { postId } = req.body;
-            console.log("user req.user in controller", req.user);
             const likedOrUnliked = yield PostsService_1.default.likeOrDislike(postId, req.user);
             res.status(200).json({
                 message: likedOrUnliked
             });
         });
     }
-    static SaveOrUnsave(req, res) {
+    static saveOrUnsave(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
+            const { postId } = req.body;
+            const savedOrUnsaved = yield PostsService_1.default.saveOrUnsave(postId, req.user.id);
+            res.status(200).json({
+                message: savedOrUnsaved
+            });
         });
     }
 }
