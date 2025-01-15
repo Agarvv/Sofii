@@ -44,7 +44,7 @@ class PostsController {
     public static async saveOrUnsave(req: Request, res: Response) {
         const { postId } = req.body; 
         
-        const savedOrUnsaved = await PostsService.saveOrUnsave(postId, req.user.id); 
+        const savedOrUnsaved = await PostsService.saveOrUnsave(postId, req.user.user_id); 
         
         res.status(200).json({
             message: savedOrUnsaved
