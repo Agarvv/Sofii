@@ -21,5 +21,6 @@
     "strict": true,
     "skipLibCheck": true,
     "outDir": "./dist"
-  }
+  },
+  "include": ["src/**/*", "src/types/express.d.ts"] 
 }
