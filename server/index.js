@@ -73,7 +73,6 @@ console.log('path',path.resolve(__dirname, './controllers'))
 
   sequelize.authenticate().then(() => {
    console.log('DATABASE OK');
-     sequelize.sync({ force: false});
   }).catch((e) => { 
      console.log(e);
   });

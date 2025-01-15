@@ -1,6 +1,6 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../../../config/database';
-
+//
 interface CommentAttributes {
   id: number;
   post_id: number;

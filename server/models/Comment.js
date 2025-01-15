@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-const Comment = sequelize.define('comment', {
+const Comment = sequelize.define('Comment', {
   post_id: {
     type: DataTypes.INTEGER,
     allowNull: false
