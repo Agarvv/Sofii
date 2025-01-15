@@ -12,51 +12,52 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const PostsService_1 = __importDefault(require("@services/content/posts/PostsService"));
-class PostsController {
-    static createPost(req, res) {
+const UsersService_1 = __importDefault(require("@services/users/UsersService"));
+class UsersController {
+    static blockOrUnblock(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { description, picture } = req.body;
-            const userId = 1;
-            yield PostsService_1.default.createPost(description, picture, userId);
-            res.status(201).json({
-                message: "Post Created!"
+            const { userId } = req.body;
+            const blockedOrUnblocked = yield UsersService_1.default.blockOrUnblock(userId, req.user.user_id);
+            res.status(200).json({
+                message: blockedOrUnblocked
             });
         });
     }
-    static GetPosts(req, res) {
+    static followOrUnfollow(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const posts = yield PostsService_1.default.getPosts();
+            const { userId } = req.body;
+            const followedOrUnfollowed = yield UsersService_1.default.followOrUnfollow(userId, req.user);
             res.status(200).json({
-                "posts": posts
+                message: followedOrUnfollowed
             });
         });
     }
-    static GetPostById(req, res) {
+    static sendFriendRequest(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const post = yield PostsService_1.default.getPostDetails(Number(req.params.id));
+            const { userId } = req.body;
+            yield UsersService_1.default.sendFriendRequest(userId, req.user);
             res.status(200).json({
-                "post": post
+                message: "¡Friend Request Send!"
             });
         });
     }
-    static likeOrUnlike(req, res) {
+    static denyFriendRequest(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { postId } = req.body;
-            const likedOrUnliked = yield PostsService_1.default.likeOrDislike(postId, req.user);
+            const { requestId } = req.body;
+            yield UsersService_1.default.denyFriendRequest(requestId, req.user);
             res.status(200).json({
-                message: likedOrUnliked
+                message: "¡Friend Request Denied!"
             });
         });
     }
-    static saveOrUnsave(req, res) {
+    static acceptFriendRequest(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { postId } = req.body;
-            const savedOrUnsaved = yield PostsService_1.default.saveOrUnsave(postId, req.user.user_id);
+            const { requestId } = req.body;
+            yield UsersService_1.default.acceptFriendRequest(requestId, req.user);
             res.status(200).json({
-                message: savedOrUnsaved
+                message: "¡Friend Request Accepted!"
             });
         });
     }
 }
-exports.default = PostsController;
+exports.default = UsersController;
