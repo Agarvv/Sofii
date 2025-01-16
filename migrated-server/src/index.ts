@@ -9,18 +9,21 @@ import cookieParser from 'cookie-parser';
 import http from 'http'; 
 import websocket from './websocket/websocket'; 
 import authMiddleware from '@middleware/AuthMiddleware';
-import session from 'express-session';
 import passport from 'passport';
+import session from 'express-session';
 
 dotenv.config();
 
 const app: Express = express();
 
 app.use(session({
-  secret: 'unsecureSecret2025',
+  secret: 'unsecureSecret2025', 
   resave: false,
   saveUninitialized: true,
 }));
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 const server = http.createServer(app); 
 

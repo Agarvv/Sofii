@@ -5,6 +5,8 @@ import { loginSchema } from '@validation/auth/LoginSchema';
 import { sendResetPasswordSchema } from '@validation/auth/SendResetPasswordSchema'
 import { resetPasswordSchema } from '@validation/auth/ResetPasswordSchema'; 
 import AuthController from '@controllers/auth/AuthController';
+import GoogleController from '@controllers/auth/GoogleController';
+import GithubController from '@controllers/auth/GithubController';
 
 const authRouter = express.Router();
 
@@ -28,5 +30,21 @@ authRouter.post('/reset-password',
   AuthController.resetPassword
 );
 
+authRouter.get('/google', 
+  GoogleController.authenticate
+)
+
+authRouter.get('/google/callback', 
+  GoogleController.callback
+)
+
+authRouter.get('/github',
+  GithubController.authenticate
+)
+
+authRouter.get('/github/callback',
+  GithubController.callback
+)
 
 export default authRouter;
+
