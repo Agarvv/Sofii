@@ -17,7 +17,7 @@ class ChatController {
     static chat(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { receiverId } = req.body;
-            const chatId = yield ChatService_1.default.startOrGetChat(req.user.user_id, receiverId);
+            const chatId = yield ChatService_1.default.startOrGetChat(req.account.user_id, receiverId);
             res.status(200).json({
                 chatId: chatId
             });
@@ -26,7 +26,7 @@ class ChatController {
     static getChatById(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const chat = yield ChatService_1.default.getChat(Number(id), req.user.user_id);
+            const chat = yield ChatService_1.default.getChat(Number(id), req.account.user_id);
             res.status(200).json({
                 chat: chat
             });
@@ -34,7 +34,7 @@ class ChatController {
     }
     static getChats(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const chats = yield ChatService_1.default.getUserChats(req.user.user_id);
+            const chats = yield ChatService_1.default.getUserChats(req.account.user_id);
             res.status(200).json({
                 chats: chats
             });

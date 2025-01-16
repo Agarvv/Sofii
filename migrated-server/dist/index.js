@@ -56,8 +56,14 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const http_1 = __importDefault(require("http"));
 const websocket_1 = __importDefault(require("./websocket/websocket"));
 const AuthMiddleware_1 = __importDefault(require("@middleware/AuthMiddleware"));
+const express_session_1 = __importDefault(require("express-session"));
 dotenv.config();
 const app = (0, express_1.default)();
+app.use((0, express_session_1.default)({
+    secret: 'unsecureSecret2025',
+    resave: false,
+    saveUninitialized: true,
+}));
 const server = http_1.default.createServer(app);
 websocket_1.default.init(server);
 app.use((0, cookie_parser_1.default)());

@@ -26,7 +26,7 @@ class CommentController {
     public static async dislikeComment(req: Request, res: Response) {
         const { commentId, postId } = req.body; 
         
-        const userId = req.user.user_id; 
+        const userId = req.account.user_id; 
         
         const dislikedOrUndisliked = await CommentService.dislikeOrUndislikeComment(commentId, postId, userId); 
         

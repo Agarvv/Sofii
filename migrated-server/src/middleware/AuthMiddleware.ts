@@ -11,7 +11,7 @@ const authMiddleware: RequestHandler = (req: Request, res: Response, next: NextF
   try {
     const decoded = JwtHelper.verifyToken(jwtToken);  
     console.log(decoded);
-    req.user = decoded;  
+    req.account = decoded; 
     
     next();  
   } catch (error) {

@@ -17,7 +17,7 @@ class PostsController {
     static createPost(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { description, picture } = req.body;
-            const userId = 1;
+            const userId = req.account.user_id;
             yield PostsService_1.default.createPost(description, picture, userId);
             res.status(201).json({
                 message: "Post Created!"
@@ -43,7 +43,7 @@ class PostsController {
     static likeOrUnlike(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { postId } = req.body;
-            const likedOrUnliked = yield PostsService_1.default.likeOrDislike(postId, req.user);
+            const likedOrUnliked = yield PostsService_1.default.likeOrDislike(postId, req.account);
             res.status(200).json({
                 message: likedOrUnliked
             });
@@ -52,7 +52,7 @@ class PostsController {
     static saveOrUnsave(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { postId } = req.body;
-            const savedOrUnsaved = yield PostsService_1.default.saveOrUnsave(postId, req.user.user_id);
+            const savedOrUnsaved = yield PostsService_1.default.saveOrUnsave(postId, req.account.user_id);
             res.status(200).json({
                 message: savedOrUnsaved
             });

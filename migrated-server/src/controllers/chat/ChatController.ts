@@ -6,7 +6,7 @@ class ChatController {
     public static async chat(req: Request, res: Response) {
       const { receiverId } = req.body; 
 
-      const chatId = await ChatService.startOrGetChat(req.user.user_id, receiverId); 
+      const chatId = await ChatService.startOrGetChat(req.account.user_id, receiverId); 
 
       res.status(200).json({
         chatId: chatId
@@ -16,7 +16,7 @@ class ChatController {
     public static async getChatById(req: Request, res: Response) {
       const { id } = req.params; 
 
-      const chat = await ChatService.getChat(Number(id), req.user.user_id); 
+      const chat = await ChatService.getChat(Number(id), req.account.user_id); 
 
       res.status(200).json({
         chat: chat
@@ -24,7 +24,7 @@ class ChatController {
     }
 
     public static async getChats(req: Request, res: Response) {
-      const chats = await ChatService.getUserChats(req.user.user_id); 
+      const chats = await ChatService.getUserChats(req.account.user_id); 
 
       res.status(200).json({
         chats: chats

@@ -6,7 +6,7 @@ class ProfileController {
         let { profileId } = req.params; 
         
         if(profileId == "s") {
-            profileId = req.user.user_id;
+            profileId = req.account.user_id;
         } // if the param value "profileId" is equal to "s" that means we have to get our autenthicated current user profile. 
         const profile = await ProfileService.getUserProfile(Number(profileId)); 
         
@@ -18,7 +18,7 @@ class ProfileController {
     public static async changeProfileData(req: Request, res: Response) {
         const { field, value } = req.body; 
         
-        await ProfileService.changeProfileData(field, value, req.user.user_id); 
+        await ProfileService.changeProfileData(field, value, req.account.user_id); 
         
         res.status(200).json({
             message: `Your ${field} Has Been Updated.`

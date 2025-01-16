@@ -5,7 +5,7 @@ class PostsController {
     public static async createPost(req: Request, res: Response): Promise<void> {
         const { description, picture } = req.body; 
         
-        const userId = 1; 
+        const userId = req.account.user_id; 
         
         await PostsService.createPost(description, picture, userId); 
         
@@ -34,7 +34,7 @@ class PostsController {
         const { postId } = req.body; 
         
         
-        const likedOrUnliked = await PostsService.likeOrDislike(postId, req.user); 
+        const likedOrUnliked = await PostsService.likeOrDislike(postId, req.account); 
         
         res.status(200).json({
             message: likedOrUnliked
@@ -44,7 +44,7 @@ class PostsController {
     public static async saveOrUnsave(req: Request, res: Response) {
         const { postId } = req.body; 
         
-        const savedOrUnsaved = await PostsService.saveOrUnsave(postId, req.user.user_id); 
+        const savedOrUnsaved = await PostsService.saveOrUnsave(postId, req.account.user_id); 
         
         res.status(200).json({
             message: savedOrUnsaved

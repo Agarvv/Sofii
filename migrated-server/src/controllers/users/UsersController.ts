@@ -5,7 +5,7 @@ class UsersController {
     public static async blockOrUnblock(req: Request, res: Response) {
         const { userId } = req.body; 
         
-        const blockedOrUnblocked = await UsersService.blockOrUnblock(userId, req.user.user_id); 
+        const blockedOrUnblocked = await UsersService.blockOrUnblock(userId, req.account.user_id); 
         
        res.status(200).json({
             message: blockedOrUnblocked
@@ -15,7 +15,7 @@ class UsersController {
     public static async followOrUnfollow(req: Request, res: Response) {
         const { userId } = req.body; 
         
-        const followedOrUnfollowed = await UsersService.followOrUnfollow(userId, req.user); 
+        const followedOrUnfollowed = await UsersService.followOrUnfollow(userId, req.account); 
         
         res.status(200).json({
             message: followedOrUnfollowed 
@@ -25,7 +25,7 @@ class UsersController {
     public static async sendFriendRequest(req: Request, res: Response) {
         const { userId } = req.body; 
         
-        await UsersService.sendFriendRequest(userId, req.user); 
+        await UsersService.sendFriendRequest(userId, req.account); 
         
         res.status(200).json({
             message: "¡Friend Request Send!"
@@ -35,7 +35,7 @@ class UsersController {
     public static async denyFriendRequest(req: Request, res: Response) {
         const { requestId } = req.body; 
         
-        await UsersService.denyFriendRequest(requestId, req.user);
+        await UsersService.denyFriendRequest(requestId, req.account);
         
         res.status(200).json({
             message: "¡Friend Request Denied!"
@@ -45,7 +45,7 @@ class UsersController {
     public static async acceptFriendRequest(req: Request, res: Response) {
         const { requestId } = req.body; 
         
-        await UsersService.acceptFriendRequest(requestId, req.user);
+        await UsersService.acceptFriendRequest(requestId, req.account);
         
         res.status(200).json({
             message: "¡Friend Request Accepted!"

@@ -17,7 +17,7 @@ class UsersController {
     static blockOrUnblock(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { userId } = req.body;
-            const blockedOrUnblocked = yield UsersService_1.default.blockOrUnblock(userId, req.user.user_id);
+            const blockedOrUnblocked = yield UsersService_1.default.blockOrUnblock(userId, req.account.user_id);
             res.status(200).json({
                 message: blockedOrUnblocked
             });
@@ -26,7 +26,7 @@ class UsersController {
     static followOrUnfollow(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { userId } = req.body;
-            const followedOrUnfollowed = yield UsersService_1.default.followOrUnfollow(userId, req.user);
+            const followedOrUnfollowed = yield UsersService_1.default.followOrUnfollow(userId, req.account);
             res.status(200).json({
                 message: followedOrUnfollowed
             });
@@ -35,7 +35,7 @@ class UsersController {
     static sendFriendRequest(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { userId } = req.body;
-            yield UsersService_1.default.sendFriendRequest(userId, req.user);
+            yield UsersService_1.default.sendFriendRequest(userId, req.account);
             res.status(200).json({
                 message: "¡Friend Request Send!"
             });
@@ -44,7 +44,7 @@ class UsersController {
     static denyFriendRequest(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { requestId } = req.body;
-            yield UsersService_1.default.denyFriendRequest(requestId, req.user);
+            yield UsersService_1.default.denyFriendRequest(requestId, req.account);
             res.status(200).json({
                 message: "¡Friend Request Denied!"
             });
@@ -53,7 +53,7 @@ class UsersController {
     static acceptFriendRequest(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { requestId } = req.body;
-            yield UsersService_1.default.acceptFriendRequest(requestId, req.user);
+            yield UsersService_1.default.acceptFriendRequest(requestId, req.account);
             res.status(200).json({
                 message: "¡Friend Request Accepted!"
             });

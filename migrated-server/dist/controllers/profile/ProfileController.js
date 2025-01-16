@@ -18,7 +18,7 @@ class ProfileController {
         return __awaiter(this, void 0, void 0, function* () {
             let { profileId } = req.params;
             if (profileId == "s") {
-                profileId = req.user.user_id;
+                profileId = req.account.user_id;
             } // if the param value "profileId" is equal to "s" that means we have to get our autenthicated current user profile. 
             const profile = yield ProfileService_1.default.getUserProfile(Number(profileId));
             res.status(200).json({
@@ -29,7 +29,7 @@ class ProfileController {
     static changeProfileData(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { field, value } = req.body;
-            yield ProfileService_1.default.changeProfileData(field, value, req.user.user_id);
+            yield ProfileService_1.default.changeProfileData(field, value, req.account.user_id);
             res.status(200).json({
                 message: `Your ${field} Has Been Updated.`
             });

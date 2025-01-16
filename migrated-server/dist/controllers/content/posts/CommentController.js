@@ -35,7 +35,7 @@ class CommentController {
     static dislikeComment(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { commentId, postId } = req.body;
-            const userId = req.user.user_id;
+            const userId = req.account.user_id;
             const dislikedOrUndisliked = yield CommentService_1.default.dislikeOrUndislikeComment(commentId, postId, userId);
             res.status(200).json({
                 "message": dislikedOrUndisliked
