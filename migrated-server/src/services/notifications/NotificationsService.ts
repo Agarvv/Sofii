@@ -23,7 +23,6 @@ class NotificationsService {
             NEW_FOLLOWER: `${user_name} Started Following You!`,
             ACCEPTED_FRIEND_REQUEST: `${user_name} Acepted Your Friend Request!`,
             CHAT_MESSAGE: `${user_name} Sendt You A Message: "${chat_message}"`,
-            CHAT_MESSAGE_WITH_FILE: `${user_name} Sendt A File`,
         };
 
         if (!(type in notificationText)) {

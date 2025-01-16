@@ -1,18 +1,29 @@
-import { DataTypes, Model } from 'sequelize';
+import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../../config/database';
 
+
+
 interface MessageAttributes {
+  id?: number; 
   message_room_id: number;
   message_user_id: number;
   message_content: string;
   message_color?: string;
   withFile?: boolean;
   fileType?: string;
-  fileSource?: string;
+  fileSource?: string; 
   readed?: boolean;
 }
 
-const Message = sequelize.define<Model<MessageAttributes>>('Message', {
+
+interface MessageInstance extends Model<MessageAttributes>, MessageAttributes {}
+
+const Message = sequelize.define<MessageInstance>('Message', {
+  id: {  
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true
+  },
   message_room_id: {
     type: DataTypes.INTEGER,
     allowNull: false

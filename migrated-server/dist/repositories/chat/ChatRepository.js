@@ -110,5 +110,28 @@ class ChatRepository {
             });
         });
     }
+    static createMessage(chatId, senderId, message) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const createdMessage = yield Message_1.default.create({
+                message_room_id: chatId,
+                message_user_id: senderId,
+                message_content: message
+            });
+            // need to emit back to the client the message with his user relation
+            const newMessage = yield Message_1.default.findOne({
+                where: {
+                    id: createdMessage.id
+                },
+                include: [
+                    {
+                        model: User_1.default,
+                        as: 'message_user'
+                    }
+                ]
+            });
+            if (newMessage)
+                return newMessage;
+        });
+    }
 }
 exports.default = ChatRepository;

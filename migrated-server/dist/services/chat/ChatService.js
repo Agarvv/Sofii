@@ -15,7 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const CustomError_1 = __importDefault(require("@outils/CustomError"));
 const ChatRepository_1 = __importDefault(require("@repositories/chat/ChatRepository"));
 const Chat_1 = __importDefault(require("@models/chat/Chat"));
+const Message_1 = __importDefault(require("@models/chat/Message"));
 const User_1 = __importDefault(require("@models/users/User"));
+const NotificationsService_1 = __importDefault(require("@services/notifications/NotificationsService"));
 class ChatService {
     static getUserChats(userId) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -33,7 +35,6 @@ class ChatService {
         return __awaiter(this, void 0, void 0, function* () {
             const chat = yield ChatRepository_1.default.getUserChat(senderId, receiverId);
             if (chat) {
-                this.checkIfAuthorizedToChat(chat, senderId);
                 return chat.chat_id;
             }
             const newChat = yield Chat_1.default.create({
@@ -48,8 +49,29 @@ class ChatService {
             throw new CustomError_1.default("You arent authorized to interact on this chat.", 401);
         }
     }
-    static sendMessage() {
+    static sendMessage(message, chatId, sender) {
         return __awaiter(this, void 0, void 0, function* () {
+            const chat = yield ChatRepository_1.default.getChat(chatId, sender.user_id);
+            if (!chat) {
+                throw new CustomError_1.default("Chat Not Found.", 404);
+            }
+            const newMessage = yield ChatRepository_1.default.createMessage(chatId, sender.user_id, message);
+            chat.last_message = message;
+            yield chat.save();
+            const messageNotificationTarget = chat.sender_id == sender.user_id ? chat.receiver_id : chat.sender_id;
+            yield NotificationsService_1.default.sendNotificationToUser(messageNotificationTarget, sender.username, sender.user_id, chat, message, 'CHAT_MESSAGE');
+            return newMessage;
+        });
+    }
+    static readMessage(messageId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const message = yield Message_1.default.findByPk(messageId);
+            if (message) {
+                message.readed = true;
+                yield message.save();
+                return message;
+            }
+            throw new CustomError_1.default("Message not found", 404);
         });
     }
     static getUserToDisplayInfo(chat, userId) {

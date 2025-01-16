@@ -15,9 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const JwtHelper_1 = __importDefault(require("@helpers/JwtHelper"));
 const socket_io_1 = require("socket.io");
 const cookie_1 = __importDefault(require("cookie"));
-//import ChatController from './controllers/ChatController';
-//import setUserActiveOrInactive from './outils/setUserActiveOrInactive';
-//import tokenController from './controllers/tokenController';
+const ChatService_1 = __importDefault(require("@services/chat/ChatService"));
+const ProfileService_1 = __importDefault(require("@services/profile/ProfileService"));
 let io = null;
 exports.default = {
     init: (server) => {
@@ -25,22 +24,24 @@ exports.default = {
             cors: {
                 origin: 'https://sofii.vercel.app',
                 methods: ['GET', 'POST'],
-                credentials: true
-            }
+                credentials: true,
+            },
         });
         io.on('connection', (socket) => __awaiter(void 0, void 0, void 0, function* () {
-            const cookies = cookie_1.default.parse(socket.request.headers.cookie || '');
+            const cookies = socket.request.headers.cookie
+                ? cookie_1.default.parse(socket.request.headers.cookie)
+                : {};
             const jwtToken = cookies.jwt;
-            if (!jwtToken) {
+            if (!jwtToken)
                 return;
-            }
-            //await setUserActiveOrInactive('active', jwtToken);
             const userDecoded = yield JwtHelper_1.default.verifyToken(jwtToken);
             socket.join(userDecoded.user_id);
+            yield ProfileService_1.default.setUserStatus('online', userDecoded.user_id);
             socket.on('chatMessage', (data) => __awaiter(void 0, void 0, void 0, function* () {
                 const { message, chat_id } = data;
-                socket.join(chat_id);
-                // send message func soon
+                socket.join(String(chat_id));
+                const newMessage = yield ChatService_1.default.sendMessage(message, chat_id, userDecoded);
+                socket.to(String(chat_id)).emit('chatMessage', newMessage);
             }));
             socket.on('typing', (chatId) => {
                 socket.join(chatId);
@@ -51,22 +52,20 @@ exports.default = {
                 socket.to(chatId).emit('stopTyping');
             });
             socket.on('readMessage', (data) => __awaiter(void 0, void 0, void 0, function* () {
-                socket.join(data.chat_id);
-                //const readedMessage = await ChatController.readMessage(data.message, userDecoded);
-                //if (readedMessage) {
-                //    socket.to(data.chat_id).emit('readMessage', readedMessage);
-                // }
+                socket.join(String(data.chatId));
+                const readedMessage = yield ChatService_1.default.readMessage(data.messageId);
+                socket.to(String(data.chatId)).emit('readMessage', readedMessage);
             }));
             socket.on('disconnect', () => __awaiter(void 0, void 0, void 0, function* () {
-                // await setUserActiveOrInactive('inactive', jwtToken);
+                yield ProfileService_1.default.setUserStatus('offline', userDecoded.user_id);
             }));
         }));
         return io;
     },
     getIO: () => {
         if (!io) {
-            throw new Error("Socket.io not Initialized");
+            throw new Error('Socket.io not Initialized');
         }
         return io;
-    }
+    },
 };

@@ -1,8 +1,7 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../../config/database';
 
-
-interface UserAttributes {
+export interface UserAttributes {
   id?: number;
   username: string;
   email: string;
@@ -51,6 +50,7 @@ class User extends Model<UserAttributes, UserCreationAttributes> implements User
   public job?: string;
   public banner?: string;
   public active!: boolean;
+
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;

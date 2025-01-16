@@ -3,6 +3,7 @@ import Message from "@models/chat/Message";
 import User from "@models/users/User";
 import { Op } from "sequelize";
 
+
 class ChatRepository {
     public static async getUserChats(userId: number): Promise<Chat[]> {
         return await Chat.findAll({
@@ -92,6 +93,30 @@ class ChatRepository {
                 }
             ]
         });
+    }
+    
+    public static async createMessage(chatId: number, senderId: number, message: string) {
+        const createdMessage = await Message.create({
+            message_room_id: chatId,
+            message_user_id: senderId,
+            message_content: message
+        })
+        
+        // need to emit back to the client the message with his user relation
+        const newMessage = await
+        Message.findOne({
+            where: {
+                id: createdMessage.id
+            }, 
+            include: [
+               {
+                   model: User,
+                   as: 'message_user'
+               }
+            ]
+        })
+        
+        if(newMessage) return newMessage 
     }
 }
 

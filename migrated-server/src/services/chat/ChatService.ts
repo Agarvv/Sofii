@@ -4,6 +4,7 @@ import Chat from "@models/chat/Chat";
 import Message from "@models/chat/Message";
 import { Model } from 'sequelize';
 import User from "@models/users/User";
+import NotificationsService from '@services/notifications/NotificationsService'
 
 class ChatService {
    public static async getUserChats(userId: number): Promise<Chat[]> {
@@ -21,7 +22,6 @@ class ChatService {
       const chat = await ChatRepository.getUserChat(senderId, receiverId); 
       
       if(chat) {
-        this.checkIfAuthorizedToChat(chat, senderId)
         return chat.chat_id; 
       }
 
@@ -39,8 +39,43 @@ class ChatService {
      }
    }
 
-   public static async sendMessage() {
-
+   public static async sendMessage(message: string, chatId: number, sender: any) {
+       const chat = await ChatRepository.getChat(chatId, sender.user_id); 
+       
+       if(!chat) {
+           throw new CustomError("Chat Not Found.", 404); 
+       }
+       
+       const newMessage = await ChatRepository.createMessage(chatId, sender.user_id, message); 
+       
+       chat.last_message = message; 
+       await chat.save(); 
+       
+       const messageNotificationTarget = chat.sender_id == sender.user_id ? chat.receiver_id : chat.sender_id 
+       
+       await NotificationsService.sendNotificationToUser(
+          messageNotificationTarget,
+          sender.username,
+          sender.user_id,
+          chat, 
+          message,
+          'CHAT_MESSAGE'
+       ); 
+       
+       return newMessage; 
+   }
+   
+   public static async readMessage(messageId: number) {
+       
+       const message = await Message.findByPk(messageId); 
+       
+       if(message) {
+           message.readed = true; 
+           await message.save(); 
+           return message
+       }
+       
+       throw new CustomError("Message not found", 404)
    }
 
    public static async getUserToDisplayInfo(chat: Chat, userId: number): Promise<User | null> {
