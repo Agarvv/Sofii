@@ -12,16 +12,15 @@ class ChatService {
 
     const chatsWithUserInfo = await Promise.all(
         chats.map(async (chat) => {
-            const userToDisplayInfo = await this.getUserToDisplayInfo(chat, userId);
-            return {
-                ...chat,
-                userToDisplayInfo, 
-            };
+            const chatData = chat.toJSON();
+            chatData.userToDisplayInfo = await this.getUserToDisplayInfo(chat, userId);
+            return chatData;
         })
     );
 
     return chatsWithUserInfo;
 }
+
 
    public static async getChat(chatId: number, userId: number) {
        
