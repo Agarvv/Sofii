@@ -8,14 +8,17 @@ import NotificationsService from '@services/notifications/NotificationsService'
 
 class ChatService {
    public static async getUserChats(userId: number): Promise<Chat[]> {
-      const chats = await ChatRepository.getUserChats(userId);
-      
-      chats.map(async (chat) => {
-          (chat as any).userToDisplayInfo = await this.getUserToDisplayInfo(chat, userId); 
-      })
-      
-     return chats; 
-   }
+    const chats = await ChatRepository.getUserChats(userId);
+
+    const chatsWithUserToDisplayInfo = await Promise.all(
+        chats.map(async (chat) => {
+            (chat as any).userToDisplayInfo = await this.getUserToDisplayInfo(chat, userId);
+            return chat;
+        })
+    );
+
+    return chatsWithUserToDisplayInfo;
+}
 
    public static async getChat(chatId: number, userId: number) {
        

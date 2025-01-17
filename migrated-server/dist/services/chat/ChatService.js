@@ -21,10 +21,11 @@ class ChatService {
     static getUserChats(userId) {
         return __awaiter(this, void 0, void 0, function* () {
             const chats = yield ChatRepository_1.default.getUserChats(userId);
-            chats.map((chat) => __awaiter(this, void 0, void 0, function* () {
+            const chatsWithUserToDisplayInfo = yield Promise.all(chats.map((chat) => __awaiter(this, void 0, void 0, function* () {
                 chat.userToDisplayInfo = yield this.getUserToDisplayInfo(chat, userId);
-            }));
-            return chats;
+                return chat;
+            })));
+            return chatsWithUserToDisplayInfo;
         });
     }
     static getChat(chatId, userId) {
