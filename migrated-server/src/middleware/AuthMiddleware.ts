@@ -5,7 +5,8 @@ const authMiddleware: RequestHandler = (req: Request, res: Response, next: NextF
   const jwtToken = req.cookies.jwt; 
 
   if (!jwtToken) {
-    return next(new Error("No JWT Found."));
+    //return next(new Error("No JWT Found."));
+    console.log("no jwt")
   }
 
   try {
