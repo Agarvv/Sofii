@@ -16,7 +16,8 @@ const authMiddleware: RequestHandler = (req: Request, res: Response, next: NextF
     
     next();  
   } catch (error) {
-    return next(new Error("Invalid or expired token.")); 
+    console.log(error)
+   // return next(new Error("Invalid or expired token.")); 
   }
 };
 
