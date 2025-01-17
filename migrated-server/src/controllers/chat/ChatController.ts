@@ -17,6 +17,7 @@ class ChatController {
       const { id } = req.params; 
 
       const chat = await ChatService.getChat(Number(id), req.account.user_id); 
+      
 
       res.status(200).json({
         chat: chat

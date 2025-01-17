@@ -39,15 +39,12 @@ class ChatRepository {
                     }
                 ]
             });
-            chats.forEach((chat) => {
-                chat.userToDisplayInfo = this.getUserToDisplayInfo(chat, userId);
-            });
             return chats;
         });
     }
     static getChat(chatId, userId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const chat = yield Chat_1.default.findOne({
+            return yield Chat_1.default.findOne({
                 where: {
                     chat_id: chatId,
                     [sequelize_1.Op.or]: {
@@ -79,8 +76,6 @@ class ChatRepository {
                     }
                 ]
             });
-            chat.userToDisplayInfo = this.getUserToDisplayInfo(chat, userId);
-            return chat;
         });
     }
     static getUserChat(sender, receiver) {
@@ -145,11 +140,6 @@ class ChatRepository {
             });
             if (newMessage)
                 return newMessage;
-        });
-    }
-    static getUserToDisplayInfo(chat, userId) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return chat.Sender.id == userId ? chat.Receiver : chat.Sender;
         });
     }
 }

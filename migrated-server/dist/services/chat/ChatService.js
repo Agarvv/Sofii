@@ -16,19 +16,22 @@ const CustomError_1 = __importDefault(require("@outils/CustomError"));
 const ChatRepository_1 = __importDefault(require("@repositories/chat/ChatRepository"));
 const Chat_1 = __importDefault(require("@models/chat/Chat"));
 const Message_1 = __importDefault(require("@models/chat/Message"));
-const User_1 = __importDefault(require("@models/users/User"));
 const NotificationsService_1 = __importDefault(require("@services/notifications/NotificationsService"));
 class ChatService {
     static getUserChats(userId) {
         return __awaiter(this, void 0, void 0, function* () {
             const chats = yield ChatRepository_1.default.getUserChats(userId);
+            chats.map((chat) => __awaiter(this, void 0, void 0, function* () {
+                chat.userToDisplayInfo = yield this.getUserToDisplayInfo(chat, userId);
+            }));
             return chats;
         });
     }
     static getChat(chatId, userId) {
         return __awaiter(this, void 0, void 0, function* () {
             const chat = yield ChatRepository_1.default.getChat(chatId, userId);
-            return chat;
+            const userToDisplayInfo = yield this.getUserToDisplayInfo(chat, userId);
+            return { chat, userToDisplayInfo };
         });
     }
     static startOrGetChat(senderId, receiverId) {
@@ -76,8 +79,7 @@ class ChatService {
     }
     static getUserToDisplayInfo(chat, userId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userToDisplayInfoId = chat.sender_id == userId ? chat.receiver_id : chat.sender_id;
-            return User_1.default.findByPk(userToDisplayInfoId);
+            return chat.Sender.id == userId ? chat.Receiver : chat.Sender;
         });
     }
 }

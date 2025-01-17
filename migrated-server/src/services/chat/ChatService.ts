@@ -9,13 +9,21 @@ import NotificationsService from '@services/notifications/NotificationsService'
 class ChatService {
    public static async getUserChats(userId: number): Promise<Chat[]> {
       const chats = await ChatRepository.getUserChats(userId);
-      return chats;
+      
+      chats.map(async (chat) => {
+          (chat as any).userToDisplayInfo = await this.getUserToDisplayInfo(chat, userId); 
+      })
+      
+     return chats; 
    }
 
-   public static async getChat(chatId: number, userId: number): Promise<Chat | null> {
+   public static async getChat(chatId: number, userId: number) {
+       
         const chat = await ChatRepository.getChat(chatId, userId);
-
-        return chat;
+        
+        const userToDisplayInfo = await this.getUserToDisplayInfo(chat, userId); 
+        
+        return { chat, userToDisplayInfo } 
    }
 
    public static async startOrGetChat(senderId: number, receiverId: number): Promise<number>{
@@ -78,10 +86,9 @@ class ChatService {
        throw new CustomError("Message not found", 404)
    }
 
-   public static async getUserToDisplayInfo(chat: Chat, userId: number): Promise<User | null> {
-     const userToDisplayInfoId = chat.sender_id == userId ? chat.receiver_id : chat.sender_id;
-     return User.findByPk(userToDisplayInfoId); 
-   }
+   private static async getUserToDisplayInfo(chat: any, userId: number) {
+        return chat.Sender.id == userId ? chat.Receiver : chat.Sender; 
+    }
 }
 
 export default ChatService; 

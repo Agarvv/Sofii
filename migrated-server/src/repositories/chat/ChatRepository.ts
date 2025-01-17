@@ -6,71 +6,65 @@ import { Op } from "sequelize";
 
 class ChatRepository {
     public static async getUserChats(userId: number): Promise<Chat[]> {
-        const chats = await Chat.findAll({
-            where: {
-                [Op.or]: [
-                    { sender_id: userId },
-                    { receiver_id: userId }
-                ]
-            }, 
-            include: [
-                {
-                    model: User,
-                    as: 'Sender',
-                    attributes: ['id', 'username', 'profilePicture', 'active']
-                },
-                {
-                    model: User,
-                    as: 'Receiver',
-                    attributes: ['id', 'username', 'profilePicture', 'active']
-                }
+    const chats = await Chat.findAll({
+        where: {
+            [Op.or]: [
+                { sender_id: userId },
+                { receiver_id: userId }
             ]
-        });
-        
-        chats.forEach((chat) => {
-            (chat as any).userToDisplayInfo = this.getUserToDisplayInfo(chat, userId); 
-        })
-        
-        return chats; 
-    }
+        },
+        include: [
+            {
+                model: User,
+                as: 'Sender',
+                attributes: ['id', 'username', 'profilePicture', 'active']
+            },
+            {
+                model: User,
+                as: 'Receiver',
+                attributes: ['id', 'username', 'profilePicture', 'active']
+            }
+        ]
+    });
+
+    return chats; 
+}
+
 
     public static async getChat(chatId: number, userId: number) {
-        const chat = await Chat.findOne({
-            where: { 
-                chat_id: chatId,
-                [Op.or]: {
-                    sender_id: userId,
-                    receiver_id: userId
-                }
+    return await Chat.findOne({
+        where: { 
+            chat_id: chatId,
+            [Op.or]: {
+                sender_id: userId,
+                receiver_id: userId
+            }
+        },
+        include: [
+            {
+                model: User,
+                as: 'Sender',
+                attributes: ['id', 'username', 'profilePicture', 'active']
             },
-            include: [
-                {
-                    model: User,
-                    as: 'Sender',
-                    attributes: ['id', 'username', 'profilePicture', 'active']
-                },
-                {
-                    model: User,
-                    as: 'Receiver',
-                    attributes: ['id', 'username', 'profilePicture', 'active']
-                },
-                {
-                    model: Message,
-                    as: 'messages',
-                    include: [
-                       {
-                           model: User,
-                           as: 'message_user',
-                           attributes: ['id', 'username', 'profilePicture', 'active']
-                       }
-                    ]
-                }
-            ]
-        });
-        (chat as any).userToDisplayInfo = this.getUserToDisplayInfo(chat, userId); 
-        return chat; 
-        
-    }
+            {
+                model: User,
+                as: 'Receiver',
+                attributes: ['id', 'username', 'profilePicture', 'active']
+            },
+            {
+                model: Message,
+                as: 'messages',
+                include: [
+                   {
+                       model: User,
+                       as: 'message_user',
+                       attributes: ['id', 'username', 'profilePicture', 'active']
+                   }
+                ]
+            }
+        ]
+    });
+}
 
     public static async getUserChat(sender: number, receiver: number): Promise<Chat | null>{
         return await Chat.findOne({
@@ -135,10 +129,7 @@ class ChatRepository {
         
         if(newMessage) return newMessage 
     }
-    
-    private static async getUserToDisplayInfo(chat: any, userId: number) {
-        return chat.Sender.id == userId ? chat.Receiver : chat.Sender; 
-    }
+
 }
 
 export default ChatRepository; 
