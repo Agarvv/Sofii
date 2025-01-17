@@ -6,7 +6,7 @@ import { Op } from "sequelize";
 
 class ChatRepository {
     public static async getUserChats(userId: number): Promise<Chat[]> {
-        return await Chat.findAll({
+        const chats = await Chat.findAll({
             where: {
                 [Op.or]: [
                     { sender_id: userId },
@@ -26,10 +26,16 @@ class ChatRepository {
                 }
             ]
         });
+        
+        chats.forEach((chat) => {
+            (chat as any).userToDisplayInfo = this.getUserToDisplayInfo(chat, userId); 
+        })
+        
+        return chats; 
     }
 
     public static async getChat(chatId: number, userId: number) {
-        return await Chat.findOne({
+        const chat = await Chat.findOne({
             where: { 
                 chat_id: chatId,
                 [Op.or]: {
@@ -61,7 +67,8 @@ class ChatRepository {
                 }
             ]
         });
-        
+        (chat as any).userToDisplayInfo = this.getUserToDisplayInfo(chat, userId); 
+        return chat; 
         
     }
 
@@ -127,6 +134,10 @@ class ChatRepository {
         })
         
         if(newMessage) return newMessage 
+    }
+    
+    private static async getUserToDisplayInfo(chat: any, userId: number) {
+        return chat.Sender.id == userId ? chat.Receiver : chat.Sender; 
     }
 }
 

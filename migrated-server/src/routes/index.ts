@@ -14,7 +14,6 @@ router.use('/api/sofii/posts', postsRouter);
 router.use('/api/sofii/users', usersRouter);
 router.use('/api/sofii/chats', chatRouter);
 router.use('/api/sofii/search', searchRouter);
-
 router.use('/api/sofii/profile', profileRouter);
 
 export default router;
