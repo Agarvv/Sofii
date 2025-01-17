@@ -35,9 +35,9 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 
 app.use((req, res, next) => {
-  if (req.path.startsWith('/api/sofii/auth')) {
-    return next(); 
-  }
+  if (req.path.startsWith('/api/sofii/auth') || req.path.startsWith('/auth')) {
+    return next()
+  }  
   authMiddleware(req, res, next); 
 });
 
