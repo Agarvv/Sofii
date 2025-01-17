@@ -74,6 +74,39 @@ class AuthService {
       throw new CustomError("Your Reset Password Link Has Expired...", 400);
     }
   }
+  
+  public static async registerBySocialMedia(user: any): Promise<User> {
+      const randomPassword = Math.random().toString(36).slice(-8); 
+      
+      const hashedPassword = await this.hashPassword(randomPassword); 
+      
+      const newUser = await User.create({
+          username: user.username,
+          email: user.email,
+          password: hashedPassword
+      })
+      
+      return newUser; 
+  }
+  
+  public static async authenticateWithSocialMedia(user: any): Promise<string> {
+      const dbUser = await userRepository.findByEmail(user.email) 
+      if(dbUser) {
+          const payload = this.generateJwtPayload(dbUser); 
+          
+          const jwt = await JwtHelper.generateToken(payload) 
+          
+          return jwt; 
+      }
+      
+      const newUser = await this.registerBySocialMedia(user) 
+      
+      const payload = this.generateJwtPayload(newUser); 
+          
+      const jwt = await JwtHelper.generateToken(payload) 
+      
+      return jwt; 
+  }
 
   private static async hashPassword(rawPassword: string): Promise<string> {
     return await bcrypt.hash(rawPassword, 10);

@@ -81,6 +81,32 @@ class AuthService {
             }
         });
     }
+    static registerBySocialMedia(user) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const randomPassword = Math.random().toString(36).slice(-8);
+            const hashedPassword = yield this.hashPassword(randomPassword);
+            const newUser = yield User_1.default.create({
+                username: user.username,
+                email: user.email,
+                password: hashedPassword
+            });
+            return newUser;
+        });
+    }
+    static authenticateWithSocialMedia(user) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const dbUser = yield UserRepository_1.default.findByEmail(user.email);
+            if (dbUser) {
+                const payload = this.generateJwtPayload(dbUser);
+                const jwt = yield JwtHelper_1.default.generateToken(payload);
+                return jwt;
+            }
+            const newUser = yield this.registerBySocialMedia(user);
+            const payload = this.generateJwtPayload(newUser);
+            const jwt = yield JwtHelper_1.default.generateToken(payload);
+            return jwt;
+        });
+    }
     static hashPassword(rawPassword) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield bcryptjs_1.default.hash(rawPassword, 10);

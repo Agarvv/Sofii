@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction} from 'express';
 import passport from 'passport';
+import AuthService from '@services/auth/AuthService'
+
 
 class GithubController {
 
@@ -10,16 +12,33 @@ class GithubController {
   }
 
   public static callback(req: Request, res: Response, next: NextFunction) {
-    passport.authenticate('github', { failureRedirect: '/' }, (err: any, user: any) => {
-      if (err) {
-        return res.redirect('/'); 
+  passport.authenticate('github', { failureRedirect: '/' }, async (err: any, user: any) => {
+    if (err) {
+      console.log(err);
+      return res.redirect('https://sofii.vercel.app'); 
+    }
+
+    if (user) {
+      try {
+        const jwt = await AuthService.authenticateWithSocialMedia(user);
+
+        res.cookie('jwt', jwt, {
+          secure: true,
+          httpOnly: true,
+          sameSite: 'none'
+        });
+
+        return res.status(200).json({
+          accessToken: jwt
+        });
+      } catch (error) {
+        console.log('Github auth error:', error);
+        return res.redirect('https://sofii.vercel.app'); 
       }
+    }
+  })(req, res, next);
+}
 
-      const email = user?.email; 
-
-      return res.json({ email });
-    })(req, res, next); 
-  }
 }
 
 export default GithubController;
