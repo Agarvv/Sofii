@@ -13,7 +13,7 @@ passport.use(new GoogleStrategy(
   {
     clientID: process.env.GOOGLE_CLIENT_ID as string,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-    callbackURL: 'https://sofii-vsly.onrender.com/auth/google/callback',
+    callbackURL: 'https://sofii-vsly.onrender.com/api/sofii/auth/google/callback',
   },
   (accessToken: string, refreshToken: string, profile: Profile, done: (err: any, user?: any) => void) => {
     const user = {
