@@ -11,6 +11,8 @@ import websocket from './websocket/websocket';
 import authMiddleware from '@middleware/AuthMiddleware';
 import passport from 'passport';
 import session from 'express-session';
+import '@config/GooglePassport'
+import '@config/GithubPassport'
 
 dotenv.config();
 
