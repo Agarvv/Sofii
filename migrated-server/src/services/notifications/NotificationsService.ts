@@ -10,7 +10,7 @@ class NotificationsService {
    
    public static async sendNotificationToUser(
     target: number,
-    user_name: any,
+    user_name: string,
     user_id: number,
     content: any,
     chat_message: string | null,
@@ -35,15 +35,11 @@ class NotificationsService {
             notification_type: type,
             notification: notificationText[type as keyof typeof notificationText],
             type_id: content.id || content.post_id || content.video_id || content.sender_id || content.friend_one_id || content.request_sender_id || user_id,
+        }, {
+           include: { model: User, as: 'targetUser' }
         });
 
-        // need to send the notification with his user relation
-        const fullNotification = await Notifications.findOne({
-            where: { id: originalNotification.id },
-            include: [{ model: User, as: 'targetUser' }],
-        });
-
-        io.to(String(target)).emit('newNotification', fullNotification);
+        io.to(String(target)).emit('newNotification', originalNotification);
    }
 
 }

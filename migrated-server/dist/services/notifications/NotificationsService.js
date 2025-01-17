@@ -41,13 +41,10 @@ class NotificationsService {
                 notification_type: type,
                 notification: notificationText[type],
                 type_id: content.id || content.post_id || content.video_id || content.sender_id || content.friend_one_id || content.request_sender_id || user_id,
+            }, {
+                include: { model: User_1.default, as: 'targetUser' }
             });
-            // need to send the notification with his user relation
-            const fullNotification = yield Notifications_1.default.findOne({
-                where: { id: originalNotification.id },
-                include: [{ model: User_1.default, as: 'targetUser' }],
-            });
-            io.to(String(target)).emit('newNotification', fullNotification);
+            io.to(String(target)).emit('newNotification', originalNotification);
         });
     }
 }

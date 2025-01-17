@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import CustomError from '@outils/CustomError';
 import JwtHelper from '@helpers/JwtHelper';
 import MailHelper from '@helpers/MailHelper';
+import Account from '../../types/Account'
 
 class AuthService {
   public static async registerUser(username: string, email: string, password: string): Promise<void> {
@@ -119,7 +120,7 @@ class AuthService {
     }
   }
 
-  private static generateJwtPayload(user: User): object {
+  private static generateJwtPayload(user: User): Account {
     return {
       user_id: user.id,
       username: user.username,
@@ -139,7 +140,7 @@ class AuthService {
     const resetUrl = `https://sofii.vercel.app/reset-password/${email}/${resetToken}`;
 
     await MailHelper.sendMail(
-      email, // Corregido
+      email, 
       'Reset Your Password At Sofii',
       `Enter this link to reset your password: ${resetUrl}`,
     );

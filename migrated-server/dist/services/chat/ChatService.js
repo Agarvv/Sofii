@@ -49,11 +49,6 @@ class ChatService {
             return newChat.chat_id;
         });
     }
-    static checkIfAuthorizedToChat(chat, userId) {
-        if (chat.sender_id !== userId || chat.receiver_id !== userId) {
-            throw new CustomError_1.default("You arent authorized to interact on this chat.", 401);
-        }
-    }
     static sendMessage(message, chatId, sender) {
         return __awaiter(this, void 0, void 0, function* () {
             const chat = yield ChatRepository_1.default.getChat(chatId, sender.user_id);

@@ -138,8 +138,7 @@ class AuthService {
     static sendResetEmail(email, resetToken) {
         return __awaiter(this, void 0, void 0, function* () {
             const resetUrl = `https://sofii.vercel.app/reset-password/${email}/${resetToken}`;
-            yield MailHelper_1.default.sendMail(email, // Corregido
-            'Reset Your Password At Sofii', `Enter this link to reset your password: ${resetUrl}`);
+            yield MailHelper_1.default.sendMail(email, 'Reset Your Password At Sofii', `Enter this link to reset your password: ${resetUrl}`);
         });
     }
     static generateResetToken() {

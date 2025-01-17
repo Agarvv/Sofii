@@ -10,26 +10,39 @@ import CommentAwnsersLikes from '@models/posts/comments/CommentAwnsersLikes';
 import CommentAwnsersDislikes from '@models/posts/comments/CommentAwnsersDislikes';
 import NotificationsService from '@services/notifications/NotificationsService';
 import websocket from '@websocket/websocket'
-
+import Account from '../../../types/Account';
+import User from '@models/users/User'
 
 
 class CommentService {
-    public static async comment(commentValue: string, postId: number, user: any): Promise<void> {
+    public static async comment(commentValue: string, postId: number, user: Account): Promise<void> {
         const io = websocket.getIO(); 
         
         const newComment = await Comment.create({
             post_id: postId,
             user_id: user.user_id,
-            comment_content: commentValue 
-        })
+            comment_content: commentValue,
+        }, {
+            include: [
+                { model: User, as: 'commentUser' },
+                { model: CommentLikes, as: 'comment_likes' },
+                { model: CommentDislikes, as: 'comment_dislikes' },
+                {
+                    model: CommentAnswer,
+                    as: 'awnsers',
+                    include: [
+                        { model: User, as: 'awnser_user' },
+                        { model: CommentAwnsersLikes, as: 'awnser_likes' },
+                        { model: CommentAwnsersDislikes, as: 'awnser_dislikes' }
+        ]
+    }
+]
+        });
         
-        // need to find the comment with his owner relations likes and dislikes to send to the frontend. 
-        const fullComment = await CommentsRepository.findCommentById(newComment.id) 
-    
-        io.emit('newComment', fullComment)
+        io.emit('newComment', newComment)
     }
     
-    public static async likeOrUnlikeComment(commentId: number, postId: number, user: any): Promise<string> {
+    public static async likeOrUnlikeComment(commentId: number, postId: number, user: Account): Promise<string> {
         const io = websocket.getIO(); 
         
         const commentLike = await LikesRepository.getCommentLike(user.user_id, postId, commentId);
@@ -75,7 +88,7 @@ class CommentService {
     (
         commentId:  number, 
         postId: number, 
-        user: any, 
+        user: Account, 
         answerValue: string
     ): Promise<void> {
         const io = websocket.getIO(); 
@@ -84,12 +97,15 @@ class CommentService {
             comment_id: commentId,
             user_id: user.user_id,
             answer_content: answerValue 
+        }, {
+            include: [
+                { model: User, as: 'awnser_user' },
+                { model: CommentAwnsersLikes, as: 'awnser_likes' },
+                { model: CommentAwnsersDislikes, as: 'awnser_dislikes' }
+            ]
         })
-        
-        // need to find answer with his sql relations to send to the client.
-        const fullAnswer = await CommentsRepository.findAnswerById(newAnswer.id);
-    
-        io.emit('newCommentAnswer', fullAnswer)
+
+        io.emit('newCommentAnswer', newAnswer)
     }
     
     public static async likeOrUnlikeAnswer(answerId: number, commentId: number, postId: number, userId: number) {

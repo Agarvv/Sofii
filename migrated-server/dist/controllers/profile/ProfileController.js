@@ -16,7 +16,7 @@ const ProfileService_1 = __importDefault(require("@services/profile/ProfileServi
 class ProfileController {
     static getUserProfile(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            let { profileId } = req.params;
+            let profileId = req.params.profileId;
             if (profileId == "s") {
                 profileId = req.account.user_id;
             } // if the param value "profileId" is equal to "s" that means we have to get our autenthicated current user profile. 

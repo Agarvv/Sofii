@@ -17,7 +17,7 @@ class CommentController {
     static comment(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { commentValue, postId } = req.body;
-            yield CommentService_1.default.comment(commentValue, postId, req.user);
+            yield CommentService_1.default.comment(commentValue, postId, req.account);
             res.status(201).json({
                 "message": "¡Comment Created!"
             });
@@ -26,7 +26,7 @@ class CommentController {
     static likeComment(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { commentId, postId } = req.body;
-            const likedOrUnliked = yield CommentService_1.default.likeOrUnlikeComment(commentId, postId, req.user);
+            const likedOrUnliked = yield CommentService_1.default.likeOrUnlikeComment(commentId, postId, req.account);
             res.status(200).json({
                 "message": likedOrUnliked
             });
@@ -45,7 +45,7 @@ class CommentController {
     static answerComment(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { answerValue, commentId, postId } = req.body;
-            yield CommentService_1.default.answerComment(commentId, postId, req.user, answerValue);
+            yield CommentService_1.default.answerComment(commentId, postId, req.account, answerValue);
             res.status(201).json({
                 "message": "¡Comment Answered!"
             });
@@ -54,7 +54,7 @@ class CommentController {
     static likeCommentAnswer(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { commentId, answerId, postId } = req.body;
-            const userId = 1;
+            const userId = req.account.user_id;
             const likedOrUnliked = yield CommentService_1.default.likeOrUnlikeAnswer(answerId, commentId, postId, userId);
             res.status(201).json({
                 "message": likedOrUnliked
@@ -64,7 +64,7 @@ class CommentController {
     static dislikeCommentAnswer(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { commentId, answerId, postId } = req.body;
-            const userId = 1;
+            const userId = req.account.user_id;
             const dislikedOrUndisliked = yield CommentService_1.default.dislikeOrUndislikeAnswer(answerId, commentId, postId, userId);
             res.status(200).json({
                 "message": dislikedOrUndisliked

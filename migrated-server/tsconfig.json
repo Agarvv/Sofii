@@ -12,7 +12,8 @@
       "@helpers/*": ["helpers/*"],
       "@repositories/*": ["repositories/*"],
       "@outils/*": ["outils/*"],
-      "@websocket/*": ["websocket/*"]
+      "@websocket/*": ["websocket/*"],
+      "@types/*": ["types/*"]
     },
     "target": "es2016",
     "module": "commonjs",

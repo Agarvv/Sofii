@@ -5,10 +5,11 @@ import Message from "@models/chat/Message";
 import { Model } from 'sequelize';
 import User from "@models/users/User";
 import NotificationsService from '@services/notifications/NotificationsService'
+import Account from '../../types/Account';
 
 class ChatService {
    
-   public static async getUserChats(userId: number): Promise<any[]> {
+   public static async getUserChats(userId: number): Promise<Chat[]> {
     const chats = await ChatRepository.getUserChats(userId);
 
     const chatsWithUserInfo = await Promise.all(
@@ -24,7 +25,8 @@ class ChatService {
 }
 
 
-   public static async getChat(chatId: number, userId: number) {
+   public static async getChat(chatId: number, userId: number):
+   Promise<{ chat: Chat | null, userToDisplayInfo: User}> {
        
         const chat = await ChatRepository.getChat(chatId, userId);
         
@@ -33,7 +35,7 @@ class ChatService {
         return { chat, userToDisplayInfo } 
    }
 
-   public static async startOrGetChat(senderId: number, receiverId: number): Promise<number>{
+   public static async startOrGetChat(senderId: number, receiverId: number): Promise<number> {
       const chat = await ChatRepository.getUserChat(senderId, receiverId); 
       
       if(chat) {
@@ -48,13 +50,7 @@ class ChatService {
       return newChat.chat_id;
    }
 
-   public static checkIfAuthorizedToChat(chat: Chat, userId: number) {
-     if(chat.sender_id !== userId || chat.receiver_id !== userId) {
-        throw new CustomError("You arent authorized to interact on this chat.", 401); 
-     }
-   }
-
-   public static async sendMessage(message: string, chatId: number, sender: any) {
+   public static async sendMessage(message: string, chatId: number, sender: Account) {
        const chat = await ChatRepository.getChat(chatId, sender.user_id); 
        
        if(!chat) {
@@ -93,7 +89,7 @@ class ChatService {
        throw new CustomError("Message not found", 404)
    }
 
-   private static async getUserToDisplayInfo(chat: any, userId: number) {
+   private static async getUserToDisplayInfo(chat: any, userId: number): Promise<User> {
         return chat.Sender.id == userId ? chat.Receiver : chat.Sender; 
     }
 }

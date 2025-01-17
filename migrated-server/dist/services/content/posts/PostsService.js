@@ -13,7 +13,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Post_1 = __importDefault(require("@models/posts/Post"));
-//import websocket from '@websocket/websocket';
 const PostsRepository_1 = __importDefault(require("@repositories/posts/PostsRepository"));
 const LikesRepository_1 = __importDefault(require("@repositories/posts/LikesRepository"));
 const SavedRepository_1 = __importDefault(require("@repositories/posts/SavedRepository"));
@@ -22,8 +21,8 @@ const SavedPost_1 = __importDefault(require("@models/posts/SavedPost"));
 const CustomError_1 = __importDefault(require("@outils/CustomError"));
 const NotificationsService_1 = __importDefault(require("@services/notifications/NotificationsService"));
 const websocket_1 = __importDefault(require("@websocket/websocket"));
+const User_1 = __importDefault(require("@models/users/User"));
 class PostsService {
-    // private static io = websocket.getIO();
     static createPost(description, picture, userId) {
         return __awaiter(this, void 0, void 0, function* () {
             const io = websocket_1.default.getIO();
@@ -31,15 +30,31 @@ class PostsService {
                 description: description,
                 postPicture: picture,
                 user_id: userId,
+            }, {
+                include: [
+                    {
+                        model: User_1.default,
+                        as: 'user'
+                    },
+                    {
+                        model: Likes_1.default,
+                        as: 'postLikes'
+                    },
+                    {
+                        model: SavedPost_1.default,
+                        as: 'saved_post'
+                    },
+                    {
+                        model: Comment,
+                        as: 'postComments'
+                    }
+                ]
             });
-            // i need to emit back to the client a post with likes saved and comment relations.
-            const fullPost = yield PostsRepository_1.default.getPostById(newPost.id);
-            io.emit('createdPost', fullPost);
+            io.emit('createdPost', newPost);
         });
     }
     static getPosts() {
         return __awaiter(this, void 0, void 0, function* () {
-            // need posts with some relations.
             return yield PostsRepository_1.default.findAllPosts();
         });
     }

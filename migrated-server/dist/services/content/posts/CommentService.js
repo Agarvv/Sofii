@@ -12,7 +12,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const CommentsRepository_1 = __importDefault(require("@repositories/posts/CommentsRepository"));
 const LikesRepository_1 = __importDefault(require("@repositories/posts/LikesRepository"));
 const DislikesRepository_1 = __importDefault(require("@repositories/posts/DislikesRepository"));
 const Comment_1 = __importDefault(require("@models/posts/comments/Comment"));
@@ -22,6 +21,7 @@ const CommentDislikes_1 = __importDefault(require("@models/posts/comments/Commen
 const CommentAwnsersLikes_1 = __importDefault(require("@models/posts/comments/CommentAwnsersLikes"));
 const CommentAwnsersDislikes_1 = __importDefault(require("@models/posts/comments/CommentAwnsersDislikes"));
 const websocket_1 = __importDefault(require("@websocket/websocket"));
+const User_1 = __importDefault(require("@models/users/User"));
 class CommentService {
     static comment(commentValue, postId, user) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -29,11 +29,24 @@ class CommentService {
             const newComment = yield Comment_1.default.create({
                 post_id: postId,
                 user_id: user.user_id,
-                comment_content: commentValue
+                comment_content: commentValue,
+            }, {
+                include: [
+                    { model: User_1.default, as: 'commentUser' },
+                    { model: CommentLikes_1.default, as: 'comment_likes' },
+                    { model: CommentDislikes_1.default, as: 'comment_dislikes' },
+                    {
+                        model: CommentAwnser_1.default,
+                        as: 'awnsers',
+                        include: [
+                            { model: User_1.default, as: 'awnser_user' },
+                            { model: CommentAwnsersLikes_1.default, as: 'awnser_likes' },
+                            { model: CommentAwnsersDislikes_1.default, as: 'awnser_dislikes' }
+                        ]
+                    }
+                ]
             });
-            // need to find the comment with his owner relations likes and dislikes to send to the frontend. 
-            const fullComment = yield CommentsRepository_1.default.findCommentById(newComment.id);
-            io.emit('newComment', fullComment);
+            io.emit('newComment', newComment);
         });
     }
     static likeOrUnlikeComment(commentId, postId, user) {
@@ -80,10 +93,14 @@ class CommentService {
                 comment_id: commentId,
                 user_id: user.user_id,
                 answer_content: answerValue
+            }, {
+                include: [
+                    { model: User_1.default, as: 'awnser_user' },
+                    { model: CommentAwnsersLikes_1.default, as: 'awnser_likes' },
+                    { model: CommentAwnsersDislikes_1.default, as: 'awnser_dislikes' }
+                ]
             });
-            // need to find answer with his sql relations to send to the client.
-            const fullAnswer = yield CommentsRepository_1.default.findAnswerById(newAnswer.id);
-            io.emit('newCommentAnswer', fullAnswer);
+            io.emit('newCommentAnswer', newAnswer);
         });
     }
     static likeOrUnlikeAnswer(answerId, commentId, postId, userId) {

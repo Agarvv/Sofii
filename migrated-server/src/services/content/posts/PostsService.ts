@@ -1,5 +1,4 @@
 import Post from '@models/posts/Post';
-//import websocket from '@websocket/websocket';
 import PostRepository from '@repositories/posts/PostsRepository'
 import LikesRepository from '@repositories/posts/LikesRepository';
 import SavedRepository from '@repositories/posts/SavedRepository'
@@ -8,10 +7,10 @@ import Saved from '@models/posts/SavedPost'
 import CustomError from '@outils/CustomError';
 import NotificationsService from '@services/notifications/NotificationsService';
 import websocket from '@websocket/websocket'
+import User from '@models/users/User';
+import Account from '../../../types/Account';
 
 class PostsService {
-   // private static io = websocket.getIO();
-
     public static async createPost(description: string, picture: string, userId: number): Promise<void> {
         const io = websocket.getIO(); 
         
@@ -19,15 +18,31 @@ class PostsService {
             description: description,
             postPicture: picture,
             user_id: userId,
+        }, {
+            include: [
+                {
+                    model: User,
+                    as: 'user'
+                },
+                {
+                    model: Likes,
+                    as: 'postLikes'
+                },
+                {
+                    model: Saved,
+                    as: 'saved_post'
+                },
+                {
+                    model: Comment as any,
+                    as: 'postComments'
+                }
+              ]
         });
-        // i need to emit back to the client a post with likes saved and comment relations.
-        const fullPost = await PostRepository.getPostById(newPost.id); 
         
-        io.emit('createdPost', fullPost);
+        io.emit('createdPost', newPost);
     }
     
     public static async getPosts(): Promise<any> {
-        // need posts with some relations.
         return await PostRepository.findAllPosts()
     } 
     
@@ -43,7 +58,7 @@ class PostsService {
        await post.destroy(); 
     }
 
-    public static async likeOrDislike(postId: number, user: any): Promise<string> {
+    public static async likeOrDislike(postId: number, user: Account): Promise<string> {
        const io = websocket.getIO(); 
        
        const postLike = await LikesRepository.getPostLike(postId, user.user_id); 

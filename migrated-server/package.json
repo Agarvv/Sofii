@@ -62,6 +62,7 @@
     "@helpers": "dist/helpers",
     "@repositories": "dist/repositories",
     "@outils": "dist/outils",
-    "@websocket": "dist/websocket"
+    "@websocket": "dist/websocket",
+    "@types": "dist/types"
   }
 }

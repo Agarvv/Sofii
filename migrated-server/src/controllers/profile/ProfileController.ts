@@ -3,7 +3,7 @@ import ProfileService from '@services/profile/ProfileService'
 
 class ProfileController {
     public static async getUserProfile(req: Request, res: Response) {
-        let { profileId } = req.params; 
+        let profileId = req.params.profileId as any; 
         
         if(profileId == "s") {
             profileId = req.account.user_id;

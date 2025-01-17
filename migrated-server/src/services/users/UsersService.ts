@@ -5,6 +5,7 @@ import User from '@models/users/User';
 import CustomError from '@outils/CustomError';
 import NotificationsService from '@services/notifications/NotificationsService';
 import websocket from '@websocket/websocket';
+import Account from '../../types/Account';
 
 class UsersService {
     public static async blockOrUnblock(blockedId: number, blockerId: number): Promise<string> {
@@ -26,7 +27,7 @@ class UsersService {
         return 'BLOCKED';
     }
 
-    public static async followOrUnfollow(followedId: number, follower: any): Promise<string> {
+    public static async followOrUnfollow(followedId: number, follower: Account): Promise<string> {
         if (followedId === follower.user_id) throw new CustomError("You can't follow yourself.", 400);
 
         const follow = await FollowerRepository.getFollow(follower.user_id, followedId);
@@ -53,7 +54,7 @@ class UsersService {
         return 'FOLLOWED';
     }
 
-    public static async sendFriendRequest(receiverId: number, sender: any): Promise<void> {
+    public static async sendFriendRequest(receiverId: number, sender: Account): Promise<void> {
         const existingRequest = await FriendRepository.getFriendRequest(sender.user_id, receiverId);
         if (existingRequest) throw new CustomError('You have already sent a friend request to this user.', 400);
 
@@ -71,7 +72,7 @@ class UsersService {
         );
     }
 
-    public static async denyFriendRequest(requestId: number, user: any): Promise<void> {
+    public static async denyFriendRequest(requestId: number, user: Account): Promise<void> {
         const friendRequest = await FriendRepository.getFriendRequestById(requestId);
         if (!friendRequest) throw new CustomError('Friend request not found.', 404);
 
@@ -82,7 +83,7 @@ class UsersService {
         await friendRequest.destroy();
     }
 
-    public static async acceptFriendRequest(requestId: number, user: any): Promise<void> {
+    public static async acceptFriendRequest(requestId: number, user: Account): Promise<void> {
         const friendRequest = await FriendRepository.getFriendRequestById(requestId);
         if (!friendRequest) throw new CustomError('Friend request not found.', 404);
 
