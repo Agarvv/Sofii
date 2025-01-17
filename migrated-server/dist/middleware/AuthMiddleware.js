@@ -8,6 +8,7 @@ const authMiddleware = (req, res, next) => {
     const jwtToken = req.cookies.jwt;
     if (!jwtToken) {
         return next(new Error("No JWT Found."));
+        console.log("no jwt");
     }
     try {
         const decoded = JwtHelper_1.default.verifyToken(jwtToken);
@@ -16,6 +17,7 @@ const authMiddleware = (req, res, next) => {
         next();
     }
     catch (error) {
+        console.log(error);
         return next(new Error("Invalid or expired token."));
     }
 };

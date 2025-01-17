@@ -16,11 +16,13 @@ class ChatRepository {
             include: [
                 {
                     model: User,
-                    as: 'Sender'
+                    as: 'Sender',
+                    attributes: ['id', 'username', 'profilePicture', 'active']
                 },
                 {
                     model: User,
-                    as: 'Receiver'
+                    as: 'Receiver',
+                    attributes: ['id', 'username', 'profilePicture', 'active']
                 }
             ]
         });
@@ -38,11 +40,13 @@ class ChatRepository {
             include: [
                 {
                     model: User,
-                    as: 'Sender'
+                    as: 'Sender',
+                    attributes: ['id', 'username', 'profilePicture', 'active']
                 },
                 {
                     model: User,
-                    as: 'Receiver'
+                    as: 'Receiver',
+                    attributes: ['id', 'username', 'profilePicture', 'active']
                 },
                 {
                     model: Message,
@@ -50,12 +54,15 @@ class ChatRepository {
                     include: [
                        {
                            model: User,
-                           as: 'message_user'
+                           as: 'message_user',
+                           attributes: ['id', 'username', 'profilePicture', 'active']
                        }
                     ]
                 }
             ]
         });
+        
+        
     }
 
     public static async getUserChat(sender: number, receiver: number): Promise<Chat | null>{
@@ -79,17 +86,20 @@ class ChatRepository {
                     include: [
                         {
                             model: User,
-                            as: 'message_user' 
+                            as: 'message_user',
+                            attributes: ['id', 'username', 'profilePicture', 'active']
                         }
                     ]
                 },
                 {
                     model: User,
-                    as: 'Sender' 
+                    as: 'Sender',
+                    attributes: ['id', 'username', 'profilePicture', 'active']
                 },
                 {
                     model: User,
-                    as: 'Receiver' 
+                    as: 'Receiver',
+                    attributes: ['id', 'username', 'profilePicture', 'active']
                 }
             ]
         });

@@ -15,6 +15,6 @@ router.use('/api/sofii/auth', AuthRoutes_1.default);
 router.use('/api/sofii/posts', PostsRoutes_1.default);
 router.use('/api/sofii/users', UsersRoutes_1.default);
 router.use('/api/sofii/chats', ChatRoutes_1.default);
-router.use('/api/sofii/profile', ProfileRoutes_1.default);
 router.use('/api/sofii/search', SearchRoutes_1.default);
+router.use('/api/sofii/profile', ProfileRoutes_1.default);
 exports.default = router;

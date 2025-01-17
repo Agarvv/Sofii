@@ -29,11 +29,13 @@ class ChatRepository {
                 include: [
                     {
                         model: User_1.default,
-                        as: 'Sender'
+                        as: 'Sender',
+                        attributes: ['id', 'username', 'profilePicture', 'active']
                     },
                     {
                         model: User_1.default,
-                        as: 'Receiver'
+                        as: 'Receiver',
+                        attributes: ['id', 'username', 'profilePicture', 'active']
                     }
                 ]
             });
@@ -52,11 +54,13 @@ class ChatRepository {
                 include: [
                     {
                         model: User_1.default,
-                        as: 'Sender'
+                        as: 'Sender',
+                        attributes: ['id', 'username', 'profilePicture', 'active']
                     },
                     {
                         model: User_1.default,
-                        as: 'Receiver'
+                        as: 'Receiver',
+                        attributes: ['id', 'username', 'profilePicture', 'active']
                     },
                     {
                         model: Message_1.default,
@@ -64,7 +68,8 @@ class ChatRepository {
                         include: [
                             {
                                 model: User_1.default,
-                                as: 'message_user'
+                                as: 'message_user',
+                                attributes: ['id', 'username', 'profilePicture', 'active']
                             }
                         ]
                     }
@@ -94,17 +99,20 @@ class ChatRepository {
                         include: [
                             {
                                 model: User_1.default,
-                                as: 'message_user'
+                                as: 'message_user',
+                                attributes: ['id', 'username', 'profilePicture', 'active']
                             }
                         ]
                     },
                     {
                         model: User_1.default,
-                        as: 'Sender'
+                        as: 'Sender',
+                        attributes: ['id', 'username', 'profilePicture', 'active']
                     },
                     {
                         model: User_1.default,
-                        as: 'Receiver'
+                        as: 'Receiver',
+                        attributes: ['id', 'username', 'profilePicture', 'active']
                     }
                 ]
             });

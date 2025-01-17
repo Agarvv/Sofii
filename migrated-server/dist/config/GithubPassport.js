@@ -8,7 +8,7 @@ const passport_github2_1 = require("passport-github2");
 passport_1.default.use(new passport_github2_1.Strategy({
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: 'https://sofii-vsly.onrender.com/auth/github/callback',
+    callbackURL: 'https://sofii-vsly.onrender.com/api/sofii/auth/github/callback',
     scope: ['user:email'],
 }, (accessToken, refreshToken, profile, done) => {
     const user = {

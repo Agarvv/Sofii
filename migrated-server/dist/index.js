@@ -58,6 +58,8 @@ const websocket_1 = __importDefault(require("./websocket/websocket"));
 const AuthMiddleware_1 = __importDefault(require("@middleware/AuthMiddleware"));
 const passport_1 = __importDefault(require("passport"));
 const express_session_1 = __importDefault(require("express-session"));
+require("@config/GooglePassport");
+require("@config/GithubPassport");
 dotenv.config();
 const app = (0, express_1.default)();
 app.use((0, express_session_1.default)({
@@ -72,7 +74,7 @@ websocket_1.default.init(server);
 app.use((0, cookie_parser_1.default)());
 app.use(body_parser_1.default.json());
 app.use((req, res, next) => {
-    if (req.path.startsWith('/api/sofii/auth')) {
+    if (req.path.startsWith('/api/sofii/auth') || req.path.startsWith('/auth')) {
         return next();
     }
     (0, AuthMiddleware_1.default)(req, res, next);
