@@ -7,12 +7,14 @@ import User from "@models/users/User";
 import NotificationsService from '@services/notifications/NotificationsService'
 
 class ChatService {
+   
    public static async getUserChats(userId: number): Promise<any[]> {
     const chats = await ChatRepository.getUserChats(userId);
 
     const chatsWithUserInfo = await Promise.all(
         chats.map(async (chat) => {
-            const chatData = chat.toJSON();
+            const chatData = chat.toJSON() as Chat & { userToDisplayInfo?: any };
+            
             chatData.userToDisplayInfo = await this.getUserToDisplayInfo(chat, userId);
             return chatData;
         })
