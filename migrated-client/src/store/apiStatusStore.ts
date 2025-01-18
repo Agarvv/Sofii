@@ -10,7 +10,7 @@ export const apiStatusStore = defineStore('user', {
   state: (): ApiStatusStore => ({
     isLoading: false,
     successMessage: null,
-    errorMessage: "Something Went Wrong..."
+    errorMessage: null
   }),
   actions: {
     setLoading(isLoading: boolean) {
