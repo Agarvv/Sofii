@@ -1,0 +1,31 @@
+<template>
+  <div class="success">
+    <p>{{ successMessage }}</p>
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue'; 
+export default defineComponent({
+    name: 'SuccessComponent',
+    props: {
+       successMessage: String 
+    }
+})
+</script>
+
+<style scoped lang="css">
+.success {
+    padding: 15px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(28, 207, 28); 
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+}
+</style>
