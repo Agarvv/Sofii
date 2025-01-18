@@ -9,8 +9,8 @@ interface ApiStatusStore {
 export const apiStatusStore = defineStore('user', {
   state: (): ApiStatusStore => ({
     isLoading: false,
-    successMessage: "Post Created!!!",
-    errorMessage: null
+    successMessage: null,
+    errorMessage: "Something Went Wrong..."
   }),
   actions: {
     setLoading(isLoading: boolean) {

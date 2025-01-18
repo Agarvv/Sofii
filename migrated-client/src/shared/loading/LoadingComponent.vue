@@ -13,7 +13,7 @@
   
   <style scoped lang="css">
   .loading {
-      padding: 15px;
+    padding: 25px;
       position: fixed;
       top: 0;
       left: 0;

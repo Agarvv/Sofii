@@ -16,7 +16,7 @@ export default defineComponent({
 
 <style scoped lang="css">
 .success {
-    padding: 15px;
+    padding: 25px;
     position: fixed;
     top: 0;
     left: 0;

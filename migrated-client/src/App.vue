@@ -1,7 +1,7 @@
 <template>
   <LoadingComponent v-if="isLoading" />
-  <SuccessComponent v-if="successMessage" :message="successMessage" />
-  <ErrorComponent v-if="errorMessage" :message="errorMessage" />
+  <SuccessComponent v-if="successMessage" :successMessage="successMessage" />
+  <ErrorComponent v-if="errorMessage" :errorMessage="errorMessage" />
 
   <router-view/>
 </template>
