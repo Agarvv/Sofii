@@ -1,7 +1,0 @@
-[build]
-  base = "new"               # Esta es la carpeta donde está tu frontend (new)
-  publish = "new/dist"        # Esta es la carpeta donde se publica el build
-  command = "npm run build"   # Este es el comando para construir el proyecto
-
-[context.production.environment]
-  NODE_VERSION = "16"         # Esta es una versión de Node.js compatible con Vue CLI   
