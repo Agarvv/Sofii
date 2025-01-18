@@ -1,0 +1,119 @@
+.header {
+    background-color: #ffffff; 
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    box-shadow: 5px 5px 6px rgba(0, 0, 0, 0.5);
+  }
+  
+  .header .first-flex {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .first-flex .f-flex-logo p {
+    font-weight: 800;
+    font-size: 24px;
+    color: #333; /* Color del logo */
+  }
+  
+  .first-flex .f-flex-search {
+    background: #e5e5e5;
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    border-radius: 15px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra interna */
+  }
+  
+  .f-flex-search input {
+    background: #e5e5e5;
+    border: none;
+    outline: none;
+    padding-left: 5px;
+    color: #333;
+  }
+  
+  .header .second-flex {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .s-flex-user {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .m-flex-nav-items {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .responsive-aside-open {
+    display: none;
+    font-size: 20px; 
+    cursor: pointer;
+    color: #007bff; 
+    padding: 5px;
+    border-radius: 50%; 
+    transition: background 0.3s, color 0.3s; 
+  }
+  
+  .responsive-aside-open:hover {
+    background: rgba(0, 123, 255, 0.1); 
+    color: #0056b3;
+  }
+  
+  .s-flex-user .user-img img {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
+  }
+  
+  .responsive-sub-header {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    display: none;
+  }
+  
+  .responsive-sub-header div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    font-size: 20px;
+  }
+  
+  .rsb-i.on {
+    border-bottom: 5px solid blue;
+    color: blue;
+  }
+  
+  
+  @media (max-width: 700px) {
+    .second-flex {
+      display: none!important;
+    }
+  
+    .m-flex-nav-items {
+      display: none;
+    }
+  
+    .responsive-aside-open {
+      display: block!important;
+    }
+  
+    .responsive-sub-header {
+      display: grid;
+    }
+  }
