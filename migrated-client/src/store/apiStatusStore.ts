@@ -8,8 +8,8 @@ interface ApiStatusStore {
 
 export const apiStatusStore = defineStore('user', {
   state: (): ApiStatusStore => ({
-    isLoading: true,
-    successMessage: null,
+    isLoading: false,
+    successMessage: "Post Created!!!",
     errorMessage: null
   }),
   actions: {
