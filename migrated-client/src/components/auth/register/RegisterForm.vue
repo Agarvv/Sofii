@@ -59,6 +59,7 @@
 import { defineComponent, reactive } from 'vue';
 import * as yup from 'yup';
 import { useForm } from 'vee-validate';
+import { useRouter } from 'vue-router';  
 import { apiService } from '@/api/ApiService';
 import { usePost } from '@/composables/usePost';
 
@@ -71,6 +72,8 @@ interface RegisterFormValues {
 export default defineComponent({
   name: 'RegisterForm',
   setup() {
+    const router = useRouter(); 
+
     const schema = yup.object({
       username: yup.string().required('Username is required'),
       email: yup.string().email('Invalid email').required('Email is required'),
@@ -83,11 +86,9 @@ export default defineComponent({
       password: ''
     });
 
-    const { handleSubmit, errors, validate, clearErrors } = useForm<RegisterFormValues>({
+    const { handleSubmit, errors, validate } = useForm<RegisterFormValues>({
       validationSchema: schema,
       initialValues: values,
-      validateOnBlur: true,
-      validateOnChange: true,
     });
 
     const { mutate } = usePost<RegisterFormValues>({
@@ -100,7 +101,8 @@ export default defineComponent({
       const isValid = await validate();
       if (isValid) {
         console.log('Form Submitted:', values);
-        mutate(values); 
+          await mutate(values); 
+          router.push({ name: 'login' });  
       } else {
         console.log('Form is not valid.');
       }
