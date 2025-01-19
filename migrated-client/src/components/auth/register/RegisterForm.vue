@@ -82,6 +82,7 @@ export default defineComponent({
     });
 
     const onSubmit = async (formData: RegisterFormValues) => {
+      console.log("on submit trigger")
       const isValid = await validate();
       if (isValid) {
         console.log('Form Submitted:', formData);
