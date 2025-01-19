@@ -58,7 +58,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import * as yup from 'yup';
-import { useForm, useField } from 'vee-validate';
+import { useForm } from 'vee-validate';
 import { apiService } from '@/api/ApiService';
 import { usePost } from '@/composables/usePost';
 
@@ -71,27 +71,30 @@ interface RegisterFormValues {
 export default defineComponent({
   name: 'RegisterForm',
   setup() {
+
     const schema = yup.object({
       username: yup.string().required('Username is required'),
       email: yup.string().email('Invalid email').required('Email is required'),
       password: yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
     });
 
+
     const { handleSubmit, values, errors, validate } = useForm<RegisterFormValues>({
       validationSchema: schema,
     });
 
+  
+    const { mutate } = usePost<RegisterFormValues>({
+      serviceFunc: (data: RegisterFormValues) => apiService.post('/auth/register', data),
+      withError: true,
+      withLoading: true,
+    });
+
     const onSubmit = async () => {
-      console.log("on submit trigger", values)
-      const isValid = await validate();
+      const isValid = await validate(); 
       if (isValid) {
-        console.log('Form Submitted:');
-        const { data } = usePost<RegisterFormValues>({
-          serviceFunc: (values: RegisterFormValues) => apiService.post('/auth/register', values),
-          withError: true,
-          withLoading: true,
-        });
-        console.log('data', data);
+        console.log('Form Submitted:', values); 
+        mutate(values);
       } else {
         console.log('Form is not valid.');
       }
@@ -106,5 +109,6 @@ export default defineComponent({
   },
 });
 </script>
+
 
 <style scoped src="./RegisterForm.css"></style>
