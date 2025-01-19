@@ -59,8 +59,8 @@
 import { defineComponent } from 'vue';
 import * as yup from 'yup';
 import { useForm } from 'vee-validate';
+import { useMutation } from '@tanstack/vue-query';
 import { apiService } from '@/api/ApiService';
-import { usePost } from '@/composables/usePost';
 
 interface RegisterFormValues {
   username: string;
@@ -78,23 +78,28 @@ export default defineComponent({
       password: yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
     });
 
-
     const { handleSubmit, values, errors, validate } = useForm<RegisterFormValues>({
       validationSchema: schema,
     });
 
-  
-    const { mutate } = usePost<RegisterFormValues>({
-      serviceFunc: (data: RegisterFormValues) => apiService.post('/auth/register', data),
-      withError: true,
-      withLoading: true,
+    const mutation = useMutation({
+      mutationFn: (data: RegisterFormValues) => apiService.post('/auth/register', data),
+      onMutate: () => {
+        console.log("Mutating...");
+      },
+      onError: (error: any) => {
+        console.error("Error: ", error);
+      },
+      onSuccess: (response: any) => {
+        console.log("Success:", response);
+      }
     });
 
     const onSubmit = async () => {
       const isValid = await validate(); 
       if (isValid) {
         console.log('Form Submitted:', values); 
-        mutate(values);
+        mutation.mutate(values);
       } else {
         console.log('Form is not valid.');
       }
@@ -105,10 +110,10 @@ export default defineComponent({
       values,
       errors,
       onSubmit,
+      mutation, 
     };
   },
 });
 </script>
-
 
 <style scoped src="./RegisterForm.css"></style>
