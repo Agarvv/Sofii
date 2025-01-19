@@ -77,27 +77,28 @@ export default defineComponent({
       password: yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
     });
 
-    const { handleSubmit, values, errors, validate } = useForm<RegisterFormValues>({
-      validationSchema: schema,
+    const values = reactive<RegisterFormValues>({
+      username: '',
+      email: '',
+      password: ''
     });
-    
+//
+    const { handleSubmit, errors, validate } = useForm<RegisterFormValues>({
+      validationSchema: schema,
+      initialValues: values, 
+    });
+
     const { mutate } = usePost<RegisterFormValues>({
       serviceFunc: (data: RegisterFormValues) => apiService.post('/auth/register', data),
       withError: true,
       withLoading: true,
     });
 
-    const formValues = reactive({
-      username: '',
-      email: '',
-      password: ''
-    });
-    
     const onSubmit = async () => {
       const isValid = await validate();
       if (isValid) {
-        console.log('Form Submitted:', { ...formValues }); 
-        mutate({ ...formValues }); 
+        console.log('Form Submitted:', values); 
+        mutate(values); 
       } else {
         console.log('Form is not valid.');
       }
@@ -105,7 +106,7 @@ export default defineComponent({
 
     return {
       handleSubmit,
-      formValues,
+      values,
       errors,
       onSubmit,
     };
