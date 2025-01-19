@@ -4,7 +4,7 @@
       <div class="wrapper">
         <div class="login-form">
           <h1 class="lf-h1">Welcome To Sofii!</h1>
-          <form @submit.prevent="handleSubmit(onSubmit)">
+          <form @submit.prevent="onSubmit">
             <div class="inp-box">
               <input
                 v-model="values.username"
@@ -81,13 +81,13 @@ export default defineComponent({
       validationSchema: schema,
     });
 
-    const onSubmit = async (formData: RegisterFormValues) => {
-      console.log("on submit trigger")
+    const onSubmit = async () => {
+      console.log("on submit trigger", values)
       const isValid = await validate();
       if (isValid) {
-        console.log('Form Submitted:', formData);
+        console.log('Form Submitted:');
         const { data } = usePost<RegisterFormValues>({
-          serviceFunc: (data: RegisterFormValues) => apiService.post('/auth/register', data),
+          serviceFunc: (values: RegisterFormValues) => apiService.post('/auth/register', values),
           withError: true,
           withLoading: true,
         });
