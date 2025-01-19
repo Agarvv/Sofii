@@ -15,12 +15,18 @@ export const apiStatusStore = defineStore('user', {
   actions: {
     setLoading(isLoading: boolean) {
       this.isLoading = isLoading; 
+      this.successMessage = null; 
+      this.errorMessage = null; 
     },
     setSuccess(successMessage: string) {
       this.successMessage = successMessage; 
+      this.isLoading = false,
+      this.errorMessage = null
     },
     setError(errorMessage: string) {
       this.errorMessage = errorMessage
+      this.successMessage = null,
+      this.isLoading = false; 
     }
   }
 })

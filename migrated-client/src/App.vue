@@ -40,4 +40,8 @@ export default defineComponent({
   margin: 0;
   box-sizing: border-box;
 }
+
+.val-error {
+  color: red; 
+}
 </style>
