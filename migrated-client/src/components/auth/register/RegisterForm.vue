@@ -56,7 +56,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRaw } from 'vue';
+import { defineComponent, reactive } from 'vue';
 import * as yup from 'yup';
 import { useForm } from 'vee-validate';
 import { apiService } from '@/api/ApiService';
@@ -80,18 +80,24 @@ export default defineComponent({
     const { handleSubmit, values, errors, validate } = useForm<RegisterFormValues>({
       validationSchema: schema,
     });
-
+    
     const { mutate } = usePost<RegisterFormValues>({
       serviceFunc: (data: RegisterFormValues) => apiService.post('/auth/register', data),
       withError: true,
       withLoading: true,
     });
 
+    const formValues = reactive({
+      username: '',
+      email: '',
+      password: ''
+    });
+    
     const onSubmit = async () => {
       const isValid = await validate();
       if (isValid) {
-        console.log('Form Submitted:', toRaw(values)); 
-        mutate(toRaw(values)); 
+        console.log('Form Submitted:', { ...formValues }); 
+        mutate({ ...formValues }); 
       } else {
         console.log('Form is not valid.');
       }
@@ -99,7 +105,7 @@ export default defineComponent({
 
     return {
       handleSubmit,
-      values,
+      formValues,
       errors,
       onSubmit,
     };
