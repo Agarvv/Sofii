@@ -43,5 +43,6 @@ export default defineComponent({
 
 .val-error {
   color: red; 
+  padding: 5px;
 }
 </style>

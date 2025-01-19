@@ -82,10 +82,12 @@ export default defineComponent({
       email: '',
       password: ''
     });
-//
-    const { handleSubmit, errors, validate } = useForm<RegisterFormValues>({
+
+    const { handleSubmit, errors, validate, clearErrors } = useForm<RegisterFormValues>({
       validationSchema: schema,
-      initialValues: values, 
+      initialValues: values,
+      validateOnBlur: true,
+      validateOnChange: true,
     });
 
     const { mutate } = usePost<RegisterFormValues>({
@@ -97,7 +99,7 @@ export default defineComponent({
     const onSubmit = async () => {
       const isValid = await validate();
       if (isValid) {
-        console.log('Form Submitted:', values); 
+        console.log('Form Submitted:', values);
         mutate(values); 
       } else {
         console.log('Form is not valid.');
