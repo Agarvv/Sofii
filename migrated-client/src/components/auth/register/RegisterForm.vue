@@ -103,5 +103,5 @@ export default defineComponent({
 </script>
 
 
-<style src="./RegisterForm.css"></style>
+<style scoped src="./RegisterForm.css"></style>
 
