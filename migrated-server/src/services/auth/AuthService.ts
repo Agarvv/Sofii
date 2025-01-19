@@ -76,6 +76,14 @@ class AuthService {
     }
   }
   
+  public static async checkAuthentication(jwt: string): Promise<number> {
+      const userDecoded = await JwtHelper.verifyToken(jwt); 
+      
+      if(userDecoded) return userDecoded.user_id; 
+      
+      throw new CustomError("You Aren't Authenticated.", 401); 
+  }
+  
   public static async registerBySocialMedia(user: any): Promise<User> {
       const randomPassword = Math.random().toString(36).slice(-8); 
       

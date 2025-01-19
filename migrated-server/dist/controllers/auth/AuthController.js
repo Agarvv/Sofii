@@ -47,5 +47,14 @@ class AuthController {
             });
         });
     }
+    static checkAuthentication(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const jwt = req.cookies.jwt;
+            const userId = yield AuthService_1.default.checkAuthentication(jwt);
+            res.status(200).json({
+                userId: userId
+            });
+        });
+    }
 }
 exports.default = AuthController;

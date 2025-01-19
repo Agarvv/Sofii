@@ -13,10 +13,20 @@ import passport from 'passport';
 import session from 'express-session';
 import '@config/GooglePassport'
 import '@config/GithubPassport'
+import cors from 'cors'
 
 dotenv.config();
 
 const app: Express = express();
+
+const corsOptions = {
+    origin: 'https://sofii-vsly.vercel.app',
+    methods: 'GET, POST, PUT, DELETE', 
+    credentials: true, 
+};
+
+app.use(cors(corsOptions)); 
+
 
 app.use(session({
   secret: 'unsecureSecret2025', 

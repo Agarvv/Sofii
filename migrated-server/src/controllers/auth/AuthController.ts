@@ -39,6 +39,16 @@ class AuthController {
       })
       
   }
+  
+  public static async checkAuthentication(req: Request, res: Response) {
+      const jwt = req.cookies.jwt 
+      
+      const userId = await AuthService.checkAuthentication(jwt); 
+      
+      res.status(200).json({
+          userId: userId 
+      })
+  }
 }
 
 export default AuthController;

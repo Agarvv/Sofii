@@ -30,6 +30,10 @@ authRouter.post('/reset-password',
   AuthController.resetPassword
 );
 
+authRouter.get('/check',
+  AuthController.checkAuthentication
+)
+
 authRouter.get('/google', 
   GoogleController.authenticate
 )

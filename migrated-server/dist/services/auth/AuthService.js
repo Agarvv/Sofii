@@ -81,6 +81,14 @@ class AuthService {
             }
         });
     }
+    static checkAuthentication(jwt) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const userDecoded = yield JwtHelper_1.default.verifyToken(jwt);
+            if (userDecoded)
+                return userDecoded.user_id;
+            throw new CustomError_1.default("You Aren't Authenticated.", 401);
+        });
+    }
     static registerBySocialMedia(user) {
         return __awaiter(this, void 0, void 0, function* () {
             const randomPassword = Math.random().toString(36).slice(-8);

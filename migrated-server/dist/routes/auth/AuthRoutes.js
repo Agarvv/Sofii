@@ -17,6 +17,7 @@ authRouter.post('/register', (0, ValidationMiddleware_1.validateRequest)(Registe
 authRouter.post('/login', (0, ValidationMiddleware_1.validateRequest)(LoginSchema_1.loginSchema), AuthController_1.default.loginUser);
 authRouter.post('/send-reset-password', (0, ValidationMiddleware_1.validateRequest)(SendResetPasswordSchema_1.sendResetPasswordSchema), AuthController_1.default.sendResetPassword);
 authRouter.post('/reset-password', (0, ValidationMiddleware_1.validateRequest)(ResetPasswordSchema_1.resetPasswordSchema), AuthController_1.default.resetPassword);
+authRouter.get('/check', AuthController_1.default.checkAuthentication);
 authRouter.get('/google', GoogleController_1.default.authenticate);
 authRouter.get('/google/callback', GoogleController_1.default.callback);
 authRouter.get('/github', GithubController_1.default.authenticate);

@@ -60,8 +60,15 @@ const passport_1 = __importDefault(require("passport"));
 const express_session_1 = __importDefault(require("express-session"));
 require("@config/GooglePassport");
 require("@config/GithubPassport");
+const cors_1 = __importDefault(require("cors"));
 dotenv.config();
 const app = (0, express_1.default)();
+const corsOptions = {
+    origin: 'https://sofii-vsly.vercel.app',
+    methods: 'GET, POST, PUT, DELETE',
+    credentials: true,
+};
+app.use((0, cors_1.default)(corsOptions));
 app.use((0, express_session_1.default)({
     secret: 'unsecureSecret2025',
     resave: false,
