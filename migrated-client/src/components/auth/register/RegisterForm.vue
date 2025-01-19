@@ -56,7 +56,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, toRaw } from 'vue';
 import * as yup from 'yup';
 import { useForm } from 'vee-validate';
 import { apiService } from '@/api/ApiService';
@@ -71,19 +71,16 @@ interface RegisterFormValues {
 export default defineComponent({
   name: 'RegisterForm',
   setup() {
-
     const schema = yup.object({
       username: yup.string().required('Username is required'),
       email: yup.string().email('Invalid email').required('Email is required'),
       password: yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
     });
 
-
     const { handleSubmit, values, errors, validate } = useForm<RegisterFormValues>({
       validationSchema: schema,
     });
 
-  
     const { mutate } = usePost<RegisterFormValues>({
       serviceFunc: (data: RegisterFormValues) => apiService.post('/auth/register', data),
       withError: true,
@@ -91,10 +88,10 @@ export default defineComponent({
     });
 
     const onSubmit = async () => {
-      const isValid = await validate(); 
+      const isValid = await validate();
       if (isValid) {
-        console.log('Form Submitted:', values); 
-        mutate(values);
+        console.log('Form Submitted:', toRaw(values)); 
+        mutate(toRaw(values)); 
       } else {
         console.log('Form is not valid.');
       }
@@ -109,6 +106,5 @@ export default defineComponent({
   },
 });
 </script>
-
 
 <style scoped src="./RegisterForm.css"></style>
