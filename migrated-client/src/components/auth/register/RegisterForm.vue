@@ -4,36 +4,33 @@
       <div class="wrapper">
         <div class="login-form">
           <h1 class="lf-h1">Welcome To Sofii!</h1>
-          <form @submit="onSubmit">
+          <form @submit.prevent="onSubmit">
             <div class="inp-box">
               <input
-                v-bind="formik.getFieldProps('username')"
+                v-model="values.username"
                 type="text"
                 placeholder="Username"
-                name="username"
               />
               <i class="fa fa-user icon"></i>
-              <span v-if="formik.errors.username" class="val-error">{{ formik.errors.username }}</span>
+              <span v-if="errors.username" class="val-error">{{ errors.username }}</span>
             </div>
             <div class="inp-box">
               <input
-                v-bind="formik.getFieldProps('email')"
+                v-model="values.email"
                 type="email"
                 placeholder="Email"
-                name="email"
               />
               <i class="fa fa-envelope icon"></i>
-              <span v-if="formik.errors.email" class="val-error">{{ formik.errors.email }}</span>
+              <span v-if="errors.email" class="val-error">{{ errors.email }}</span>
             </div>
             <div class="inp-box">
               <input
-                v-bind="formik.getFieldProps('password')"
+                v-model="values.password"
                 type="password"
                 placeholder="Secure Password"
-                name="password"
               />
               <i class="fa fa-lock icon"></i>
-              <span v-if="formik.errors.password" class="val-error">{{ formik.errors.password }}</span>
+              <span v-if="errors.password" class="val-error">{{ errors.password }}</span>
             </div>
             <div class="btn-box">
               <button type="submit">
@@ -59,10 +56,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import * as Yup from 'yup';
-import { useFormik } from 'formik';
-import { useRouter } from 'vue-router';
+import { defineComponent, reactive } from 'vue';
+import { toTypedSchema } from '@vee-validate/yup'
+import * as yup from 'yup';
+import { useForm } from 'vee-validate';
+import { useRouter } from 'vue-router';  
 import { apiService } from '@/api/ApiService';
 import { usePost } from '@/composables/usePost';
 
@@ -77,34 +75,53 @@ export default defineComponent({
   setup() {
     const router = useRouter(); 
 
-    const validationSchema = Yup.object({
-      username: Yup.string().required('Username is required'),
-      email: Yup.string().email('Invalid email').required('Email is required'),
-      password: Yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
+    const schema = toTypedSchema(yup.object({
+      username: yup.string().required('Username is required'),
+      email: yup.string().email('Invalid email').required('Email is required'),
+      password: yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
+    })); 
+
+   /* const values = reactive<RegisterFormValues>({
+      username: '',
+      email: '',
+      password: ''
+    });*/
+
+    const { handleSubmit, errors, validate } = useForm<RegisterFormValues>({
+      validationSchema: schema,
+      //initialValues: values,
     });
 
-    const formik = useFormik({
-      initialValues: {
-        username: '',
-        email: '',
-        password: ''
-      },
-      validationSchema,
-      onSubmit: async (values) => {
-        console.log('Form Submitted:', values);
-        const { mutate } = usePost<RegisterFormValues>({
-          serviceFunc: (data: RegisterFormValues) => apiService.post('/auth/register', data),
-          withError: true,
-          withLoading: true,
-        });
-        await mutate(values);
-        router.push({ name: 'login' });
-      }
+    const { mutate } = usePost<RegisterFormValues>({
+      serviceFunc: (data: RegisterFormValues) => apiService.post('/auth/register', data),
+      withError: true,
+      withLoading: true,
     });
+    
+    
+    const onSubmit = handleSubmit(values => {
+        console.log("Form submit success")
+    })
+
+    /*const onSubmit = async () => {
+      const isValid = await validate();
+      if (isValid) {
+        console.log('Form Submitted:', values);
+          await mutate(values); 
+          router.push({ name: 'login' });  
+      } else {
+        console.log('Form is not valid.');
+      }
+    };*/
 
     return {
-      formik
+      handleSubmit,
+      values,
+      errors,
+      onSubmit,
     };
   },
 });
 </script>
+
+<style scoped src="./RegisterForm.css"></style>
