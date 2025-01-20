@@ -56,7 +56,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from 'vue';
+import { defineComponent } from 'vue';
 import * as yup from 'yup';
 import { useForm } from 'vee-validate';
 import { useRouter } from 'vue-router';  
@@ -80,15 +80,13 @@ export default defineComponent({
       password: yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
     });
 
-    const values = reactive<RegisterFormValues>({
-      username: '',
-      email: '',
-      password: ''
-    });
-
-    const { handleSubmit, errors, validate } = useForm<RegisterFormValues>({
+    const { handleSubmit, values, errors } = useForm<RegisterFormValues>({
       validationSchema: schema,
-      initialValues: values,
+      initialValues: {
+        username: '',
+        email: '',
+        password: ''
+      },
     });
 
     const { mutate } = usePost<RegisterFormValues>({
@@ -97,19 +95,13 @@ export default defineComponent({
       withLoading: true,
     });
 
-    const onSubmit = async () => {
-      const isValid = await validate();
-      if (isValid) {
-        console.log('Form Submitted:', values);
-          await mutate(values); 
-          router.push({ name: 'login' });  
-      } else {
-        console.log('Form is not valid.');
-      }
-    };
+    const onSubmit = handleSubmit(async (values) => {
+      console.log('Form Submitted:', values);
+      await mutate(values);
+      router.push({ name: 'login' });
+    });
 
     return {
-      handleSubmit,
       values,
       errors,
       onSubmit,
