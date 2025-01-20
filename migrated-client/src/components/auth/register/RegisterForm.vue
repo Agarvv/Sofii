@@ -108,8 +108,10 @@ export default {
       withLoading: true,
     });
 
-    const onSubmit = (values: RegisterFormValues) => {
+    const onSubmit = async (values: RegisterFormValues) => {
       console.log("Form submitted:", values);
+      await mutate(values); 
+      alert("Register success")
     };
 
     return {
