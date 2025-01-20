@@ -71,10 +71,19 @@
 
 </template>
 
-<script>
+<script lang="ts">
 import { ref } from "vue";
 import { useForm, useField } from "vee-validate";
 import * as yup from "yup";
+import { useRouter } from 'vue-router';
+import { apiService } from '@/api/ApiService';
+import { usePost } from '@/composables/usePost';
+
+interface RegisterFormValues {
+  username: string;
+  password: string;
+  email: string;
+}
 
 export default {
   name: 'RegisterForm', 
@@ -85,15 +94,21 @@ export default {
       password: yup.string().min(6, "Password must have at least 6 chars").required("Password required"),
     });
 
-    const { handleSubmit, errors } = useForm({
+    const { handleSubmit, errors } = useForm<RegisterFormValues>({
       validationSchema,
     });
-    
+
     const { value: username } = useField("username"); 
     const { value: email } = useField("email");
     const { value: password } = useField("password");
+    
+    const { mutate } = usePost<RegisterFormValues>({
+      serviceFunc: (data: RegisterFormValues) => apiService.post('/auth/register', data),
+      withError: true,
+      withLoading: true,
+    });
 
-    const onSubmit = (values) => {
+    const onSubmit = (values: RegisterFormValues) => {
       console.log("Form submitted:", values);
     };
 
