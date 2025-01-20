@@ -47,20 +47,9 @@
      
   <div class="social-buttons">
     
-    <div class="google">
-      <span>Continue With Google</span>
-           <i class="fa fa-google"></i>
-    </div>
+    <GoogleButton /> 
   
-    <div  class="github">
-      <span>Continue With Github</span>
-      <i class="fa fa-github"></i>
-    </div>
-  
-    <div class="twitter">
-      <span>Continue With Twitter</span>
-      <i class="fa fa-twitter"></i>
-    </div>
+    <GithubButton /> 
   
       </div>
     </div>
@@ -76,6 +65,8 @@
   import { useRouter } from 'vue-router';
   import { apiService } from '@/api/ApiService';
   import { usePost } from '@/composables/usePost';
+  import GoogleButton from '../social-buttons/google/GoogleButton'
+  import GithubButton from '../social-buttons/github/GithubButton'
 
   interface LoginFormValues {
     email: string;
@@ -84,6 +75,10 @@
 
   export default defineComponent({
     name: 'LoginForm',
+    components: {
+        GoogleButton,
+        GithubButton 
+    }, 
     setup() {
       const router = useRouter();
       const loading = ref(false);

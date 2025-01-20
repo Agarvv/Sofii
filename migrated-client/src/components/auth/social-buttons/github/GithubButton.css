@@ -1,0 +1,13 @@
+.github {
+    padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-weight: 700;
+  border-radius: 15px;
+  background: black;
+  color: white;
+  border: 1px solid #ddd; 
+
+}

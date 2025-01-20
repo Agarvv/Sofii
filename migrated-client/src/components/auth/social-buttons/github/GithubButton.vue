@@ -1,0 +1,27 @@
+<template>
+    <div class="github" @click="githubLogin">
+        Use GitHub 
+        <i class="fa fa-github"></i>
+    </div>
+</template>
+
+<script lang="ts">
+  import { defineComponent } from 'vue' 
+  
+  export default defineComponent({
+      name: 'GitHubButton',
+      setup() {
+          const githubLogin = () => {
+              window.location.href = "https://sofii-vsly.onrender.com/api/sofii/auth/github"; 
+          }
+          
+          return {
+              githubLogin
+          }
+      }
+  })
+</script>
+
+<style scoped src="./GithubButton.css* >
+  
+</style>
