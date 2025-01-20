@@ -26,6 +26,10 @@
                 <a href="">Don't have an account?</a>
               </div>
             </div>
+
+            <div class="login-social-media">
+
+            </div>
   
             <div class="btn-box">
               <button type="submit">
