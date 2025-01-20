@@ -11,10 +11,10 @@
                 type="text"
                 placeholder="Username"
                 name="username"
-                v-bind="register('username')"
+                v-bind="username"
               />
               <i class="fa fa-user icon"></i>
-              <span v-if="errors.username" class="val-error">{{ errors.username }}</span>
+              <span v-if="usernameError" class="val-error">{{ usernameError }}</span>
             </div>
             <div class="inp-box">
               <input
@@ -22,10 +22,10 @@
                 type="email"
                 placeholder="Email"
                 name="email"
-                v-bind="register('email')"
+                v-bind="email"
               />
               <i class="fa fa-envelope icon"></i>
-              <span v-if="errors.email" class="val-error">{{ errors.email }}</span>
+              <span v-if="emailError" class="val-error">{{ emailError }}</span>
             </div>
             <div class="inp-box">
               <input
@@ -33,10 +33,10 @@
                 type="password"
                 placeholder="Secure Password"
                 name="password"
-                v-bind="register('password')"
+                v-bind="password"
               />
               <i class="fa fa-lock icon"></i>
-              <span v-if="errors.password" class="val-error">{{ errors.password }}</span>
+              <span v-if="passwordError" class="val-error">{{ passwordError }}</span>
             </div>
             <div class="btn-box">
               <button type="submit">
@@ -63,7 +63,8 @@
 
 <script lang="ts">
 import { defineComponent, reactive } from 'vue';
-import { useForm, useField, required, email, min } from 'vee-validate';
+import { useForm, useField } from 'vee-validate';
+import { required, email, min } from '@vee-validate/rules'; 
 import { useRouter } from 'vue-router';  
 import { apiService } from '@/api/ApiService';
 import { usePost } from '@/composables/usePost';
@@ -79,14 +80,13 @@ export default defineComponent({
   setup() {
     const router = useRouter(); 
 
-
     const values = reactive<RegisterFormValues>({
       username: '',
       email: '',
       password: ''
     });
-    
-    const { handleSubmit, errors, register } = useForm({
+
+    const { handleSubmit, errors } = useForm({
       initialValues: values,
     });
 
@@ -111,7 +111,6 @@ export default defineComponent({
       withLoading: true,
     });
 
-
     const onSubmit = handleSubmit(async () => {
       console.log('Form Submitted:', values);
       await mutate(values);
@@ -121,7 +120,6 @@ export default defineComponent({
     return {
       values,
       errors,
-      register,
       username,
       email,
       password,
