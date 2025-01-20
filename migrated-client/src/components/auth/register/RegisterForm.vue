@@ -7,33 +7,33 @@
           <form @submit="onSubmit">
             <div class="inp-box">
               <input
-                v-model="values.username"
+                v-bind="formik.getFieldProps('username')"
                 type="text"
                 placeholder="Username"
                 name="username"
               />
               <i class="fa fa-user icon"></i>
-              <span v-if="errors.username" class="val-error">{{ errors.username }}</span>
+              <span v-if="formik.errors.username" class="val-error">{{ formik.errors.username }}</span>
             </div>
             <div class="inp-box">
               <input
-                v-model="values.email"
+                v-bind="formik.getFieldProps('email')"
                 type="email"
                 placeholder="Email"
                 name="email"
               />
               <i class="fa fa-envelope icon"></i>
-              <span v-if="errors.email" class="val-error">{{ errors.email }}</span>
+              <span v-if="formik.errors.email" class="val-error">{{ formik.errors.email }}</span>
             </div>
             <div class="inp-box">
               <input
-                v-model="values.password"
+                v-bind="formik.getFieldProps('password')"
                 type="password"
                 placeholder="Secure Password"
                 name="password"
               />
               <i class="fa fa-lock icon"></i>
-              <span v-if="errors.password" class="val-error">{{ errors.password }}</span>
+              <span v-if="formik.errors.password" class="val-error">{{ formik.errors.password }}</span>
             </div>
             <div class="btn-box">
               <button type="submit">
@@ -59,10 +59,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from 'vue';
-import { useRouter } from 'vue-router';
+import { defineComponent } from 'vue';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
+import { useRouter } from 'vue-router';
 import { apiService } from '@/api/ApiService';
 import { usePost } from '@/composables/usePost';
 
@@ -82,7 +82,7 @@ export default defineComponent({
       email: Yup.string().email('Invalid email').required('Email is required'),
       password: Yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
     });
-    
+
     const formik = useFormik({
       initialValues: {
         username: '',
@@ -103,9 +103,7 @@ export default defineComponent({
     });
 
     return {
-      values: formik.values,
-      errors: formik.errors,
-      onSubmit: formik.handleSubmit,
+      formik
     };
   },
 });
