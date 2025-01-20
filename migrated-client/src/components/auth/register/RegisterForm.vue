@@ -63,7 +63,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive } from 'vue';
-import { useForm, useField, FieldValues, required, email, min } from 'vee-validate';
+import { useForm, useField, required, email, min } from 'vee-validate';
 import { useRouter } from 'vue-router';  
 import { apiService } from '@/api/ApiService';
 import { usePost } from '@/composables/usePost';
@@ -79,27 +79,31 @@ export default defineComponent({
   setup() {
     const router = useRouter(); 
 
+
     const values = reactive<RegisterFormValues>({
       username: '',
       email: '',
       password: ''
     });
-
-    const { handleSubmit, errors, register, validate } = useForm({
+    
+    const { handleSubmit, errors, register } = useForm({
       initialValues: values,
     });
 
-    const { value: username, errorMessage: usernameError } = useField('username', required('Username is required'));
-    
-    const { value: email, errorMessage: emailError } = useField('email', [
+    const { value: username, errorMessage: usernameError } = useField(
+      'username',
+      required('Username is required')
+    );
+    const { value: email, errorMessage: emailError } = useField(
+      'email',
       required('Email is required'),
       email('Invalid email')
-    ]);
-    
-    const { value: password, errorMessage: passwordError } = useField('password', [
+    );
+    const { value: password, errorMessage: passwordError } = useField(
+      'password',
       required('Password is required'),
       min(6, 'Password must be at least 6 characters')
-    ]);
+    );
 
     const { mutate } = usePost<RegisterFormValues>({
       serviceFunc: (data: RegisterFormValues) => apiService.post('/auth/register', data),
@@ -109,8 +113,7 @@ export default defineComponent({
 
 
     const onSubmit = handleSubmit(async () => {
-      console.log('Form Submitted:', values); 
-      
+      console.log('Form Submitted:', values);
       await mutate(values);
       router.push({ name: 'login' });
     });
