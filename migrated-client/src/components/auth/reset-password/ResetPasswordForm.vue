@@ -12,7 +12,7 @@
             </div>
   
             <div class="btn-box">
-              <button type="submit" :disabled="loading">
+              <button type="submit">
                 Update Your Password
                 <i class="fas fa-arrow-left"></i>
               </button>
