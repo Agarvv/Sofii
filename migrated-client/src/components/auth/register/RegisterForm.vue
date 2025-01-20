@@ -57,7 +57,6 @@
 
 <script lang="ts">
 import { defineComponent, reactive } from 'vue';
-import { toTypedSchema } from '@vee-validate/yup'
 import * as yup from 'yup';
 import { useForm } from 'vee-validate';
 import { useRouter } from 'vue-router';  
@@ -75,11 +74,11 @@ export default defineComponent({
   setup() {
     const router = useRouter(); 
 
-    const schema = toTypedSchema(yup.object({
+    const schema = yup.object({
       username: yup.string().required('Username is required'),
       email: yup.string().email('Invalid email').required('Email is required'),
       password: yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
-    })); 
+    })
 
    /* const values = reactive<RegisterFormValues>({
       username: '',
