@@ -99,7 +99,7 @@ export default defineComponent({
       console.log('Form Submitted:', values);
       await mutate(values);
       router.push({ name: 'login' });
-    });
+    })();
 
     return {
       values,
