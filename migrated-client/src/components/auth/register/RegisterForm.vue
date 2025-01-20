@@ -80,15 +80,15 @@ export default defineComponent({
       password: yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
     })
 
-   /* const values = reactive<RegisterFormValues>({
+   const values = reactive<RegisterFormValues>({
       username: '',
       email: '',
       password: ''
-    });*/
+    });
 
     const { handleSubmit, errors, validate } = useForm<RegisterFormValues>({
       validationSchema: schema,
-      //initialValues: values,
+      initialValues: values,
     });
 
     const { mutate } = usePost<RegisterFormValues>({
@@ -117,6 +117,7 @@ export default defineComponent({
       handleSubmit,
       errors,
       onSubmit,
+      values
     };
   },
 });
