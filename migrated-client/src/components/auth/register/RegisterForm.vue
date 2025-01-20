@@ -101,7 +101,6 @@ export default defineComponent({
       console.log("submit called")
       try {
         await mutate(values);
-        resetForm(); 
         router.push({ name: 'login' });
       } catch (error) {
         console.error('Error al registrar:', error);
