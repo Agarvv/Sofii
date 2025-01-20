@@ -96,12 +96,12 @@ export default defineComponent({
       withError: true,
       withLoading: true,
     });
-
-    const onSubmit = handleSubmit(async () => {
-       console.log('Form Submitted:', values);
-       await mutate(values);
-       router.push({ name: 'login' });
-    });
+  //
+    const onSubmit = handleSubmit(async (values) => {
+  console.log('Form Submitted:', values);
+  await mutate(values);
+  router.push({ name: 'login' });
+});
 
     return {
       handleSubmit,
