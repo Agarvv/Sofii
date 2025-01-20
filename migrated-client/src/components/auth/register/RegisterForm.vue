@@ -104,6 +104,7 @@ export default {
     
     const { mutate } = usePost<RegisterFormValues>({
       serviceFunc: (data: RegisterFormValues) => apiService.post('/auth/register', data),
+      successMessage: "Registered successfully!!", 
       withError: true,
       withLoading: true,
     });
