@@ -1,7 +1,6 @@
 import { useMutation } from '@tanstack/vue-query'
 import { apiStatusStore } from '@/store/apiStatusStore';
 
-
 interface UsePostOptions<T> {
   serviceFunc: (data: T) => Promise<any>,
   successFunc?: () => void, 
@@ -45,7 +44,14 @@ export function usePost<T>({
       }
       
       console.log("Response on onSuccess", response)
+
       return response
+    },
+
+    onSettled: () => {
+      if (withLoading) {
+        apiStore.setLoading(false);
+      }
     }
   })
 
@@ -53,4 +59,4 @@ export function usePost<T>({
     mutate: mutation.mutate,       
     data: mutation.data        
   }
-}
+}  
