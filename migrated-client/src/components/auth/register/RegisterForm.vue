@@ -4,7 +4,7 @@
       <div class="wrapper">
         <div class="login-form">
           <h1 class="lf-h1">Welcome To Sofii!</h1>
-          <form @submit.prevent="onSubmit">
+          <form @submit="onSubmit"> 
             <div class="inp-box">
               <input
                 v-model="values.username"
@@ -96,15 +96,14 @@ export default defineComponent({
       withError: true,
       withLoading: true,
     });
-  //
-    const onSubmit = handleSubmit(async (values) => {
-  console.log('Form Submitted:', values);
-  await mutate(values);
-  router.push({ name: 'login' });
-});
+
+    const onSubmit = handleSubmit(async () => {
+      console.log('Form Submitted:', values);
+      await mutate(values); 
+      router.push({ name: 'login' });
+    });
 
     return {
-      handleSubmit,
       values,
       errors,
       onSubmit,
@@ -112,5 +111,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style scoped src="./RegisterForm.css"></style>
