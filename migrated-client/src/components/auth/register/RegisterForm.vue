@@ -33,22 +33,9 @@
               <span v-if="!$v.password.$pending && !$v.password.$model" class="val-error">{{ errors.password }}</span>
             </div>
             <div class="btn-box">
-              <button type="submit">
-                Register
-                <i class="fa fa-arrow-left"></i>
-              </button>
-            </div>
-            <div class="form-links">
-              <div>
-                <a href="">Already Have An Account?</a>
-              </div>
+              <button type="submit">Register <i class="fa fa-arrow-left"></i></button>
             </div>
           </form>
-        </div>
-        <div class="login-social-media">
-          <div class="social-buttons">
-            <!-- Social media buttons here -->
-          </div>
         </div>
       </div>
     </div>
@@ -79,7 +66,11 @@ export default defineComponent({
       password: '',
     };
 
-    const $v = useVuelidate();
+    const $v = useVuelidate({
+      username: { $pending: false, $model: true, $validators: [required] },
+      email: { $pending: false, $model: true, $validators: [required, email] },
+      password: { $pending: false, $model: true, $validators: [required, minLength(6)] }
+    });
 
     const { mutate } = usePost<RegisterFormValues>({
       serviceFunc: (data: RegisterFormValues) => apiService.post('/auth/register', data),
@@ -87,24 +78,24 @@ export default defineComponent({
       withLoading: true,
     });
 
+    const errors = {
+      username: 'Username is required',
+      email: 'Invalid email',
+      password: 'Password must be at least 6 characters',
+    };
+
     const onSubmit = async () => {
-      if (!$v.$invalid) {
-        console.log('Form Submitted:', values);
-        await mutate(values);
-        router.push({ name: 'login' });
-      } else {
-        console.log('Form has errors');
-      }
+      if ($v.$pending || $v.$invalid) return; 
+
+      await mutate(values);
+      router.push({ name: 'login' });
     };
 
     return {
       values,
       $v,
-      errors: {
-        username: 'Username is required',
-        email: 'Invalid email',
-        password: 'Password must be at least 6 characters',
-      },
+      errors,
+      onSubmit,
     };
   },
 });
