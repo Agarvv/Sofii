@@ -12,7 +12,7 @@
                 placeholder="Username"
               />
               <i class="fa fa-user icon"></i>
-              <span v-if="errors.username" class="val-error">{{ errors.username }}</span>
+              <span v-if="!$v.username.$pending && !$v.username.$model" class="val-error">{{ errors.username }}</span>
             </div>
             <div class="inp-box">
               <input
@@ -21,7 +21,7 @@
                 placeholder="Email"
               />
               <i class="fa fa-envelope icon"></i>
-              <span v-if="errors.email" class="val-error">{{ errors.email }}</span>
+              <span v-if="!$v.email.$pending && !$v.email.$model" class="val-error">{{ errors.email }}</span>
             </div>
             <div class="inp-box">
               <input
@@ -30,7 +30,7 @@
                 placeholder="Secure Password"
               />
               <i class="fa fa-lock icon"></i>
-              <span v-if="errors.password" class="val-error">{{ errors.password }}</span>
+              <span v-if="!$v.password.$pending && !$v.password.$model" class="val-error">{{ errors.password }}</span>
             </div>
             <div class="btn-box">
               <button type="submit">
@@ -57,8 +57,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import * as yup from 'yup';
-import { useForm } from 'vee-validate';
+import useVuelidate from '@vuelidate/core';
+import { required, email, minLength } from '@vuelidate/validators';
 import { useRouter } from 'vue-router';  
 import { apiService } from '@/api/ApiService';
 import { usePost } from '@/composables/usePost';
@@ -73,21 +73,13 @@ export default defineComponent({
   name: 'RegisterForm',
   setup() {
     const router = useRouter(); 
+    const values = {
+      username: '',
+      email: '',
+      password: '',
+    };
 
-    const schema = yup.object({
-      username: yup.string().required('Username is required'),
-      email: yup.string().email('Invalid email').required('Email is required'),
-      password: yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
-    });
-
-    const { handleSubmit, values, errors } = useForm<RegisterFormValues>({
-      validationSchema: schema,
-      initialValues: {
-        username: '',
-        email: '',
-        password: ''
-      },
-    });
+    const $v = useVuelidate();
 
     const { mutate } = usePost<RegisterFormValues>({
       serviceFunc: (data: RegisterFormValues) => apiService.post('/auth/register', data),
@@ -95,16 +87,24 @@ export default defineComponent({
       withLoading: true,
     });
 
-    const onSubmit = handleSubmit(async (values) => {
-      console.log('Form Submitted:', values);
-      await mutate(values);
-      router.push({ name: 'login' });
-    })();
+    const onSubmit = async () => {
+      if (!$v.$invalid) {
+        console.log('Form Submitted:', values);
+        await mutate(values);
+        router.push({ name: 'login' });
+      } else {
+        console.log('Form has errors');
+      }
+    };
 
     return {
       values,
-      errors,
-      onSubmit,
+      $v,
+      errors: {
+        username: 'Username is required',
+        email: 'Invalid email',
+        password: 'Password must be at least 6 characters',
+      },
     };
   },
 });
