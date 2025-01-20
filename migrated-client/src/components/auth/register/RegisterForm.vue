@@ -88,6 +88,7 @@ interface RegisterFormValues {
 export default {
   name: 'RegisterForm', 
   setup() {
+    const router = useRouter();
     const validationSchema = yup.object({
       username: yup.string().required("Username required"), 
       email: yup.string().email("Invalid email").required("Email required"),
@@ -104,7 +105,7 @@ export default {
     
     const { mutate } = usePost<RegisterFormValues>({
       serviceFunc: (data: RegisterFormValues) => apiService.post('/auth/register', data),
-      successMessage: "Registered successfully!!", 
+      successFunc: () => router.push({ name: "home"}), 
       withError: true,
       withLoading: true,
     });
@@ -112,7 +113,6 @@ export default {
     const onSubmit = async (values: RegisterFormValues) => {
       console.log("Form submitted:", values);
       await mutate(values); 
-      alert("Register success")
     };
 
     return {
