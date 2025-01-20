@@ -4,7 +4,7 @@
       <div class="wrapper">
         <div class="login-form">
           <h1 class="lf-h1">Welcome To Sofii!</h1>
-          <form @submit.prevent="onSubmit">
+          <form @submit="onSubmit()">
             <div class="inp-box">
               <input
                 v-model="values.username"
@@ -56,7 +56,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from 'vue';
+import { defineComponent } from 'vue';
 import * as yup from 'yup';
 import { useForm } from 'vee-validate';
 import { useRouter } from 'vue-router';  
@@ -78,48 +78,46 @@ export default defineComponent({
       username: yup.string().required('Username is required'),
       email: yup.string().email('Invalid email').required('Email is required'),
       password: yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
-    })
+    });
 
-    
-    const { handleSubmit, errors, values } = useForm<RegisterFormValues>({
-  validationSchema: schema,
-  initialValues: {
-    username: '',
-    email: '',
-    password: '',
-  },
-});
-    
+    const { handleSubmit, errors, values, resetForm, setFieldTouched } = useForm<RegisterFormValues>({
+      validationSchema: schema,
+      initialValues: {
+        username: '',
+        email: '',
+        password: '',
+      },
+      validateOnMount: false, 
+      
+    });
+  
     const { mutate } = usePost<RegisterFormValues>({
       serviceFunc: (data: RegisterFormValues) => apiService.post('/auth/register', data),
       withError: true,
       withLoading: true,
     });
-    
-    
-    const onSubmit = handleSubmit(values => {
-        console.log("Form submit success")
-    })
 
-    /*const onSubmit = async () => {
-      const isValid = await validate();
-      if (isValid) {
-        console.log('Form Submitted:', values);
-          await mutate(values); 
-          router.push({ name: 'login' });  
-      } else {
-        console.log('Form is not valid.');
+    const onSubmit = handleSubmit(async (values) => {
+      console.log("submit called")
+      try {
+        await mutate(values);
+        resetForm(); 
+        router.push({ name: 'login' });
+      } catch (error) {
+        console.error('Error al registrar:', error);
       }
-    };*/
+    });
 
     return {
       handleSubmit,
       errors,
       onSubmit,
-      values
+      values,
+      setFieldTouched,
     };
   },
 });
 </script>
+
 
 <style scoped src="./RegisterForm.css"></style>
