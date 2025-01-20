@@ -116,7 +116,6 @@ export default defineComponent({
 
     return {
       handleSubmit,
-      values,
       errors,
       onSubmit,
     };
