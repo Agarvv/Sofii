@@ -1,47 +1,58 @@
 <template>
-    <div class="container">
-      <div class="wrapper">
-        <div class="login-form">
-          <h1 class="lf-h1">Welcome Back To Sofii</h1>
-  
-          <form @submit.prevent="handleSubmit">
-            
-            <div class="inp-box">
-              <input v-model="email" placeholder="Enter Your Email" id="inp1" type="email" required />
-              <i class="fas fa-envelope icon"></i>
-              <span v-if="errors.email" class="val-error">{{ errors.email }}</span>
-            </div>
-  
-            <div class="inp-box">
-              <input v-model="password" placeholder="Enter Your Password" id="inp2" type="password" required />
-              <i class="fas fa-lock icon"></i>
-              <span v-if="errors.password" class="val-error">{{ errors.password }}</span>
-            </div>
-  
-            <div class="form-links">
-              <div> 
-                <a href="">Forgot Your Password?</a>
-              </div>
-              <div >
-                <a href="">Don't have an account?</a>
-              </div>
-            </div>
 
-            <div class="login-social-media">
-
-            </div>
-  
-            <div class="btn-box">
-              <button type="submit">
-                Login
-                <i class="fas fa-arrow-left"></i>
-              </button>
-            </div>
-          </form>
-  
+  <div class="container">
+    
+  <div class="wrapper">
+    
+    <div class="login-form">
+    
+      <h1 class="lf-h1">Welcome Back To Sofii</h1>
+      
+      <form @submit.prevent="handleSubmit">
+    
+        <div class="inp-box">
+          <input v-model="email" placeholder="Enter Your Email" id="inp1" type="email" required>
+    
+          <i class="fa fa-envelope"></i>
         </div>
+        <div class="inp-box">
+          <input v-model="password" placeholder="Enter Your Password" id="inp2" type="password" required>
+        
+          <i class="fa fa-lock"></i>
+        </div>
+  
+       <div class="btn-box">
+           <button type="submit">
+             Login
+           </button>
+        </div>
+        
+        <div class="form-links">
+          <div>
+            <a href="">Forgot Your Password?</a>
+          </div>
+          <div>
+            <a href="">Don't have an account?</a>
+          </div>
+        </div>
+        
+        
+      </form>
+      
+    </div>
+    
+    
+    <div class="login-social-media"> 
+    
+     
+  <div class="social-buttons">
+
+  
       </div>
     </div>
+   </div>
+  </div>
+
   </template>
   
   <script lang="ts">
