@@ -31,7 +31,7 @@
           <div>
             <a href="">Forgot Your Password?</a>
           </div>
-          <div>
+          <div @click="goToRoute('/register')">
             <a href="">Don't have an account?</a>
           </div>
         </div>
@@ -46,7 +46,21 @@
     
      
   <div class="social-buttons">
-
+    
+    <div class="google">
+      <span>Continue With Google</span>
+           <i class="fa fa-google"></i>
+    </div>
+  
+    <div  class="github">
+      <span>Continue With Github</span>
+      <i class="fa fa-github"></i>
+    </div>
+  
+    <div class="twitter">
+      <span>Continue With Twitter</span>
+      <i class="fa fa-twitter"></i>
+    </div>
   
       </div>
     </div>
