@@ -22,6 +22,6 @@
   })
 </script>
 
-<style scoped src="./GithubButton.css* >
+<style scoped src="./GithubButton.css">
   
 </style>
