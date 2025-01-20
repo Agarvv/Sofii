@@ -11,10 +11,9 @@
                 type="text"
                 placeholder="Username"
                 name="username"
-                v-bind="username"
               />
               <i class="fa fa-user icon"></i>
-              <span v-if="usernameError" class="val-error">{{ usernameError }}</span>
+              <span v-if="errors.username" class="val-error">{{ errors.username }}</span>
             </div>
             <div class="inp-box">
               <input
@@ -22,10 +21,9 @@
                 type="email"
                 placeholder="Email"
                 name="email"
-                v-bind="email"
               />
               <i class="fa fa-envelope icon"></i>
-              <span v-if="emailError" class="val-error">{{ emailError }}</span>
+              <span v-if="errors.email" class="val-error">{{ errors.email }}</span>
             </div>
             <div class="inp-box">
               <input
@@ -33,10 +31,9 @@
                 type="password"
                 placeholder="Secure Password"
                 name="password"
-                v-bind="password"
               />
               <i class="fa fa-lock icon"></i>
-              <span v-if="passwordError" class="val-error">{{ passwordError }}</span>
+              <span v-if="errors.password" class="val-error">{{ errors.password }}</span>
             </div>
             <div class="btn-box">
               <button type="submit">
@@ -63,9 +60,9 @@
 
 <script lang="ts">
 import { defineComponent, reactive } from 'vue';
-import { useForm, useField } from 'vee-validate';
-import { required, email, min } from '@vee-validate/rules'; 
-import { useRouter } from 'vue-router';  
+import { useRouter } from 'vue-router';
+import * as Yup from 'yup';
+import { useFormik } from 'formik';
 import { apiService } from '@/api/ApiService';
 import { usePost } from '@/composables/usePost';
 
@@ -80,53 +77,35 @@ export default defineComponent({
   setup() {
     const router = useRouter(); 
 
-    const values = reactive<RegisterFormValues>({
-      username: '',
-      email: '',
-      password: ''
+    const validationSchema = Yup.object({
+      username: Yup.string().required('Username is required'),
+      email: Yup.string().email('Invalid email').required('Email is required'),
+      password: Yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
     });
-
-    const { handleSubmit, errors } = useForm({
-      initialValues: values,
-    });
-
-    const { value: username, errorMessage: usernameError } = useField(
-      'username',
-      required('Username is required')
-    );
-    const { value: email, errorMessage: emailError } = useField(
-      'email',
-      required('Email is required'),
-      email('Invalid email')
-    );
-    const { value: password, errorMessage: passwordError } = useField(
-      'password',
-      required('Password is required'),
-      min(6, 'Password must be at least 6 characters')
-    );
-
-    const { mutate } = usePost<RegisterFormValues>({
-      serviceFunc: (data: RegisterFormValues) => apiService.post('/auth/register', data),
-      withError: true,
-      withLoading: true,
-    });
-
-    const onSubmit = handleSubmit(async () => {
-      console.log('Form Submitted:', values);
-      await mutate(values);
-      router.push({ name: 'login' });
+    
+    const formik = useFormik({
+      initialValues: {
+        username: '',
+        email: '',
+        password: ''
+      },
+      validationSchema,
+      onSubmit: async (values) => {
+        console.log('Form Submitted:', values);
+        const { mutate } = usePost<RegisterFormValues>({
+          serviceFunc: (data: RegisterFormValues) => apiService.post('/auth/register', data),
+          withError: true,
+          withLoading: true,
+        });
+        await mutate(values);
+        router.push({ name: 'login' });
+      }
     });
 
     return {
-      values,
-      errors,
-      username,
-      email,
-      password,
-      usernameError,
-      emailError,
-      passwordError,
-      onSubmit,
+      values: formik.values,
+      errors: formik.errors,
+      onSubmit: formik.handleSubmit,
     };
   },
 });
