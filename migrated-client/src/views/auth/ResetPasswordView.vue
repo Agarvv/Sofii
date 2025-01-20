@@ -1,5 +1,5 @@
 <template>
-
+  <ResetPasswordForm />
 </template>
 
 <script lang="ts">
