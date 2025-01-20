@@ -12,7 +12,7 @@
                 placeholder="Username"
               />
               <i class="fa fa-user icon"></i>
-              <span v-if="!$v.username.$pending && !$v.username.$model" class="val-error">{{ errors.username }}</span>
+              <span v-if="errors.username" class="val-error">{{ errors.username }}</span>
             </div>
             <div class="inp-box">
               <input
@@ -21,7 +21,7 @@
                 placeholder="Email"
               />
               <i class="fa fa-envelope icon"></i>
-              <span v-if="!$v.email.$pending && !$v.email.$model" class="val-error">{{ errors.email }}</span>
+              <span v-if="errors.email" class="val-error">{{ errors.email }}</span>
             </div>
             <div class="inp-box">
               <input
@@ -30,12 +30,25 @@
                 placeholder="Secure Password"
               />
               <i class="fa fa-lock icon"></i>
-              <span v-if="!$v.password.$pending && !$v.password.$model" class="val-error">{{ errors.password }}</span>
+              <span v-if="errors.password" class="val-error">{{ errors.password }}</span>
             </div>
             <div class="btn-box">
-              <button type="submit">Register <i class="fa fa-arrow-left"></i></button>
+              <button type="submit">
+                Register
+                <i class="fa fa-arrow-left"></i>
+              </button>
+            </div>
+            <div class="form-links">
+              <div>
+                <a href="">Already Have An Account?</a>
+              </div>
             </div>
           </form>
+        </div>
+        <div class="login-social-media">
+          <div class="social-buttons">
+            <!-- Social media buttons here -->
+          </div>
         </div>
       </div>
     </div>
@@ -43,9 +56,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import useVuelidate from '@vuelidate/core';
-import { required, email, minLength } from '@vuelidate/validators';
+import { defineComponent, reactive } from 'vue';
+import * as yup from 'yup';
+import { useForm } from 'vee-validate';
 import { useRouter } from 'vue-router';  
 import { apiService } from '@/api/ApiService';
 import { usePost } from '@/composables/usePost';
@@ -60,16 +73,22 @@ export default defineComponent({
   name: 'RegisterForm',
   setup() {
     const router = useRouter(); 
-    const values = {
+
+    const schema = yup.object({
+      username: yup.string().required('Username is required'),
+      email: yup.string().email('Invalid email').required('Email is required'),
+      password: yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
+    });
+
+    const values = reactive<RegisterFormValues>({
       username: '',
       email: '',
-      password: '',
-    };
+      password: ''
+    });
 
-    const $v = useVuelidate({
-      username: { $pending: false, $model: true, $validators: [required] },
-      email: { $pending: false, $model: true, $validators: [required, email] },
-      password: { $pending: false, $model: true, $validators: [required, minLength(6)] }
+    const { handleSubmit, errors, validate } = useForm<RegisterFormValues>({
+      validationSchema: schema,
+      initialValues: values,
     });
 
     const { mutate } = usePost<RegisterFormValues>({
@@ -78,22 +97,15 @@ export default defineComponent({
       withLoading: true,
     });
 
-    const errors = {
-      username: 'Username is required',
-      email: 'Invalid email',
-      password: 'Password must be at least 6 characters',
-    };
-
-    const onSubmit = async () => {
-      if ($v.$pending || $v.$invalid) return; 
-
-      await mutate(values);
-      router.push({ name: 'login' });
-    };
+    const onSubmit = handleSubmit(async () => {
+       console.log('Form Submitted:', values);
+       await mutate(values);
+       router.push({ name: 'login' });
+    });
 
     return {
+      handleSubmit,
       values,
-      $v,
       errors,
       onSubmit,
     };
