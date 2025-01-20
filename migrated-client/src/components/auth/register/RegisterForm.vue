@@ -4,7 +4,7 @@
       <div class="wrapper">
         <div class="login-form">
           <h1 class="lf-h1">Welcome To Sofii!</h1>
-          <form @submit="onSubmit()">
+          <form @submit.prevent="onSubmit">
             <div class="inp-box">
               <input
                 v-model="values.username"
