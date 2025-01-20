@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="handleSubmit">
+  <!-- <form @submit.prevent="handleSubmit">
     <div>
       <label for="email">Email:</label>
       <input type="email" v-model="email" id="email" />
@@ -13,7 +13,62 @@
     </div>
     
     <button type="submit">Submit</button>
-  </form>
+  </form> --> 
+  <div>
+    <div class="container">
+      <div class="wrapper">
+        <div class="login-form">
+          <h1 class="lf-h1">Welcome To Sofii!</h1>
+          <form @submit.prevent="handleSubmit">
+            <div class="inp-box">
+              <input
+                v-model="username"
+                type="text"
+                placeholder="Username"
+              />
+              <i class="fa fa-user icon"></i>
+              <span v-if="errors.username" class="val-error">{{ errors.username }}</span>
+            </div>
+            <div class="inp-box">
+              <input
+                v-model="email"
+                type="email"
+                placeholder="Email"
+              />
+              <i class="fa fa-envelope icon"></i>
+              <span v-if="errors.email" class="val-error">{{ errors.email }}</span>
+            </div>
+            <div class="inp-box">
+              <input
+                v-model="password"
+                type="password"
+                placeholder="Secure Password"
+              />
+              <i class="fa fa-lock icon"></i>
+              <span v-if="errors.password" class="val-error">{{ errors.password }}</span>
+            </div>
+            <div class="btn-box">
+              <button type="submit">
+                Register
+                <i class="fa fa-arrow-right"></i>
+              </button>
+            </div>
+            <div class="form-links">
+              <div>
+                <a href="">Already Have An Account?</a>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="login-social-media">
+          <div class="social-buttons">
+            <!-- Social media buttons here -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </template>
 
 <script>
@@ -25,14 +80,16 @@ export default {
   name: 'RegisterForm', 
   setup() {
     const validationSchema = yup.object({
-      email: yup.string().email("Email inválido").required("El email es obligatorio"),
-      password: yup.string().min(6, "La contraseña debe tener al menos 6 caracteres").required("La contraseña es obligatoria"),
+      username: yup.string().required("Username required"), 
+      email: yup.string().email("Invalid email").required("Email required"),
+      password: yup.string().min(6, "Password must have at least 6 chars").required("Password required"),
     });
 
     const { handleSubmit, errors } = useForm({
       validationSchema,
     });
-
+    
+    const { value: username } = useField("username"); 
     const { value: email } = useField("email");
     const { value: password } = useField("password");
 
@@ -43,9 +100,12 @@ export default {
     return {
       email,
       password,
+      username, 
       errors,
       handleSubmit: handleSubmit(onSubmit),
     };
   },
 };
 </script>
+
+<style scoped src="./RegisterForm.css"></style>
