@@ -20,6 +20,7 @@ export function useGet<T>({ serviceFunc, successFunc, withError }: UseGetOptions
   }
 
   if (error && withError) {
+    console.log("ERROR", error)
     apiStore.setError('Something Went Wrong... :c') 
   }
 
