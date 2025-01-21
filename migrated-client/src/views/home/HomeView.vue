@@ -35,11 +35,13 @@
             AsideComponent,
             UsersMayLike
         },
-        setup() {
-        const { data } = useGet<{ posts: Post[], users: UserMayLike[] }>({
-            serviceFunc: () => apiService.get<{ posts: Post[], users: UserMayLike[] }>('/posts'),
+        async setup() {
+        const data = await  useGet<{ posts: Post[], users: UserMayLike[] }>({
+            endpoint: '/posts', 
             withError: true 
         });
+
+        console.log("data from useGet", data)
 
         return {
             data: data,

@@ -1,44 +1,37 @@
-import { useQuery } from '@tanstack/vue-query'
-import { apiStatusStore } from '@/store/apiStatusStore'
+import { apiStatusStore } from '@/store/apiStatusStore';
+import axios from 'axios';
 
 interface UseGetOptions<T> {
-  serviceFunc: () => Promise<T>,
-  successFunc?: (data: any) => void,  
-  withError: boolean,
+  endpoint: string;
+  successFunc?: (data: T) => void;  
+  withError: boolean;
 }
 
-export function useGet<T>({ serviceFunc, successFunc, withError }: UseGetOptions<T>) {
-  const apiStore = apiStatusStore() 
-  console.log("use get called")
-  
-  const { data, error, isLoading, isError, isSuccess } = useQuery<T>({
-    queryKey: ['data'],   
-    queryFn: serviceFunc, 
-  })
+export async function useGet<T>({ endpoint, successFunc, withError }: UseGetOptions<T>): Promise<T | null> {
+  const apiStore = apiStatusStore();
+  let data: T | null = null; 
 
-  console.log("data ( Vue Query):", data)
-  console.log("error:", error)
-  
-  if (isLoading) {
-    console.log("Loading")
-    return { data: null }
-  }
+  console.log("use get called");
 
-  if (isSuccess && data) {
-    console.log("Data dispo:", data)  
-    const realData = data  
+  try {
+    apiStore.setLoading(true); 
 
-    if (realData) {
-      successFunc ? successFunc(realData) : console.log('Get Succeeded!', realData)
-    } else {
-      console.log("data is empty or it didnt charge ok")
+    const response = await axios.get<T>(`https://sofii-vsly.onrender.com/api/sofii${endpoint}`); 
+    data = response.data; 
+
+    console.log("Data:", data);
+
+    if (data && successFunc) {
+      successFunc(data); 
     }
+  } catch (e) {
+    console.error("ERROR:", e);
+    if (withError) {
+      apiStore.setError("Something went wrong...");
+    }
+  } finally {
+    apiStore.setLoading(false); 
   }
 
-  if (isError && withError) {
-    console.log("ERROR:", error)
-    apiStore.setError('Something Went Wrong... :c')
-  }
-
-  return { data }
+  return data;
 }
