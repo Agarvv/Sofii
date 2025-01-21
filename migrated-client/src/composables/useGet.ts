@@ -16,7 +16,9 @@ export async function useGet<T>({ endpoint, successFunc, withError }: UseGetOpti
   try {
     apiStore.setLoading(true); 
 
-    const response = await axios.get<T>(`https://sofii-vsly.onrender.com/api/sofii${endpoint}`); 
+    const response = await axios.get<T>(`https://sofii-vsly.onrender.com/api/sofii${endpoint}`, {
+      withCredentials: true 
+    }); 
     data = response.data; 
 
     console.log("Data:", data);
