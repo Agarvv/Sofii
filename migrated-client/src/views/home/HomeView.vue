@@ -6,15 +6,12 @@
       </div>
       
       <main class="main">
-        <div class="posts" v-if="data?.posts?.length">
+        <div class="posts">
          <!--  <PostCard 
             v-for="post in data.posts" 
             :key="post.id" 
             :post="post"
           /> -->
-        </div>
-        <div v-else>
-          <p>No posts.</p>
         </div>
       </main>
       
@@ -42,7 +39,7 @@
      // UsersMayLike,
      // PostCard 
     },
-    async setup() {
+    /*async setup() {
       const data = await useGet<{ posts: Post[], users: UserMayLike[] }>({
         endpoint: '/posts', 
         withError: true
@@ -53,7 +50,7 @@
       return {
         data,
       };
-    }
+    }  */
   });
   </script>
   
