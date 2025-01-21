@@ -1,6 +1,6 @@
 <template>
     <div class="layout">
-        <div class="header">
+        <div class="header-c">
           <HeaderComponent /> 
         </div> 
         
@@ -22,7 +22,7 @@
     import { defineComponent } from 'vue'; 
     import HeaderComponent from '@/shared/header/HeaderComponent.vue';
     import AsideComponent from '@/shared/aside/AsideComponent.vue'
-    import UsersMayLike from './users-may-like/UsersMayLike.vue'
+    import UsersMayLike from '@/components/home/users-may-like/UsersMayLike.vue';
     
     export default defineComponent({
         name: 'HomeView',
