@@ -24,6 +24,9 @@ import { ref } from "vue";
 import { useForm, useField } from "vee-validate";
 import * as yup from "yup";
 import { useRoute } from 'vue-router';
+import { apiService } from '@/api/ApiService';
+  import { usePost } from '@/composables/usePost';
+
 
 interface ResetPasswordFormValues {
   email: string;
@@ -48,8 +51,16 @@ export default {
     });
 
     const { value: password } = useField("password");
+    
+    const { mutate } = usePost<ResetPasswordFormValues>({
+        serviceFunc: (data: ResetPasswordFormValues) => apiService.post('/auth/reset-password', data),
+        successMessage: "Your password is set!", 
+        withError: true,
+        withLoading: true,
+      });
 
-    const onSubmit = (values: ResetPasswordFormValues) => {
+
+    const onSubmit = async (values: ResetPasswordFormValues) => {
       const formData = {
         email: email,
         resetToken: resetToken,
@@ -57,6 +68,7 @@ export default {
       };
       console.log("Password reset submitted with data:", formData);
       
+      await mutate(formData); 
     };
 
     return {
