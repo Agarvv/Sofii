@@ -55,6 +55,9 @@
   
   export default defineComponent({
     name: 'PostCard',
+    components: {
+        LikeButton
+    },
     props: {
       post: {
         type: Object as () => Post, 
