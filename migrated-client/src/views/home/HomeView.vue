@@ -1,9 +1,6 @@
 <template>
+     <HeaderComponent />  
     <div class="layout">
-        <div class="header-c">
-          <HeaderComponent /> 
-        </div> 
-        
         <div class="aside">
           <AsideComponent /> 
         </div>
