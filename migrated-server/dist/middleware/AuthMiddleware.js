@@ -7,7 +7,9 @@ const JwtHelper_1 = __importDefault(require("@helpers/JwtHelper"));
 const authMiddleware = (req, res, next) => {
     const jwtToken = req.cookies.jwt;
     if (!jwtToken) {
-        return next(new Error("No JWT Found."));
+        res.status(401).json({
+            error: "Please log in."
+        });
         console.log("no jwt");
     }
     try {
@@ -18,7 +20,9 @@ const authMiddleware = (req, res, next) => {
     }
     catch (error) {
         console.log(error);
-        return next(new Error("Invalid or expired token."));
+        res.status(401).json({
+            error: "Please log in."
+        });
     }
 };
 exports.default = authMiddleware;

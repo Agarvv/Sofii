@@ -5,7 +5,9 @@ const authMiddleware: RequestHandler = (req: Request, res: Response, next: NextF
   const jwtToken = req.cookies.jwt; 
 
   if (!jwtToken) {
-    return next(new Error("No JWT Found."));
+     res.status(401).json({
+        error: "Please log in."
+    })
     console.log("no jwt")
   }
 
@@ -17,7 +19,9 @@ const authMiddleware: RequestHandler = (req: Request, res: Response, next: NextF
     next();  
   } catch (error) {
     console.log(error)
-   return next(new Error("Invalid or expired token.")); 
+     res.status(401).json({
+        error: "Please log in."
+    })
   }
 };
 
