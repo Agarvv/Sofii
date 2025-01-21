@@ -41,7 +41,8 @@ media (max-width: 700px) {
 }
 
 .main {
-  flex: 1x; 
+  flex: 1; 
+  border:3px solid red;
 }
 
 .aside {
@@ -53,4 +54,10 @@ media (max-width: 700px) {
 .right-aside {
   width: 150px;
   border: 1px solid black;
+}
+
+@media(max-width: 700px) {
+  .aside, .right-aside {
+    display: none; 
+  }
 }
