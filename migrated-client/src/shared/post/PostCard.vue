@@ -14,11 +14,11 @@
           />
         </div>
         <div class="post-user-detail">
-          <h4>Post username</h4>
+          <h4>{{ post.user.username }}</h4>
         </div>
   
         <div class="post-button-delete">
-          <font-awesome-icon icon="close" />
+         <i class="fa fa-close"></i>
         </div>
       </div>
       <div class="post-content">
@@ -32,7 +32,7 @@
   
       <div class="post-interactions">
         <div class="like">
-          <i class="fa fa-thumbs-up"></i>
+          <LikeButton :postId="post.id" /> 
           <span>{{ post.postLikes.length }}</span>
         </div>
         <div class="comment">
@@ -51,6 +51,7 @@
   <script lang="ts">
   import { defineComponent } from 'vue';
   import { Post } from '@/types/posts/Post';
+  import LikeButton from './like/LikeButton.vue'
   
   export default defineComponent({
     name: 'PostCard',
