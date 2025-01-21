@@ -36,7 +36,7 @@ const routes: Array<RouteRecordRaw> = [
         path: '/',
         component: HomeView,
         name: "home",
-        meta: { requiresAuth: true }
+        
       }
     ]
   }
