@@ -16,7 +16,7 @@ export function useGet<T>({ serviceFunc, successFunc, withError }: UseGetOptions
     queryFn: serviceFunc, 
   })
 
-  console.log('data', data)
+  console.log('data', data.value)
 
   if (data.value) {
     successFunc ? successFunc(data.value) : console.log('Get Succeeded!', data.value)
