@@ -39,7 +39,7 @@
      // UsersMayLike,
      // PostCard 
     },
-    /*async setup() {
+    async setup() {
       const data = await useGet<{ posts: Post[], users: UserMayLike[] }>({
         endpoint: '/posts', 
         withError: true
@@ -50,7 +50,7 @@
       return {
         data,
       };
-    }  */
+    }  
   });
   </script>
   
