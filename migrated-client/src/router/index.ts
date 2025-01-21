@@ -29,16 +29,9 @@ const routes: Array<RouteRecordRaw> = [
     name: "resetPassword"
   },  
   {
-    path: '/',
-    component: MainLayout,
-    children: [
-      {
-        path: '/',
+      path: '/',
         component: HomeView,
         name: "home",
-        
-      }
-    ]
   }
 ]
 
