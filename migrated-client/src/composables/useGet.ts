@@ -9,7 +9,7 @@ interface UseGetOptions<T> {
 
 export function useGet<T>({ serviceFunc, successFunc, withError }: UseGetOptions<T>) {
   const apiStore = apiStatusStore() 
-
+  console.log("use get called")
   const { data, error } = useQuery<T>({
     queryKey: ['data'],   
     queryFn: serviceFunc, 
