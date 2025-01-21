@@ -9,7 +9,7 @@ interface UseLikeOptions {
 
 export async function useLike({ type, postId, commentId, answerId }: UseLikeOptions) {
     const paths = {
-        POST: '/posts/likes',
+        POST: '/posts/like',
         COMMENT: '/posts/comments/likes',
         ANSWER: '/posts/answers/likes'
     };
