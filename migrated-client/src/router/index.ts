@@ -50,7 +50,7 @@ const router = createRouter({
 
 const isAuthenticated = async (): Promise<boolean> => {
   try {
-    const response = await axios.get('/api/auth/check'); 
+    const response = await axios.get('https://sofii-vsly.onrender.com/api/sofii/auth/check'); 
     console.log('authenticated response', response)
     
     console.log("authenticated condition", response.status == 200)
