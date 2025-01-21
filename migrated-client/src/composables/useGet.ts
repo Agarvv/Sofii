@@ -11,7 +11,7 @@ export function useGet<T>({ serviceFunc, successFunc, withError }: UseGetOptions
   const apiStore = apiStatusStore() 
   console.log("use get called")
   
-  let { data, error } = useQuery<T>({
+  const { data, error } = useQuery<T>({
     queryKey: ['data'],   
     queryFn: serviceFunc, 
   })
