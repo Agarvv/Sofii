@@ -50,7 +50,7 @@ const router = createRouter({
 
 const isAuthenticated = async (): Promise<boolean> => {
   try {
-    const response = await axios.get('/api/auth/verify'); 
+    const response = await axios.get('/api/auth/check'); 
     console.log('authenticated response', response)
     
     console.log("authenticated condition", response.status == 200)
