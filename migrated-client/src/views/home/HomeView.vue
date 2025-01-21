@@ -7,7 +7,7 @@
         
         <main class="main">
             <div class="posts" v-if="data?.posts">
-               <PostCard v-for="post in data.posts" :key="post.id" :post="post"/>
+               <!-- <PostCard v-for="post in data.posts" :key="post.id" :post="post"/>  -->
             </div>
         </main>
         
