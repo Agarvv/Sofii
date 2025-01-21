@@ -12,7 +12,7 @@
         </main>
         
         <div class="right-aside">
-           <UsersMayLike :recomendedUsers="[]"/> 
+           <!--  <UsersMayLike :recomendedUsers="[]"/>   -->
         </div>
     </div>
 </template>
