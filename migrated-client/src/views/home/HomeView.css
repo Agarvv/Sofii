@@ -1,0 +1,35 @@
+.layout {
+  display: flex;
+  flex: 1;
+  gap: 20px;
+  padding: 20px;
+}
+
+.aside {
+    flex: 0 0 250px;
+    display: block;
+}
+
+.right-aside {
+    flex: 0 0 150px;
+    display: block;
+}
+
+.main {
+    flex: 1;
+}
+
+media (max-width: 700px) {
+  .layout {
+    display: block;
+    padding: 0;
+  }
+
+  .aside, .right-aside {
+    display: none;
+  }
+
+  .main {
+    padding: 15px;
+  }
+}
