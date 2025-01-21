@@ -25,67 +25,63 @@
   
   <script lang="ts">
   import { defineComponent, ref, onMounted } from 'vue';
-  import { useRoute } from 'vue-router';
-  import { useForm, useField } from 'vee-validate';
-  import * as yup from 'yup';
-  import { apiService } from '@/api/ApiService';
-  import { usePost } from '@/composables/usePost';
+import { useRoute } from 'vue-router';
+import { useForm, useField } from 'vee-validate';
+import * as yup from 'yup';
+import { apiService } from '@/api/ApiService';
+import { usePost } from '@/composables/usePost';
 
-  interface ResetPasswordFormValues {
-    email: string;
-    token: string;
-    password: string; 
-  }
+interface ResetPasswordFormValues {
+  email: string;
+  token: string;
+  password: string; 
+}
 
-  export default defineComponent({
-    name: 'ResetPassword',
-    setup() {
-      const route = useRoute();
-      const email = ref<string>('');  
-      const token = ref<string>('');  
-      const password = ref<string>(''); 
-      const loading = ref(false);
+export default defineComponent({
+  name: 'ResetPassword',
+  setup() {
+    const route = useRoute();
+    const email = ref<string>('');  
+    const token = ref<string>('');  
+    const { value: password, errorMessage } = useField('password', yup.string().min(6, "Password must have at least 6 chars").required("Password is required"));
 
-      onMounted(() => {
-        email.value = route.params.email as string;
-        token.value = route.params.token as string;
-      });
+    const loading = ref(false);
 
-      const validationSchema = yup.object({
-        password: yup
-          .string()
-          .min(6, "Password must have at least 6 chars")
-          .required("Password is required"),  
-      });
+    onMounted(() => {
+      email.value = route.params.email as string;
+      token.value = route.params.token as string;
+    });
 
-      const { handleSubmit, errors } = useForm<ResetPasswordFormValues>({
-        validationSchema,
-      });
+    const { handleSubmit } = useForm<ResetPasswordFormValues>({
+      initialValues: {
+        password: '',
+        email: '',
+        token: ''
+      }
+    });
 
-      const { value: passwordField } = useField('password');  
-      
-      const { mutate } = usePost<ResetPasswordFormValues>({
-        serviceFunc: (data: ResetPasswordFormValues) => apiService.post('/auth/reset-password', data),
-        successMessage: 'Your Password Is Set!', 
-        withError: true,
-        withLoading: true,
-      });
+    const { mutate } = usePost<ResetPasswordFormValues>({
+      serviceFunc: (data: ResetPasswordFormValues) => apiService.post('/auth/reset-password', data),
+      successMessage: 'Your Password Is Set!',
+      withError: true,
+      withLoading: true,
+    });
 
-      const onSubmit = async (values: ResetPasswordFormValues) => {
-        console.log("Form submitted:", values);
-        await mutate(values);  
-      };
+    const onSubmit = async (values: ResetPasswordFormValues) => {
+      console.log("Form submitted:", values);
+      await mutate(values);
+    };
 
-      return {
-        email,
-        token,
-        password, 
-        errors,
-        handleSubmit: handleSubmit(onSubmit),
-        loading,
-      };
-    },
-  });
+    return {
+      email,
+      token,
+      password,
+      errorMessage,
+      handleSubmit: handleSubmit(onSubmit),
+      loading,
+    };
+  },
+});
 </script>
 
 
