@@ -1,0 +1,48 @@
+.user-card {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+  }
+  
+  .user-details {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .username-job h4 {
+    margin: 0;
+    font-size: 1.1em;
+  }
+  
+  .job-title {
+    color: gray;
+    margin: 0;
+    font-size: 0.9em;
+  }
+  
+  .user-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .view-profile,
+  .follow {
+    background: #E4E4E4;
+    padding: 8px 12px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s;
+  }
+  
+  .view-profile:hover,
+  .follow:hover {
+    background: #d0d0d0;
+  }

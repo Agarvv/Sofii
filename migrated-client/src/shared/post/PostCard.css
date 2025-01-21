@@ -1,0 +1,63 @@
+.post {
+    padding: 15px;
+    border-bottom: 1px solid #eee; 
+    display: flex;
+    flex-direction: column;
+    background: #fff; 
+    border-radius: 8px; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.post .post-header {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.post .post-header .username {
+    flex: 1; 
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.post .post-button-ellipsis {
+    display: flex;
+    align-items: top;
+    justify-content: flex-end;
+    width: auto;
+}
+
+.post-description {
+    margin-bottom: 15px;
+    color: #333; 
+}
+
+.post-image img {
+    width: 100%;
+    height: auto;
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: 8px; 
+}
+
+.post-image {
+    margin-bottom: 20px;
+}
+
+.post-interactions {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    padding: 15px 0;
+    border-top: 1px solid #eee; 
+    color: #555; 
+}
+
+.post-button-delete {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
