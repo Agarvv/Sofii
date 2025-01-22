@@ -1,5 +1,5 @@
 <template>
-    <div class="save">
+    <div class="save" @click="save">
         <i class="fa fa-bookmark"></i>
     </div>
 </template>
