@@ -41,7 +41,7 @@
         </div>
   
         <div class="save">
-          <i class="fa fa-bookmark"></i>
+          <SaveButton :postId="post.id" /> 
           <span>{{ post.saved_post.length }}</span>
         </div>
       </div>
@@ -52,11 +52,13 @@
   import { defineComponent } from 'vue';
   import { Post } from '@/types/posts/Post';
   import LikeButton from './like/LikeButton.vue'
+  import SaveButton from './save/SaveButton.vue'
   
   export default defineComponent({
     name: 'PostCard',
     components: {
-        LikeButton
+        LikeButton,
+        SaveButton
     },
     props: {
       post: {
