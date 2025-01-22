@@ -6,10 +6,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, onBeforeUnmount, ref } from 'vue';
+import { defineComponent, onMounted, onBeforeUnmount, ref, reactive } from 'vue';
 import { apiService } from '@/api/ApiService'; 
 import { useSocket } from '@/composables/useWebSocket';  
-import { Like } from '@/types/posts/Like'
+import { Like } from '@/types/posts/Like';
+
 
 export default defineComponent({
     name: 'PostLikes',
@@ -20,30 +21,34 @@ export default defineComponent({
         },
         postLikes: {
             type: Array as () => Like[],
-            required: true
-        }
+            required: true,
+        },
     },
     setup(props) {
+        let likes = reactive<Like[]>([...props.postLikes]);
 
-        const likes = ref(props.postLikes);  
-        const { socket } = useSocket();  
+        const { socket } = useSocket();
 
         const like = async () => {
-            const data = await apiService.post('/posts/like', { postId: props.postId });
-            console.log('Data from like:', data);
+            try {
+                const data = await apiService.post('/posts/like', { postId: props.postId });
+                console.log('Data from like:', data);
+            } catch (error) {
+                console.error('Error al enviar el like:', error);
+            }
         };
 
         onMounted(() => {
             socket.instance.on('likePost', (liked: Like) => {
                 if (liked.post_id === props.postId) {
-                    likes.value.push(liked);
+                    likes.push(liked);
                     console.log('Post liked via WebSocket:', liked);
                 }
             });
 
             socket.instance.on('unlikePost', (liked: Like) => {
                 if (liked.post_id === props.postId) {
-                    likes.value = likes.value.filter(like => like.user_id !== liked.user_id);
+                    likes = likes.filter(like => like.user_id !== liked.user_id); 
                     console.log('Post unliked via WebSocket:', liked);
                 }
             });
@@ -54,7 +59,7 @@ export default defineComponent({
             socket.instance.off('unlikePost');
         });
 
-        return { like, likes };
+        return { like, likes }; 
     },
 });
 </script>
