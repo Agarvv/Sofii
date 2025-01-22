@@ -6,11 +6,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, onBeforeUnmount, ref, reactive } from 'vue';
+import { defineComponent, onMounted, onBeforeUnmount, reactive } from 'vue';
 import { apiService } from '@/api/ApiService'; 
 import { useSocket } from '@/composables/useWebSocket';  
 import { Like } from '@/types/posts/Like';
-
 
 export default defineComponent({
     name: 'PostLikes',
@@ -25,8 +24,7 @@ export default defineComponent({
         },
     },
     setup(props) {
-        let likes = reactive<Like[]>([...props.postLikes]);
-
+        const likes = reactive([...props.postLikes]); 
         const { socket } = useSocket();
 
         const like = async () => {
@@ -40,16 +38,19 @@ export default defineComponent({
 
         onMounted(() => {
             socket.instance.on('likePost', (liked: Like) => {
-                if (liked.post_id === props.postId) {
-                    likes.push(liked);
+                if (liked.post_id === props.postId && !likes.some(like => like.user_id === liked.user_id)) {
+                    likes.push(liked); 
                     console.log('Post liked via WebSocket:', liked);
                 }
             });
 
             socket.instance.on('unlikePost', (liked: Like) => {
                 if (liked.post_id === props.postId) {
-                    likes = likes.filter(like => like.user_id !== liked.user_id); 
-                    console.log('Post unliked via WebSocket:', liked);
+                    const index = likes.findIndex(like => like.user_id === liked.user_id);
+                    if (index !== -1) {
+                        likes.splice(index, 1); 
+                        console.log('Post unliked via WebSocket:', liked);
+                    }
                 }
             });
         });
