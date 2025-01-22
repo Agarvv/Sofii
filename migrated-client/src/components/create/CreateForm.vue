@@ -1,7 +1,7 @@
 <template>
     <div class="container">
       <div class="create-container">
-        <form @submit.prevent="handleSubmit(onSubmit)">
+        <form @submit.prevent="submitForm">
           <div class="f-column">
             <div class="fc-inp">
               <input v-model="description" placeholder="What's Up?" />
@@ -45,8 +45,7 @@
         description: string;
         image: string;
       }
-  
-      // Validación del formulario
+
       const validationSchema = yup.object({
         description: yup.string().required('Description is required'),
         image: yup
@@ -79,7 +78,7 @@
         image.value = imageUrl;
       };
   
-      return { handleSubmit, onSubmit, description, errors, image, setImage };
+      return { submitForm: handleSubmit(onSubmit), description, errors, image, setImage };
     },
   });
   </script>
