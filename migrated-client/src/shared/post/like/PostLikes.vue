@@ -1,12 +1,12 @@
 <template>
     <div class="like" @click="like">
-        <span v-if="likes.length !== undefined">{{ likes.length }}</span>  
+        <span>{{ likes.length }}</span>  
         <i class="fa fa-thumbs-up"></i>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, onBeforeUnmount, ref } from 'vue';
+import { defineComponent, onMounted, onBeforeUnmount } from 'vue';
 import { apiService } from '@/api/ApiService'; 
 import { useSocket } from '@/composables/useWebSocket';  
 import { Like } from '@/types/posts/Like';
@@ -24,29 +24,32 @@ export default defineComponent({
         },
     },
     setup(props) {
-        const likes = ref<Like[]>([...props.postLikes]); 
-
-        const { socket } = useSocket();
+        let likes = [...props.postLikes]; 
 
         const like = async () => {
-
+            try {
                 const data = await apiService.post('/posts/like', { postId: props.postId });
                 console.log('Data from like:', data);
+            } catch (error) {
+                console.error('Error al enviar el like:', error);
+            }
         };
 
         onMounted(() => {
+            const { socket } = useSocket();
+
             socket.instance.on('likePost', (liked: Like) => {
-                if (liked.post_id === props.postId && !likes.value.some(like => like.user_id === liked.user_id)) {
-                    likes.value.push(liked);  
+                if (liked.post_id === props.postId && !likes.some(like => like.user_id === liked.user_id)) {
+                    likes.push(liked); 
                     console.log('Post liked via WebSocket:', liked);
                 }
             });
 
             socket.instance.on('unlikePost', (liked: Like) => {
                 if (liked.post_id === props.postId) {
-                    const index = likes.value.findIndex(like => like.user_id === liked.user_id);
+                    const index = likes.findIndex(like => like.user_id === liked.user_id);
                     if (index !== -1) {
-                        likes.value.splice(index, 1);  
+                        likes.splice(index, 1); 
                         console.log('Post unliked via WebSocket:', liked);
                     }
                 }
@@ -54,11 +57,12 @@ export default defineComponent({
         });
 
         onBeforeUnmount(() => {
+            const { socket } = useSocket();
             socket.instance.off('likePost');
             socket.instance.off('unlikePost');
         });
 
-        return { like, likes }; 
+        return { like, likes };
     },
 });
 </script>
