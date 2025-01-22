@@ -10,7 +10,7 @@ export default {
     init: (server: any) => {
         io = new Server(server, {
             cors: {
-                origin: 'https://sofii.vercel.app',
+                origin: 'https://sofii-vsly.vercel.app',
                 methods: ['GET', 'POST'],
                 credentials: true,
             },
