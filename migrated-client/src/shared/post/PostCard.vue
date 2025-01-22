@@ -32,8 +32,7 @@
   
       <div class="post-interactions">
         <div class="like">
-          <LikeButton :postId="post.id" /> 
-          <span>{{ post.postLikes.length }}</span>
+          <PostLikes :postId="post.id" :likes="post.postLikes"/> 
         </div>
         <div class="comment">
           <i class="fa fa-comments"></i>
@@ -41,8 +40,7 @@
         </div>
   
         <div class="save">
-          <SaveButton :postId="post.id" /> 
-          <span>{{ post.saved_post.length }}</span>
+          <PostSaveds :postId="post.id" :saveds="post.saved_post" /> 
         </div>
       </div>
     </div>
@@ -51,14 +49,14 @@
   <script lang="ts">
   import { defineComponent } from 'vue';
   import { Post } from '@/types/posts/Post';
-  import LikeButton from './like/LikeButton.vue'
-  import SaveButton from './save/SaveButton.vue'
+  import PostLikes from './like/PostLikes.vue'
+  import PostSaveds from './save/PostSaveds.vue'
   
   export default defineComponent({
     name: 'PostCard',
     components: {
-        LikeButton,
-        SaveButton
+        PostLikes,
+        PostSaveds
     },
     props: {
       post: {
