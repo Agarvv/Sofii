@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, onBeforeUnmount } from 'vue';
+import { defineComponent, onMounted, onBeforeUnmount, ref } from 'vue';
 import { apiService } from '@/api/ApiService'; 
 import { useSocket } from '@/composables/useWebSocket';  
 import { Like } from '@/types/posts/Like'
@@ -18,41 +18,43 @@ export default defineComponent({
             type: Number,
             required: true,
         },
-        likes: {
+        postLikes: {
             type: Array as () => Like[],
             required: true
         }
     },
     setup(props) {
+        const likes = ref(props.postLikes);  
         const { socket } = useSocket();  
+
         const like = async () => {
-                const data = await apiService.post('/posts/like', { postId: props.postId });
-                console.log('Data from like:', data);
-            
+            const data = await apiService.post('/posts/like', { postId: props.postId });
+            console.log('Data from like:', data);
         };
 
         onMounted(() => {
             socket.instance.on('likePost', (liked: Like) => {
                 if (liked.post_id === props.postId) {
-                  //  props.likes.push(liked); 
+                    likes.value.push(liked);
                     console.log('Post liked via WebSocket:', liked);
                 }
             });
 
             socket.instance.on('unlikePost', (liked: Like) => {
                 if (liked.post_id === props.postId) {
-                 //   props.likes = props.likes.filter(like => like.post_id !== liked.post_id);
+
+                    likes.value = likes.value.filter(like => like.user_id !== liked.user_id);
                     console.log('Post unliked via WebSocket:', liked);
                 }
             });
         });
 
         onBeforeUnmount(() => {
-            socket.instance.off('likedPost');
-            socket.instance.off('unlikedPost');
+            socket.instance.off('likePost');
+            socket.instance.off('unlikePost');
         });
 
-        return { like };
+        return { like, likes };
     },
 });
 </script>
