@@ -6,7 +6,6 @@
 
 .main {
   flex: 1; 
-  border:3px solid red;
 }
 
 .aside {
@@ -16,12 +15,14 @@
 }
 
 .right-aside {
-  width: 150px;
+  width: 200px;
   border: 1px solid black;
 }
 
 .posts {
-  
+   display: flex; 
+   flex-direction: column; 
+   gap: 25px; 
 }
 
 @media(max-width: 700px) {
