@@ -1,6 +1,6 @@
 <template>
     <div class="like" @click="like">
-        <span>{{ likes.length }}</span>  
+        <span v-if="likes.length !== undefined">{{ likes.length }}</span>  
         <i class="fa fa-thumbs-up"></i>
     </div>
 </template>
@@ -24,23 +24,16 @@ export default defineComponent({
         },
     },
     setup(props) {
-        const likes = ref<Like[]>([...props.postLikes]); 
-
-        const { socket } = useSocket();
-
-        const like = async () => {
-            try {
-                const data = await apiService.post('/posts/like', { postId: props.postId });
-                console.log('Data from like:', data);
-            } catch (error) {
-                console.error('Error al enviar el like:', error);
-            }
-        };
-
+        const likes = ref<Like[]>([]); 
+        
         onMounted(() => {
+            likes.value = [...props.postLikes];  
+
+            const { socket } = useSocket();
+
             socket.instance.on('likePost', (liked: Like) => {
                 if (liked.post_id === props.postId && !likes.value.some(like => like.user_id === liked.user_id)) {
-                    likes.value.push(liked);  
+                    likes.value.push(liked); 
                     console.log('Post liked via WebSocket:', liked);
                 }
             });
@@ -57,11 +50,12 @@ export default defineComponent({
         });
 
         onBeforeUnmount(() => {
+            const { socket } = useSocket();
             socket.instance.off('likePost');
             socket.instance.off('unlikePost');
         });
 
-        return { like, likes }; 
+        return { likes, like: async () => {} }; 
     },
 });
 </script>
