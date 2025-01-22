@@ -9,6 +9,7 @@ import NotificationsService from '@services/notifications/NotificationsService';
 import websocket from '@websocket/websocket'
 import User from '@models/users/User';
 import Account from '../../../types/Account';
+import Comment from '@models/posts/comments/Comment';
 
 class PostsService {
     public static async createPost(description: string, picture: string, userId: number): Promise<void> {
