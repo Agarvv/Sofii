@@ -1,6 +1,6 @@
 <template>
     <div class="like" @click="like">
-        <span>{{ likes.length }}</span>  
+        <span>{{ likes?.length || 0 }}</span>  
         <i class="fa fa-thumbs-up"></i>
     </div>
 </template>
@@ -24,7 +24,7 @@ export default defineComponent({
         },
     },
     setup(props) {
-        let likes = [...props.postLikes]; 
+        const likes = props.postLikes && Array.isArray(props.postLikes) ? [...props.postLikes] : [];
 
         const like = async () => {
             try {
@@ -40,7 +40,7 @@ export default defineComponent({
 
             socket.instance.on('likePost', (liked: Like) => {
                 if (liked.post_id === props.postId && !likes.some(like => like.user_id === liked.user_id)) {
-                    likes.push(liked); 
+                    likes.push(liked);  
                     console.log('Post liked via WebSocket:', liked);
                 }
             });
@@ -61,7 +61,7 @@ export default defineComponent({
             socket.instance.off('likePost');
             socket.instance.off('unlikePost');
         });
-
+        
         return { like, likes };
     },
 });
