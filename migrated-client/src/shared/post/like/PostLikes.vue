@@ -24,16 +24,20 @@ export default defineComponent({
         },
     },
     setup(props) {
-        const likes = ref<Like[]>([]); 
-        
+        const likes = ref<Like[]>([...props.postLikes]); 
+
+        const { socket } = useSocket();
+
+        const like = async () => {
+
+                const data = await apiService.post('/posts/like', { postId: props.postId });
+                console.log('Data from like:', data);
+        };
+
         onMounted(() => {
-            likes.value = [...props.postLikes];  
-
-            const { socket } = useSocket();
-
             socket.instance.on('likePost', (liked: Like) => {
                 if (liked.post_id === props.postId && !likes.value.some(like => like.user_id === liked.user_id)) {
-                    likes.value.push(liked); 
+                    likes.value.push(liked);  
                     console.log('Post liked via WebSocket:', liked);
                 }
             });
@@ -50,12 +54,11 @@ export default defineComponent({
         });
 
         onBeforeUnmount(() => {
-            const { socket } = useSocket();
             socket.instance.off('likePost');
             socket.instance.off('unlikePost');
         });
 
-        return { likes, like: async () => {} }; 
+        return { like, likes }; 
     },
 });
 </script>
