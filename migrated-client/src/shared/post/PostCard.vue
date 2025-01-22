@@ -52,6 +52,7 @@
   import PostLikes from './like/PostLikes.vue'
   import PostSaveds from './save/PostSaveds.vue'
   
+  
   export default defineComponent({
     name: 'PostCard',
     components: {

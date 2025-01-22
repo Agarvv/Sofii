@@ -5,13 +5,13 @@
           <div class="f-column">
             <div class="fc-inp">
               <input v-model="description" placeholder="What's Up?" />
-              <p v-if="errors.description" class="error">{{ errors.description }}</p>
+              <span v-if="errors.description" class="val-error">{{ errors.description }}</span>
             </div>
           </div>
   
-          <div class="demostration-content" v-if="image">
+          <div class="demostration-content" v-if="picture">
             <img
-              :src="image"
+              :src="picture"
               style="width: 100%; height: 250px; object-fit: cover; border-radius: 15px;"
             />
           </div>
@@ -48,7 +48,7 @@
 
       const validationSchema = yup.object({
         description: yup.string().required('Description is required'),
-        image: yup
+        picture: yup
           .string()
           .url('Image must be a valid URL')
           .required('Image is required!'),
@@ -59,7 +59,7 @@
       });
   
       const { value: description } = useField('description');
-      const { value: image } = useField<string | undefined>('image');
+      const { value: picture } = useField<string | undefined>('image');
   
       const { mutate } = usePost<CreatePostFormValues>({
         serviceFunc: (data: CreatePostFormValues) =>
@@ -75,10 +75,10 @@
       };
 
       const setImage = (imageUrl: string) => {
-        image.value = imageUrl;
+        picture.value = imageUrl;
       };
   
-      return { submitForm: handleSubmit(onSubmit), description, errors, image, setImage };
+      return { submitForm: handleSubmit(onSubmit), description, errors, picture, setImage };
     },
   });
   </script>
