@@ -1,0 +1,90 @@
+.container {
+  width: 100%;
+  padding: 20px;
+}
+
+.create-container {
+  width: 70%; 
+  max-width: 800px; 
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 0 auto; 
+}
+
+.f-column {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.fc-inp {
+  width: 100%;
+}
+
+.fc-inp input {
+  background: red;
+  width: 100%; 
+  height: 40px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  background: #e0e0e0;
+  transition: border-color 0.3s;
+}
+
+.fc-inp input:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.s-column {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 10px;
+}
+
+.s-column div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #fff;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.s-column div:hover {
+  background-color: #f0f0f0;
+  transform: translateY(-2px);
+}
+
+.demostration-content img,
+.demostration-content video {
+  width: 100%; 
+  max-height: 250px; 
+  object-fit: cover;
+  border-radius: 15px;
+}
+
+.rs-aside {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px; 
+    height: 100vh;
+    overflow: auto; 
+    display: block;
+    
+}
+
+@media(max-width: 600px) {
+    .create-container {
+        width: 100%;
+    }
+}
