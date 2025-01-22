@@ -1,6 +1,6 @@
 <template>
     <div class="like" @click="like">
-        <span>{{ likes.value.length }}</span>
+        <span>{{ likes.value ? likes.value.length : 0 }}</span>  
         <i class="fa fa-thumbs-up"></i>
     </div>
 </template>
@@ -24,7 +24,8 @@ export default defineComponent({
         }
     },
     setup(props) {
-        const likes = ref(props.postLikes);  
+
+        const likes = ref(props.postLikes || []);  
         const { socket } = useSocket();  
 
         const like = async () => {
@@ -42,7 +43,6 @@ export default defineComponent({
 
             socket.instance.on('unlikePost', (liked: Like) => {
                 if (liked.post_id === props.postId) {
-
                     likes.value = likes.value.filter(like => like.user_id !== liked.user_id);
                     console.log('Post unliked via WebSocket:', liked);
                 }
