@@ -7,7 +7,6 @@
     
     <main class="main">
       <div class="posts">
-        <div v-if="loading">Cargando publicaciones...</div>
         <PostCard 
           v-for="post in data.posts" 
           :key="post.id" 
@@ -17,7 +16,7 @@
     </main>
     
     <div class="right-aside">
-      <UsersMayLike v-if="!loading" :recomendedUsers="data.users" />
+      <UsersMayLike :recomendedUsers="data.users" />
     </div>
   </div>
 </template>
