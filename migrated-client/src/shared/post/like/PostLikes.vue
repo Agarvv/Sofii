@@ -1,6 +1,6 @@
 <template>
     <div class="like" @click="like">
-        <span>{{ likes.value ? likes.value.length : 0 }}</span>  
+        <span>{{ likes.length }}</span>  
         <i class="fa fa-thumbs-up"></i>
     </div>
 </template>
@@ -25,7 +25,7 @@ export default defineComponent({
     },
     setup(props) {
 
-        const likes = ref(props.postLikes || []);  
+        const likes = ref(props.postLikes);  
         const { socket } = useSocket();  
 
         const like = async () => {
