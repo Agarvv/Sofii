@@ -18,6 +18,10 @@
 
     export default defineComponent({
         name: 'PostDetailsComponent',
+        components: {
+            PostCard,
+            PostComments
+        },
         props: {
             post: {
                 type: Object as PropType<PostDetails>, 
