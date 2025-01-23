@@ -1,4 +1,7 @@
 <template>
+  <div>
+    <p>profile soon</p>
+  </div>
    <!--  <div>
       <ProfileHeader />
       
