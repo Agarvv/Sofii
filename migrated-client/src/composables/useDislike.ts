@@ -10,7 +10,7 @@ interface UseDislikeOptions {
 export async function useDislike({ type, postId, commentId, answerId }: UseDislikeOptions) {
     const paths = {
         COMMENT: '/posts/comments/dislike',
-        ANSWER: '/posts/answers/dislike'
+        ANSWER: '/posts/comments/answers/dislike'
     };
 
     if (!paths[type]) {
