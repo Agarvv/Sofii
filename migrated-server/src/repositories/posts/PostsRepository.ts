@@ -72,7 +72,7 @@ class PostsRepository {
   }
     
     public static async getPostDetails(id: number): Promise<any> {
-        const post = await Post.findOne({
+        return await Post.findOne({
             where: { id: id },
             include: [
                 {
