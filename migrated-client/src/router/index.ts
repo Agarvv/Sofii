@@ -8,6 +8,7 @@ import ResetPasswordView from '@/views/auth/ResetPasswordView.vue'
 import CreateView from '@/views/create/CreateView.vue'
 import PostDetails from '@/views/post-details/PostDetails.vue'
 import axios from 'axios'
+import ProfileView from '@/views/profile/ProfileView.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -44,6 +45,10 @@ const routes: Array<RouteRecordRaw> = [
     path: '/create',
     component: CreateView,
     name: "create"
+  },
+  {
+    path: '/profile/:id',
+    component: ProfileView 
   }
 ]
 

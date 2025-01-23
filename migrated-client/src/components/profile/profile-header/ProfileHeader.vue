@@ -42,7 +42,7 @@
    <div class="interact-buttons">
     <!-- Chat -->
     <button style="background: purple;">
-      <font-awesome-icon :icon="['fas', 'comment']" /> Chat
+      <i class="fa fa-comment"></i> Chat
     </button>
    
    <!-- friend buttons -->
