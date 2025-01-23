@@ -12,6 +12,7 @@
     padding: 10px;
     border-radius: 10px;
     border: 0.3px solid gray;
+    border: 1px solid black;
 }
 
 .comment-awnser-send-button {
@@ -19,4 +20,6 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    border: 1px solid black;
+    
 }
