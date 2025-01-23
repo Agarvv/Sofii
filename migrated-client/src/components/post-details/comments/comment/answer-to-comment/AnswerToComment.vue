@@ -1,7 +1,7 @@
 <template>
               <div class="comment-awnser">
 
-                
+
                 <div class="comment-awnser-input">
                   <input placeholder="Answer To This Comment">
                 </div>

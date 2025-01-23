@@ -1,9 +1,13 @@
 .comment-awnser {
-    display: grid;
-    grid-template-columns: 9fr 1fr;
+    display: flex;
     align-items: center;
     gap: 10px;
     margin-top: 10px;
+}
+
+
+.comment-awnser-input {
+    flex: 1; 
 }
 
 .comment-awnser-input input {
