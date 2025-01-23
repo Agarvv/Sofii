@@ -3,7 +3,7 @@ import { usePost } from '@/composables/usePost';
 
 
 interface ProfileDataChangeValues {
-    field: string:
+    field: string,
     value: string 
 }
 
