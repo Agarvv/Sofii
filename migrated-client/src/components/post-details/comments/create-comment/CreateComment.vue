@@ -54,9 +54,13 @@ export default defineComponent({
     });
 
     const onSubmit = async (values: CommentValues) => {
-      console.log('Comment submitted', values);
-      await mutate(values);
-    };
+      const commentData = {
+        ...values,
+        postId: postId.value,  
+       };
+         console.log('Comment submitted', commentData);
+         await mutate(commentData);
+     };
 
     return {
       commentValue,
