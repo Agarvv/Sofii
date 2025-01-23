@@ -19,17 +19,17 @@
           iconColor="black" 
         />
         <ProfileDetail 
-          :detail="user.gender || 'Gender Not Provided'" 
+          :detail="data.profile.gender || 'Gender Not Provided'" 
           icon="fas fa-venus-mars" 
           iconColor="hotpink" 
         />
         <ProfileDetail 
-          :detail="user.job || 'Job Not Provided'" 
+          :detail="data.profile.job || 'Job Not Provided'" 
           icon="fas fa-briefcase" 
           iconColor="gray" 
         />
         <ProfileDetail 
-          :detail="user.civil_status || 'Civil Status Not Provided'" 
+          :detail="data.profile.civil_status || 'Civil Status Not Provided'" 
           icon="fa fa-heart" 
           iconColor="red" 
         />
@@ -45,30 +45,30 @@
             </div>
             <div class="user-i">
               <ProfileDetail 
-                :detail="user.bio || 'Bio Not Provided'" 
+                :detail="data.profile.bio || 'Bio Not Provided'" 
               />
               <ProfileDetail 
-                :detail="user.ubication || 'Ubication Not Provided'" 
+                :detail="data.profile.ubication || 'Ubication Not Provided'" 
                 icon="fas fa-map-marker-alt" 
                 iconColor="red" 
               />
               <ProfileDetail 
-                :detail="user.native_city || 'Native City Not Provided'" 
+                :detail="data.profile.native_city || 'Native City Not Provided'" 
                 icon="fas fa-globe" 
                 iconColor="black" 
               />
               <ProfileDetail 
-                :detail="user.gender || 'Gender Not Provided'" 
+                :detail="data.profile.gender || 'Gender Not Provided'" 
                 icon="fas fa-venus-mars" 
                 iconColor="hotpink" 
               />
               <ProfileDetail 
-                :detail="user.job || 'Job Not Provided'" 
+                :detail="data.profile.job || 'Job Not Provided'" 
                 icon="fas fa-briefcase" 
                 iconColor="gray" 
               />
               <ProfileDetail 
-                :detail="user.civil_status || 'Civil Status Not Provided'" 
+                :detail="data.profile.civil_status || 'Civil Status Not Provided'" 
                 icon="fa fa-heart" 
                 iconColor="red" 
               />
@@ -78,7 +78,7 @@
       </aside>
 
       <main>
-        <div v-if="user.posts.length > 0" class="posts">
+        <div v-if="data.profile.posts.length > 0" class="posts">
           <div v-for="post in data.profile.posts" :key="post.id" class="post">
               
             <PostCard 
