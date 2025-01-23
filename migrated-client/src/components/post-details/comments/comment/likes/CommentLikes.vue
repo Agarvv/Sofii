@@ -1,7 +1,7 @@
 <template>
       <div v-if="likes" @click="like" class="like">
           <i class="fa fa-thumbs-up"></i>
-          <p>{{ likes.lenght }}</p>
+          <p>{{ likes.length }}</p>
       </div>
 </template>
 

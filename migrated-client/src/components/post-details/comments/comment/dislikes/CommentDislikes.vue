@@ -36,6 +36,8 @@
                 console.log("Data from useDislike", data); 
                 
             }
+            
+            return { dislike } 
         }
     })
 </script>
