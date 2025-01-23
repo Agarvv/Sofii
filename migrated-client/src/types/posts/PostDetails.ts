@@ -1,15 +1,15 @@
-import { PostComment } from "./PostComment";
+
 import { PostOwner } from "./PostOwner";
 import { Like } from './Like'
 import { Saved } from './Saved'
-
+import { PostCommentDetails } from './PostCommentDetails'
 
 export interface PostDetails {
     id: number,
     description: string,
     postPicture: string,
     user: PostOwner, 
-    postComments: PostComment[],
+    postComments: PostCommentDetails[],
     postsLikes: Like[], 
     saved_post: Saved[]
 }

@@ -6,6 +6,7 @@ import LoginView from '@/views/auth/LoginView.vue'
 import SendResetPasswordView from '@/views/auth/SendResetPasswordView.vue'
 import ResetPasswordView from '@/views/auth/ResetPasswordView.vue'
 import CreateView from '@/views/create/CreateView.vue'
+import PostDetails from '@/views/post-details/PostDetails.vue'
 import axios from 'axios'
 
 const routes: Array<RouteRecordRaw> = [
@@ -33,6 +34,11 @@ const routes: Array<RouteRecordRaw> = [
       path: '/',
         component: HomeView,
         name: "home",
+  },
+  {
+      path: '/post/:id',
+      component: PostDetails,
+      name: "postDetails"
   },
   {
     path: '/create',

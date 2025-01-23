@@ -1,5 +1,5 @@
 <template>
-    
+    <h1>Post details page</h1>
 </template>
 
 <script lang="ts">
@@ -10,12 +10,13 @@
     export default defineComponent({
         name: 'PostDetails',
         setup() {
-            const getPost = async (): Promise<PostDetails> => {
-                const { data } = await useGet<PostDetails>('/posts/1', {
+            const getPost = async () => {
+                const data  = await useGet<PostDetails>({
+                    endpoint: '/posts/1',
                     withError: true 
                 })
                 
-                return data.post; 
+                return data 
             }
 
             onMounted(async () => {
