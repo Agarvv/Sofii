@@ -3,7 +3,8 @@ import { PostOwner } from "./PostOwner";
 import { Like } from './Like'
 import { Saved } from './Saved'
 
-export interface Post {
+
+export interface PostDetails {
     id: number,
     description: string,
     postPicture: string,

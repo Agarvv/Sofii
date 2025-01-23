@@ -1,13 +1,13 @@
 import Post from '@models/posts/Post';
-import User from '@models/users/User'
-import Likes from '@models/posts/Likes'
-import Saved from '@models/posts/SavedPost'
-import Comment from '@models/posts/comments/Comment'
-const CommentLikes = require('@models/posts/comments/CommentLikes')
-const CommentDislikes = require('@models/posts/comments/CommentDislikes')
-const CommentAwnsersLikes = require('@models/posts/comments/CommentAwnsersLikes')
-const CommentAwnsersDislikes = require('@models/posts/comments/CommentAwnsersDislikes');
-const  CommentAnswer  = require('@models/posts/comments/CommentAwnser'); 
+import User from '@models/users/User';
+import Likes from '@models/posts/Likes';
+import Saved from '@models/posts/SavedPost';
+import Comment from '@models/posts/comments/Comment';
+import CommentLikes from '@models/posts/comments/CommentLikes';
+import CommentDislikes from '@models/posts/comments/CommentDislikes';
+import CommentAwnsersLikes from '@models/posts/comments/CommentAwnsersLikes';
+import CommentAwnsersDislikes from '@models/posts/comments/CommentAwnsersDislikes';
+import CommentAnswer from '@models/posts/comments/CommentAwnser';
 
 class PostsRepository {
     // finds the post with his likes, comments, saved relations.
