@@ -1,10 +1,6 @@
 <template>
    <div class="upload-comment">
-       
-            <div class="user-picture">
-              <img src="user.user_picture" alt="Owner Profile Picture">
-            </div>
-            
+    
             <div class="input">
               <input v-model="comment" type="text" placeholder="Upload A Comment">
             </div>
