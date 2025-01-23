@@ -114,6 +114,7 @@
   import ProfileHeader from '@/components/profile/profile-header/ProfileHeader.vue';
   import { useGet } from '@/composables/useGet';
   import { useRoute } from 'vue-router';
+  import { Profile } from '@/types/profile/Profile';
 
   export default defineComponent({
     name: 'ProfileView',
@@ -126,7 +127,7 @@
           console.log("SELF");
         }
 
-        const data = await useGet<any>({
+        const data = await useGet<Profile>({
            endpoint: `/profile/${id}`,
            withError: true 
         });
