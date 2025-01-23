@@ -15,6 +15,7 @@
 <div class="wrapper">
   <div class="container">
     <div class="user-details-section">
+      
       <div class="profile-picture">
         <h4>Your Profile Picture</h4>
         <div @click="handlePhotoOpen" id="profile-picture-photo">
