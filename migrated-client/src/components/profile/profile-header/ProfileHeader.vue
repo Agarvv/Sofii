@@ -68,6 +68,10 @@
 
   export default defineComponent({
     name: 'ProfileHeader',
+    components: {
+        ProfilePicture,
+        ProfileBanner
+    },
     props: {
       profile: {
         type: Object as () => Profile,
