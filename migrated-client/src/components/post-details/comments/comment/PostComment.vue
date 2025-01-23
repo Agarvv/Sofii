@@ -36,7 +36,7 @@
               </div>
               
               <AnswerToComment 
-              :postId="comment.postId" 
+              :postId="comment.post_id" 
               :commentId="comment.id" 
               /> 
               
