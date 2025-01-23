@@ -110,7 +110,7 @@
   </template>
 
 <script lang="ts">
-  import { defineComponent } from 'vue';
+  import { defineComponent, onMounted } from 'vue';
   import ProfileHeader from '@/components/profile/profile-header/ProfileHeader.vue';
   import { useGet } from '@/composables/useGet';
   import { useRoute } from 'vue-router';
@@ -123,16 +123,20 @@
       const getProfile = async () => {
         const id = route.params.id as string; 
         if(id == "s") {
-          console.log("SELF")
+          console.log("SELF");
         }
 
         const data = await useGet<any>({
            endpoint: `/profile/${id}`,
            withError: true 
-        })
+        });
 
-        console.log('profile data', data)
+        console.log('profile data', data);
       };
+
+      onMounted(() => {
+        getProfile();
+      });
 
       return {
         getProfile,
