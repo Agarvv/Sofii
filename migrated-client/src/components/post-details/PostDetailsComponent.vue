@@ -10,16 +10,21 @@
 </template>
 
 <script lang="ts">
-    import { defineComponent } from 'vue'; 
+    import { defineComponent, PropType } from 'vue';
+    import { PostDetails } from '@/types/posts/PostDetails';
     import PostCard from '@/shared/post/PostCard.vue'
     import PostComments from './comments/PostComments.vue'
     
+
     export default defineComponent({
         name: 'PostDetailsComponent',
-        components: {
-            PostCard 
+        props: {
+            post: {
+                type: Object as PropType<PostDetails>, 
+                required: true
+            }
         }
-    })
+    });
 </script>
 
 <style scoped src="./PostDetailsComponent.css"></style>
