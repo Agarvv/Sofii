@@ -1,18 +1,18 @@
 <template>
-    <div class="awnser">
+    <div v-if="answer" class="awnser">
         <div class="response-user">
                     <div class="response-user-img">
                       <img
                       style="width: 40px; height: 40px; border-radius: 50%"
-                       src="">
+                       :src="answer.awnser_user.profilePicture">
                     </div>
                     <div class="response-username">
-                      <h3>Answer Username</h3>
+                      <h3>{{ answer.awnser_user.username }}</h3>
                     </div>
                   </div>
                   
                   <div class="response-content">
-                    <p>Answer Content</p>
+                    <p>{{ answer.answer_content }}</p>
                   </div>
                   
                   <div class="comment-response-interact">
@@ -21,7 +21,6 @@
                       <i class="fa fa-thumbs-up"></i>
                       <span>789</span>
                     </div> 
-                    
                     
                     
                     <div class="dislike">
@@ -33,10 +32,17 @@
 </template>
 
 <script lang="ts">
-    import { defineComponent } from 'vue'; 
+    import { defineComponent, PropType } from 'vue'; 
+    import { CommentAnswer } from '@/types/posts/CommentAnswer'
     
     export default defineComponent({
-        name: 'CommentAnswer'
+        name: 'CommentAnswer',
+        props: {
+            answer: {
+                type: Object as PropType<CommentAnswer>, 
+                required: true
+            }
+        }
     })
 </script>
 

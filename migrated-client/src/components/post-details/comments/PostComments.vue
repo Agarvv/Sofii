@@ -4,8 +4,8 @@
    
    <div class="comments">
         <div class="comment-section">
-            <div class="comment">
-                 <PostComment/>
+            <div v-for="comment in post.postComments" :key="comment.id" class="comment">
+                 <PostComment :comment="comment"/>
             </div> 
         </div>
     </div>

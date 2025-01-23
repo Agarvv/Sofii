@@ -1,25 +1,25 @@
 <template>
-       <div  class="comment">
+       <div v-if="comment" class="comment">
               <div class="comment-user-details">
                 <div class="user-comment-img"> 
                   <img 
-                  src="" 
+                  :src="comment.commentUser.profilePicture" 
                   alt="User Picture"
                   >
                 </div>
                 <div class="user-comment-username">
-                  <h4>Comment Owner Username</h4>
+                  <h4>{{ comment.commentUser.username }}</h4>
                 </div>
               </div>
               
               <div class="user-comment">
-                <p>Comment Owner Content</p>
+                <p>{{ comment.comment_content }}</p>
               </div>
               
               <div class="comment-interacts">
                 <div class="like">
                   <i class="fa fa-thumbs-up"></i>
-                  <p>5</p>
+                  <p>0</p>
                 </div>
                 
                 
@@ -35,32 +35,44 @@
                 </div>
               </div>
               
-              <AnswerToComment /> 
+              <AnswerToComment 
+              :postId="comment.postId" 
+              :commentId="comment.id" 
+              /> 
               
               <div class="view-responses-button">
                   <i class="fa fa-chevron-down"></i>
               </div>
               
               <div class="comment-responses">
-                <div class="response">
-                    <CommentAnswer/>
+                <div
+                v-for="answer in comment.awnsers" 
+                :key="answer.id" 
+                class="response">
+                    <CommentAnswer :answer="answer" />
                 </div> 
+                
              </div>
      </div>
 </template>
 
 <script lang="ts">
-    import { defineComponent } from 'vue'; 
-    
+    import { defineComponent, PropType } from 'vue'; 
     import AnswerToComment from './answer-to-comment/AnswerToComment.vue'
-    
     import CommentAnswer from './comment-answer/CommentAnswer.vue'
+    import { PostCommentDetails } from '@/types/posts/PostCommentDetails'
     
     export default defineComponent({
         name: 'PostComment',
         components: {
             AnswerToComment,
             CommentAnswer
+        },
+        props: {
+            comment: {
+                type: Object as PropType<PostCommentDetails>, 
+                required: true
+            }
         }
     })
 </script>
