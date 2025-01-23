@@ -1,27 +1,27 @@
 <template>
-  <header>    
+  <header v-if="profile">    
     <!--   <div v-if="showBlock && !isSelfUser" class="block-user">
        <BlockUserCard :user="user"/>
       </div> -->
        
-      
         <div class="profile-banner">
           <img src="user.banner || '/images/default_banner.webp'" alt="Profile Banner">
         </div>
       
         <div class="user">
+            
           <div class="user-img">
            <img src="user.profilePicture || '/images/default.jpeg'" alt="Foto de Perfil">
           </div>
   
           <div class="user-details">
             <div class="username">
-              <h1>User username</h1>
+              <h1>{{ profile.username }}</h1>
             </div>
             
               <div class="followers" style="margin-bottom: 20px">
-                 <p>50 Followers</p>
-                 <p style="color: gray">90 Following</p>
+                 <p>{{ profile.followers.length }}Followers</p>
+                 <p style="color: gray">{{ profile.following.length }} Following</p>
               </div>
   
   <div class="active-inactive">
@@ -73,10 +73,17 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent } from 'vue';
+  import { defineComponent, PropType } from 'vue';
+  import { Profile } from '@/types/profile/Profile';
 
   export default defineComponent({
-    name: 'ProfileHeader'
+    name: 'ProfileHeader',
+    props: {
+        profile: {
+            type: Object as () => Profile,
+            required: true 
+        }
+    }
   })
 </script>
 

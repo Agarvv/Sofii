@@ -107,7 +107,8 @@
     name: 'ProfileView',
     components: {
         ProfileDetail,
-        PostCard 
+        PostCard,
+        ProfileHeader
     }, 
     setup() {
       const route = useRoute(); 
