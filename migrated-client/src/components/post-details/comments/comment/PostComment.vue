@@ -17,10 +17,11 @@
               </div>
               
               <div class="comment-interacts">
-                <div class="like">
-                  <i class="fa fa-thumbs-up"></i>
-                  <p>0</p>
-                </div>
+                 <CommentLikes 
+                   :likes="comment.comment_likes"
+                   :postId="comment.post_id"
+                   :commentId="comment.id"
+                 />
                 
                 
                 <div class="awnser">
@@ -28,11 +29,12 @@
                   <p>70</p>
                 </div>
                 
+                <CommentDislikes 
+                  :dislikes="comment.comment_dislikes"
+                  :postId="comment.post_id"
+                  :commentId="comment.id"
+                /> 
                 
-                <div>
-                  <i class="fa fa-thumbs-down"></i>
-                  <p>140</p>
-                </div>
               </div>
               
               <AnswerToComment 
@@ -61,12 +63,17 @@
     import AnswerToComment from './answer-to-comment/AnswerToComment.vue'
     import CommentAnswer from './comment-answer/CommentAnswer.vue'
     import { PostCommentDetails } from '@/types/posts/PostCommentDetails'
+    import CommentLikes from './likes/CommentLikes.vue'; 
+    import CommentDislikes from './dislikes/CommentDislikes.vue'; 
+    
     
     export default defineComponent({
         name: 'PostComment',
         components: {
             AnswerToComment,
-            CommentAnswer
+            CommentAnswer,
+            CommentLikes,
+            CommentDislikes
         },
         props: {
             comment: {

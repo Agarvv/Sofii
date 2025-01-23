@@ -27,12 +27,9 @@ export default defineComponent({
         const likes = props.postLikes && Array.isArray(props.postLikes) ? [...props.postLikes] : [];
 
         const like = async () => {
-            try {
+            
                 const data = await apiService.post('/posts/like', { postId: props.postId });
                 console.log('Data from like:', data);
-            } catch (error) {
-                console.error('Error al enviar el like:', error);
-            }
         };
 
         onMounted(() => {

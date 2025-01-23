@@ -17,16 +17,19 @@
                   
                   <div class="comment-response-interact">
                       
-                    <div class="like">
-                      <i class="fa fa-thumbs-up"></i>
-                      <span>789</span>
-                    </div> 
+                    <AnswerLikes 
+                        :likes="answer.awnser_likes"
+                        :postId="answer.post_id"
+                        :commentId="answer.comment_id"
+                        :answerId="answer.id"
+                    /> 
                     
-                    
-                    <div class="dislike">
-                      <i class="fa fa-thumbs-down"></i>
-                      <span>780</span>
-                    </div>
+                    <AnswerDislikes
+                        :dislikes="answer.awnser_dislikes"
+                        :postId="answer.post_id"
+                        :commentId="answer.comment_id"
+                        :answerId="answer.id"
+                    /> 
          </div>
     </div>
 </template>
@@ -34,6 +37,8 @@
 <script lang="ts">
     import { defineComponent, PropType } from 'vue'; 
     import { CommentAnswer } from '@/types/posts/CommentAnswer'
+    import AnswerLikes from './likes/AnswerLikes.vue'
+    import AnswerDislikes from './dislikes/AnswerDislikes.vue'
     
     export default defineComponent({
         name: 'CommentAnswer',
@@ -42,6 +47,10 @@
                 type: Object as PropType<CommentAnswer>, 
                 required: true
             }
+        },
+        components: {
+            AnswerLikes,
+            AnswerDislikes
         }
     })
 </script>
