@@ -64,3 +64,5 @@
         }
     })
 </script>
+
+<style scoped src="./PostComment.css"></style>

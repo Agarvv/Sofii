@@ -1,5 +1,5 @@
 <template>
-    <PostDetailsComponent v-if="data" :post="data" />
+    <PostDetailsComponent v-if="data" :post="data.post" />
 </template>
 
 <script lang="ts">
