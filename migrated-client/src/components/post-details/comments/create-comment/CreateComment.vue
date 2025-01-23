@@ -35,7 +35,7 @@ export default defineComponent({
     }
 
     const validationSchema = yup.object({
-      postId: yup.number().required(),
+      postId: yup.number(),
       commentValue: yup.string().required('Comment is required'),
     });
 
