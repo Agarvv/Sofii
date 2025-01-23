@@ -4,6 +4,7 @@
 
 <script lang="ts">
     import { defineComponent, onMounted, ref } from 'vue'; 
+    import { useRoute } from 'vue-router';  
     import { PostDetails } from '@/types/posts/PostDetails'
     import { useGet } from '@/composables/useGet'
     import PostDetailsComponent from '@/components/post-details/PostDetailsComponent.vue'
@@ -13,13 +14,14 @@
         components: { PostDetailsComponent },
         setup() {
             const data = ref<PostDetails | null>(null);
+            const route = useRoute();  
 
             const getPost = async () => {
                 const postData = await useGet<PostDetails>({
-                    endpoint: '/posts/1',
-                    withError: true 
+                    endpoint: `/posts/${route.params.id}`,  
+                    withError: true
                 });
-                data.value = postData; 
+                data.value = postData;
             };
 
             onMounted(() => {
