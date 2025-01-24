@@ -49,9 +49,10 @@
           </button> -->
   
           <!-- Follow -->
-          <button>
-            <i class="fa fa-user-plus"></i>
-          </button>
+          <FollowButton 
+            :isFollowed="true"
+            :userId="profile.id"
+          />
           
         </div>
       </div>
@@ -65,13 +66,17 @@
   import ProfilePicture from './profile-picture/ProfilePicture.vue'
   import ProfileBanner from './profile-banner/ProfileBanner.vue'
   import ChatButton from './chat-button/ChatButton.vue';
+  import FollowButton from './follow-button/FollowButton.vue';
+  //import FriendButton from './friend-button/FriendButton.vue';
 
   export default defineComponent({
     name: 'ProfileHeader',
     components: {
         ProfilePicture,
         ProfileBanner,
-        ChatButton
+        ChatButton,
+        FollowButton,
+       // FriendButton
     },
     props: {
       profile: {
