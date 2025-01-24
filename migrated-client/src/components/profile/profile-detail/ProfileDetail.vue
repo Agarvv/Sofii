@@ -38,6 +38,8 @@
                     value: value 
                 })
             }
+            
+            return { changeProfileInfo } 
         }
     })
 </script>
