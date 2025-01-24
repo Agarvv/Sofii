@@ -1,5 +1,5 @@
 <template>
-     <button style="background: purple;">
+     <button @clic="startChat" style="background: purple;">
            <i class="fa fa-comment"></i> Chat
      </button>
 </template>
@@ -33,6 +33,8 @@
                 await mutate({ receiverId: props.receiverId })
                 console.log('data from chat', data)
             }
+
+            return { startChat }
         }
     })
 </script>
