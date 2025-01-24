@@ -35,18 +35,10 @@
           <!-- Chat -->
           <ChatButton :receiverId="profile.id"/>
   
-          <!-- friend buttons -->
-          <button style="background: lightblue; color: black;"> 
-            <i class="fa fa-user-friends"></i> Friends
-          </button>
-  
-          <!-- <button 
-               style="
-                color: black;
-               "
-                >
-             <font-awesome-icon :icon="['fas', 'user-plus']"/> Send Friend Request
-          </button> -->
+          <FriendButton 
+            :isFriend="false"
+            :userId="profile.id"
+          />
   
           <!-- Follow -->
           <FollowButton 
@@ -67,7 +59,7 @@
   import ProfileBanner from './profile-banner/ProfileBanner.vue'
   import ChatButton from './chat-button/ChatButton.vue';
   import FollowButton from './follow-button/FollowButton.vue';
-  //import FriendButton from './friend-button/FriendButton.vue';
+  import FriendButton from './friend-button/FriendButton.vue';
 
   export default defineComponent({
     name: 'ProfileHeader',
@@ -76,7 +68,7 @@
         ProfileBanner,
         ChatButton,
         FollowButton,
-       // FriendButton
+        FriendButton
     },
     props: {
       profile: {
