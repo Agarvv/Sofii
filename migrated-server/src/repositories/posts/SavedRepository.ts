@@ -11,13 +11,14 @@ class SavedRepository {
         })
     }
 
-    public static async getSaveds(userId: number): Promise<Post[]> {
+    public static async getSaveds(userId: number): {
   const saveds = await Saved.findAll({
     where: {
       user_id: userId
     },
     include: [{
       model: Post,  
+      as: 'post'
     }]
   });
 
