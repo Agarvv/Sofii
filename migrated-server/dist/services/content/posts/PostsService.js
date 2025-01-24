@@ -22,6 +22,7 @@ const CustomError_1 = __importDefault(require("@outils/CustomError"));
 const NotificationsService_1 = __importDefault(require("@services/notifications/NotificationsService"));
 const websocket_1 = __importDefault(require("@websocket/websocket"));
 const User_1 = __importDefault(require("@models/users/User"));
+const Comment_1 = __importDefault(require("@models/posts/comments/Comment"));
 class PostsService {
     static createPost(description, picture, userId) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -45,7 +46,7 @@ class PostsService {
                         as: 'saved_post'
                     },
                     {
-                        model: Comment,
+                        model: Comment_1.default,
                         as: 'postComments'
                     }
                 ]
@@ -109,6 +110,11 @@ class PostsService {
             });
             io.emit('savedPost', newSaved);
             return "¡Post Saved!";
+        });
+    }
+    static getSaveds(userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield SavedRepository_1.default.getSaveds(userId);
         });
     }
 }

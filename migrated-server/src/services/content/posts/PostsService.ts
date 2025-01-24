@@ -109,6 +109,11 @@ class PostsService {
         io.emit('savedPost', newSaved)
         return "¡Post Saved!"
     }
+
+    public static async getSaveds(userId: number) {
+        return await SavedRepository.getSaveds(userId); 
+    }
+    
 }
 
 export default PostsService;

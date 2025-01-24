@@ -17,4 +17,5 @@ postsRouter.get('/:id', PostsController_1.default.GetPostById);
 postsRouter.post('/', (0, ValidationMiddleware_1.validateRequest)(PostCreationSchema_1.postCreationSchema), PostsController_1.default.createPost);
 postsRouter.post('/like', (0, ValidationMiddleware_1.validateRequest)(LikePostSchema_1.default), PostsController_1.default.likeOrUnlike);
 postsRouter.post('/save', (0, ValidationMiddleware_1.validateRequest)(SavePostSchema_1.default), PostsController_1.default.saveOrUnsave);
+postsRouter.get('/saved', PostsController_1.default.getSaveds);
 exports.default = postsRouter;

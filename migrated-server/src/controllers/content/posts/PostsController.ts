@@ -50,6 +50,13 @@ class PostsController {
             message: savedOrUnsaved
         })
     }
+
+    public static async getSaveds(req: Request, res: Response) {
+        const saveds = await PostsService.getSaveds(req.account.user_id); 
+        res.status(200).json({
+            saveds: saveds 
+        })
+    }
 }
 
 export default PostsController; 

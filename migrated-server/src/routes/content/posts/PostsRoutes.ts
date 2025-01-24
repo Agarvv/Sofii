@@ -32,4 +32,7 @@ postsRouter.post('/save',
   PostsController.saveOrUnsave
 );
 
+postsRouter.get('/saved',
+  PostsController.getSaveds
+)
 export default postsRouter; 

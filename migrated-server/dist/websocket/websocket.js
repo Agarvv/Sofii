@@ -22,7 +22,7 @@ exports.default = {
     init: (server) => {
         io = new socket_io_1.Server(server, {
             cors: {
-                origin: 'https://sofii.vercel.app',
+                origin: 'https://sofii-vsly.vercel.app',
                 methods: ['GET', 'POST'],
                 credentials: true,
             },

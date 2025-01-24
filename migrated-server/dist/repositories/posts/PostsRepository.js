@@ -17,11 +17,11 @@ const User_1 = __importDefault(require("@models/users/User"));
 const Likes_1 = __importDefault(require("@models/posts/Likes"));
 const SavedPost_1 = __importDefault(require("@models/posts/SavedPost"));
 const Comment_1 = __importDefault(require("@models/posts/comments/Comment"));
-const CommentLikes = require('@models/posts/comments/CommentLikes');
-const CommentDislikes = require('@models/posts/comments/CommentDislikes');
-const CommentAwnsersLikes = require('@models/posts/comments/CommentAwnsersLikes');
-const CommentAwnsersDislikes = require('@models/posts/comments/CommentAwnsersDislikes');
-const CommentAnswer = require('@models/posts/comments/CommentAwnser');
+const CommentLikes_1 = __importDefault(require("@models/posts/comments/CommentLikes"));
+const CommentDislikes_1 = __importDefault(require("@models/posts/comments/CommentDislikes"));
+const CommentAwnsersLikes_1 = __importDefault(require("@models/posts/comments/CommentAwnsersLikes"));
+const CommentAwnsersDislikes_1 = __importDefault(require("@models/posts/comments/CommentAwnsersDislikes"));
+const CommentAwnser_1 = __importDefault(require("@models/posts/comments/CommentAwnser"));
 class PostsRepository {
     // finds the post with his likes, comments, saved relations.
     static getPostById(id) {
@@ -87,7 +87,7 @@ class PostsRepository {
     }
     static getPostDetails(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const post = yield Post_1.default.findOne({
+            return yield Post_1.default.findOne({
                 where: { id: id },
                 include: [
                     {
@@ -103,15 +103,15 @@ class PostsRepository {
                                 as: 'commentUser'
                             },
                             {
-                                model: CommentLikes,
+                                model: CommentLikes_1.default,
                                 as: 'comment_likes'
                             },
                             {
-                                model: CommentDislikes,
+                                model: CommentDislikes_1.default,
                                 as: 'comment_dislikes'
                             },
                             {
-                                model: CommentAnswer,
+                                model: CommentAwnser_1.default,
                                 as: 'awnsers',
                                 include: [
                                     {
@@ -119,11 +119,11 @@ class PostsRepository {
                                         as: 'awnser_user'
                                     },
                                     {
-                                        model: CommentAwnsersLikes,
+                                        model: CommentAwnsersLikes_1.default,
                                         as: 'awnser_likes'
                                     },
                                     {
-                                        model: CommentAwnsersDislikes,
+                                        model: CommentAwnsersDislikes_1.default,
                                         as: 'awnser_dislikes'
                                     }
                                 ]
