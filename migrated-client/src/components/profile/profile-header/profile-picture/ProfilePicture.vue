@@ -7,7 +7,7 @@
 
 <script lang="ts">
   import { defineComponent, ref } from 'vue'; 
-  import { useProfileDataChange } from '@/composables/useProfileDataChange'
+  import useProfileDataChange from '@/composables/useProfileDataChange'
   import { useImageUpload } from '@/composables/useImageUpload'
   
   export default defineComponent({
@@ -19,10 +19,7 @@
       }
     },
     setup() {
-      interface SetProfilePictureValues {
-          value: string,
-          field: string 
-      }
+      const { changeProfileData } = useProfileDataChange(); 
       
       const fileInput = ref<HTMLInputElement | null>(null);
       
@@ -41,7 +38,7 @@
               file: file
           }); 
 
-          await useProfileDataChange({
+          await changeProfileData({
               field: 'profilePicture',
               value: imageUrl 
           })

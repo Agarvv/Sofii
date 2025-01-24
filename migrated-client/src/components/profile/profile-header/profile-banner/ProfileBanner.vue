@@ -8,7 +8,7 @@
 <script lang="ts">
   import { defineComponent, ref } from 'vue'; 
   import { useImageUpload } from '@/composables/useImageUpload'
-  import { useProfileDataChange } from '@/composables/useProfileDataChange'
+  import useProfileDataChange from '@/composables/useProfileDataChange'
 
   export default defineComponent({
     name: 'ProfileBanner',
@@ -19,6 +19,8 @@
       }
     },
     setup() {
+      const { changeProfileData } = useProfileDataChange(); 
+      
       const fileInput = ref<HTMLInputElement | null>(null);
 
       const openFileInput = () => {
@@ -36,7 +38,7 @@
               file: file
           });
 
-          await useProfileDataChange({
+          await changeProfileData({
             field: 'banner',
             value: bannerUrl
           });
