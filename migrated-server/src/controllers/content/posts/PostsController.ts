@@ -52,10 +52,15 @@ class PostsController {
     }
 
     public static async getSaveds(req: Request, res: Response) {
+        try { 
         const saveds = await PostsService.getSaveds(req.account.user_id); 
         res.status(200).json({
             saveds: saveds 
         })
+        } catch(e) {
+            console.log(e)
+            throw new Error(e)
+        }
     }
 }
 
