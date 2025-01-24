@@ -1,5 +1,5 @@
 <template>
-     <button @clic="startChat" style="background: purple;">
+     <button @click="startChat" style="background: purple;">
            <i class="fa fa-comment"></i> Chat
      </button>
 </template>
