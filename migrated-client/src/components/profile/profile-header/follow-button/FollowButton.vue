@@ -27,7 +27,7 @@
             }
 
             const { mutate } = usePost<FollowValues>({
-                    serviceFunc: (data: FollowValues) => apiService.post('/follow', data),
+                    serviceFunc: (data: FollowValues) => apiService.post('/users/follow', data),
                     successFunc: (response) => {
                       console.log("response from follow", response)
 
