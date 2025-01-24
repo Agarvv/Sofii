@@ -57,7 +57,7 @@ class PostsController {
         res.status(200).json({
             saveds: saveds 
         })
-        } catch(e) {
+        } catch(e: any) {
             console.log(e)
             throw new Error(e)
         }
