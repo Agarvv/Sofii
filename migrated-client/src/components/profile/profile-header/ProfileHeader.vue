@@ -54,6 +54,7 @@
           <button>
             <i class="fa fa-user-plus"></i>
           </button>
+          
         </div>
       </div>
     </div>
