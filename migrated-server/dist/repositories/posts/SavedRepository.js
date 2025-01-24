@@ -14,6 +14,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const SavedPost_1 = __importDefault(require("@models/posts/SavedPost"));
 const Post_1 = __importDefault(require("@models/posts/Post"));
+const User_1 = __importDefault(require("@models/users/User"));
+const Likes_1 = __importDefault(require("@models/posts/Likes"));
+const Comment_1 = __importDefault(require("@models/posts/comments/Comment"));
 class SavedRepository {
     static getSaved(postId, userId) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -33,9 +36,37 @@ class SavedRepository {
                 },
                 include: [{
                         model: Post_1.default,
+                        as: 'saved_post',
+                        include: [
+                            {
+                                model: User_1.default,
+                                as: 'user',
+                                attributes: ['username', 'profilePicture', 'id']
+                            },
+                            {
+                                model: Comment_1.default,
+                                as: 'postComments',
+                                attributes: ['comment_content'],
+                                include: [
+                                    {
+                                        model: User_1.default,
+                                        as: 'commentUser',
+                                        attributes: ['username', 'profilePicture', 'id']
+                                    }
+                                ]
+                            },
+                            {
+                                model: Likes_1.default,
+                                as: 'postLikes'
+                            },
+                            {
+                                model: SavedPost_1.default,
+                                as: 'saved_post'
+                            }
+                        ]
                     }]
             });
-            return saveds.map(saved => saved.post);
+            return saveds;
         });
     }
 }
