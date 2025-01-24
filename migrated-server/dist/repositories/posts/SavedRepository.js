@@ -27,16 +27,11 @@ class SavedRepository {
     }
     static getSaveds(userId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const saveds = yield SavedPost_1.default.findAll({
+            return yield Post_1.default.findOne({
                 where: {
                     user_id: userId
-                },
-                include: [{
-                        model: Post_1.default,
-                        required: true
-                    }]
+                }
             });
-            return saveds.map(saved => saved.post);
         });
     }
 }

@@ -11,19 +11,13 @@ class SavedRepository {
         })
     }
 
-    public static async getSaveds(userId: number): Promise<Post[]> {
-        const saveds = await Saved.findAll({
-          where: {
-            user_id: userId
-          },
-          include: [{
-            model: Post,      
-            required: true     
-          }]
-        });
-      
-        return saveds.map(saved => (saved as any).post);  
-      }
+    public static async getSaveds(userId: number) {
+        return await Post.findOne({
+            where: {
+                user_id: userId 
+            }
+        })
 }
 
+}
 export default SavedRepository; 
