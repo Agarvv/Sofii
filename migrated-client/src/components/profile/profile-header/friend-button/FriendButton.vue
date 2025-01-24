@@ -1,5 +1,5 @@
 <template>
-    <button style="background: lightblue; color: black;"> 
+    <button :click="isFriend ? null : sendFriendRequest" style="background: lightblue; color: black;"> 
         <i class="fa fa-user-friends"></i> <p>{{  isFriend ? 'Friends' : 'Send Friend Request' }}</p>
     </button>
 </template>
@@ -35,6 +35,8 @@
             const sendFriendRequest = async () => {
                await mutate({ userId: props.userId })
             }
+
+            return { sendFriendRequest }
         }
     })
 </script>
