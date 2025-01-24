@@ -4,34 +4,35 @@
 
     <div class="responsive-user-details">
       <ProfileDetail 
-        :detail="data.profile.bio || 'Not Provided'" 
+        :detailValue="data.profile.bio || 'Not Provided'" 
+        detail="bio"
       />
       
       <div class="r-info">
         <ProfileDetail 
-          :detail="data.profile.ubication || 'Ubication Not Provided'" 
+          :detailValue="data.profile.ubication || 'Ubication Not Provided'" 
           icon="fa fa-map-marker-alt" 
-          iconColor="red" 
+          detail="ubication"
         />
         <ProfileDetail 
-          :detail="data.profile.native_city || 'Native City Not Provided'" 
+          :detailValue="data.profile.native_city || 'Native City Not Provided'" 
           icon="fa fa-globe" 
-          iconColor="black" 
+          detail="native_city"
         />
         <ProfileDetail 
-          :detail="data.profile.gender || 'Gender Not Provided'" 
+          :detailValue="data.profile.gender || 'Gender Not Provided'" 
           icon="fas fa-venus-mars" 
-          iconColor="hotpink" 
+          detail="gender"
         />
         <ProfileDetail 
-          :detail="data.profile.job || 'Job Not Provided'" 
+          :detailValue="data.profile.job || 'Job Not Provided'" 
           icon="fas fa-briefcase" 
-          iconColor="gray" 
+          detail="job"
         />
         <ProfileDetail 
-          :detail="data.profile.civil_status || 'Civil Status Not Provided'" 
+          :detailValue="data.profile.civil_status || 'Civil Status Not Provided'" 
           icon="fa fa-heart" 
-          iconColor="red" 
+          detail="civil_status"
         />
       </div>
     </div>
@@ -45,32 +46,33 @@
             </div>
             <div class="user-i">
               <ProfileDetail 
-                :detail="data.profile.bio || 'Bio Not Provided'" 
+                :detailValue="data.profile.bio || 'Bio Not Provided'" 
+                detail="bio"
               />
               <ProfileDetail 
-                :detail="data.profile.ubication || 'Ubication Not Provided'" 
+                :detailValue="data.profile.ubication || 'Ubication Not Provided'" 
                 icon="fas fa-map-marker-alt" 
-                iconColor="red" 
+                detail="ubication"
               />
               <ProfileDetail 
-                :detail="data.profile.native_city || 'Native City Not Provided'" 
-                icon="fas fa-globe" 
-                iconColor="black" 
+                :detailValue="data.profile.native_city || 'Native City Not Provided'" 
+                icon="fas fa-globe"
+                detail="native_city"
               />
               <ProfileDetail 
-                :detail="data.profile.gender || 'Gender Not Provided'" 
+                :detailValue="data.profile.gender || 'Gender Not Provided'" 
                 icon="fas fa-venus-mars" 
-                iconColor="hotpink" 
+                detail="gender"
               />
               <ProfileDetail 
-                :detail="data.profile.job || 'Job Not Provided'" 
+                :detailValue="data.profile.job || 'Job Not Provided'" 
                 icon="fas fa-briefcase" 
-                iconColor="gray" 
+                detail="job"
               />
               <ProfileDetail 
-                :detail="data.profile.civil_status || 'Civil Status Not Provided'" 
+                :detailValue="data.profile.civil_status || 'Civil Status Not Provided'" 
                 icon="fa fa-heart" 
-                iconColor="red" 
+                detail="civil_status"
               />
             </div>
           </div>

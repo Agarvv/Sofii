@@ -1,23 +1,42 @@
 <template>
-    <div class="detail">
+    <div class="detail" @click="changeProfileInfo">
         <i v-if="icon" :class="icon"></i>
-        <span>{{ detail }}</span>
+        <span>{{ detailValue }}</span>
     </div>
 </template>
 
 <script lang="ts">
     import { defineComponent } from 'vue'
+    import useProfileDataChange from '@/composables/useProfileDataChange'
     
     export default defineComponent({
         name: 'ProfileDetail',
         props: {
-            detail: {
+            detailValue: {
                 type: String,
                 required: true 
             },
             icon: {
                 type: String,
                 required: false 
+            },
+            detail: {
+                type: String,
+                required: true 
+            }
+        },
+        setup(props) {
+            const { changeProfileData } = useProfileDataChange(); 
+            
+            const changeProfileInfo = async () => {
+                const value = prompt(`Enter your new ${props.detail}`)
+                
+                if(!value) return; 
+                
+                await changeProfileData({
+                    field: props.detail,
+                    value: value 
+                })
             }
         }
     })
