@@ -13,7 +13,7 @@ class JwtHelper {
             return jsonwebtoken_1.default.verify(token, this.SECRET);
         }
         catch (error) {
-            throw new Error('Invalid or expired token');
+           throw new Error('Invalid or expired token');
         }
     }
 }
