@@ -12,11 +12,7 @@ class SavedRepository {
     }
 
     public static async getSaveds(userId: number) {
-        return await Post.findOne({
-            where: {
-                user_id: userId 
-            }
-        })
+        return
 }
 
 }

@@ -13,7 +13,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const SavedPost_1 = __importDefault(require("@models/posts/SavedPost"));
-const Post_1 = __importDefault(require("@models/posts/Post"));
 class SavedRepository {
     static getSaved(postId, userId) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -27,11 +26,7 @@ class SavedRepository {
     }
     static getSaveds(userId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield Post_1.default.findOne({
-                where: {
-                    user_id: userId
-                }
-            });
+            return;
         });
     }
 }
