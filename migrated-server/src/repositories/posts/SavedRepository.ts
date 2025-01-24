@@ -18,7 +18,7 @@ class SavedRepository {
     },
     include: [{
       model: Post,  
-      as: 'post'
+      as: 'saved_post'
     }]
   });
 
