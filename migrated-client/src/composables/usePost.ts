@@ -4,7 +4,7 @@ import { ref } from 'vue'
 
 interface UsePostOptions<T> {
   serviceFunc: (data: T) => Promise<any>,
-  successFunc?: () => void, 
+  successFunc?: (response: any) => void,
   successMessage?: string,
   withError: boolean,
   withLoading: boolean
@@ -18,7 +18,7 @@ export function usePost<T>({
   withLoading
 }: UsePostOptions<T>) {
   const apiStore = apiStatusStore()
-  const responseData = ref<any>(null)  
+  const responseData = ref<any>(null)
 
   const mutation = useMutation({
     mutationFn: (data: T) => serviceFunc(data),
@@ -37,10 +37,10 @@ export function usePost<T>({
     },
 
     onSuccess: (response: any) => {
-      responseData.value = response 
+      responseData.value = response
 
       if (successFunc) {
-        successFunc()
+        successFunc(response) 
       } else if (successMessage) {
         apiStore.setSuccess(successMessage)
       } else {
@@ -59,6 +59,6 @@ export function usePost<T>({
 
   return {
     mutate: mutation.mutate,
-    data: responseData  
+    data: responseData
   }
 }
