@@ -22,7 +22,7 @@ class SavedRepository {
     }]
   });
 
-  return saveds.map(saved => (saved as any).post);  
+  return saveds; 
 }
 
 }
