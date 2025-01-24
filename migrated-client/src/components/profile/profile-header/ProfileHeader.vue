@@ -33,9 +33,7 @@
   
         <div class="interact-buttons">
           <!-- Chat -->
-          <button style="background: purple;">
-            <i class="fa fa-comment"></i> Chat
-          </button>
+          <ChatButton :receiverId="profile.id"/>
   
           <!-- friend buttons -->
           <button style="background: lightblue; color: black;"> 
@@ -66,12 +64,14 @@
   import { Profile } from '@/types/profile/Profile';
   import ProfilePicture from './profile-picture/ProfilePicture.vue'
   import ProfileBanner from './profile-banner/ProfileBanner.vue'
+  import ChatButton from './chat-button/ChatButton.vue';
 
   export default defineComponent({
     name: 'ProfileHeader',
     components: {
         ProfilePicture,
-        ProfileBanner
+        ProfileBanner,
+        ChatButton
     },
     props: {
       profile: {
