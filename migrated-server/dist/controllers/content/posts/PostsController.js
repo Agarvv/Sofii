@@ -60,16 +60,9 @@ class PostsController {
     }
     static getSaveds(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const saveds = yield PostsService_1.default.getSaveds(req.account.user_id);
-                res.status(200).json({
-                    saveds: saveds
-                });
-            }
-            catch (e) {
-                console.log(e);
-                throw new Error(e);
-            }
+            res.status(200).json({
+                message: "ok"
+            });
         });
     }
 }
