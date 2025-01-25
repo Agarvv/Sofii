@@ -25,7 +25,7 @@
           <h4>Your Friends</h4>
           <div v-for="friend in friends.friends" :key="friend.id" class="friend">
               <FriendCard 
-                :friend="friend"
+                :friend="friend.friend"
               />
           </div>
         </div>
