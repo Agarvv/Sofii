@@ -1,7 +1,7 @@
 <template>
   <div class="saved" v-if="saveds">
     <PostCard 
-      v-for="saved in saveds" 
+      v-for="saved in saveds.saveds" 
       :key="saved.id" 
       :post="saved.saved_post" 
     />
@@ -30,7 +30,7 @@
             });
 
             if(data) {
-                saveds.value = data.saveds; 
+                saveds.value = data; 
             } else {
                 console.log("no data")
             }
