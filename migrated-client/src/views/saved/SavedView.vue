@@ -2,7 +2,7 @@
   <div class="saved" v-if="saveds">
     <PostCard 
       v-for="saved in saveds" 
-      :key="saved.saved_post.id" 
+      :key="saved.id" 
       :post="saved.saved_post" 
     />
   </div>
