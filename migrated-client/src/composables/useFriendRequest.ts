@@ -1,18 +1,21 @@
-import { usePost } from "./usePost";
+import { usePost } from '@/composables/usePost';
 import { apiService } from "@/api/ApiService";
 
-type FriendRequestType = "accept" | "deny";
+export default function useFriendRequest() {
+  interface Options {
+    type: string, 
+    requestId: number
+  }
 
-export function useFriendRequest() {
-  const acceptOrDeny = async ({ type, requestId }: { type: FriendRequestType; requestId: number }) => {
+  const { mutate } = usePost({
+    serviceFunc: (data: { requestId: number }) => apiService.post('/users/friendRequest/deny', data),
+    successFunc: () => window.location.reload(),
+    withError: true,
+    withLoading: true,
+  });
+
+  const acceptOrDeny = async ({ type, requestId }: Options) => {
     const endpoint = type === "accept" ? "/users/friendRequest/accept" : "/users/friendRequest/deny";
-
-    const { mutate } = usePost({
-      serviceFunc: (data: { requestId: number }) => apiService.post(endpoint, data),
-      successFunc: () => window.location.reload(),
-      withError: true,
-      withLoading: true,
-    });
 
     await mutate({ requestId });
   };
