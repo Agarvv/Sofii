@@ -29,7 +29,9 @@
                 withError: true
             });
 
-            saveds.value = data; 
+            if(data) {
+                saveds.value = data; 
+            }
             console.log("data from saveds", data); 
         };
 
