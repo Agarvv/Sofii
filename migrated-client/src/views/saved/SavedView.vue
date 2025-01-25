@@ -1,5 +1,5 @@
 <template>
-  <div class="saved">
+  <div class="saved" v-if="saveds">
     <PostCard 
       v-for="saved in saveds" 
       :key="saved.saved_post.id" 
