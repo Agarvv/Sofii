@@ -2,8 +2,8 @@
      <div class="friend-details">
            
            <div class="friend-img"> 
-             
              <img 
+             style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%"
              :src="friend.profilePicture">
            </div>
            
