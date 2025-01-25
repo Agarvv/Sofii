@@ -38,8 +38,8 @@
 import { defineComponent, ref, onMounted } from 'vue';
 import FriendsAside from '@/components/friends/friends-aside/FriendsAside.vue';
 import FriendsSelector from '@/components/friends/friends-selector/FriendsSelector.vue';
-import FriendCard from '@/components/friends/friend/FriendCard.vue';
-import FriendRequest from '@/components/friends/friend-request/FriendRequest.vue';
+//import FriendCard from '@/components/friends/friend/FriendCard.vue';
+//import FriendRequest from '@/components/friends/friend-request/FriendRequest.vue';
 import { useGet } from '@/composables/useGet';
 import { Friends } from '@/types/users/Friends';
 
@@ -49,8 +49,8 @@ export default defineComponent({
   components: {
     FriendsAside,
     FriendsSelector,
-    FriendCard,
-    FriendRequest,
+    //FriendCard,
+    //FriendRequest,
   },
   setup() {
     const content = ref('friends');
