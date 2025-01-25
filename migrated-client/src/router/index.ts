@@ -9,7 +9,7 @@ import CreateView from '@/views/create/CreateView.vue'
 import PostDetails from '@/views/post-details/PostDetails.vue'
 import axios from 'axios'
 import ProfileView from '@/views/profile/ProfileView.vue'
-import SavedView from '@/views/saved/SavedView'; 
+import SavedView from '@/views/saved/SavedView.vue'; 
 
 const routes: Array<RouteRecordRaw> = [
   {
