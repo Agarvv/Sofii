@@ -9,6 +9,7 @@ import CreateView from '@/views/create/CreateView.vue'
 import PostDetails from '@/views/post-details/PostDetails.vue'
 import axios from 'axios'
 import ProfileView from '@/views/profile/ProfileView.vue'
+import SavedView from '@/views/saved/SavedView'; 
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -49,6 +50,11 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/profile/:id',
     component: ProfileView 
+  },
+  {
+      path: '/saved',
+      component: SavedView,
+      name: "saved"
   }
 ]
 

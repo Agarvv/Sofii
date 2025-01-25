@@ -1,7 +1,7 @@
 <template>
-    <div class="saved">
-       
-    </div>
+  <div class="saved">
+      <h1>C#</h1>
+  </div>
 </template> 
 
 <script lang="ts">
@@ -14,7 +14,7 @@
   export default defineComponent({
     name: 'SavedView',
     components: {
-       PostCard
+      PostCard
     },
     setup() {
         const getSaveds = async () => {
@@ -25,6 +25,10 @@
              
              console.log("data from saveds", data)
         }
+
+        onMounted(() => {
+            getSaveds(); 
+        })
     }
   })
-</script> 
+</script>
