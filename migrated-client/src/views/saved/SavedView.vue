@@ -1,34 +1,45 @@
 <template>
   <div class="saved">
-      <h1>C#</h1>
+    <PostCard 
+      v-for="saved in saveds" 
+      :key="saved.saved_post.id" 
+      :post="saved.saved_post" 
+    />
   </div>
-</template> 
+</template>
 
 <script lang="ts">
-  import { defineComponent, onMounted } from 'vue';
-  //import PostCard from '@/shared/post/PostCard.vue';
+  import { defineComponent, onMounted, ref } from 'vue';
+  import PostCard from '@/shared/post/PostCard.vue'; 
   import { useGet } from '@/composables/useGet';
   import { Saved } from '@/types/saved/Saved'
   import { apiService } from '@/api/ApiService'
-  
+
   export default defineComponent({
     name: 'SavedView',
-   /* components: {
+    components: {
       PostCard
-    },*/ 
+    },
     setup() {
+        const saveds = ref<Saved[]>([]); 
+        
         const getSaveds = async () => {
-             const data = await useGet<Saved[]>({
-                 endpoint: '/saved',
-                 withError: true
-             }); 
-             
-             console.log("data from saveds", data)
-        }
+            const data = await useGet<Saved[]>({
+                endpoint: '/saved',
+                withError: true
+            });
+
+            saveds.value = data; 
+            console.log("data from saveds", data); 
+        };
 
         onMounted(() => {
             getSaveds(); 
-        })
+        });
+
+        return {
+            saveds
+        };
     }
-  })
+  });
 </script>
