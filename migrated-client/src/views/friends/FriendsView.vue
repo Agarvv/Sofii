@@ -14,7 +14,7 @@
 
         <div v-if="content === 'requests'" class="friends-requests">
           <h4>Your Friend Requests</h4>
-          <div v-for="request in friends.requests" :key="request.id" class="friend">
+          <div v-for="request in friends.data.requests" :key="request.id" class="friend">
               <FriendRequest
                 :request="request"
               /> 
@@ -23,7 +23,7 @@
 
         <div v-if="content === 'friends'" class="friends">
           <h4>Your Friends</h4>
-          <div v-for="friend in friends.friends" :key="friend.id" class="friend">
+          <div v-for="friend in friends.data.friends" :key="friend.id" class="friend">
               <FriendCard 
                 :friend="friend.friend"
               />
