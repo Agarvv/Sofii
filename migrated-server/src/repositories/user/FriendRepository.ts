@@ -1,8 +1,43 @@
 import Friends from '@models/users/Friends';
 import FriendRequest from '@models/users/FriendRequest';
+import User from '@models/users/User';
 import { Op } from 'sequelize'
 
 class FriendRepository {
+    public static async getUserFriendRequests(userId: number): Promise<FriendRequest[]> {
+        return await FriendRequest.findAll({
+            where: {
+                friend_target: userId
+            },
+            include: [
+                {
+                    model: User,
+                    as: 'sender'
+                }
+            ]
+        });
+    }
+    
+    public static async getUserFriends(userId: number) {
+    const userFriends = await Friends.findAll({
+        where: {
+            [Op.or]: [
+                { friend_one_id: userId },
+                { friend_two_id: userId }
+            ]
+        },
+        include: [
+            { model: User, as: 'friendOne' },
+            { model: User, as: 'friendTwo' }
+        ]
+    });
+
+    return userFriends.map(userFriend => {
+        const isFriendOne = userId === (userFriend as any).friendOne.id;
+        return { friend: isFriendOne ? (userFriend as any).friendTwo : (userFriend as any).friendOne };
+    });
+   }
+    
     public static async friendRequest(sender: number, receiver: number): Promise<FriendRequest> {
         return await FriendRequest.create({
             request_sender_id: sender,

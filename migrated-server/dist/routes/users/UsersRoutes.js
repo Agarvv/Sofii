@@ -13,6 +13,7 @@ const FriendRequestSchema_1 = __importDefault(require("@validation/users/FriendR
 const usersRouter = express_1.default.Router();
 usersRouter.post('/block', (0, ValidationMiddleware_1.validateRequest)(BlockUserSchema_1.default), UsersController_1.default.blockOrUnblock);
 usersRouter.post('/follow', (0, ValidationMiddleware_1.validateRequest)(FollowUserSchema_1.default), UsersController_1.default.followOrUnfollow);
+usersRouter.get('/friends', UsersController_1.default.getFriendsAndRequests);
 usersRouter.post('/friendRequest', (0, ValidationMiddleware_1.validateRequest)(SendFriendRequestSchema_1.default), UsersController_1.default.sendFriendRequest);
 usersRouter.post('/friendRequest/accept', (0, ValidationMiddleware_1.validateRequest)(FriendRequestSchema_1.default), UsersController_1.default.acceptFriendRequest);
 usersRouter.post('/friendRequest/deny', (0, ValidationMiddleware_1.validateRequest)(FriendRequestSchema_1.default), UsersController_1.default.denyFriendRequest);

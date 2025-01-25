@@ -22,6 +22,16 @@ class UsersController {
         })
     }
     
+    public static async getFriendsAndRequests(req: Request, res: Response) {
+        
+        const data = await UsersService.getFriendsAndRequests(req.account.user_id)
+        
+        res.status(200).json({
+            data: data 
+        })
+        
+    }
+    
     public static async sendFriendRequest(req: Request, res: Response) {
         const { userId } = req.body; 
         

@@ -53,6 +53,14 @@ class UsersService {
 
         return 'FOLLOWED';
     }
+    
+    public static async getFriendsAndRequests(userId: number) {
+        const friends = await FriendRepository.getUserFriends(userId); 
+        
+        const requests = await FriendRepository.getUserFriendRequests(userId); 
+        
+        return { friends, requests } 
+    }
 
     public static async sendFriendRequest(receiverId: number, sender: Account): Promise<void> {
         const existingRequest = await FriendRepository.getFriendRequest(sender.user_id, receiverId);

@@ -14,8 +14,44 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const Friends_1 = __importDefault(require("@models/users/Friends"));
 const FriendRequest_1 = __importDefault(require("@models/users/FriendRequest"));
+const User_1 = __importDefault(require("@models/users/User"));
 const sequelize_1 = require("sequelize");
 class FriendRepository {
+    static getUserFriendRequests(userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield FriendRequest_1.default.findAll({
+                where: {
+                    friend_target: userId
+                },
+                include: [
+                    {
+                        model: User_1.default,
+                        as: 'sender'
+                    }
+                ]
+            });
+        });
+    }
+    static getUserFriends(userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const userFriends = yield Friends_1.default.findAll({
+                where: {
+                    [sequelize_1.Op.or]: [
+                        { friend_one_id: userId },
+                        { friend_two_id: userId }
+                    ]
+                },
+                include: [
+                    { model: User_1.default, as: 'friendOne' },
+                    { model: User_1.default, as: 'friendTwo' }
+                ]
+            });
+            return userFriends.map(userFriend => {
+                const isFriendOne = userId === userFriend.friendOne.id;
+                return { friend: isFriendOne ? userFriend.friendTwo : userFriend.friendOne };
+            });
+        });
+    }
     static friendRequest(sender, receiver) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield FriendRequest_1.default.create({

@@ -5,16 +5,15 @@
   
   <div @click="toggleSelectedOption('friends')" class="only-friends">
  
-   <font-awesome-icon icon="userFriends"/> 
+    <i class="fa fa-user-friends"></i>
     <h4>Only My Friends</h4>
 
   </div>
    
-  <div @click="toggleSelectedOption('friend_requests')" class="pending-requests">
-    <font-awesome-icon icon="userPlus"/>
+  <div @click="toggleSelectedOption('requests')" class="pending-requests">
+    <i class="fa fa-user-plus"></i>
     <h4>Pending requests</h4>
   </div>
-  
   
 </div>
 
@@ -23,9 +22,17 @@
 </template>
 
 <script>
- import { defineComponent } from 'vue';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: 'FriendsAside'
-})
+  name: 'FriendsAside',
+  emits: ['changeOption'],
+  setup(_, { emit }) {
+    const toggleSelectedOption = (option: string) => {
+      emit('changeOption', option);
+    };
+
+    return { toggleSelectedOption };
+  },
+});
 </script>

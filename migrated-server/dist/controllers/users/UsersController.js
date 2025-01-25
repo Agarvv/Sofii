@@ -32,6 +32,14 @@ class UsersController {
             });
         });
     }
+    static getFriendsAndRequests(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const data = yield UsersService_1.default.getFriendsAndRequests(req.account.user_id);
+            res.status(200).json({
+                data: data
+            });
+        });
+    }
     static sendFriendRequest(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { userId } = req.body;

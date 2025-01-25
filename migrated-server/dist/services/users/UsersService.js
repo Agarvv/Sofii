@@ -54,6 +54,13 @@ class UsersService {
             return 'FOLLOWED';
         });
     }
+    static getFriendsAndRequests(userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const friends = yield FriendRepository_1.default.getUserFriends(userId);
+            const requests = yield FriendRepository_1.default.getUserFriendRequests(userId);
+            return { friends, requests };
+        });
+    }
     static sendFriendRequest(receiverId, sender) {
         return __awaiter(this, void 0, void 0, function* () {
             const existingRequest = yield FriendRepository_1.default.getFriendRequest(sender.user_id, receiverId);

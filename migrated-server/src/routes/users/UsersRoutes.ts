@@ -18,6 +18,10 @@ usersRouter.post('/follow',
   UsersController.followOrUnfollow 
 )
 
+usersRouter.get('/friends', 
+  UsersController.getFriendsAndRequests 
+)
+
 usersRouter.post('/friendRequest', 
   validateRequest(sendFriendRequestSchema),
   UsersController.sendFriendRequest 
