@@ -3,11 +3,15 @@ import { apiService } from "@/api/ApiService";
 
 export default {
   setup() {
-    const acceptOrDeny = async ({ type, requestId }) => {
+    interface Options {
+      type: string,
+      requestId: number
+    }
+    const acceptOrDeny = async ({ type, requestId }: Options) => {
       const endpoint = type === "accept" ? "/users/friendRequest/accept" : "/users/friendRequest/deny";
 
       const { mutate } = usePost({
-        serviceFunc: (data) => apiService.post(endpoint, data),
+        serviceFunc: (data: { requestId: number }) => apiService.post(endpoint, data),
         successFunc: () => window.location.reload(),
         withError: true,
         withLoading: true,
