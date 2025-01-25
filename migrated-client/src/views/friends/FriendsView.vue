@@ -14,20 +14,20 @@
 
         <section v-if="content === 'requests'" class="friends-requests">
           <h4>Your Friend Requests</h4>
-          <div v-for="request in friend_requests" :key="request.id" class="friend">
+          <!-- <div v-for="request in friend_requests" :key="request.id" class="friend">
             <FriendRequest />
-          </div>
+          </div> -->
         </section>
 
         <section v-if="content === 'friends'" class="friends">
           <h4>Your Friends</h4>
-          <div
+         <!--  <div
             v-for="friend in friends"
             :key="friend.friendToDisplayInfo.id"
             class="friend"
           >
             <FriendCard />
-          </div>
+          </div>  --> 
         </section>
       </main>
     </div>
@@ -35,12 +35,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, onMounted } from 'vue';
 import FriendsAside from '@/components/friends/friends-aside/FriendsAside.vue';
 import FriendsSelector from '@/components/friends/friends-selector/FriendsSelector.vue';
 import FriendCard from '@/components/friends/friend/FriendCard.vue';
 import FriendRequest from '@/components/friends/friend-request/FriendRequest.vue';
-import { useGet } from '@/composables/useGet'
+import { useGet } from '@/composables/useGet';
+import { Friends } from '@/types/users/Friends';
+
 
 export default defineComponent({
   name: 'FriendsView',
@@ -58,10 +60,19 @@ export default defineComponent({
     const toggleContent = (newContent: string) => {
       content.value = newContent;
     };
-    
+
     const getFriends = async () => {
-        const data = await useGet<>
-    }
+        const data = await useGet<Friends>({
+          endpoint: '/users/friends',
+          withError: true,
+        });
+
+        console.log("data from friends", data);
+    };
+
+    onMounted(() => {
+      getFriends();
+    });
 
     return { content, toggleContent, friend_requests, friends };
   },
