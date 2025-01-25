@@ -4,23 +4,26 @@
            <div class="friend-img"> 
              
              <img 
-             :src="friend.friendToDisplayInfo.profilePicture || '/images/default.jpeg' ">
-             
-             
+             :src="friend.profilePicture">
            </div>
            
            <div class="friend-username">
-               <h3>{{friend.friendToDisplayInfo.username}}</h3>
+               <h3>{{friend.username}}</h3>
            </div>
-           
-           
          </div> 
 </template>
 
 <script lang="ts">
   import { defineComponent } from 'vue'; 
+  import { Friend } from '@/types/users/Friend';
 
   export default defineComponent({
-    name: 'FriendCard'
+    name: 'FriendCard',
+    props: {
+      friend: {
+        type: Object as () => Friend ,
+        required: true 
+      }
+    }
   })
 </script>

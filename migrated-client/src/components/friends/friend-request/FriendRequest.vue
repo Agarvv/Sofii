@@ -1,21 +1,20 @@
 <template>
 <div class="friend-details">
-          
-          <div @click="goToPage('/user/' + request.sender.id)" class="friend-img">
+          <div class="friend-img">
             <img style="width: 80px; border-radius: 50%" 
-            :src="request.sender.profilePicture || '/images/default.jpeg' ">
+            :src="request.sender.profilePicture">
           </div>
           
           <div class="friend-username-and-buttons">
             <h2>{{request.sender.username}}</h2>
             
             <div  class="friend-buttons">
-              <button @click="acceptRequest(request.id)" class="f-button-accept">
-                Accept
-              </button>
-              <button @click="declineRequest(request.id)" class="f-button-deny">
-                Deny
-              </button>
+              <AcceptRequest 
+               :requestId="request.id"
+              />
+              <DenyRequest
+                :requestId="request.id"
+              />
             </div>
             
           </div>
@@ -25,9 +24,22 @@
 
 <script lang="ts">
   import { defineComponent } from 'vue'; 
+  import { FriendRequest } from '@/types/users/FriendRequest';
+  import AcceptRequest from './accept/AcceptRequest.vue';
+  import DenyRequest from './deny/DenyRequest.vue';
 
   export default defineComponent({
-    name: 'FriendRequest'
+    name: 'FriendRequest',
+    components: {
+      AcceptRequest,
+      DenyRequest
+    }, 
+    props: {
+      request: {
+        type: Object as () => FriendRequest,
+        required: true 
+      }
+    }
   })
 </script>
 
