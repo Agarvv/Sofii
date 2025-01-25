@@ -1,7 +1,5 @@
 <template>
-    <button @click="deny" class="f-button-deny">
-      Deny
-    </button>
+    <button @click="deny" class="f-button-deny">Deny</button>
   </template>
   
   <script>
