@@ -18,7 +18,7 @@ class PostsController {
         const posts = await PostsService.getPostsAndUsersMayLike(); 
         
         res.status(200).json({
-            "posts": posts
+            "data": posts
         })
     }
     

@@ -8,7 +8,7 @@
     <main class="main">
       <div class="posts">
         <PostCard 
-          v-for="post in data.posts" 
+          v-for="post in data.data.posts" 
           :key="post.id" 
           :post="post"
         />
@@ -16,7 +16,7 @@
     </main>
     
     <div class="right-aside">
-      <UsersMayLike :recomendedUsers="data.users" />
+      <UsersMayLike :recomendedUsers="data.data.users" />
     </div>
   </div>
 </template>
