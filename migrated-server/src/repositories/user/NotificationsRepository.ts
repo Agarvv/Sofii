@@ -6,7 +6,7 @@ class NotificationsRepository {
    public static async getUserNotifications(userId: number) {
       
     return await Notifications.findAll({
-            where: { user_id: userId },
+            where: { user_target: userId },
             include: [
                 {
                     model: User, 
