@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'
 import UsersService from '@services/users/UsersService'
+import NotificationsService from '@services/notifications/NotificationsService'
 
 class UsersController {
     public static async blockOrUnblock(req: Request, res: Response) {
@@ -19,6 +20,14 @@ class UsersController {
         
         res.status(200).json({
             message: followedOrUnfollowed 
+        })
+    }
+    
+    public static async getNotifications(req: Request, res: Response) {
+        const notifications = await NotificationsService.getUserNotifications(req.account.user_id); 
+        
+        res.status(200).json({
+            notifications: notifications 
         })
     }
     

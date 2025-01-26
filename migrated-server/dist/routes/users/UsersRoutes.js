@@ -17,4 +17,5 @@ usersRouter.get('/friends', UsersController_1.default.getFriendsAndRequests);
 usersRouter.post('/friendRequest', (0, ValidationMiddleware_1.validateRequest)(SendFriendRequestSchema_1.default), UsersController_1.default.sendFriendRequest);
 usersRouter.post('/friendRequest/accept', (0, ValidationMiddleware_1.validateRequest)(FriendRequestSchema_1.default), UsersController_1.default.acceptFriendRequest);
 usersRouter.post('/friendRequest/deny', (0, ValidationMiddleware_1.validateRequest)(FriendRequestSchema_1.default), UsersController_1.default.denyFriendRequest);
+usersRouter.get('/notifications', UsersController_1.default.getNotifications);
 exports.default = usersRouter;

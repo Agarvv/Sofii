@@ -4,7 +4,7 @@ import NotificationsRepository from "@repositories/user/NotificationsRepository"
 import User from "@models/users/User";
 
 class NotificationsService {
-   public static async GetUserNotifications(userId: number) {
+   public static async getUserNotifications(userId: number) {
      return await NotificationsRepository.getUserNotifications(userId); 
    }
    

@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const UsersService_1 = __importDefault(require("@services/users/UsersService"));
+const NotificationsService_1 = __importDefault(require("@services/notifications/NotificationsService"));
 class UsersController {
     static blockOrUnblock(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -29,6 +30,14 @@ class UsersController {
             const followedOrUnfollowed = yield UsersService_1.default.followOrUnfollow(userId, req.account);
             res.status(200).json({
                 message: followedOrUnfollowed
+            });
+        });
+    }
+    static getNotifications(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const notifications = yield NotificationsService_1.default.getUserNotifications(req.account.user_id);
+            res.status(200).json({
+                notifications: notifications
             });
         });
     }

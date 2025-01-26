@@ -17,7 +17,7 @@ const websocket_1 = __importDefault(require("@websocket/websocket"));
 const NotificationsRepository_1 = __importDefault(require("@repositories/user/NotificationsRepository"));
 const User_1 = __importDefault(require("@models/users/User"));
 class NotificationsService {
-    static GetUserNotifications(userId) {
+    static getUserNotifications(userId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield NotificationsRepository_1.default.getUserNotifications(userId);
         });

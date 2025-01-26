@@ -37,5 +37,9 @@ usersRouter.post('/friendRequest/deny',
   UsersController.denyFriendRequest
 )
 
+usersRouter.get('/notifications', 
+  UsersController.getNotifications 
+)
+
 
 export default usersRouter; 
