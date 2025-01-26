@@ -13,13 +13,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Notifications_1 = __importDefault(require("@models/notifications/Notifications"));
+const User_1 = __importDefault(require("@models/users/User"));
 class NotificationsRepository {
     static getUserNotifications(userId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return Notifications_1.default.findAll({
-                where: {
-                    user_target: userId
-                }
+            return yield Notifications_1.default.findAll({
+                where: { user_id: userId },
+                include: [
+                    {
+                        model: User_1.default,
+                        as: 'targetUser'
+                    }
+                ]
             });
         });
     }

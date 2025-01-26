@@ -1,13 +1,22 @@
 import Notifications from "@models/notifications/Notifications";
+import User from '@models/users/User'
 
 class NotificationsRepository {
    public static async getUserNotifications(userId: number) {
-    return Notifications.findAll({
-        where: {
-            user_target: userId
-        }
-    })
+      
+    return await Notifications.findAll({
+            where: { user_id: userId },
+            include: [
+                {
+                    model: User, 
+                    as: 'targetUser' 
+                }
+            ]
+        });
+        
    }
+   
+   
 }
 
 export default NotificationsRepository; 
