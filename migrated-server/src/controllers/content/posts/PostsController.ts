@@ -14,8 +14,8 @@ class PostsController {
         })
     }
     
-    public static async GetPosts(req: Request, res: Response) {
-        const posts = await PostsService.getPosts(); 
+    public static async getPostsAndUsers(req: Request, res: Response) {
+        const posts = await PostsService.getPostsAndUsersMayLike(); 
         
         res.status(200).json({
             "posts": posts

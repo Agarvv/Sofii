@@ -8,6 +8,8 @@ import CommentDislikes from '@models/posts/comments/CommentDislikes';
 import CommentAwnsersLikes from '@models/posts/comments/CommentAwnsersLikes';
 import CommentAwnsersDislikes from '@models/posts/comments/CommentAwnsersDislikes';
 import CommentAnswer from '@models/posts/comments/CommentAwnser';
+import sequelize from '@config/database';
+
 
 class PostsRepository {
     // finds the post with his likes, comments, saved relations.
@@ -39,8 +41,8 @@ class PostsRepository {
        return post!; 
     }
     
-    public static async findAllPosts(): Promise<any> {
-    return await Post.findAll({
+    public static async getPostsAndUsersMayLike() {
+    const posts = Post.findAll({
         include: [
             {
                 model: User,
@@ -68,14 +70,25 @@ class PostsRepository {
                 as: 'saved_post'
             }
         ]
-        
-        
-        
-        
-        
-        
-        
     });
+
+    const users = await User.findAll({
+        order: sequelize.random(),
+        limit: 10,
+        attributes: ['username', 'id', 'profilePicture', 'job'],
+        include: [
+            {
+                model: User,
+                as: 'followers',
+            },
+            {
+                model: User,
+                as: 'friends',
+            }
+        ]
+    });
+
+    return { posts, users }
   }
     
     public static async getPostDetails(id: number): Promise<any> {

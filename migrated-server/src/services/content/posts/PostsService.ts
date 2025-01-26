@@ -43,8 +43,8 @@ class PostsService {
         io.emit('createdPost', newPost);
     }
     
-    public static async getPosts(): Promise<any> {
-        return await PostRepository.findAllPosts()
+    public static async getPostsAndUsersMayLike(): Promise<any> {
+        return await PostRepository.getPostsAndUsersMayLike()
     } 
     
     public static async getPostDetails(postId: number): Promise<any> {

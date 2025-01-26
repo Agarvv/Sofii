@@ -9,8 +9,9 @@ import savePostSchema from '@validation/posts/SavePostSchema'
 const postsRouter = express.Router(); 
 postsRouter.use('/comments', commentRoutes)
 
+// get posts and users may like
 postsRouter.get('/', 
-  PostsController.GetPosts
+  PostsController.getPostsAndUsers
 );
 
 postsRouter.get('/:id', 
