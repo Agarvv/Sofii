@@ -10,6 +10,7 @@
 <script lang="ts">
     import { defineComponent } from 'vue'
     import { usePost } from '@/composables/usePost'
+    import { useGet } from '@/composables/useGet'
     import { apiService } from '@/api/ApiService'
 
     interface DeleteNotificationOptions {
@@ -25,17 +26,15 @@
             }
         },
         setup(props) {
-            const { mutate } = usePost<DeleteNotificationOptions>({
-                serviceFunc: (data: DeleteNotificationOptions) => apiService.post(`/users/notifications/delete/${props.notificationId}`, data),
-                successFunc: () => window.location.reload(),
-                withError: true,
-                withLoading: true 
-            })
+            
             
             const closeNotification = async () => {
-                 await mutate({
-                     notificationId: props.notificationId 
-                 }) 
+                 await useGet<string>({
+                     endpoint: `/users/notifications/delete/${props.notificationId}`,
+                     withError: true 
+                 })
+
+                 window.location.reload(); 
             }
             
             return { closeNotification } 
