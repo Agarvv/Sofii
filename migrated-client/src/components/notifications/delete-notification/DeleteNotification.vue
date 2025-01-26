@@ -29,12 +29,13 @@
             
             
             const closeNotification = async () => {
-                 await useGet<string>({
+                const data = await useGet<string>({
                      endpoint: `/users/notifications/delete/${props.notificationId}`,
                      withError: true 
                  })
 
-                 window.location.reload(); 
+                 console.log("data", data)
+                // window.location.reload(); 
             }
             
             return { closeNotification } 
