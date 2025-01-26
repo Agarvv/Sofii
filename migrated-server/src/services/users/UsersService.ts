@@ -112,6 +112,8 @@ class UsersService {
             'ACCEPTED_FRIEND_REQUEST'
         );
     }
+    
+
 
     private static async destroyAnySocialRelations(userId1: number, userId2: number): Promise<void> {
         await FriendRepository.unfriends(userId1, userId2);

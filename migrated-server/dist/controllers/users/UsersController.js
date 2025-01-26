@@ -41,6 +41,15 @@ class UsersController {
             });
         });
     }
+    static deleteNotification(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = Number(req.params.id);
+            yield NotificationsService_1.default.deleteUserNotification(id, req.account.user_id);
+            res.status(200).json({
+                message: "¡Notification Deleted!"
+            });
+        });
+    }
     static getFriendsAndRequests(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const data = yield UsersService_1.default.getFriendsAndRequests(req.account.user_id);

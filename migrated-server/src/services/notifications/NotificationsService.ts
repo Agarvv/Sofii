@@ -8,6 +8,12 @@ class NotificationsService {
      return await NotificationsRepository.getUserNotifications(userId); 
    }
    
+   public static async deleteUserNotification(notificationId: number, userId: number) {
+       
+       await NotificationsRepository.deleteNotification(notificationId, userId); 
+       
+   }
+   
    public static async sendNotificationToUser(
     target: number,
     user_name: string,

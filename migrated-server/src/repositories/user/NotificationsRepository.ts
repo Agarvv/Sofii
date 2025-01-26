@@ -13,10 +13,16 @@ class NotificationsRepository {
                 }
             ]
         });
-        
    }
    
-   
+   public static async deleteNotification(nId: number, userId: number) {
+       const notification = await Notifications.destroy({
+           where: {
+               id: nId,
+               user_target: userId 
+           }
+       })
+   }
 }
 
 export default NotificationsRepository; 

@@ -41,5 +41,8 @@ usersRouter.get('/notifications',
   UsersController.getNotifications 
 )
 
+usersRouter.get('/notifications/delete/:id',
+  UsersController.deleteNotification
+)
 
 export default usersRouter; 

@@ -22,6 +22,11 @@ class NotificationsService {
             return yield NotificationsRepository_1.default.getUserNotifications(userId);
         });
     }
+    static deleteUserNotification(notificationId, userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield NotificationsRepository_1.default.deleteNotification(notificationId, userId);
+        });
+    }
     static sendNotificationToUser(target, user_name, user_id, content, chat_message, type) {
         return __awaiter(this, void 0, void 0, function* () {
             const io = websocket_1.default.getIO();

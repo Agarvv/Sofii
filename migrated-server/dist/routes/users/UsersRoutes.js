@@ -18,4 +18,5 @@ usersRouter.post('/friendRequest', (0, ValidationMiddleware_1.validateRequest)(S
 usersRouter.post('/friendRequest/accept', (0, ValidationMiddleware_1.validateRequest)(FriendRequestSchema_1.default), UsersController_1.default.acceptFriendRequest);
 usersRouter.post('/friendRequest/deny', (0, ValidationMiddleware_1.validateRequest)(FriendRequestSchema_1.default), UsersController_1.default.denyFriendRequest);
 usersRouter.get('/notifications', UsersController_1.default.getNotifications);
+usersRouter.get('/notifications/delete/:id', UsersController_1.default.deleteNotification);
 exports.default = usersRouter;

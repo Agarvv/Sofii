@@ -28,5 +28,15 @@ class NotificationsRepository {
             });
         });
     }
+    static deleteNotification(nId, userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const notification = yield Notifications_1.default.destroy({
+                where: {
+                    id: nId,
+                    user_target: userId
+                }
+            });
+        });
+    }
 }
 exports.default = NotificationsRepository;
