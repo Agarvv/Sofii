@@ -6,7 +6,7 @@
         </div>
         <div class="us-users">
           <div v-for="user in recomendedUsers" :key="user.id" class="us-user">
-            <HomePageUserMustLike :user="user" />
+            <UserMayLike :user="user" />
           </div>
         </div>
       </div>
@@ -15,13 +15,17 @@
   
   <script lang="ts">
   import { defineComponent } from 'vue';
-  import { UserMayLike } from '@/types/users/UserMayLike';
-  
+  import { UserMayLike as UserMayLikeType } from '@/types/users/UserMayLike';
+  import UserMayLike from './user-may-like/UserMayLike.vue';
+
   export default defineComponent({
     name: 'UsersMayLike',
+    components: {
+      UserMayLike
+    },
     props: {
       recomendedUsers: {
-        type: Array as () => UserMayLike[],
+        type: Array as () => UserMayLikeType[],
         required: true,
       },
     },

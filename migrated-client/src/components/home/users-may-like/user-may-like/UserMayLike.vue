@@ -18,10 +18,10 @@
           class="view-profile">
           <i class="fa fa-user"></i>
         </div>
-        <div 
+       <!--  <div 
           class="follow">
           <i class="fa fa-user-plus"></i>
-        </div>
+        </div> -->
       </div>
     </div>
   </template>
