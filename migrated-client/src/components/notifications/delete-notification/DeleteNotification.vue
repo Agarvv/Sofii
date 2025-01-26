@@ -26,7 +26,7 @@
         },
         setup(props) {
             const { mutate } = usePost<DeleteNotificationOptions>({
-                serviceFunc: (data: DeleteNotificationOptions) => apiService.post('/users/notifications', data),
+                serviceFunc: (data: DeleteNotificationOptions) => apiService.post(`/users/notifications/delete/${props.notificationId}`, data),
                 successFunc: () => window.location.reload(),
                 withError: true,
                 withLoading: true 
