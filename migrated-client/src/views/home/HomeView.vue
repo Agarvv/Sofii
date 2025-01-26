@@ -52,6 +52,8 @@ export default defineComponent({
           withError: true
         });
 
+        console.log("response homepage", response)
+
         if (response) {
           data.value = response;
         }
