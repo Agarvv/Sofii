@@ -1,5 +1,6 @@
 import Notifications from "@models/notifications/Notifications";
 import User from '@models/users/User'
+import CustomError from '@outils/CustomError'
 
 class NotificationsRepository {
    public static async getUserNotifications(userId: number) {

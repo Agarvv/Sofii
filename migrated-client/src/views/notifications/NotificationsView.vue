@@ -14,7 +14,7 @@
 
 <script lang="ts">
     import { defineComponent, ref, onMounted } from 'vue'
-    import NotificationComponent from '@/components/notifications/NotificationComponent'
+    import NotificationComponent from '@/components/notifications/NotificationComponent.vue'
     import { useGet } from '@/composables/useGet'
     import { Notification } from '@/types/notifications/Notification'
     
@@ -32,7 +32,7 @@
                     withError: true 
                 })
                 
-                data.value = response 
+                if(response) data.value = response; 
                 console.log("data from notifications", data)
             }
 

@@ -16,12 +16,9 @@
       </div>
     </div>
 
-    <div 
-      @click="closeNotification(notification.id)" 
-      class="notification-close"
-    >
-      <i class="fa fa-close"></i>
-    </div>
+    <DeleteNotification
+      :notificationId="notification.id"
+    /> 
     
   </div> 
 </template>
@@ -30,6 +27,7 @@
 <script lang="ts">
     import { defineComponent } from 'vue'
     import { Notification } from '@/types/notifications/Notification'
+    import DeleteNotification from './delete-notification/DeleteNotification.vue'
     
     export default defineComponent({
         name: 'NotificationComponent',
@@ -39,9 +37,12 @@
                 required: true 
             }
         },
+        components: {
+            DeleteNotification
+        }, 
         setup(props) {
             const goToNotification = () => {
-                
+                console.log("soon")
             }
             
             return { goToNotification } 
