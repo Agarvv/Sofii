@@ -42,7 +42,7 @@ class PostsRepository {
     }
     
     public static async getPostsAndUsersMayLike() {
-    const posts = Post.findAll({
+    const posts = await Post.findAll({
         include: [
             {
                 model: User,
