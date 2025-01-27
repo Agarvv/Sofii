@@ -56,10 +56,6 @@
   background-color: #f1f1f1;
   padding: 10px;
   border-radius: 20px;
-  max-width: 70%;
-  word-wrap: break-word;
-  word-break: break-word;
-  margin: 0;
 }
 
 .message.user p {
