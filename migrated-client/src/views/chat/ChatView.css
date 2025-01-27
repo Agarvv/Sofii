@@ -34,10 +34,11 @@ main {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.main-header .user-details {
+.user-details {
   display: flex;
   align-items: center;
   gap: 10px;
+  position: relative; 
 }
 
 .profile-img {
