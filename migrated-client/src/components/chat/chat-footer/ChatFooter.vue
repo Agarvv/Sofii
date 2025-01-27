@@ -1,5 +1,5 @@
 <template>
-  <div class="chat-footer">
+  <div class="main-footer">
 
     <div class="footer-message-input">
       <input
@@ -63,3 +63,5 @@ export default defineComponent({
   },
 });
 </script>
+
+<style src="./ChatFooter.css>
