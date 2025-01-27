@@ -23,7 +23,7 @@ class AuthService {
     });
   }
 
-  public static async loginUser(email: string, password: string): Promise<string> {
+  public static async loginUser(email: string, password: string): Promise<{ userId: number, accessToken: string}> {
     const user = await userRepository.findByEmail(email);
     if (!user) {
       throw new CustomError("That email doesn't exist.", 400);
@@ -33,7 +33,9 @@ class AuthService {
 
     const jwtPayload = this.generateJwtPayload(user);
 
-    return JwtHelper.generateToken(jwtPayload);
+    const jwt = JwtHelper.generateToken(jwtPayload);
+
+    return { userId: user.id, accessToken: jwt }
   }
 
   public static async sendResetPassword(email: string): Promise<void> {

@@ -5,7 +5,7 @@ class AuthController {
   public static async registerUser(req: Request, res: Response): Promise<void> {
     const { username, email, password } = req.body;
 
-    await AuthService.registerUser(username, email, password);
+   await AuthService.registerUser(username, email, password);
 
     res.status(201).json({ message: "¡Welcome To Sofii!" });
   }
@@ -13,10 +13,10 @@ class AuthController {
   public static async loginUser(req: Request, res: Response): Promise<void> {
     const { email, password } = req.body;
 
-    const jwtToken = await AuthService.loginUser(email, password);
+    const { userId, accessToken} = await AuthService.loginUser(email, password);
 
-    res.cookie('jwt', jwtToken, { httpOnly: true, secure: true, sameSite: 'none', maxAge: 3600000 });
-    res.status(200).json({ accessToken: jwtToken });
+    res.cookie('jwt', accessToken, { httpOnly: true, secure: true, sameSite: 'none', maxAge: 3600000 });
+    res.status(200).json({ accessToken: accessToken, userId: userId });
   }
   
   public static async sendResetPassword(req: Request, res: Response) {
