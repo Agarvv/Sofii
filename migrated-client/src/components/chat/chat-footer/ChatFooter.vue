@@ -64,4 +64,4 @@ export default defineComponent({
 });
 </script>
 
-<style src="./ChatFooter.css>
+<style scoped src="./ChatFooter.css </style>
