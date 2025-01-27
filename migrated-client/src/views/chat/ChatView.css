@@ -54,7 +54,6 @@ main {
   display: flex;
   gap: 10px;
   align-items: center;
-  justify-content: space-between;
   padding: 10px;
   position: fixed;
   bottom: 0;
@@ -64,13 +63,8 @@ main {
   box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.footer-buttons {
-  display: flex;
-  gap: 5px;
-}
-
 .footer-message-input {
-  flex-grow: 1;
+  flex: 1; 
   display: flex;
   gap: 10px;
   align-items: center; 

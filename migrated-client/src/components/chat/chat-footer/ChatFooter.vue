@@ -1,13 +1,5 @@
 <template>
   <div class="chat-footer">
-    <div class="footer-buttons">
-      <div class="video">
-        <i class="fa fa-video"></i>
-      </div>
-      <div class="image">
-        <i class="fa fa-image"></i>
-      </div>
-    </div>
 
     <div class="footer-message-input">
       <input
@@ -17,10 +9,11 @@
         type="text"
         placeholder="Send a message..."
       />
-      <div @click="sendMessage" class="footer-send-message-button">
+    </div>
+
+    <div @click="sendMessage" class="footer-send-message-button">
         <i class="fa fa-paper-plane"></i>
       </div>
-    </div>
   </div>
 </template>
 
