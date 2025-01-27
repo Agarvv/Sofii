@@ -28,3 +28,5 @@
         }
     })
 </script>
+
+<style src="./ChatBox.css"></style>

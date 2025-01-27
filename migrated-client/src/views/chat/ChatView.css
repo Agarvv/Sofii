@@ -50,64 +50,6 @@ main {
   color: green;
 }
 
-.main-footer {
-  height: 80px;
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  padding: 10px;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: white;
-  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.footer-message-input {
-  border: 3px solid red;
-  flex: 1; 
-  display: flex;
-  gap: 10px;
-  align-items: center; 
-}
-
-.footer-message-input input {
-  width: 100%;
-  padding: 10px;
-  border-radius: 20px;
-  border: 1px solid #ccc;
-  max-width: 100%;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  box-sizing: border-box; 
-}
-
-.footer-send-message-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px;
-  background-color: #4CAF50;
-  border-radius: 50%;
-  color: white;
-  cursor: pointer; 
-}
-
-.footer-send-message-button:hover {
-  background-color: #45a049;
-}
-
-.video, .image, .micro {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px;
-  background-color: #f1f1f1;
-  border-radius: 50%;
-  cursor: pointer;
-}
 
 .preview-container {
   position: relative;

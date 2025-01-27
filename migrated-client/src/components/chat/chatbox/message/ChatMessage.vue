@@ -34,3 +34,5 @@
         }
     })
 </script>
+
+<style src="./ChatMessage.css"></style>

@@ -60,3 +60,5 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped src="./ChatHeader.css"></style>
