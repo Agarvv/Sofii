@@ -1,5 +1,5 @@
 <template>
-  <div class="footer-chat">
+  <div class="chat-footer">
     <div class="footer-buttons">
       <div class="video">
         <i class="fa fa-video"></i>
