@@ -97,7 +97,7 @@
 
       const { mutate } = usePost<LoginFormValues>({
         serviceFunc: (data: LoginFormValues) => apiService.post('/auth/login', data),
-        successFunc: () => router.push({ name: 'home' }),
+        successFunc: (response: any) => console.log("login response", response),
         withError: true,
         withLoading: true,
       });
