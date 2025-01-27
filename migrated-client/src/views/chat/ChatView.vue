@@ -3,7 +3,7 @@
     <div class="container">
       <main>
 
-          <ChatHeader :userToDisplayInfo="data.chat.chat.userToDisplayInfo" /> 
+          <ChatHeader :userToDisplayInfo="data.chat.userToDisplayInfo" /> 
           
           <ChatBox :chat="data.chat.chat" />
 
