@@ -12,6 +12,7 @@ import ProfileView from '@/views/profile/ProfileView.vue'
 import SavedView from '@/views/saved/SavedView.vue'; 
 import FriendsView from '@/views/friends/FriendsView.vue'
 import NotificationsView from '@/views/notifications/NotificationsView.vue'
+import ChatsView from '@/views/chats/ChatsView.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -67,6 +68,11 @@ const routes: Array<RouteRecordRaw> = [
       path: '/notifications',
       component: NotificationsView,
       name: "notifications"
+  },
+  {
+      path: '/chats',
+      component: ChatsView,
+      name: "chats"
   }
 ]
 
