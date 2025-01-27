@@ -1,0 +1,71 @@
+<template>
+  <div class="footer-chat">
+    <div class="footer-buttons">
+      <div class="video">
+        <i class="fa fa-video"></i>
+      </div>
+      <div class="image">
+        <i class="fa fa-image"></i>
+      </div>
+    </div>
+
+    <div class="footer-message-input">
+      <input
+        @input="broadcastTyping"
+        v-model="message"
+        id="inp"
+        type="text"
+        placeholder="Send a message..."
+      />
+      <div @click="sendMessage" class="footer-send-message-button">
+        <i class="fa fa-paper-plane"></i>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent, ref, watch } from 'vue';
+import { ChatDetails } from '@/types/chats/ChatDetails';
+import { useSocket } from '@/composables/useWebSocket';
+
+export default defineComponent({
+  name: 'ChatFooter',
+  props: {
+    chat: {
+      type: Object as () => ChatDetails,
+      required: true,
+    },
+  },
+  setup(props) {
+    const message = ref<string>('');
+    const { socket } = useSocket();
+
+    const broadcastTyping = () => {
+      if (message.value.trim() !== '') {
+        socket.emit('typing', props.chat.chat_id);
+      } else {
+        console.log('emitting stopTyping');
+        socket.emit('stopTyping', props.chat.chat_id);
+      }
+    };
+
+    const sendMessage = () => {
+      if (message.value.trim() !== '') {
+        console.log('Sending message:', message.value);
+        socket.emit('chatMessage', {
+          chat_id: props.chat.chat_id,
+          message: message.value,
+        });
+        message.value = ''; 
+      }
+    };
+
+    return {
+      message,
+      broadcastTyping,
+      sendMessage,
+    };
+  },
+});
+</script>

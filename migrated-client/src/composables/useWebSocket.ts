@@ -1,9 +1,9 @@
-
 import { reactive, onMounted, onBeforeUnmount } from 'vue';
+import { Socket } from 'socket.io-client'; 
 import io from 'socket.io-client';
 
 const socket = reactive({
-    instance: io('https://sofii-vsly.onrender.com', { withCredentials: true }),
+    instance: io('https://sofii-vsly.onrender.com', { withCredentials: true }) as Socket, 
 });
 
 export function useSocket() {
@@ -11,7 +11,7 @@ export function useSocket() {
         socket.instance.on('connect', () => {
             console.log('Socket connected!');
         });
-    }); 
+    });
 
     return { socket };
 }

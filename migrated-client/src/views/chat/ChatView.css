@@ -1,0 +1,266 @@
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+main {
+  display: flex;
+  width: 70%;
+  flex-direction: column;
+  height: 100vh;
+  padding-bottom: 80px;
+  box-sizing: border-box;
+}
+
+.main-header, .main-footer {
+  background: white;
+  z-index: 1;
+}
+
+.main-header {
+  display: flex;
+  justify-content: space-between;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  align-items: center;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.main-header .user-details {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile-img {
+  width: 60px;
+  border-radius: 50%;
+}
+
+.status {
+  color: green;
+}
+
+.main-footer {
+  height: 80px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.footer-buttons {
+  display: flex;
+  gap: 5px;
+}
+
+.footer-message-input {
+  flex-grow: 1;
+  display: flex;
+  gap: 10px;
+  align-items: center; 
+}
+
+.footer-message-input input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-sizing: border-box; 
+}
+
+.footer-send-message-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  background-color: #4CAF50;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer; 
+}
+
+.footer-send-message-button:hover {
+  background-color: #45a049;
+}
+
+.video, .image, .micro {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  background-color: #f1f1f1;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.preview-container {
+  position: relative;
+  max-height: 300px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.preview-image, .preview-video {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.cancel-preview {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+
+.recording-ui {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.timer {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.stop-button {
+  padding: 10px;
+  background-color: red;
+  border-radius: 50%;
+  color: white;
+}
+
+.messages {
+  padding-top: 80px;
+  padding-bottom: 90px;
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+.messages .message {
+  display: flex;
+  width: 100%;
+  flex-direction: column!important;
+  align-items: flex-end; 
+ 
+}
+
+.message.friend {
+  align-items: flex-start; 
+  flex-direction: row-reverse;
+}
+
+.message.user {
+  display: flex;
+  flex-direction: row;
+}
+
+
+
+.message.friend .msgIcon {
+  display: none;
+}
+.message.user .message-user-img {
+  display: none;
+}
+
+
+.message .msg_content {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.message-user-img {
+  width: 40px;
+  height: 40px;
+}
+
+.message-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.message p {
+  background-color: #f1f1f1;
+  padding: 10px;
+  border-radius: 20px;
+  max-width: 70%;
+  word-wrap: break-word;
+  word-break: break-word;
+  margin: 0;
+}
+
+.message.user p {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.message.friend p {
+  background-color: #E0E0E0;
+  color: black;
+}
+
+.message-wrapper {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.message-wrapper.user {
+  border-color: #4CAF50;
+}
+
+.message-wrapper.friend {
+  border-color: #E0E0E0;
+}
+
+.footer-chat {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+   padding: 15px;
+}
+
+@media(max-width: 600px) {
+  main {
+    width: 100%;
+  }
+
+  .message p {
+    max-width: 85%;
+  }
+
+  .footer-message-input input {
+    padding: 5px;
+  }
+
+  .messages {
+    padding-top: 60px;
+    padding-bottom: 70px;
+  }
+}
