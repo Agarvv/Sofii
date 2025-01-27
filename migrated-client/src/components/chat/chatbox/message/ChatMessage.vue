@@ -1,6 +1,6 @@
 <template>
        <div 
-                class="message"
+                class="message friend"
             >
                 <div class="msg_content">
                     <div 
