@@ -3,11 +3,11 @@
     <div class="container">
       <main>
 
-          <ChatHeader :userToDisplayInfo="data.chat.userToDisplayInfo" /> 
+          <ChatHeader :userToDisplayInfo="data.chat.chat.userToDisplayInfo" /> 
           
-          <ChatBox :chat="data.chat" />
+          <ChatBox :chat="data.chat.chat" />
 
-          <ChatFooter :chat="data.chat" />
+          <ChatFooter :chat="data.chat.chat" />
 
       </main>
     </div>
