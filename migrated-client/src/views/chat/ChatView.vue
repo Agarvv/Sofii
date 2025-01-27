@@ -46,7 +46,7 @@ export default defineComponent({
     onMounted(() => {
       getChat();
 
-      socket.on('chatMessage', (message: any) => {
+      socket.instance.on('chatMessage', (message: any) => {
         console.log('New message!', message);
       });
     });

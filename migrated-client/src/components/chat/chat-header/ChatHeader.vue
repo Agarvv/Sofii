@@ -45,11 +45,11 @@ export default defineComponent({
     const isUserTyping = ref<boolean>(false);
 
     onMounted(() => {
-      socket.on('typing', () => {
+      socket.instance.on('typing', () => {
         isUserTyping.value = true;
       });
 
-      socket.on('stopTyping', () => {
+      socket.instance.on('stopTyping', () => {
         isUserTyping.value = false;
       });
     });

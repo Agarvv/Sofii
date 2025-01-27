@@ -43,17 +43,17 @@ export default defineComponent({
 
     const broadcastTyping = () => {
       if (message.value.trim() !== '') {
-        socket.emit('typing', props.chat.chat_id);
+        socket.instance.emit('typing', props.chat.chat_id);
       } else {
         console.log('emitting stopTyping');
-        socket.emit('stopTyping', props.chat.chat_id);
+        socket.instance.emit('stopTyping', props.chat.chat_id);
       }
     };
 
     const sendMessage = () => {
       if (message.value.trim() !== '') {
         console.log('Sending message:', message.value);
-        socket.emit('chatMessage', {
+        socket.instance.emit('chatMessage', {
           chat_id: props.chat.chat_id,
           message: message.value,
         });
