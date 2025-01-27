@@ -52,11 +52,12 @@ export default defineComponent({
 
     const sendMessage = () => {
       if (message.value.trim() !== '') {
-        console.log('Sending message:', message.value);
-        socket.instance.emit('chatMessage', {
-          chat_id: props.chat.chat_id,
-          message: message.value,
-        });
+        const newMessage = {
+            chat_id: props.chat.chat_id,
+            message: message.value 
+        }
+        console.log('Sending message:', newMessage);
+        socket.instance.emit('chatMessage', newMessage);
         message.value = ''; 
       }
     };
