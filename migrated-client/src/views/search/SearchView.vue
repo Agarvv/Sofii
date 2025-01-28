@@ -2,7 +2,7 @@
   <div v-if="filteredResults">
     <SearchPageHeader @toggleFilters="toggleFilters"/> 
     
-    <SearchFilters v-if="showFilters" /> 
+    <SearchFilters @toggleFilters="toggleFilters" v-if="showFilters" /> 
         
     <div class="container">
      

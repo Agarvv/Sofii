@@ -1,6 +1,6 @@
 <template>
   <div class="filter-div">
-      <div class="close-filters">
+      <div @click="toggleFilters" class="close-filters">
           <i class="fa fa-close"></i>
       </div>
     <div class="aside-users">
@@ -77,7 +77,7 @@ import { searchStore } from '@/store/searchStore'
 
 export default defineComponent({
   name: 'SearchFilters',
-  setup() {
+  setup(_, { emit }) {
     const store = searchStore(); 
     
     const filters = reactive({
@@ -102,10 +102,16 @@ export default defineComponent({
       
       store.filter(appliedFilters)
     }
+    
+    const toggleFilters = () => {
+      emit('toggleFilters') 
+    }
+
 
     return {
       filters,
-      applyFilters
+      applyFilters,
+      toggleFilters 
     }
   }
 })
