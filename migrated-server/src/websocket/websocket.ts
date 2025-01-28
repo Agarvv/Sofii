@@ -25,6 +25,8 @@ export default {
             if (!jwtToken) return;
             
             const { userDecoded } = await JwtHelper.verifyToken(jwtToken);
+            
+            if(!userDecoded) return 
 
             socket.join(userDecoded.user_id);
             
