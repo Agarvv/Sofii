@@ -27,7 +27,7 @@ export default defineComponent({
         const userId = Number(localStorage.getItem('userId'));
 
 
-        const likes = ref<Like[]>([...props.postLikes]);
+        const likes = ref<Like[]>(props.postLikes);
 
         const isLiked = computed(() => likes.value.some(like => like.user_id === userId));
 
