@@ -1,6 +1,6 @@
 <template>
     <div class="like" @click="like">
-        <span>{{ likes.value.length }}</span>  
+        <span>5</span>  
         <i :class="['fa', 'fa-thumbs-up', { 'liked': isLiked }]"></i>
     </div>
 </template>
@@ -36,6 +36,8 @@ export default defineComponent({
         );
 
         const isLiked = computed(() => likes.value.some(like => like.user_id === userId));
+        
+        const likesCount = likes.value.length; 
 
         const like = async () => {
             const data = await apiService.post('/posts/like', { postId: props.postId });
@@ -69,7 +71,7 @@ export default defineComponent({
             socket.instance.off('unlikePost');
         });
 
-        return { like, likes, isLiked };  
+        return { like, likes, isLiked, likesCount };  
     },
 });
 </script>
