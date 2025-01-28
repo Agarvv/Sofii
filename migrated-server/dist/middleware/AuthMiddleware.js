@@ -11,13 +11,17 @@ const authMiddleware = (req, res, next) => {
             error: "Please log in."
         });
     }
-    const result = JwtHelper_1.default.verifyToken(jwtToken);
-    if (!result.success) {
+    try {
+        const decoded = JwtHelper_1.default.verifyToken(jwtToken);
+        console.log(decoded);
+        req.account = decoded;
+        next();
+    }
+    catch (error) {
+        console.log(error);
         res.status(401).json({
-            error: result.message || "Please log in."
+            error: "Please log in."
         });
     }
-    req.account = result.userDecoded;
-    next();
 };
 exports.default = authMiddleware;

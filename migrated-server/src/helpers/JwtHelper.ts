@@ -1,21 +1,20 @@
 import jwt from 'jsonwebtoken';
 
-class JwtHelper {
-  private static readonly SECRET = process.env.JWT_SECRET || '!+()@3*+25#34+€(€(#!_)#82+_!"9#(;_*';
-  private static readonly EXPIRATION = '1h';
+class JwtHelper { 
+    private static readonly SECRET = process.env.JWT_SECRET || '!+()@3*+25#34+€(€(#!)#82+!"9#(;_*'; 
+    private static readonly EXPIRATION = '1h';
 
-  public static generateToken(payload: object): string {
-    return jwt.sign(payload, this.SECRET, { expiresIn: this.EXPIRATION });
-  }
-
-  public static async verifyToken(token: string): Promise<{ success: boolean, userDecoded?: any, message?: string }> {
-    try {
-      const userDecoded = await jwt.verify(token, this.SECRET);
-      return { success: true, userDecoded: userDecoded };
-    } catch (error) {
-      return { success: false, message: 'Invalid or expired token' };
+    public static generateToken(payload: object): string { 
+        return jwt.sign(payload, this.SECRET, { expiresIn: this.EXPIRATION }); 
     }
-  }
+
+    public static verifyToken(token: string): any { 
+        try { 
+            return jwt.verify(token, this.SECRET); 
+        } catch (error) { 
+            throw new Error('Invalid or expired token'); 
+        } 
+    } 
 }
 
 export default JwtHelper;

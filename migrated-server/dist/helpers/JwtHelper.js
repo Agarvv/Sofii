@@ -10,14 +10,13 @@ class JwtHelper {
     }
     static verifyToken(token) {
         try {
-            const userDecoded = jsonwebtoken_1.default.verify(token, this.SECRET);
-            return { success: true, userDecoded: userDecoded };
+            return jsonwebtoken_1.default.verify(token, this.SECRET);
         }
         catch (error) {
-            return { success: false, message: 'Invalid or expired token' };
+            throw new Error('Invalid or expired token');
         }
     }
 }
-JwtHelper.SECRET = process.env.JWT_SECRET || '!+()@3*+25#34+€(€(#!_)#82+_!"9#(;_*';
+JwtHelper.SECRET = process.env.JWT_SECRET || '!+()@3*+25#34+€(€(#!)#82+!"9#(;_*';
 JwtHelper.EXPIRATION = '1h';
 exports.default = JwtHelper;

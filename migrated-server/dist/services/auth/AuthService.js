@@ -84,7 +84,7 @@ class AuthService {
     }
     static checkAuthentication(jwt) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { userDecoded } = yield JwtHelper_1.default.verifyToken(jwt);
+            const userDecoded = yield JwtHelper_1.default.verifyToken(jwt);
             if (userDecoded)
                 return userDecoded.user_id;
             throw new CustomError_1.default("You Aren't Authenticated.", 401);

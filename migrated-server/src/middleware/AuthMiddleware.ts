@@ -1,25 +1,27 @@
 import { Request, Response, NextFunction, RequestHandler } from 'express';
 import JwtHelper from '@helpers/JwtHelper';
 
-const authMiddleware: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+const authMiddleware: RequestHandler = (req: Request, res: Response, next: NextFunction) => {
   const jwtToken = req.cookies.jwt;
 
   if (!jwtToken) {
-   res.status(401).json({
+    res.status(401).json({
       error: "Please log in."
     });
   }
 
-  const result = await JwtHelper.verifyToken(jwtToken);
+  try {
+    const decoded = JwtHelper.verifyToken(jwtToken);
+    console.log(decoded);
+    req.account = decoded;
 
-  if (!result.success) {
+    next();  
+  } catch (error) {
+    console.log(error);
     res.status(401).json({
-      error: result.message || "Please log in."
-    });
+      error: "Please log in."
+    });  
   }
-
-  req.account = result.userDecoded; 
-  next();
 };
 
-export default authMiddleware;
+export default authMiddleware; 
