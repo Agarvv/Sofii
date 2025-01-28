@@ -22,23 +22,24 @@
       <div class="content">
           <!-- -->
           <h1>Content</h1>
-        <!-- 
-        <div v-if="filteredContent.users.length > 0 && content_to_show == 'all' || content_to_show == 'users'" class="users">
+        
+        <div v-if="data.results.users.length > 0" class="users">
           <h4>Users</h4>
           <div v-for="user in filteredContent.users" :key="user.id" class="user">
-            <UserCard :user="user"/>
+           <!--  <UserCard :user="user"/> --> 
+           <h1> user </h1>
           </div>
         </div>
 
-        <div class="posts" v-if="filteredContent.posts.length > 0 && content_to_show == 'posts' || content_to_show == 'all'">
-          <h4 v-if="content.posts.length > 0">Posts</h4>
-          <div v-for="post in filteredContent.posts" :key="post.id" class="post">
+        <div class="posts" v-if="data.results.posts.length > 0">
+          <h4>Posts</h4>
+          <div v-for="post in data.results.posts" :key="post.id" class="post">
             <PostCard :post="post"
-             @delete="handlePostRemoval"
+            
             />
           </div>
         </div>
-        --> 
+    
         
       </div>
     </div> 
@@ -51,13 +52,18 @@ import { defineComponent, onMounted, ref } from 'vue';
 import SearchFilters from '@/components/search/filters/SearchFilters.vue';
 import { useGet } from '@/composables/useGet';
 import { SearchResults } from '@/types/search/SearchResults';
+import { searchStore } from '@/store/searchStore'
+import PostCard from '@/shared/post/PostCard.vue'
 
 export default defineComponent({
     name: 'SearchView',
     components: {
         SearchFilters,
+        PostCard
     },
     setup() {
+        const store = searchStore(); 
+        
         const data = ref<SearchResults | null>(null); 
 
         const search = async () => {
@@ -65,8 +71,14 @@ export default defineComponent({
                     endpoint: '/search/a',
                     withError: true,
                 });
-                console.log('data from search', response);
+    
+                store.setOriginalResults((response as any).results); 
+                
+                store.setFilteredResults((response as any).results); 
+                
                 data.value = response; 
+                
+                console.log('data from search', response);
         };
 
         onMounted(() => {
