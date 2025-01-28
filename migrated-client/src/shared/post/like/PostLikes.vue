@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, onBeforeUnmount, ref } from 'vue';
+import { defineComponent, onMounted, onBeforeUnmount, ref, watch } from 'vue';
 import { apiService } from '@/api/ApiService'; 
 import { useSocket } from '@/composables/useWebSocket';  
 import { Like } from '@/types/posts/Like';
@@ -25,9 +25,12 @@ export default defineComponent({
     },
     setup(props) {
         const userId = localStorage.getItem('userId');
-        const likes = ref<Like[]>(props.postLikes || []);
-        
-    
+        const likes = ref<Like[]>([]);
+
+        watch(() => props.postLikes, (newLikes) => {
+            likes.value = newLikes;
+            console.log("Likes updated:", likes.value);
+        }, { immediate: true }); 
 
         const like = async () => {
             const data = await apiService.post('/posts/like', { postId: props.postId });
@@ -35,9 +38,6 @@ export default defineComponent({
         };
 
         onMounted(() => {
-            likes.value = props.postLikes; 
-            console.log("Likes", likes)
-            console.log("likes prop", props.postLikes)
             const { socket } = useSocket();
 
             socket.instance.on('likePost', (liked: Like) => {
