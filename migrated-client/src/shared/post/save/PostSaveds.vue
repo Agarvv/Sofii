@@ -1,12 +1,12 @@
 <template>
-    <div class="save">
+    <div @click="save" class="save">
         <span>{{ saveds.length }}</span>
-        <i @click="save" class="fa fa-bookmark"></i>
+        <i :class="['fa', 'fa-bookmark', { 'saved': isSaved }]"></i>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, onBeforeUnmount } from 'vue';
+import { defineComponent, onMounted, onBeforeUnmount, ref} from 'vue';
 import { apiService } from '@/api/ApiService';
 import { useSocket } from '@/composables/useWebSocket';  
 import { Saved } from '@/types/posts/Saved'
@@ -24,6 +24,9 @@ export default defineComponent({
         }
     },
     setup(props) {
+        const isSaved = ref<boolean>(props.saveds.some(saved => saved.user_id == Number(localStorage.getItem('userId')))); 
+        
+        
         const { socket } = useSocket(); 
 
         const save = async () => {
