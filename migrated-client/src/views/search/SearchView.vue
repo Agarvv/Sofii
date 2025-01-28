@@ -25,7 +25,7 @@
         
         <div v-if="data.results.users.length > 0" class="users">
           <h4>Users</h4>
-          <div v-for="user in filteredContent.users" :key="user.id" class="user">
+          <div v-for="user in data.results.users" :key="user.id" class="user">
            <!--  <UserCard :user="user"/> --> 
            <h1> user </h1>
           </div>
