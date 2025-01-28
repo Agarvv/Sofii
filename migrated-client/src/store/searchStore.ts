@@ -8,7 +8,7 @@ interface SearchStore {
 
 export const searchStore = defineStore('search', {
     state: (): SearchStore => ({
-        originalResults: { users: [], posts: []}
+        originalResults: { users: [], posts: []},
         filteredResults: { users: [], posts: [] }
     }),
     actions: {
