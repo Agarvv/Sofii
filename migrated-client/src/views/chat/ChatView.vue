@@ -48,7 +48,7 @@ export default defineComponent({
 
       socket.instance.on('chatMessage', (message: any) => {
         console.log('New message!', message);
-        if(data) {
+        if(data.value) {
             console.log(data.value)
             data.value.chat.chat.messages.push(message)
         }
