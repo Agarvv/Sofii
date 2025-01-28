@@ -48,7 +48,11 @@ export default defineComponent({
 
       socket.instance.on('chatMessage', (message: any) => {
         console.log('New message!', message);
+        alert("new message!!")
       });
+
+
+
     });
 
     return {
