@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import CustomError from '@outils/CustomError';
 
 class JwtHelper {
   private static readonly SECRET = process.env.JWT_SECRET || '!+()@3*+25#34+€(€(#!_)#82+_!"9#(;_*';
@@ -12,7 +13,7 @@ class JwtHelper {
     try {
       return jwt.verify(token, this.SECRET);
     } catch (error) {
-      throw new Error('Invalid or expired token');
+      throw new CustomError('Invalid or expired token', 401);
     }
   }
 }
