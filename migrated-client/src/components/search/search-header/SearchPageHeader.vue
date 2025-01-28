@@ -8,8 +8,8 @@
             <input v-model="searchQ" type="search" placeholder="Search..."/>
           </div>
           <div class="icons">
-            <i class="fa-fa search" @click="search"></i>
-            <i class="fa fa-filter" @click="toggleFilters"></i>
+              <i class="fa fa-search" @click="search"></i>
+             <i class="fa fa-filter" @click="toggleFilters"></i>
           </div>
         </header>
     </div>

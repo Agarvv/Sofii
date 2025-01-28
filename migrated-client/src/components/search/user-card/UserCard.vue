@@ -6,7 +6,7 @@
      :src="user.profilePicture">
   </div>
   <div class="user-card-details">
-    <h3>{{  user.profilePicture  }}</h3>
+    <h3>{{  user.username  }}</h3>
     
     <p style="color: gray">{{  user.bio }}</p>
     
