@@ -5,7 +5,8 @@
     <SearchFilters /> 
         
     <div class="container">
-      <aside>
+        
+     <!--  <aside>
         <div class="aside-header">
           <div class="logo">
             <h1>Sofii</h1>
@@ -15,7 +16,7 @@
         <nav>
           <SearchFilters /> 
         </nav>
-      </aside>
+      </aside> --> 
 
       <div class="content">
           
