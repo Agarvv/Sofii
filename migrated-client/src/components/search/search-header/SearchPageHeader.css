@@ -1,0 +1,40 @@
+header {
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    padding: 0 20px;
+    box-shadow: 5px 5px 6px rgba(0, 0, 0, 0.5);
+}
+
+header .search-input {
+    flex: 1;
+    margin: 0 20px;
+}
+
+header .search-input input {
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    border-radius: 20px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+header .search-input input:focus {
+    border-color: #ff6347;
+}
+
+header .icons {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+header .icons i {
+    font-size: 24px;
+    color: white;
+}

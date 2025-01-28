@@ -1,14 +1,14 @@
 <template>
     
-<div class="user-card">
+<div v-if="user" class="user-card">
   <div class="user-card-user-img">
     <img style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;"
-     src="soon">
+     :src="user.profilePicture">
   </div>
   <div class="user-card-details">
-    <h3>User username</h3>
+    <h3>{{  user.profilePicture  }}</h3>
     
-    <p style="color: gray">User Job</p>
+    <p style="color: gray">{{  user.bio }}</p>
     
     <div class="user-buttons">
       <button class="view-profile-btn">View Profile</button>
@@ -21,9 +21,16 @@
 
 <script lang="ts">
     import { defineComponent } from 'vue'
+    import { UserResult } from '@/types/search/UserResult';
     
     export default defineComponent({
-        name: 'UserCard'
+        name: 'UserCard',
+        props: {
+            user: {
+              type: Object as () => UserResult,
+              required: true 
+            }
+        }
     })
 </script>
 

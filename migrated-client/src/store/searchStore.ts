@@ -4,7 +4,6 @@ import { SearchResults } from '@/types/search/SearchResults'
 interface SearchFilters {
   users: {
     following: boolean;
-    friend: boolean;
     popular: boolean;
   };
   posts: {
@@ -12,9 +11,7 @@ interface SearchFilters {
     mostSaved: boolean;
     mostCommented: boolean;
     liked: boolean;
-    latest: boolean;
     popular: boolean;
-    trending: boolean;
   };
 }
 
@@ -36,37 +33,45 @@ export const searchStore = defineStore('search', {
             this.filteredResults = results;
         },
         filter(filters: SearchFilters) {
-            console.log("filters", filters)
-            console.log('users', this.originalResults.users); 
-console.log('posts', this.originalResults.posts); 
-            const userId = Number(localStorage.getItem("userId"))
-
-            const filteredUsers = this.originalResults.users.filter(user => {
-                return (
-                    (filters.users.following ? user.followers.some((f) => f.follower_id == userId) : true) &&
-                    (filters.users.friend ? user.friends.some((f) => f.friend_one_id == userId || f.friend_two_id == userId) : true) &&
-                    (filters.users.popular ? user.followers.length > 1000 : true)
+            let filteredUsers = [...this.originalResults.users];
+            let filteredPosts = [...this.originalResults.posts];
+        
+            const userId = Number(localStorage.getItem("userId"));
+        
+            if (filters.users.following) {
+                filteredUsers = filteredUsers.filter(user =>
+                    user.followers.some(f => f.id === userId)
                 );
-            });
-
-            const filteredPosts = this.originalResults.posts.filter(post => {
-                return (
-                    (filters.posts.mostLiked ? post.postLikes.length > 100 : true) &&
-                    
-                    (filters.posts.mostSaved ? post.saved_post.length > 50 : true) &&
-                    
-                    (filters.posts.mostCommented ? post.postComments.length > 50 : true) &&
-                    
-                    (filters.posts.liked ? post.postLikes.some(like => like.user_id == userId) : true) &&
-                    
-                    (filters.posts.popular ? post.postLikes.length > 500 || post.postComments.length > 100 : true)
-                    
+            }
+            if (filters.users.popular) {
+                filteredUsers = filteredUsers.filter(user => user.followers.length > 1000);
+            }
+        
+            if (filters.posts.liked) {
+                filteredPosts = filteredPosts.filter(post =>
+                    post.postLikes.some(like => like.user_id === userId)
                 );
-            });
-            
+            }
+          
+            if (filters.posts.popular) {
+                filteredPosts = filteredPosts.filter(
+                    post => post.postLikes.length > 500 || post.postComments.length > 100
+                );
+            }
+        
+            if (filters.posts.mostLiked) {
+                filteredPosts.sort((a, b) => b.postLikes.length - a.postLikes.length);
+            }
+            if (filters.posts.mostSaved) {
+                filteredPosts.sort((a, b) => b.saved_post.length - a.saved_post.length);
+            }
+            if (filters.posts.mostCommented) {
+                filteredPosts.sort((a, b) => b.postComments.length - a.postComments.length);
+            }
+        
             this.filteredResults = { users: filteredUsers, posts: filteredPosts };
-            
-            console.log("filtered results", this.filteredResults)
-        }
+        
+            console.log("Filtered Results", this.filteredResults);
+        }        
     }
 })

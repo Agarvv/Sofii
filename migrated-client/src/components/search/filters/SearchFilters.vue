@@ -6,9 +6,9 @@
         <i class="fas fa-user"></i>
         <span>Users</span>
       </div>
-      <div>
+      <!--<div>
         <i class="fas fa-caret-down"></i>
-      </div>
+      </div>  -->
     </div>
 
     <div class="hidden-users">
@@ -16,10 +16,6 @@
         <div class="following">
           <label>Following</label>
           <input type="checkbox" v-model="filters.users.following" />
-        </div>
-        <div class="friend">
-          <label>Friend</label>
-          <input type="checkbox" v-model="filters.users.friend" />
         </div>
         <div class="followers">
           <label>Popular</label>
@@ -33,9 +29,9 @@
         <i class="fas fa-newspaper"></i>
         <span>Posts</span>
       </div>
-      <div>
+     <!--  <div>
         <i class="fas fa-caret-down"></i>
-      </div>
+      </div>-->
     </div>
 
     <div class="hidden-posts">
@@ -60,17 +56,9 @@
           <input type="checkbox" v-model="filters.posts.liked" />
         </div>
 
-        <div class="latest">
-          <label>Latest</label>
-          <input type="checkbox" v-model="filters.posts.latest" />
-        </div>
         <div class="popular">
           <label>Popular</label>
           <input type="checkbox" v-model="filters.posts.popular" />
-        </div>
-        <div class="trending">
-          <label>Trending</label>
-          <input type="checkbox" v-model="filters.posts.trending" />
         </div>
       </div>
     </div>
@@ -93,7 +81,6 @@ export default defineComponent({
     const filters = reactive({
       users: {
         following: false,
-        friend: false,
         popular: false
       },
       posts: {
@@ -101,9 +88,7 @@ export default defineComponent({
         mostSaved: false,
         mostCommented: false,
         liked: false,
-        latest: false,
         popular: false,
-        trending: false
       }
     })
 
