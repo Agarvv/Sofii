@@ -47,13 +47,12 @@ export default defineComponent({
       getChat();
 
       socket.instance.on('chatMessage', (message: any) => {
-        console.log('New message!', message);
-        if(data.value) {
-            console.log(data.value)
-            data.value.chat.chat.messages.push(message)
-        }
-        
-      });
+  console.log('New message!', message);
+  if (data.value) {
+    console.log(data.value);
+    (data as any).value.chat.chat.messages.push(message); 
+  }
+});
       
     });
 
