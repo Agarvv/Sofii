@@ -31,6 +31,7 @@ export default defineComponent({
         watch(
             () => props.postLikes,
             (newValue) => {
+                console.log("new proñs", newValue)
                 likes.value = [...(newValue || [])];
             }
         );
