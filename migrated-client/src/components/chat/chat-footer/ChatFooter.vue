@@ -51,6 +51,7 @@ export default defineComponent({
         }
         console.log('Sending message:', newMessage);
         socket.instance.emit('chatMessage', newMessage);
+        socket.instance.emit('stopTyping', props.chat.chat_id);
         message.value = ''; 
       }
     };
