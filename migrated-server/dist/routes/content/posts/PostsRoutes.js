@@ -12,7 +12,8 @@ const LikePostSchema_1 = __importDefault(require("@validation/posts/LikePostSche
 const SavePostSchema_1 = __importDefault(require("@validation/posts/SavePostSchema"));
 const postsRouter = express_1.default.Router();
 postsRouter.use('/comments', CommentRoutes_1.default);
-postsRouter.get('/', PostsController_1.default.GetPosts);
+// get posts and users may like
+postsRouter.get('/', PostsController_1.default.getPostsAndUsers);
 postsRouter.get('/:id', PostsController_1.default.GetPostById);
 postsRouter.post('/', (0, ValidationMiddleware_1.validateRequest)(PostCreationSchema_1.postCreationSchema), PostsController_1.default.createPost);
 postsRouter.post('/like', (0, ValidationMiddleware_1.validateRequest)(LikePostSchema_1.default), PostsController_1.default.likeOrUnlike);

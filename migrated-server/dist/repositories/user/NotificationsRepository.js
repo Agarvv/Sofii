@@ -18,7 +18,7 @@ class NotificationsRepository {
     static getUserNotifications(userId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield Notifications_1.default.findAll({
-                where: { user_id: userId },
+                where: { user_target: userId },
                 include: [
                     {
                         model: User_1.default,

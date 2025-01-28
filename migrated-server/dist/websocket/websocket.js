@@ -41,7 +41,7 @@ exports.default = {
                 const { message, chat_id } = data;
                 socket.join(String(chat_id));
                 const newMessage = yield ChatService_1.default.sendMessage(message, chat_id, userDecoded);
-                socket.to(String(chat_id)).emit('chatMessage', newMessage);
+                io === null || io === void 0 ? void 0 : io.to(String(chat_id)).emit('chatMessage', newMessage);
             }));
             socket.on('typing', (chatId) => {
                 socket.join(chatId);

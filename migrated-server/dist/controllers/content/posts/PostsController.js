@@ -24,11 +24,11 @@ class PostsController {
             });
         });
     }
-    static GetPosts(req, res) {
+    static getPostsAndUsers(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const posts = yield PostsService_1.default.getPosts();
+            const posts = yield PostsService_1.default.getPostsAndUsersMayLike();
             res.status(200).json({
-                "posts": posts
+                "data": posts
             });
         });
     }

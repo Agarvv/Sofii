@@ -11,4 +11,4 @@ class SearchService {
     }
 }
 
-export default SearchService;
+export default SearchService

@@ -45,12 +45,12 @@ class SearchRepository {
         {
             model: User, 
             as: 'followers',
-            through: { model: Follower } as any 
+            through: { model: Follower, as: 'follower' } as any 
         },
         {
             model: User,
             as: 'friends',
-            through: { model: Friends } as any
+            through: { model: Friends, as: 'friends' } as any
         }
     ]
 });

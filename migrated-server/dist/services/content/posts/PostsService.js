@@ -54,9 +54,9 @@ class PostsService {
             io.emit('createdPost', newPost);
         });
     }
-    static getPosts() {
+    static getPostsAndUsersMayLike() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield PostsRepository_1.default.findAllPosts();
+            return yield PostsRepository_1.default.getPostsAndUsersMayLike();
         });
     }
     static getPostDetails(postId) {

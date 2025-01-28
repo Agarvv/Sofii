@@ -58,12 +58,12 @@ class SearchRepository {
                     {
                         model: User_1.default,
                         as: 'followers',
-                        through: { model: Followers_1.default }
+                        through: { model: Followers_1.default, as: 'follower' }
                     },
                     {
                         model: User_1.default,
                         as: 'friends',
-                        through: { model: Friends_1.default }
+                        through: { model: Friends_1.default, as: 'friends' }
                     }
                 ]
             });

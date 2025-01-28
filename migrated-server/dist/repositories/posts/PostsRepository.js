@@ -22,6 +22,7 @@ const CommentDislikes_1 = __importDefault(require("@models/posts/comments/Commen
 const CommentAwnsersLikes_1 = __importDefault(require("@models/posts/comments/CommentAwnsersLikes"));
 const CommentAwnsersDislikes_1 = __importDefault(require("@models/posts/comments/CommentAwnsersDislikes"));
 const CommentAwnser_1 = __importDefault(require("@models/posts/comments/CommentAwnser"));
+const database_1 = __importDefault(require("@config/database"));
 class PostsRepository {
     // finds the post with his likes, comments, saved relations.
     static getPostById(id) {
@@ -52,9 +53,9 @@ class PostsRepository {
             return post;
         });
     }
-    static findAllPosts() {
+    static getPostsAndUsersMayLike() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield Post_1.default.findAll({
+            const posts = yield Post_1.default.findAll({
                 include: [
                     {
                         model: User_1.default,
@@ -83,6 +84,22 @@ class PostsRepository {
                     }
                 ]
             });
+            const users = yield User_1.default.findAll({
+                order: database_1.default.random(),
+                limit: 10,
+                attributes: ['username', 'id', 'profilePicture', 'job'],
+                include: [
+                    {
+                        model: User_1.default,
+                        as: 'followers',
+                    },
+                    {
+                        model: User_1.default,
+                        as: 'friends',
+                    }
+                ]
+            });
+            return { posts, users };
         });
     }
     static getPostDetails(id) {

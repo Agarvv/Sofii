@@ -42,7 +42,8 @@ class AuthService {
             }
             yield this.ensurePasswordMatch(password, user.password);
             const jwtPayload = this.generateJwtPayload(user);
-            return JwtHelper_1.default.generateToken(jwtPayload);
+            const jwt = JwtHelper_1.default.generateToken(jwtPayload);
+            return { userId: user.id, accessToken: jwt };
         });
     }
     static sendResetPassword(email) {
