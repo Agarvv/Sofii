@@ -27,7 +27,7 @@ export default defineComponent({
         const userId = localStorage.getItem('userId');
         const likes = ref<Like[]>(props.postLikes || []);
         
-        const isLiked = ref<boolean>(likes.value.some(like => like.user_id === Number(userId)));
+    
 
         const like = async () => {
             const data = await apiService.post('/posts/like', { postId: props.postId });
@@ -35,6 +35,7 @@ export default defineComponent({
         };
 
         onMounted(() => {
+            console.log("Likes", likes)
             const { socket } = useSocket();
 
             socket.instance.on('likePost', (liked: Like) => {
