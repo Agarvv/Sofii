@@ -1,12 +1,12 @@
 <template>
     <div class="like" @click="like">
-        <span>{{ postLikes?.length || 0 }}</span>  
+        <span>{{ likes.length || 0 }}</span>  
         <i :class="['fa', 'fa-thumbs-up', { 'liked': isLiked }]"></i>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, onBeforeUnmount, ref, reactive } from 'vue';
+import { defineComponent, onMounted, onBeforeUnmount, ref, computed } from 'vue';
 import { apiService } from '@/api/ApiService'; 
 import { useSocket } from '@/composables/useWebSocket';  
 import { Like } from '@/types/posts/Like';
@@ -24,9 +24,12 @@ export default defineComponent({
         },
     },
     setup(props) {
-        const userId = localStorage.getItem('userId');
+        const userId = Number(localStorage.getItem('userId'));
 
-        const likes = ref([...props.postLikes]);
+
+        const likes = ref<Like[]>([...props.postLikes]);
+
+        const isLiked = computed(() => likes.value.some(like => like.user_id === userId));
 
         const like = async () => {
             const data = await apiService.post('/posts/like', { postId: props.postId });
@@ -60,7 +63,7 @@ export default defineComponent({
             socket.instance.off('unlikePost');
         });
 
-        return { like, likes };  
+        return { like, likes, isLiked };  
     },
 });
 </script>
