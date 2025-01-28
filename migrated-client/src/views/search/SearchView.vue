@@ -17,9 +17,10 @@
           <SearchFilters /> 
         </nav>
       </aside> --> 
-
+     
+  <div class="wrapper">
       <div class="content">
-          
+          <h1>Content</h1>
         <!-- 
         <div v-if="filteredContent.users.length > 0 && content_to_show == 'all' || content_to_show == 'users'" class="users">
           <h4>Users</h4>
@@ -39,6 +40,7 @@
         --> 
         
       </div>
+    </div> 
     </div>
   </div>
 </template>
