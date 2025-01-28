@@ -1,6 +1,6 @@
 <template>
     <div class="like" @click="like">
-        <span>50</span>  
+        <span>{{ likes.value.length }}</span>  
         <i :class="['fa', 'fa-thumbs-up', { 'liked': isLiked }]"></i>
     </div>
 </template>
