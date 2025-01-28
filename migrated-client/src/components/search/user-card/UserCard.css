@@ -3,6 +3,7 @@
 }
 
 .user-card {
+  margin-bottom: 15px;
   width: 100%;
   box-shadow: 10px;
   display: flex;
@@ -10,6 +11,7 @@
   padding: 15px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  z-index: 10;
 }
 
 .user-buttons {

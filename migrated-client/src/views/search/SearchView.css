@@ -172,6 +172,10 @@ aside i {
     .filter-div {
         width: 90%; 
    }
+   
+   .content {
+       width: 100%;
+   }
 } 
 
 @media (max-width: 600px) {
@@ -179,6 +183,7 @@ aside i {
     nav {
         display: none;
     }
+
 }
 
 @media (max-width: 400px) {

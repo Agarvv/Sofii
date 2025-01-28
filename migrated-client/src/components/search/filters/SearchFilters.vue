@@ -1,6 +1,8 @@
 <template>
   <div class="filter-div">
-
+      <div class="close-filters">
+          <i class="fa fa-close"></i>
+      </div>
     <div class="aside-users">
       <div>
         <i class="fas fa-user"></i>
