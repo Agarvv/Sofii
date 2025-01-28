@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction, RequestHandler } from 'express';
 import JwtHelper from '@helpers/JwtHelper';
 
-const authMiddleware: RequestHandler = (req: Request, res: Response, next: NextFunction) => {
+const authMiddleware: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
   const jwtToken = req.cookies.jwt;
 
   if (!jwtToken) {
@@ -10,7 +10,7 @@ const authMiddleware: RequestHandler = (req: Request, res: Response, next: NextF
     });
   }
 
-  const result = JwtHelper.verifyToken(jwtToken);
+  const result = await JwtHelper.verifyToken(jwtToken);
 
   if (!result.success) {
     res.status(401).json({

@@ -8,9 +8,9 @@ class JwtHelper {
     return jwt.sign(payload, this.SECRET, { expiresIn: this.EXPIRATION });
   }
 
-  public static verifyToken(token: string): { success: boolean, userDecoded?: any, message?: string } {
+  public static async verifyToken(token: string): Promise<{ success: boolean, userDecoded?: any, message?: string }> {
     try {
-      const userDecoded = jwt.verify(token, this.SECRET);
+      const userDecoded = await jwt.verify(token, this.SECRET);
       return { success: true, userDecoded: userDecoded };
     } catch (error) {
       return { success: false, message: 'Invalid or expired token' };
