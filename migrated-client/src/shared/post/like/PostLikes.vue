@@ -1,12 +1,12 @@
 <template>
     <div class="like" @click="like">
-        <span>5</span>  
+        <span>50</span>  
         <i :class="['fa', 'fa-thumbs-up', { 'liked': isLiked }]"></i>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, onBeforeUnmount, ref, computed } from 'vue';
+import { defineComponent, onMounted, onBeforeUnmount, ref, computed, watch } from 'vue';
 import { apiService } from '@/api/ApiService'; 
 import { useSocket } from '@/composables/useWebSocket';  
 import { Like } from '@/types/posts/Like';
@@ -26,8 +26,14 @@ export default defineComponent({
     setup(props) {
         const userId = Number(localStorage.getItem('userId'));
 
+        const likes = ref<Like[]>([...(props.postLikes || [])]);
 
-        const likes = ref<Like[]>(props.postLikes);
+        watch(
+            () => props.postLikes,
+            (newValue) => {
+                likes.value = [...(newValue || [])];
+            }
+        );
 
         const isLiked = computed(() => likes.value.some(like => like.user_id === userId));
 
