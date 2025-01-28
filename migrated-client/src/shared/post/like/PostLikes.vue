@@ -62,7 +62,7 @@ export default defineComponent({
             socket.instance.off('unlikePost');
         });
 
-        return { like, likes, isLiked };
+        return { like, likes };
     },
 });
 </script>
