@@ -51,15 +51,15 @@ console.log('posts', this.originalResults.posts);
 
             const filteredPosts = this.originalResults.posts.filter(post => {
                 return (
-                    (filters.posts.mostLiked ? post.postsLikes.length > 100 : true) &&
+                    (filters.posts.mostLiked ? post.postLikes.length > 100 : true) &&
                     
                     (filters.posts.mostSaved ? post.saved_post.length > 50 : true) &&
                     
                     (filters.posts.mostCommented ? post.postComments.length > 50 : true) &&
                     
-                    (filters.posts.liked ? post.postsLikes.some(like => like.user_id == userId) : true) &&
+                    (filters.posts.liked ? post.postLikes.some(like => like.user_id == userId) : true) &&
                     
-                    (filters.posts.popular ? post.postsLikes.length > 500 || post.postComments.length > 100 : true)
+                    (filters.posts.popular ? post.postLikes.length > 500 || post.postComments.length > 100 : true)
                     
                 );
             });

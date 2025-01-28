@@ -10,6 +10,6 @@ export interface PostDetails {
     postPicture: string,
     user: PostOwner, 
     postComments: PostCommentDetails[],
-    postsLikes: Like[], 
+    postLikes: Like[], 
     saved_post: Saved[]
 }
