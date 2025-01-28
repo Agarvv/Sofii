@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="data">
     <!-- <SearchPageHeader @toggleFilters="toggleFiltersButton" /> -->
     
     <SearchFilters /> 
@@ -47,16 +47,40 @@
 </template>
 
 <script lang="ts">
-    import { defineComponent } from 'vue' 
-    import SearchFilters from '@/components/search/filters/SearchFilters.vue'
-    
-    export default defineComponent({
-        name: 'SearchView',
-        components: {
-            SearchFilters
-        }
-    })
+import { defineComponent, onMounted, ref } from 'vue';
+import SearchFilters from '@/components/search/filters/SearchFilters.vue';
+import { useGet } from '@/composables/useGet';
+import { SearchResults } from '@/types/search/SearchResults';
+
+export default defineComponent({
+    name: 'SearchView',
+    components: {
+        SearchFilters,
+    },
+    setup() {
+        const data = ref<SearchResults | null>(null); 
+
+        const search = async () => {
+                const response = await useGet<SearchResults>({
+                    endpoint: '/search/a',
+                    withError: true,
+                });
+                console.log('data from search', response);
+                data.value = response; 
+        };
+
+        onMounted(() => {
+            search();
+        });
+
+        return {
+            data,
+        };
+    },
+});
 </script>
+
+<style scoped src="./SearchView.css"></style>
 
 
 <style scoped src="./SearchView.css"></style>
