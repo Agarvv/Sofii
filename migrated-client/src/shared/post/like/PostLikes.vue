@@ -37,7 +37,7 @@ export default defineComponent({
         onMounted(() => {
             likes.value = props.postLikes; 
             console.log("Likes", likes)
-            console.log("likes prop", prop.postLikes)
+            console.log("likes prop", props.postLikes)
             const { socket } = useSocket();
 
             socket.instance.on('likePost', (liked: Like) => {
