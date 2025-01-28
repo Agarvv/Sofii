@@ -37,7 +37,8 @@ export default {
 
                 const newMessage = await ChatService.sendMessage(message, chat_id, userDecoded);
 
-                socket.to(String(chat_id)).emit('chatMessage', newMessage);
+                //socket.to(String(chat_id)).emit('chatMessage', newMessage);
+                socket.emit('chatMessage', newMessage)
             });
 
             socket.on('typing', (chatId: string) => {
