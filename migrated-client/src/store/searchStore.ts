@@ -36,6 +36,7 @@ export const searchStore = defineStore('search', {
             this.filteredResults = results;
         },
         filter(filters: SearchFilters) {
+            console.log("filters", filters)
             console.log('users', this.originalResults.users); 
 console.log('posts', this.originalResults.posts); 
             const userId = Number(localStorage.getItem("userId"))
