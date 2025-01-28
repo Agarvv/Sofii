@@ -34,7 +34,7 @@ exports.default = {
             const jwtToken = cookies.jwt;
             if (!jwtToken)
                 return;
-            const userDecoded = yield JwtHelper_1.default.verifyToken(jwtToken);
+            const { userDecoded } = yield JwtHelper_1.default.verifyToken(jwtToken);
             socket.join(userDecoded.user_id);
             yield ProfileService_1.default.setUserStatus('online', userDecoded.user_id);
             socket.on('chatMessage', (data) => __awaiter(void 0, void 0, void 0, function* () {

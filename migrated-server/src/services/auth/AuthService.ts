@@ -79,7 +79,7 @@ class AuthService {
   }
   
   public static async checkAuthentication(jwt: string): Promise<number> {
-      const userDecoded = await JwtHelper.verifyToken(jwt); 
+      const { userDecoded } = await JwtHelper.verifyToken(jwt); 
       
       if(userDecoded) return userDecoded.user_id; 
       

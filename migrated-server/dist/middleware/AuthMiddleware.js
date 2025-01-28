@@ -7,21 +7,17 @@ const JwtHelper_1 = __importDefault(require("@helpers/JwtHelper"));
 const authMiddleware = (req, res, next) => {
     const jwtToken = req.cookies.jwt;
     if (!jwtToken) {
-        return res.status(401).json({
+        res.status(401).json({
             error: "Please log in."
         });
     }
-    try {
-        const decoded = JwtHelper_1.default.verifyToken(jwtToken);
-        console.log(decoded);
-        req.account = decoded;
-        next();
-    }
-    catch (error) {
-        console.log(error);
-        return res.status(401).json({
-            error: "Please log in."
+    const result = JwtHelper_1.default.verifyToken(jwtToken);
+    if (!result.success) {
+        res.status(401).json({
+            error: result.message || "Please log in."
         });
     }
+    req.account = result.userDecoded;
+    next();
 };
 exports.default = authMiddleware;

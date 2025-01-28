@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken';
-import CustomError from '@outils/CustomError';
 
 class JwtHelper {
   private static readonly SECRET = process.env.JWT_SECRET || '!+()@3*+25#34+€(€(#!_)#82+_!"9#(;_*';
@@ -9,11 +8,12 @@ class JwtHelper {
     return jwt.sign(payload, this.SECRET, { expiresIn: this.EXPIRATION });
   }
 
-  public static verifyToken(token: string): any {
+  public static verifyToken(token: string): { success: boolean, userDecoded?: any, message?: string } {
     try {
-      return jwt.verify(token, this.SECRET);
+      const userDecoded = jwt.verify(token, this.SECRET);
+      return { success: true, userDecoded: userDecoded };
     } catch (error) {
-      throw new CustomError('Invalid or expired token', 401);
+      return { success: false, message: 'Invalid or expired token' };
     }
   }
 }

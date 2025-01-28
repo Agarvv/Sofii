@@ -10,10 +10,11 @@ class JwtHelper {
     }
     static verifyToken(token) {
         try {
-            return jsonwebtoken_1.default.verify(token, this.SECRET);
+            const userDecoded = jsonwebtoken_1.default.verify(token, this.SECRET);
+            return { success: true, userDecoded: userDecoded };
         }
         catch (error) {
-            throw new Error('Invalid or expired token');
+            return { success: false, message: 'Invalid or expired token' };
         }
     }
 }
