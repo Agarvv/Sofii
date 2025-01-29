@@ -35,7 +35,7 @@
             const { changeProfileData } = useProfileDataChange(); 
             
             const changeProfileInfo = async () => {
-                if(props.isSelf) return; 
+                if(!props.isSelf) return; 
                 
                 const value = prompt(`Enter your new ${props.detail}`)
                 

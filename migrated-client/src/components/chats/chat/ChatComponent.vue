@@ -1,7 +1,7 @@
 <template>
 <div v-if="chat" class="chat">
           <div class="main-chat-user">
-            <div class="user-img">
+            <div class="usr-img">
               <img :src="chat.userToDisplayInfo.profilePicture">
             </div>
             <div class="user-details">

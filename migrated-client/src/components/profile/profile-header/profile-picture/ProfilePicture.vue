@@ -28,7 +28,7 @@
       const fileInput = ref<HTMLInputElement | null>(null);
       
       const openFileInput = () => {
-        if(props.isSelf) return; 
+        if(!props.isSelf) return; 
         if (fileInput.value) {
           fileInput.value.click();
         }
