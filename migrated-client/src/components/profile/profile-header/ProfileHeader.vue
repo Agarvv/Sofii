@@ -40,6 +40,9 @@
             :userId="profile.id"
             
           />
+          
+           <p>{{ isFriend }}</p>
+           <p>{{ isFollowed }}</p>
   
           <!-- Follow -->
           <FollowButton 
@@ -78,7 +81,7 @@
       }
     },
     setup(props) {
-        const userId = localStorage.getItem("userId"); 
+        const userId = Number(localStorage.getItem("userId")); 
         
         const isFriend = ref<boolean>(props.profile.profile.friends.some((p) => p.id == userId));
         
