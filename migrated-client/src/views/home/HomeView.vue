@@ -69,7 +69,7 @@ export default defineComponent({
   fetchData();
 
   socket.instance.on('createdPost', (post: Post) => {
-    data.value.posts.push(post); 
+    (data as any).value.data.posts.push(post); 
     console.log("New post:", post);
   });
 });
