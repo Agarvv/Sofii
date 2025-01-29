@@ -24,9 +24,9 @@
                  />
                 
                 
-                <div class="awnser">
+                <div @click="toggleAnswerField" class="awnser">
                   <i class="fa fa-share"></i>
-                  <p>70</p>
+                  <p>{{ comment.awnsers.length }}</p>
                 </div>
                 
                 <CommentDislikes 
@@ -37,16 +37,18 @@
                 
               </div>
               
+              <div v-if="showAnswersField">
               <AnswerToComment 
               :postId="comment.post_id" 
               :commentId="comment.id" 
               /> 
+              </div>
               
-              <div class="view-responses-button">
+              <div @click="toggleAnswers" class="view-responses-button">
                   <i class="fa fa-chevron-down"></i>
               </div>
               
-              <div class="comment-responses">
+              <div v-if="showAnswers" class="comment-responses">
                 <div
                 v-for="answer in comment.awnsers" 
                 :key="answer.id" 
@@ -59,7 +61,7 @@
 </template>
 
 <script lang="ts">
-    import { defineComponent, PropType } from 'vue'; 
+    import { defineComponent, PropType, ref } from 'vue'; 
     import AnswerToComment from './answer-to-comment/AnswerToComment.vue'
     import CommentAnswer from './comment-answer/CommentAnswer.vue'
     import { PostCommentDetails } from '@/types/posts/PostCommentDetails'
@@ -80,6 +82,21 @@
                 type: Object as PropType<PostCommentDetails>, 
                 required: true
             }
+        },
+        setup() {
+            const showAnswersField = ref<boolean>(false); 
+            
+            const showAnswers = ref<boolean>(false); 
+            
+            const toggleAnswerField = () => {
+                showAnswersField.value = !showAnswersField.value; 
+            }
+            
+            const toggleAnswers = () => {
+                showAnswers.value = !showAnswers.value; 
+            }
+            
+            return { showAnswersField, showAnswers, toggleAnswerField, toggleAnswers }
         }
     })
 </script>
