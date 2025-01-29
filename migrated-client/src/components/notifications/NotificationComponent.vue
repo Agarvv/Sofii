@@ -49,3 +49,5 @@
         }
     })
 </script>
+
+<style scoped src="./NotificationComponent.css"></style>
