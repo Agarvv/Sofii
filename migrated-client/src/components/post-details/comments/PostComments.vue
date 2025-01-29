@@ -48,7 +48,7 @@
         if(comment.post_id == props.postId) postComments.value.push(comment);
     });
 
-    socket.instance.on('newCommentAwnser', (answer: CommentAnswer) => {
+    socket.instance.on('newCommentAnswer', (answer: CommentAnswer) => {
        console.log("New answer!", answer)
        
         const comment = postComments.value.find(c => c.id == answer.comment_id);
