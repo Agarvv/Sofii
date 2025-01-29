@@ -2,6 +2,7 @@
     <div class="detail" @click="isSelf ? changeProfileInfo : null">
         <i v-if="icon" :class="icon"></i>
         <span>{{ detailValue }}</span>
+        <p>{{ isSelf }}</p>
     </div>
 </template>
 

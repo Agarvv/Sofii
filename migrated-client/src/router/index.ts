@@ -71,11 +71,11 @@ const routes: Array<RouteRecordRaw> = [
       component: NotificationsView,
       name: "notifications"
   },
-  {
+ /* {
       path: '/chats',
       component: ChatsView,
       name: "chats"
-  },
+  }, */
   {
       path: '/chat/:id',
       component: ChatView,
@@ -84,6 +84,16 @@ const routes: Array<RouteRecordRaw> = [
   {
       path: '/search/:query',
       component: SearchView
+  },
+  {
+    path: '/',
+    component: MainLayout,
+    children: [
+      {
+        path: '/chats',
+        component: ChatsView
+      }
+    ]
   }
 ]
 
