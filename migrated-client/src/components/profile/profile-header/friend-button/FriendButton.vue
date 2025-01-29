@@ -1,7 +1,7 @@
 <template>
     <button @click="sendFriendRequest" style="background: lightblue; color: black;"> 
         <i class="fa fa-user-friends"></i> 
-        Send Friend Request
+        Friend Request
     </button>
 </template>
 

@@ -30,6 +30,11 @@ header .profile-banner img {
 
 .container {
     display: flex;
+    width: 100%;
+    background-color: #fff;
+
+    border-radius: 8px;
+
 }
 
 .posts {
