@@ -1,5 +1,5 @@
 <template>
-  <div class="user-img" @click="isSelf ? openFileInput : null">
+  <div class="user-img" @click="openFileInput">
     <input type="file" ref="fileInput" style="display: none" @change="handleFileChange"/>
     <img :src="profilePicture" alt="Profile Pic">
   </div>
@@ -22,12 +22,13 @@
         required: true 
       }
     },
-    setup() {
+    setup(props) {
       const { changeProfileData } = useProfileDataChange(); 
       
       const fileInput = ref<HTMLInputElement | null>(null);
       
       const openFileInput = () => {
+        if(props.isSelf) return; 
         if (fileInput.value) {
           fileInput.value.click();
         }

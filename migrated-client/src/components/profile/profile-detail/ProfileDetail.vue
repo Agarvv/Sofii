@@ -1,5 +1,5 @@
 <template>
-    <div class="detail" @click="isSelf && changeProfileInfo">
+    <div class="detail" @click="changeProfileInfo">
         <i v-if="icon" :class="icon"></i>
         <span>{{ detailValue }}</span>
         <p>{{ isSelf }}</p>
@@ -35,6 +35,8 @@
             const { changeProfileData } = useProfileDataChange(); 
             
             const changeProfileInfo = async () => {
+                if(props.isSelf) return; 
+                
                 const value = prompt(`Enter your new ${props.detail}`)
                 
                 if(!value) return; 

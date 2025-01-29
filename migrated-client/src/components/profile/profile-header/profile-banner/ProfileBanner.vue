@@ -1,12 +1,12 @@
 <template>
-  <div class="profile-banner" @click="isSelf ? openFileInput : null">
+  <div class="profile-banner" @click="openFileInput">
     <input type="file" ref="fileInput" style="display: none" @change="handleFileChange"/>
     <img :src="profileBanner" alt="Profile Banner">
   </div>
 </template>
 
 <script lang="ts">
-  import { defineComponent, ref } from 'vue'; 
+  import { defineComponent, mergeProps, ref } from 'vue'; 
   import { useImageUpload } from '@/composables/useImageUpload'
   import useProfileDataChange from '@/composables/useProfileDataChange'
 
@@ -22,12 +22,13 @@
         required: true 
       }
     },
-    setup() {
+    setup(props) {
       const { changeProfileData } = useProfileDataChange(); 
       
       const fileInput = ref<HTMLInputElement | null>(null);
 
       const openFileInput = () => {
+        if(props.isSelf) return; 
         if (fileInput.value) {
           fileInput.value.click();
         }
