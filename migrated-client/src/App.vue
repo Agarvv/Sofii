@@ -7,12 +7,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, onMounted } from 'vue';
 import { apiStatusStore } from '@/store/apiStatusStore';
 import { storeToRefs } from 'pinia';
 import SuccessComponent from './shared/success/SuccessComponent.vue';
 import ErrorComponent from './shared/error/ErrorComponent.vue';
 import LoadingComponent from './shared/loading/LoadingComponent.vue';
+import { useSocket } from './composables/useWebSocket';
 
 export default defineComponent({
   components: {
@@ -21,8 +22,17 @@ export default defineComponent({
     LoadingComponent
   },
   setup() {
+    const { socket } = useSocket(); 
+
     const apiStore = apiStatusStore(); 
     const { isLoading, successMessage, errorMessage } = storeToRefs(apiStore);
+    
+    onMounted(() => {
+  socket.instance.on('newNotification', (notification) => {
+    console.log("new notification", notification);
+  });
+});
+
 
     return {
       isLoading,
@@ -40,7 +50,10 @@ export default defineComponent({
   margin: 0;
   box-sizing: border-box;
 }
-
+a {
+  text-decoration: none;
+  color: inherit; 
+}
 .val-error {
   color: red; 
   padding: 15px;
