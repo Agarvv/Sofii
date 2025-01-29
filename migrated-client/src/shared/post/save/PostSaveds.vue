@@ -2,6 +2,7 @@
     <div @click="save" class="save">
         <span>{{ localSaveds.length }}</span>
         <i :class="['fa', 'fa-bookmark', { 'saved': isSaved }]"></i>
+    
     </div>
 </template>
 
@@ -24,9 +25,11 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const userId = Number(localStorage.getItem("userId"))
     
     const localSaveds = ref<Saved[]>([...props.saveds]);
-    const isSaved = ref<boolean>(localSaveds.value.some(saved => saved.user_id == Number(localStorage.getItem('userId'))));
+    
+    const isSaved = ref<boolean>(localSaveds.value.some(saved => saved.user_id == userId));
 
     const { socket } = useSocket();
 
@@ -43,6 +46,10 @@ export default defineComponent({
 
           localSaveds.value.push(saved);
           
+          if(saved.user_id == userId) {
+              isSaved.value = true; 
+          }
+          
         }
       });
 
@@ -53,6 +60,9 @@ export default defineComponent({
          
           localSaveds.value = localSaveds.value.filter(item => item.user_id !== saved.user_id);
           
+          if(saved.user_id == userId) {
+              isSaved.value = false; 
+          }
         }
       });
     });
@@ -62,7 +72,7 @@ export default defineComponent({
       socket.instance.off('unsavedPost');
     });
 
-    return { save, localSaveds };
+    return { save, localSaveds, isSaved };
   },
 });
 </script>
