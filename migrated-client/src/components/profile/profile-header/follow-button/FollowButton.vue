@@ -30,7 +30,7 @@
                     serviceFunc: (data: FollowValues) => apiService.post('/users/follow', data),
                     successFunc: (response) => {
                       console.log("response from follow", response)
-
+                      window.location.reload(); 
                     }, 
                     withError: true,
                     withLoading: false 

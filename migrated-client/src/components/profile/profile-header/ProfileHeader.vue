@@ -36,13 +36,14 @@
           <ChatButton :receiverId="profile.id"/>
   
           <FriendButton 
-            :isFriend="false"
+            :isFriend="isFriend"
             :userId="profile.id"
+            
           />
   
           <!-- Follow -->
           <FollowButton 
-            :isFollowed="true"
+            :isFollowed="isFollowed"
             :userId="profile.id"
           />
           
@@ -53,7 +54,7 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent, PropType } from 'vue';
+  import { defineComponent, PropType, ref } from 'vue';
   import { Profile } from '@/types/profile/Profile';
   import ProfilePicture from './profile-picture/ProfilePicture.vue'
   import ProfileBanner from './profile-banner/ProfileBanner.vue'
@@ -75,6 +76,15 @@
         type: Object as () => Profile,
         required: true 
       }
+    },
+    setup(props) {
+        const userId = localStorage.getItem("userId"); 
+        
+        const isFriend = ref<boolean>(props.profile.profile.friends.some((p) => p.id == userId));
+        
+        const isFollowed = ref<boolean>(props.profile.profile.followers.some(f => f.id == userId)); 
+        
+        return { isFriend, isFollowed }
     }
   })
 </script>

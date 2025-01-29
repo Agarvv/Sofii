@@ -28,6 +28,7 @@
             
             const { mutate } = usePost<SendFriendRequestValues>({
               serviceFunc: (data: SendFriendRequestValues) => apiService.post('/users/friendRequest', data),
+              successFunc: () => window.location.reload(), 
               withError: true,
               withLoading: true 
             })
