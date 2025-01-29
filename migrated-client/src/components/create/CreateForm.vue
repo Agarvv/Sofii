@@ -18,7 +18,7 @@
 
         <div class="s-column">
           <PostImage @imageUploaded="setPicture" />
-          <button type="submit">
+          <button class="create-post-btn" type="submit">
             <div class="sce-three">
               <i class="fa fa-paper-plane"></i>
             </div>

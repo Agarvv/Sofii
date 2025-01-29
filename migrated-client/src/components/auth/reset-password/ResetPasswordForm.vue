@@ -80,4 +80,4 @@ export default {
 };
 </script>
 
-<style src="./ResetPasswordForm.css"></style>
+<style scoped src="./ResetPasswordForm.css"></style>
