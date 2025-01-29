@@ -40,9 +40,7 @@
             :userId="profile.id"
             
           />
-          
-           <p>{{ isFriend }}</p>
-           <p>{{ isFollowed }}</p>
+         
   
           <!-- Follow -->
           <FollowButton 

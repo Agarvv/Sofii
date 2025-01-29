@@ -1,6 +1,7 @@
 <template>
      <button @click="follow">
             <i :class="isFollowed ? 'fa fa-user-plus' : 'fa fa-user-minus'"></i>
+            <p>{{ isFollowed }}</p>
      </button>
 </template>
 
