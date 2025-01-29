@@ -58,4 +58,9 @@ a {
   color: red; 
   padding: 15px;
 }
+
+button {
+  border: none !important;
+}
+
 </style>
