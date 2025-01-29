@@ -9,7 +9,6 @@ import CreateView from '@/views/create/CreateView.vue'
 import PostDetails from '@/views/post-details/PostDetails.vue'
 import axios from 'axios'
 import ProfileView from '@/views/profile/ProfileView.vue'
-import SavedView from '@/views/saved/SavedView.vue'; 
 import FriendsView from '@/views/friends/FriendsView.vue'
 import NotificationsView from '@/views/notifications/NotificationsView.vue'
 import ChatsView from '@/views/chats/ChatsView.vue'
