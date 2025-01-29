@@ -2,7 +2,6 @@
     <button @click="sendFriendRequest" style="background: lightblue; color: black;"> 
         <i class="fa fa-user-friends"></i> 
         <p>{{ isFriend ? 'Friends' : 'Send Friend Request' }}</p>
-        <p>{{ isFriend }}</p> 
     </button>
 </template>
 

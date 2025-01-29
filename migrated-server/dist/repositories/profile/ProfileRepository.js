@@ -20,6 +20,7 @@ const Friends_1 = __importDefault(require("@models/users/Friends"));
 const FriendRequest_1 = __importDefault(require("@models/users/FriendRequest"));
 const SavedPost_1 = __importDefault(require("@models/posts/SavedPost"));
 const Blocked_1 = __importDefault(require("@models/users/Blocked"));
+const sequelize_1 = require("sequelize");
 class ProfileRepository {
     static getUserProfile(userId) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -57,6 +58,12 @@ class ProfileRepository {
                         as: 'friends',
                         through: {
                             model: Friends_1.default,
+                            where: {
+                                [sequelize_1.Op.or]: [
+                                    { friend_one_id: userId },
+                                    { friend_two_id: userId }
+                                ]
+                            },
                             attributes: []
                         }
                     },

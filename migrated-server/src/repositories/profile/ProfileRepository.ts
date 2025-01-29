@@ -6,7 +6,7 @@ import Friends from '@models/users/Friends';
 import FriendRequest from '@models/users/FriendRequest';
 import Saved from '@models/posts/SavedPost';
 import Blocked from '@models/users/Blocked';
-
+import { Op } from 'sequelize'
 
 class ProfileRepository {
     public static async getUserProfile(userId: number): Promise<User | null> {
@@ -40,13 +40,19 @@ class ProfileRepository {
       as: 'following'
     },
     {
-      model: User,
-      as: 'friends', 
-      through: { 
-        model: Friends,
-        attributes: []  
-      } as any  
+  model: User,
+  as: 'friends', 
+  through: { 
+    model: Friends,
+    where: {
+      [Op.or]: [
+        { friend_one_id: userId },
+        { friend_two_id: userId }
+      ]
     },
+    attributes: []  
+  } as any  
+},
     {
       model: User,
       as: 'friendsOf', 
