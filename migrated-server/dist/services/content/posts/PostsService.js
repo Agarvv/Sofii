@@ -31,27 +31,16 @@ class PostsService {
                 description: description,
                 postPicture: picture,
                 user_id: userId,
-            }, {
+            });
+            const fullPost = yield Post_1.default.findByPk(newPost.id, {
                 include: [
-                    {
-                        model: User_1.default,
-                        as: 'user'
-                    },
-                    {
-                        model: Likes_1.default,
-                        as: 'postLikes'
-                    },
-                    {
-                        model: SavedPost_1.default,
-                        as: 'saved_post'
-                    },
-                    {
-                        model: Comment_1.default,
-                        as: 'postComments'
-                    }
+                    { model: User_1.default, as: 'user' },
+                    { model: Likes_1.default, as: 'postLikes' },
+                    { model: SavedPost_1.default, as: 'saved_post' },
+                    { model: Comment_1.default, as: 'postComments' }
                 ]
             });
-            io.emit('createdPost', newPost);
+            io.emit('createdPost', fullPost);
         });
     }
     static getPostsAndUsersMayLike() {

@@ -13,35 +13,25 @@ import Comment from '@models/posts/comments/Comment';
 
 class PostsService {
     public static async createPost(description: string, picture: string, userId: number): Promise<void> {
-        const io = websocket.getIO(); 
-        
-        const newPost = await Post.create({
-            description: description,
-            postPicture: picture,
-            user_id: userId,
-        }, {
-            include: [
-                {
-                    model: User,
-                    as: 'user'
-                },
-                {
-                    model: Likes,
-                    as: 'postLikes'
-                },
-                {
-                    model: Saved,
-                    as: 'saved_post'
-                },
-                {
-                    model: Comment as any,
-                    as: 'postComments'
-                }
-              ]
-        });
-        
-        io.emit('createdPost', newPost);
-    }
+    const io = websocket.getIO(); 
+    
+    const newPost = await Post.create({
+        description: description,
+        postPicture: picture,
+        user_id: userId,
+    });
+
+    const fullPost = await Post.findByPk(newPost.id, {
+        include: [
+            { model: User, as: 'user' },
+            { model: Likes, as: 'postLikes' },
+            { model: Saved, as: 'saved_post' },
+            { model: Comment, as: 'postComments' }
+        ]
+    });
+
+    io.emit('createdPost', fullPost);
+}
     
     public static async getPostsAndUsersMayLike(): Promise<any> {
         return await PostRepository.getPostsAndUsersMayLike()
