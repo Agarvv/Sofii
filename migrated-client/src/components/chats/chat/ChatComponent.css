@@ -1,0 +1,36 @@
+.main-chat-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.chat {
+  transition: 0.4s;
+  width: 85%;
+  padding: 15px;
+  border-radius: 15px;
+  background: #F6F6F6;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+}
+
+.chat:hover {
+  background: #A1A9FF;
+}
+
+.main-chat-user .user-img img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.main-chats {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.main-chat-user .user-details p {
+  color: #B9BBBE; 
+}

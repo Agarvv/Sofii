@@ -26,4 +26,4 @@
     })
 </script>  
 
-<style scoped src="./ChatComponent"></style>
+<style scoped src="./ChatComponent.css"></style>
