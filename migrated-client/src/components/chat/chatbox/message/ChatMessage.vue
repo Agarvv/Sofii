@@ -7,7 +7,6 @@
         <p v-if="message.message_content.length > 0">
           {{ message.message_content }}
         </p>
-        <i class="fa fa-check" :style="{ color: message.readed ? 'blue' : '' }"></i>
       </div>
     </div>
   </template>
