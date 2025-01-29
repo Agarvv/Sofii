@@ -3,7 +3,7 @@
     <div> 
       <div class="post-ctn">
           <PostCard :post="post" />
-          <PostComments :post="post"/> 
+          <PostComments :post="post" :postId="post.id"/> 
       </div>
     </div>
   </div>
