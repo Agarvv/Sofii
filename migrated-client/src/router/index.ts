@@ -15,6 +15,7 @@ import NotificationsView from '@/views/notifications/NotificationsView.vue'
 import ChatsView from '@/views/chats/ChatsView.vue'
 import ChatView from '@/views/chat/ChatView.vue'
 import SearchView from '@/views/search/SearchView.vue'
+import SavedView from '@/views/saved/SavedView.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -56,11 +57,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/profile/:id',
     component: ProfileView 
   },
-  {
+  /*{
       path: '/saved',
       component: SavedView,
       name: "saved"
-  },
+  }, */
   {
     path: '/friends', 
     component: FriendsView,
@@ -71,11 +72,6 @@ const routes: Array<RouteRecordRaw> = [
       component: NotificationsView,
       name: "notifications"
   },
- /* {
-      path: '/chats',
-      component: ChatsView,
-      name: "chats"
-  }, */
   {
       path: '/chat/:id',
       component: ChatView,
@@ -92,6 +88,10 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: '/chats',
         component: ChatsView
+      },
+      {
+        path: '/saved',
+        component: SavedView
       }
     ]
   }

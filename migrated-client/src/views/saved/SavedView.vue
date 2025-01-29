@@ -1,10 +1,12 @@
 <template>
-  <div class="saved" v-if="saveds">
+  <div class="saved-wraper">
+    <div class="saved" v-if="saveds">
     <PostCard 
       v-for="saved in saveds.saveds" 
       :key="saved.id" 
       :post="saved.saved_post" 
     />
+  </div>
   </div>
 </template>
 
