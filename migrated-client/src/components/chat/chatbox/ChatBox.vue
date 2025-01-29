@@ -29,4 +29,4 @@
     })
 </script>
 
-<style src="./ChatBox.css"></style>
+<style scoped src="./ChatBox.css"></style>
