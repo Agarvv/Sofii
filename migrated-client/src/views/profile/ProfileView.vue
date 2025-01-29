@@ -6,7 +6,7 @@
       <ProfileDetail 
         :detailValue="data.profile.bio || 'Not Provided'" 
         detail="bio"
-        :isSelf="isSelf"
+        :isSelf="computedIsSelf"
       />
       
       <div class="r-info">
@@ -106,7 +106,7 @@
 
 
 <script lang="ts">
-  import { defineComponent, onMounted, ref } from 'vue';
+  import { defineComponent, onMounted, ref, computed } from 'vue';
   import ProfileHeader from '@/components/profile/profile-header/ProfileHeader.vue';
   import { useGet } from '@/composables/useGet';
   import { useRoute } from 'vue-router';
@@ -124,6 +124,7 @@
     setup() {
       const route = useRoute(); 
       const isSelf = ref<boolean>(false); 
+      const computedIsSelf = computed(() => isSelf.value);
       const data = ref<Profile | null>(null);
       const userId = (localStorage.getItem("userId"))
       
@@ -152,7 +153,8 @@
       return {
         data,
         getProfile,
-        isSelf 
+        isSelf,
+        computedIsSelf
       };
     },
   });
