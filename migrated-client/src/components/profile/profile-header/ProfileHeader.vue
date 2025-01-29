@@ -80,6 +80,7 @@
     },
     setup(props) {
         const userId = Number(localStorage.getItem("userId")); 
+        console.log("props", props.profile)
         
         const isFriend = ref<boolean>(props.profile.profile.friends.some((p) => p.id == userId));
         
