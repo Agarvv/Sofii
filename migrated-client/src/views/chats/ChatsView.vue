@@ -1,15 +1,6 @@
 <template>
   <div>
     <main>
-      <div class="main-header">
-        <div class="mh-search">
-          <i class="fa fa-search"></i>
-          <input 
-            type="search" 
-            placeholder="Search Chats..." 
-          />
-        </div>
-      </div>
 
       <div class="main-chats">
         <ChatComponent 

@@ -1,5 +1,5 @@
 <template>
-    <div class="detail" @click="isSelf ? changeProfileInfo : null">
+    <div class="detail" @click="isSelf && changeProfileInfo">
         <i v-if="icon" :class="icon"></i>
         <span>{{ detailValue }}</span>
         <p>{{ isSelf }}</p>
