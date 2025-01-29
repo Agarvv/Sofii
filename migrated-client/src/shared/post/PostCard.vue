@@ -32,7 +32,7 @@
   
       <div class="post-interactions">
         <div class="like">
-          <PostLikes :postId="post.id" :likes="post.postLikes"/> 
+          <PostLikes :postId="post.id" :postLikes="post.postLikes"/> 
         </div>
         <div class="comment">
           <i class="fa fa-comments"></i>

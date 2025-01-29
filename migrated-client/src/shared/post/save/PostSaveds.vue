@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, onBeforeUnmount, ref } from 'vue';
+import { defineComponent, onMounted, onBeforeUnmount, ref, computed } from 'vue';
 import { apiService } from '@/api/ApiService';
 import { useSocket } from '@/composables/useWebSocket';
 import { Saved } from '@/types/posts/Saved';

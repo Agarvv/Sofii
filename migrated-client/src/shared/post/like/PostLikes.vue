@@ -1,14 +1,14 @@
 <template>
-    <div class="like" @click="like">
-        <span>{{ likesCount }}</span>  
-        <i :class="['fa', 'fa-thumbs-up', { 'liked': isLiked }]"></i>
+    <div @click="like" class="like">
+        <span>{{ likesCount }}</span>
+        <i :class="['fa', 'fa-thumbs-up', { 'liked': isLiked }]" :style="{ color: isLiked ? 'blue' : '' }"></i>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, onBeforeUnmount, ref, computed, watch } from 'vue';
-import { apiService } from '@/api/ApiService'; 
-import { useSocket } from '@/composables/useWebSocket';  
+import { defineComponent, onMounted, onBeforeUnmount, ref, computed} from 'vue';
+import { apiService } from '@/api/ApiService';
+import { useSocket } from '@/composables/useWebSocket';
 import { Like } from '@/types/posts/Like';
 
 export default defineComponent({
@@ -27,18 +27,11 @@ export default defineComponent({
         const userId = Number(localStorage.getItem('userId'));
 
         const likes = ref<Like[]>([...(props.postLikes || [])]);
+        const isLiked = ref<boolean>(likes.value.some(like => like.user_id === userId));
 
-        watch(
-            () => props.postLikes,
-            (newValue) => {
-                console.log("new proñs", newValue)
-                likes.value = [...(newValue || [])];
-            }
-        );
+        const likesCount = computed(() => likes.value.length);
 
-        const isLiked = computed(() => likes.value.some(like => like.user_id === userId));
-        
-        const likesCount = likes.value.length; 
+        const { socket } = useSocket();
 
         const like = async () => {
             const data = await apiService.post('/posts/like', { postId: props.postId });
@@ -46,11 +39,10 @@ export default defineComponent({
         };
 
         onMounted(() => {
-            const { socket } = useSocket();
-
             socket.instance.on('likePost', (liked: Like) => {
                 if (liked.post_id === props.postId && !likes.value.some(like => like.user_id === liked.user_id)) {
-                    likes.value.push(liked); 
+                    likes.value.push(liked);
+                    if (liked.user_id === userId) isLiked.value = true;
                     console.log('Post liked via WebSocket:', liked);
                 }
             });
@@ -59,7 +51,8 @@ export default defineComponent({
                 if (liked.post_id === props.postId) {
                     const index = likes.value.findIndex(like => like.user_id === liked.user_id);
                     if (index !== -1) {
-                        likes.value.splice(index, 1);  
+                        likes.value.splice(index, 1);
+                        if (liked.user_id === userId) isLiked.value = false;
                         console.log('Post unliked via WebSocket:', liked);
                     }
                 }
@@ -67,12 +60,11 @@ export default defineComponent({
         });
 
         onBeforeUnmount(() => {
-            const { socket } = useSocket();
             socket.instance.off('likePost');
             socket.instance.off('unlikePost');
         });
 
-        return { like, likes, isLiked, likesCount };  
+        return { like, likes, isLiked, likesCount };
     },
 });
 </script>
