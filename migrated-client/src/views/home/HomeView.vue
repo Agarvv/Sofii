@@ -31,6 +31,7 @@ import PostCard from '@/shared/post/PostCard.vue';
 import { apiStatusStore } from '@/store/apiStatusStore';
 import { Post } from '@/types/posts/Post';
 import { UserMayLike } from '@/types/users/UserMayLike';
+import { useSocket } from '@/composables/useWebSocket';
 
 export default defineComponent({
   name: 'HomeView',
@@ -41,9 +42,11 @@ export default defineComponent({
     PostCard
   },
   setup() {
+    const { socket } = useSocket(); 
     const apiStore = apiStatusStore();
     
-    const data = ref<{ posts: Post[], users: UserMayLike[] }>({ posts: [], users: [] });
+    //const data = ref<{ posts: Post[], users: UserMayLike[] }>({ posts: [], users: [] });
+    const data = ref({ posts: [] as Post[], users: [] as UserMayLike[] });
 
     const fetchData = async () => {
       try {
@@ -63,8 +66,13 @@ export default defineComponent({
     };
 
     onMounted(() => {
-      fetchData();
-    });
+  fetchData();
+
+  socket.instance.on('createdPost', (post: Post) => {
+    alert("¡New post!");
+    console.log("New post:", post);
+  });
+});
 
     return {
       data

@@ -30,7 +30,8 @@ class CommentService {
                 post_id: postId,
                 user_id: user.user_id,
                 comment_content: commentValue,
-            }, {
+            });
+            const fullComment = yield Comment_1.default.findByPk(newComment.id, {
                 include: [
                     { model: User_1.default, as: 'commentUser' },
                     { model: CommentLikes_1.default, as: 'comment_likes' },
@@ -46,7 +47,7 @@ class CommentService {
                     }
                 ]
             });
-            io.emit('newComment', newComment);
+            io.emit('newComment', fullComment);
         });
     }
     static likeOrUnlikeComment(commentId, postId, user) {
@@ -93,14 +94,15 @@ class CommentService {
                 comment_id: commentId,
                 user_id: user.user_id,
                 answer_content: answerValue
-            }, {
+            });
+            const fullAnswer = yield CommentAwnser_1.default.findByPk(newAnswer.id, {
                 include: [
                     { model: User_1.default, as: 'awnser_user' },
                     { model: CommentAwnsersLikes_1.default, as: 'awnser_likes' },
                     { model: CommentAwnsersDislikes_1.default, as: 'awnser_dislikes' }
                 ]
             });
-            io.emit('newCommentAnswer', newAnswer);
+            io.emit('newCommentAnswer', fullAnswer);
         });
     }
     static likeOrUnlikeAnswer(answerId, commentId, postId, userId) {

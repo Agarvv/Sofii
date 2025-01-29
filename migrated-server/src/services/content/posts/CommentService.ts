@@ -16,31 +16,33 @@ import User from '@models/users/User'
 
 class CommentService {
     public static async comment(commentValue: string, postId: number, user: Account): Promise<void> {
-        const io = websocket.getIO(); 
-        
-        const newComment = await Comment.create({
-            post_id: postId,
-            user_id: user.user_id,
-            comment_content: commentValue,
-        }, {
-            include: [
-                { model: User, as: 'commentUser' },
-                { model: CommentLikes, as: 'comment_likes' },
-                { model: CommentDislikes, as: 'comment_dislikes' },
-                {
-                    model: CommentAnswer,
-                    as: 'awnsers',
-                    include: [
-                        { model: User, as: 'awnser_user' },
-                        { model: CommentAwnsersLikes, as: 'awnser_likes' },
-                        { model: CommentAwnsersDislikes, as: 'awnser_dislikes' }
+    const io = websocket.getIO(); 
+    
+    const newComment = await Comment.create({
+        post_id: postId,
+        user_id: user.user_id,
+        comment_content: commentValue,
+    });
+
+    const fullComment = await Comment.findByPk(newComment.id, {
+        include: [
+            { model: User, as: 'commentUser' },
+            { model: CommentLikes, as: 'comment_likes' },
+            { model: CommentDislikes, as: 'comment_dislikes' },
+            {
+                model: CommentAnswer,
+                as: 'awnsers',
+                include: [
+                    { model: User, as: 'awnser_user' },
+                    { model: CommentAwnsersLikes, as: 'awnser_likes' },
+                    { model: CommentAwnsersDislikes, as: 'awnser_dislikes' }
+                ]
+            }
         ]
-    }
-]
-        });
-        
-        io.emit('newComment', newComment)
-    }
+    });
+
+    io.emit('newComment', fullComment);
+}
     
     public static async likeOrUnlikeComment(commentId: number, postId: number, user: Account): Promise<string> {
         const io = websocket.getIO(); 
@@ -85,28 +87,31 @@ class CommentService {
     }
     
     public static async answerComment
-    (
-        commentId:  number, 
-        postId: number, 
-        user: Account, 
-        answerValue: string
-    ): Promise<void> {
-        const io = websocket.getIO(); 
-        const newAnswer = await CommentAnswer.create({
-            post_id: postId,
-            comment_id: commentId,
-            user_id: user.user_id,
-            answer_content: answerValue 
-        }, {
-            include: [
-                { model: User, as: 'awnser_user' },
-                { model: CommentAwnsersLikes, as: 'awnser_likes' },
-                { model: CommentAwnsersDislikes, as: 'awnser_dislikes' }
-            ]
-        })
+(
+    commentId: number, 
+    postId: number, 
+    user: Account, 
+    answerValue: string
+): Promise<void> {
+    const io = websocket.getIO(); 
+    
+    const newAnswer = await CommentAnswer.create({
+        post_id: postId,
+        comment_id: commentId,
+        user_id: user.user_id,
+        answer_content: answerValue 
+    });
 
-        io.emit('newCommentAnswer', newAnswer)
-    }
+    const fullAnswer = await CommentAnswer.findByPk(newAnswer.id, {
+        include: [
+            { model: User, as: 'awnser_user' },
+            { model: CommentAwnsersLikes, as: 'awnser_likes' },
+            { model: CommentAwnsersDislikes, as: 'awnser_dislikes' }
+        ]
+    });
+
+    io.emit('newCommentAnswer', fullAnswer);
+}
     
     public static async likeOrUnlikeAnswer(answerId: number, commentId: number, postId: number, userId: number) {
         const io = websocket.getIO(); 
