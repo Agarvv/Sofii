@@ -36,7 +36,6 @@
           <ChatButton :receiverId="profile.id"/>
   
           <FriendButton 
-            :friends="profile.friends"
             :userId="profile.id"
             
           />

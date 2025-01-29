@@ -1,7 +1,7 @@
 <template>
     <button @click="sendFriendRequest" style="background: lightblue; color: black;"> 
         <i class="fa fa-user-friends"></i> 
-        <p>{{ isFriend ? 'Friends' : 'Send Friend Request' }}</p>
+        Send Friend Request
     </button>
 </template>
 
@@ -13,25 +13,13 @@
     export default defineComponent({
         name: 'FriendButton',
         props: {
-            friends: {
-                type: Array as () => any[], 
-                required: true 
-            },
             userId: {
                 type: Number,
                 required: true 
             }
         },
         setup(props) {
-            const userId = Number(localStorage.getItem("userId"))
             
-            const isFriend = ref(false);
-
-         
-            watchEffect(() => {
-                isFriend.value = props.friends.some(friend => friend.id === userId);
-            });
-
             interface SendFriendRequestValues {
                 userId: number
             }
@@ -49,7 +37,7 @@
                 
             }
 
-            return { sendFriendRequest, isFriend }
+            return { sendFriendRequest }
         }
     })
 </script>
