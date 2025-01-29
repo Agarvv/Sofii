@@ -1,20 +1,21 @@
 <template>
     <button @click="sendFriendRequest" style="background: lightblue; color: black;"> 
-        <i class="fa fa-user-friends"></i> <p>{{  isFriend ? 'Friends' : 'Send Friend Request' }}</p>
-        <p>{{ isFriend }}</p>
+        <i class="fa fa-user-friends"></i> 
+        <p>{{ isFriend ? 'Friends' : 'Send Friend Request' }}</p>
+        <p>{{ isFriend }}</p> 
     </button>
 </template>
 
 <script lang="ts">
-    import { defineComponent } from 'vue'; 
+    import { defineComponent, ref, watchEffect } from 'vue'; 
     import { usePost } from '@/composables/usePost';
     import { apiService } from '@/api/ApiService';
     
     export default defineComponent({
         name: 'FriendButton',
         props: {
-            isFriend: {
-                type: Boolean,
+            friends: {
+                type: Array as () => any[], 
                 required: true 
             },
             userId: {
@@ -23,10 +24,19 @@
             }
         },
         setup(props) {
+            const userId = Number(localStorage.getItem("userId"))
+            
+            const isFriend = ref(false);
+
+         
+            watchEffect(() => {
+                isFriend.value = props.friends.some(friend => friend.id === userId);
+            });
+
             interface SendFriendRequestValues {
                 userId: number
             }
-            
+
             const { mutate } = usePost<SendFriendRequestValues>({
               serviceFunc: (data: SendFriendRequestValues) => apiService.post('/users/friendRequest', data),
               successFunc: () => window.location.reload(), 
@@ -35,10 +45,12 @@
             })
 
             const sendFriendRequest = async () => {
-               await mutate({ userId: props.userId })
+            
+                    await mutate({ userId: props.userId });
+                
             }
 
-            return { sendFriendRequest }
+            return { sendFriendRequest, isFriend }
         }
     })
 </script>

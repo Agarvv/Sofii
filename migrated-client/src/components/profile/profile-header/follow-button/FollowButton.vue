@@ -1,20 +1,20 @@
 <template>
      <button @click="follow">
             <i :class="isFollowed ? 'fa fa-user-plus' : 'fa fa-user-minus'"></i>
-            <p>{{ isFollowed }}</p>
+            <p>{{ isFollowed ? 'Followed' : 'Follow' }}</p> 
      </button>
 </template>
 
 <script lang="ts">
-    import { defineComponent } from 'vue'; 
+    import { defineComponent, ref, watchEffect } from 'vue'; 
     import { usePost } from '@/composables/usePost';
     import { apiService } from '@/api/ApiService';
     
     export default defineComponent({
         name: 'FollowButton',
         props: {
-            isFollowed: {
-                type: Boolean,
+            followers: {
+                type: Array as () => any[],
                 required: true 
             },
             userId: {
@@ -23,6 +23,13 @@
             }
         },
         setup(props) {
+            const userId = Number(localStorage.getItem("userId"))
+            const isFollowed = ref(false);
+
+            watchEffect(() => {
+                isFollowed.value = props.followers.some(follower => follower.id === userId);
+            });
+
             interface FollowValues {
                userId: number
             }
@@ -37,11 +44,13 @@
                     withLoading: false 
             })
 
-            const follow =  async() => {
-                 await mutate({ userId: props.userId })
+            const follow = async () => {
+                
+                    await mutate({ userId: props.userId });
+                
             }
 
-            return { follow }
+            return { follow, isFollowed }
         }
     })
 </script>

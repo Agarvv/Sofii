@@ -36,7 +36,7 @@
           <ChatButton :receiverId="profile.id"/>
   
           <FriendButton 
-            :isFriend="isFriend"
+            :friends="profile.friends"
             :userId="profile.id"
             
           />
@@ -44,7 +44,7 @@
   
           <!-- Follow -->
           <FollowButton 
-            :isFollowed="isFollowed"
+            :followers="profile.followers"
             :userId="profile.id"
           />
           
@@ -77,16 +77,6 @@
         type: Object as () => Profile,
         required: true 
       }
-    },
-    setup(props) {
-        const userId = Number(localStorage.getItem("userId")); 
-        console.log("props", props.profile)
-        
-        const isFriend = ref<boolean>(props.profile.profile.friends.some((p) => p.id == userId));
-        
-        const isFollowed = ref<boolean>(props.profile.profile.followers.some(f => f.id == userId)); 
-        
-        return { isFriend, isFollowed }
     }
   })
 </script>
