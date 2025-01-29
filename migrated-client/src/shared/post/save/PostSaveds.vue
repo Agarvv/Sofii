@@ -1,8 +1,7 @@
 <template>
     <div @click="save" class="save">
         <span>{{ localSaveds.length }}</span>
-        <i :class="['fa', 'fa-bookmark', { 'saved': isSaved }]"></i>
-        <p>{{ isSaved }}</p>
+        <i :class="['fa', 'fa-bookmark', { 'saved': isSaved }]" :style="{ color: isSaved ? 'blue' : '' }"></i>
     </div>
 </template>
 
