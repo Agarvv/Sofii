@@ -1,13 +1,10 @@
 <template>
   <header v-if="profile">    
-    <!--   <div v-if="showBlock && !isSelfUser" class="block-user">
-          <BlockUserCard :user="user"/>
-        </div> -->
     
-    <ProfileBanner :profileBanner="profile.banner" /> 
+    <ProfileBanner :profileBanner="profile.banner" :isSelf="isSelf" /> 
     
     <div class="user">
-      <ProfilePicture :profilePicture="profile.profilePicture"/> 
+      <ProfilePicture :profilePicture="profile.profilePicture" :isSelf="isSelf"/> 
   
       <div class="user-details">
         <div class="username">
@@ -19,7 +16,7 @@
           <p style="color: gray">{{ profile.following.length }} Following</p>
         </div>
 
-        <div class="active-inactive">
+        <div v-if="!isSelf" class="active-inactive">
           <div class="user-active">
             <div style="
               width: 20px;
@@ -31,7 +28,7 @@
           </div>
         </div>
   
-        <div class="interact-buttons">
+        <div v-if="!isSelf" class="interact-buttons">
           <!-- Chat -->
           <ChatButton :receiverId="profile.id"/>
   
@@ -74,6 +71,10 @@
     props: {
       profile: {
         type: Object as () => Profile,
+        required: true 
+      },
+      isSelf: {
+        type: Boolean,
         required: true 
       }
     }

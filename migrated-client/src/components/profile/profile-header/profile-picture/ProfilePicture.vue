@@ -1,5 +1,5 @@
 <template>
-  <div class="user-img" @click="openFileInput">
+  <div class="user-img" @click="isSelf ? openFileInput : null">
     <input type="file" ref="fileInput" style="display: none" @change="handleFileChange"/>
     <img :src="profilePicture" alt="Profile Pic">
   </div>
@@ -15,6 +15,10 @@
     props: {
       profilePicture: {
         type: String,
+        required: true 
+      },
+      isSelf: {
+        type: Boolean,
         required: true 
       }
     },

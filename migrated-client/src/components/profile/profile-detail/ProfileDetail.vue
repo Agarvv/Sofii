@@ -1,9 +1,10 @@
 <template>
-    <div class="detail" @click="changeProfileInfo">
+    <div class="detail" @click="isSelf ? changeProfileInfo : null">
         <i v-if="icon" :class="icon"></i>
         <span>{{ detailValue }}</span>
     </div>
 </template>
+
 
 <script lang="ts">
     import { defineComponent } from 'vue'
@@ -22,6 +23,10 @@
             },
             detail: {
                 type: String,
+                required: true 
+            },
+            isSelf: {
+                type: Boolean, 
                 required: true 
             }
         },

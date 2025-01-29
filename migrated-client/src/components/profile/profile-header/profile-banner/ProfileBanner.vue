@@ -1,5 +1,5 @@
 <template>
-  <div class="profile-banner" @click="openFileInput">
+  <div class="profile-banner" @click="isSelf ? openFileInput : null">
     <input type="file" ref="fileInput" style="display: none" @change="handleFileChange"/>
     <img :src="profileBanner" alt="Profile Banner">
   </div>
@@ -16,6 +16,10 @@
       profileBanner: {
         type: String,
         required: true
+      },
+      isSelf: {
+        type: Boolean,
+        required: true 
       }
     },
     setup() {

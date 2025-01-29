@@ -1,11 +1,12 @@
 <template>
   <div v-if="data">
-    <ProfileHeader :profile="data.profile" />
+    <ProfileHeader :profile="data.profile" :isSelf="isSelf" />
 
     <div class="responsive-user-details">
       <ProfileDetail 
         :detailValue="data.profile.bio || 'Not Provided'" 
         detail="bio"
+        :isSelf="isSelf"
       />
       
       <div class="r-info">
@@ -13,26 +14,31 @@
           :detailValue="data.profile.ubication || 'Ubication Not Provided'" 
           icon="fa fa-map-marker-alt" 
           detail="ubication"
+          :isSelf="isSelf"
         />
         <ProfileDetail 
           :detailValue="data.profile.native_city || 'Native City Not Provided'" 
           icon="fa fa-globe" 
           detail="native_city"
+          :isSelf="isSelf"
         />
         <ProfileDetail 
           :detailValue="data.profile.gender || 'Gender Not Provided'" 
           icon="fas fa-venus-mars" 
           detail="gender"
+          :isSelf="isSelf"
         />
         <ProfileDetail 
           :detailValue="data.profile.job || 'Job Not Provided'" 
           icon="fas fa-briefcase" 
           detail="job"
+          :isSelf="isSelf"
         />
         <ProfileDetail 
           :detailValue="data.profile.civil_status || 'Civil Status Not Provided'" 
           icon="fa fa-heart" 
           detail="civil_status"
+          :isSelf="isSelf"
         />
       </div>
     </div>
@@ -48,31 +54,37 @@
               <ProfileDetail 
                 :detailValue="data.profile.bio || 'Bio Not Provided'" 
                 detail="bio"
+                :isSelf="isSelf"
               />
               <ProfileDetail 
                 :detailValue="data.profile.ubication || 'Ubication Not Provided'" 
                 icon="fas fa-map-marker-alt" 
                 detail="ubication"
+                :isSelf="isSelf"
               />
               <ProfileDetail 
                 :detailValue="data.profile.native_city || 'Native City Not Provided'" 
                 icon="fas fa-globe"
                 detail="native_city"
+                :isSelf="isSelf"
               />
               <ProfileDetail 
                 :detailValue="data.profile.gender || 'Gender Not Provided'" 
                 icon="fas fa-venus-mars" 
                 detail="gender"
+                :isSelf="isSelf"
               />
               <ProfileDetail 
                 :detailValue="data.profile.job || 'Job Not Provided'" 
                 icon="fas fa-briefcase" 
                 detail="job"
+                :isSelf="isSelf"
               />
               <ProfileDetail 
                 :detailValue="data.profile.civil_status || 'Civil Status Not Provided'" 
                 icon="fa fa-heart" 
                 detail="civil_status"
+                :isSelf="isSelf"
               />
             </div>
           </div>
@@ -82,19 +94,16 @@
       <main>
         <div v-if="data.profile.posts.length > 0" class="posts">
           <div v-for="post in data.profile.posts" :key="post.id" class="post">
-              
             <PostCard 
               :post="post" 
             />
-            
           </div>
         </div>
       </main>
-      
-      
     </div>
   </div>
 </template>
+
 
 <script lang="ts">
   import { defineComponent, onMounted, ref } from 'vue';
@@ -114,12 +123,15 @@
     }, 
     setup() {
       const route = useRoute(); 
+      const isSelf = ref<boolean>(false); 
       const data = ref<Profile | null>(null);
+      const userId = (localStorage.getItem("userId"))
       
       
       const getProfile = async () => {
         const id = route.params.id as string; 
-        if(id == "s") {
+        if(id == "s" || id == userId) {
+          isSelf.value = true; 
           console.log("SELF");
         }
 
@@ -140,6 +152,7 @@
       return {
         data,
         getProfile,
+        isSelf 
       };
     },
   });
