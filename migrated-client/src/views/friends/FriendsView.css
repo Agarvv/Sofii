@@ -1,13 +1,4 @@
-header {
-    padding: 20px;
-    background-color: #f5f5f5;
-  }
-  
-  header .logo {
-    display: flex;
-    gap: 15px;
-    align-items: center;
-  }
+
   
   .container {
     border: none;
@@ -18,11 +9,7 @@ header {
     gap: 20px;
   }
   
-  .container aside {
-    background-color: #e0e0e0;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
+  
   
   .container main {
     background-color: #ffffff;
@@ -30,54 +17,6 @@ header {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
   
-  main .responsive-main-header {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    padding: 15px;
-    background-color: #f9f9f9;
-    border-bottom: 2px solid #ddd;
-  }
-  
-  .rmh-only-friends, .rmh-pending-requests {
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 15px;
-  }
-  
-  aside .aside-header {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
-    background-color: #f5f5f5;
-    border-bottom: 2px solid #ddd;
-  }
-  
-  aside .aside-content {
-    padding: 10px;
-  }
-  
-  aside .aside-content div {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px;
-    font-size: 18px;
-    background-color: #ffffff;
-    border-radius: 8px;
-    margin-bottom: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  aside .aside-content div input[type="radio"] {
-    width: 20px;
-    height: 20px;
-  }
   
   main .friends-requests {
     padding: 15px;

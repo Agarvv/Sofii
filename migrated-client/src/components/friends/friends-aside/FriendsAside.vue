@@ -36,3 +36,5 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped src="./FriendsAside.css"></style>

@@ -26,3 +26,5 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped src="./FriendsSelector.css"></style>

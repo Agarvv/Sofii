@@ -43,3 +43,5 @@
   })
 </script>
 
+
+<style scoped src="./FriendRequest.css"></style>

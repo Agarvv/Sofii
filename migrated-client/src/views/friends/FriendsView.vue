@@ -1,11 +1,5 @@
 <template>
   <div v-if="friends">
-    <header>
-      <div class="logo">
-        <i class="fa fa-arrow-left"></i>
-        <h1>Sofii</h1>
-      </div>
-    </header>
 
     <div class="container">
       <FriendsAside @changeOption="toggleContent" />

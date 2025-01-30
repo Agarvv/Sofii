@@ -57,11 +57,6 @@ const routes: Array<RouteRecordRaw> = [
     component: ProfileView 
   },
   {
-    path: '/friends', 
-    component: FriendsView,
-    name: "friends"
-  },
-  {
       path: '/chat/:id',
       component: ChatView,
       name: "chat"
@@ -88,6 +83,11 @@ const routes: Array<RouteRecordRaw> = [
         path: '/notifications',
         component: NotificationsView,
         name: "notifications"
+    },
+    {
+      path: '/friends', 
+      component: FriendsView,
+      name: "friends"
     },
     ]
   }

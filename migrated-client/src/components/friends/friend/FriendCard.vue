@@ -27,3 +27,5 @@
     }
   })
 </script>
+
+<style scoped src="./FriendCard.css"></style>
