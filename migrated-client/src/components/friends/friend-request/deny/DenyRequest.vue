@@ -1,31 +1,35 @@
 <template>
-    <button @click="deny" class="f-button-deny">Deny</button>
-  </template>
-  
-  <script>
-  import { defineComponent } from 'vue';
-  import useFriendRequest from '@/composables/useFriendRequest';
-  
-  export default defineComponent({
-    name: 'DenyRequest',
-    props: {
-      requestId: {
-        type: Number,
-        required: true
-      }
-    },
-    setup(props) {
-      const { acceptOrDeny } = useFriendRequest();  
-  
-      const deny = async () => {
-        await acceptOrDeny({
-          type: 'deny',
-          requestId: props.requestId
-        });
-      };
-  
-      return { deny };
-    }
+  <button @click="deny" class="f-button-deny">Deny</button>
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+import { usePost } from '@/composables/usePost';
+import { apiService } from '@/api/ApiService';
+
+export default defineComponent({
+name: 'DenyRequest',
+props: {
+  requestId: {
+    type: Number,
+    required: true
+  }
+},
+setup(props) {
+  const { mutate } = usePost({
+    serviceFunc: (data: { requestId: number }) => apiService.post('/users/friendRequest/deny', data),
+    successFunc: () => window.location.reload(),
+    withError: true,
+    withLoading: true,
   });
-  </script>
-  
+
+  const deny = async () => {
+    await mutate({
+      requestId: props.requestId
+    });
+  };
+
+  return { deny };
+}
+});
+</script>
