@@ -34,7 +34,7 @@
         }
 
         const search = () => {
-    window.location.href = `/search/${searchQ.value}`;
+    window.location.href = `/#/search/${searchQ.value}`;
 }
 
         return { toggleFilters, searchQ, search }
