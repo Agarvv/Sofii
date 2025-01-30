@@ -45,7 +45,7 @@ class NotificationsService {
            include: { model: User, as: 'targetUser' }
         });
 
-        io.to(String(target)).emit('newNotification', originalNotification);
+        socket.to(String(target)).emit('newNotification', originalNotification);
         //io.emit('newNotification', originalNotification);
    }
 
