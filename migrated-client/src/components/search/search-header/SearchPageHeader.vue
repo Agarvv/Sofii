@@ -8,36 +8,31 @@
             <input v-model="searchQ" type="search" placeholder="Search..."/>
           </div>
           <div class="icons">
-              <i class="fa fa-search" @click="search"></i>
-             <i class="fa fa-filter" @click="toggleFilters"></i>
+              <router-link :to="`/search/${searchQ}`">
+                <i class="fa fa-search"></i>
+              </router-link>
+              <i class="fa fa-filter" @click="toggleFilters"></i>
           </div>
         </header>
     </div>
-    </template>
-    
+</template>
 
 <script lang="ts">
    import { defineComponent, ref } from 'vue';
    import { useRoute } from 'vue-router';
-   import { useRouter } from 'vue-router';
 
    export default defineComponent({
     name: 'SearchPageHeader',
     emits: ['toggleFilters'], 
     setup(_, { emit }) {
         const route = useRoute();
-        const router = useRouter(); 
         const searchQ = ref<string>(String(route.params.query))
 
         const toggleFilters = () => {
             emit("toggleFilters")
         }
 
-        const search = () => {
-    window.location.hash = `/search/${searchQ.value}`;
-}
-
-        return { toggleFilters, searchQ, search }
+        return { toggleFilters, searchQ }
     }
    })
 </script>
