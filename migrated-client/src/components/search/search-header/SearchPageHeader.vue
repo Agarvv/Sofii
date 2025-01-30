@@ -34,9 +34,7 @@
         }
 
         const search = () => {
-            console.log("debug"); 
-  router.push(`/search/${searchQ.value}`);
-  window.location.reload(); 
+    window.location.href = `/search/${searchQ.value}`;
 }
 
         return { toggleFilters, searchQ, search }
