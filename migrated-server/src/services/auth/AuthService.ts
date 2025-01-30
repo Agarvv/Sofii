@@ -100,14 +100,14 @@ class AuthService {
       return newUser; 
   }
   
-  public static async authenticateWithSocialMedia(user: any): Promise<string> {
+  public static async authenticateWithSocialMedia(user: any): Promise<{ jwt: string, userId: number }> {
       const dbUser = await userRepository.findByEmail(user.email) 
       if(dbUser) {
           const payload = this.generateJwtPayload(dbUser); 
           
           const jwt = await JwtHelper.generateToken(payload) 
           
-          return jwt; 
+          return { jwt: jwt, userId: dbUser.id }
       }
       
       const newUser = await this.registerBySocialMedia(user) 
@@ -116,7 +116,7 @@ class AuthService {
           
       const jwt = await JwtHelper.generateToken(payload) 
       
-      return jwt; 
+      return { jwt: jwt, userId: newUser.id }
   }
 
   private static async hashPassword(rawPassword: string): Promise<string> {

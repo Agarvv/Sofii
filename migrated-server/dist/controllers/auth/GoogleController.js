@@ -28,15 +28,13 @@ class GoogleController {
             }
             if (user) {
                 try {
-                    const jwt = yield AuthService_1.default.authenticateWithSocialMedia(user);
+                    const { jwt, userId } = yield AuthService_1.default.authenticateWithSocialMedia(user);
                     res.cookie('jwt', jwt, {
                         secure: true,
                         httpOnly: true,
                         sameSite: 'none'
                     });
-                    return res.status(200).json({
-                        accessToken: jwt
-                    });
+                    res.redirect(`https://sofii-vsly.vercel.app?userId=${userId}`);
                 }
                 catch (error) {
                     console.log('Google auth error:', error);

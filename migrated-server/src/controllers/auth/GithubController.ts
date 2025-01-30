@@ -20,7 +20,7 @@ class GithubController {
 
     if (user) {
       try {
-        const jwt = await AuthService.authenticateWithSocialMedia(user);
+        const { jwt, userId } = await AuthService.authenticateWithSocialMedia(user);
 
         res.cookie('jwt', jwt, {
           secure: true,
@@ -28,9 +28,8 @@ class GithubController {
           sameSite: 'none'
         });
 
-        return res.status(200).json({
-          accessToken: jwt
-        });
+        res.redirect(`https://sofii-vsly.vercel.app?userId=${userId}`)
+        
       } catch (error) {
         console.log('Github auth error:', error);
         return res.redirect('https://sofii.vercel.app'); 

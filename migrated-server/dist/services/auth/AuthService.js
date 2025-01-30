@@ -108,12 +108,12 @@ class AuthService {
             if (dbUser) {
                 const payload = this.generateJwtPayload(dbUser);
                 const jwt = yield JwtHelper_1.default.generateToken(payload);
-                return jwt;
+                return { jwt: jwt, userId: dbUser.id };
             }
             const newUser = yield this.registerBySocialMedia(user);
             const payload = this.generateJwtPayload(newUser);
             const jwt = yield JwtHelper_1.default.generateToken(payload);
-            return jwt;
+            return { jwt: jwt, userId: newUser.id };
         });
     }
     static hashPassword(rawPassword) {
