@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue';
+import { defineComponent, onMounted, ref, watch } from 'vue';
 import SearchFilters from '@/components/search/filters/SearchFilters.vue';
 import { useGet } from '@/composables/useGet';
 import { SearchResults } from '@/types/search/SearchResults';
@@ -70,7 +70,6 @@ export default defineComponent({
 
             store.setOriginalResults((response as any).results); 
             store.setFilteredResults((response as any).results); 
-                      
             console.log('data from search', response);
         };
 
@@ -81,6 +80,14 @@ export default defineComponent({
 
         onMounted(() => {
             search();
+        });
+
+
+        watch(() => route.params.query, (newQuery) => {
+            if (newQuery !== searchQuery) {
+                searchQuery = newQuery;  
+                search(); 
+            }
         });
 
         return {
