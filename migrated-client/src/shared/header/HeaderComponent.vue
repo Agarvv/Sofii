@@ -6,28 +6,35 @@
           <p>Sofii</p>
         </div>
         <div class="f-flex-search">
-          <i class="fas fa-search"></i>
-          <input type="search" placeholder="Search Users, Posts, Videos....." />
+          <i class="fas fa-search" @click="search"></i>
+          <input 
+            type="search" 
+            placeholder="Search Users, Posts, Videos....." 
+            v-model="searchQuery"
+            @keyup.enter="search"
+          />
         </div>
       </div>
 
       <div class="m-flex-nav-items">
         <div class="icon-div home">
-          <i class="fas fa-home"></i>
+          <router-link to="/" exact><i class="fas fa-home"></i></router-link>
         </div>
         <div class="icon-div create">
-          <i class="fas fa-plus"></i>
+          <router-link to="/create"><i class="fas fa-plus"></i></router-link>
         </div>
       </div>
 
       <div class="second-flex">
         <div class="s-flex-user">
           <div class="icon-div notifications">
-            <i class="fas fa-bell"></i>
-            <div class="not-readed"></div>
+            <router-link to="/notifications">
+              <i class="fas fa-bell"></i>
+              <div class="not-readed"></div>
+            </router-link>
           </div>
           <div class="icon-div chat">
-            <i class="fas fa-comment"></i>
+            <router-link to="/chats"><i class="fas fa-comment"></i></router-link>
           </div>
           <div class="user-img">
             <img
@@ -41,54 +48,43 @@
     </header>
 
     <div class="responsive-sub-header">
-      <div
-        class="rsb-i"
-        :class="{ on: activePage === 'home' }"
-      >
-        <i class="fas fa-home"></i>
+      <div class="rsb-i">
+        <router-link to="/"><i class="fas fa-home"></i></router-link>
       </div>
-      <div
-        class="rsb-i"
-        :class="{ on: activePage === 'watch' }"
-      >
-        <i class="fas fa-tv"></i>
+      <div class="rsb-i">
+        <router-link to="/saved"><i class="fa fa-bookmark"></i></router-link>
       </div>
-      <div
-        class="rsb-i"
-        :class="{ on: activePage === 'create' }"
-      >
-        <i class="fas fa-plus"></i>
+      <div class="rsb-i">
+        <router-link to="/create"><i class="fas fa-plus"></i></router-link>
       </div>
-      <div
-        class="rsb-i"
-        :class="{ on: activePage === 'notifications' }"
-      >
-        <i class="fas fa-bell"></i>
+      <div class="rsb-i">
+        <router-link to="/notifications"><i class="fas fa-bell"></i></router-link>
       </div>
-      <div
-        class="rsb-i"
-        :class="{ on: activePage === 'chat' }"
-      >
-        <i class="fas fa-comment-dots"></i>
+      <div class="rsb-i">
+        <router-link to="/chats"><i class="fas fa-comment-dots"></i></router-link>
       </div>
     </div>
-    
-    
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
   name: 'HeaderComponent',
-  props: {
-    activePage: {
-      type: String as PropType<'home' | 'watch' | 'create' | 'notifications' | 'chat'>,
-      required: false,
-      value: 'home'
-    },
-  },
+  setup() {
+    const searchQuery = ref('');
+    const router = useRouter();
+
+    const search = () => {
+      if (searchQuery.value.trim()) {
+        router.push(`/search/${searchQuery.value.trim()}`);
+      }
+    };
+
+    return { searchQuery, search };
+  }
 });
 </script>
 
