@@ -1,6 +1,6 @@
 <template>
-  <div class="upload-comment">
     <form @submit.prevent="handleSubmit">
+          <div class="upload-comment">
       <div class="input">
         <input v-model="commentValue" type="text" placeholder="Upload A Comment" />
       </div>
@@ -9,8 +9,8 @@
           <i class="fa fa-paper-plane"></i>
         </div>
       </button>
+       </div>
     </form>
-  </div>
 </template>
 
 <script lang="ts">
