@@ -17,9 +17,6 @@
           <h4>{{ post.user.username }}</h4>
         </div>
   
-        <div class="post-button-delete">
-         <i class="fa fa-close"></i>
-        </div>
       </div>
       <div class="post-content">
         <div class="post-description">
