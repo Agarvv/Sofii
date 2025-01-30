@@ -20,8 +20,8 @@ export default defineComponent({
   },
   setup(props) {
     const { mutate } = usePost({
-      serviceFunc: (data: { requestId: number }) => apiService.post('/users/friendRequest/deny', data),
-      successFunc: () => window.location.reload(),
+      serviceFunc: (data: { requestId: number }) => apiService.post('/users/friendRequest/accept', data),
+      successFunc: () => console.log("success"),
       withError: true,
       withLoading: true,
     });
