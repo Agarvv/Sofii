@@ -35,7 +35,7 @@
                  })
 
                  console.log("data", data)
-                // window.location.reload(); 
+                 window.location.reload(); 
             }
             
             return { closeNotification } 

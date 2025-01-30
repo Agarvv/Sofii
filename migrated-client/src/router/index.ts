@@ -56,20 +56,10 @@ const routes: Array<RouteRecordRaw> = [
     path: '/profile/:id',
     component: ProfileView 
   },
-  /*{
-      path: '/saved',
-      component: SavedView,
-      name: "saved"
-  }, */
   {
     path: '/friends', 
     component: FriendsView,
     name: "friends"
-  },
-  {
-      path: '/notifications',
-      component: NotificationsView,
-      name: "notifications"
   },
   {
       path: '/chat/:id',
@@ -86,12 +76,19 @@ const routes: Array<RouteRecordRaw> = [
     children: [
       {
         path: '/chats',
-        component: ChatsView
+        component: ChatsView,
+        name: "chats"
       },
       {
         path: '/saved',
-        component: SavedView
-      }
+        component: SavedView,
+        name: "saved"
+      },
+      {
+        path: '/notifications',
+        component: NotificationsView,
+        name: "notifications"
+    },
     ]
   }
 ]
