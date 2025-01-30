@@ -36,6 +36,7 @@
         const search = () => {
             console.log("debug"); 
   router.push(`/search/${searchQ.value}`);
+  window.location.reload(); 
 }
 
         return { toggleFilters, searchQ, search }
