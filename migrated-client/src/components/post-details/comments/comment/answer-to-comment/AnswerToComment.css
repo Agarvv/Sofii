@@ -24,6 +24,6 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    border: 1px solid black;
-    
+
+    background: white;
 }

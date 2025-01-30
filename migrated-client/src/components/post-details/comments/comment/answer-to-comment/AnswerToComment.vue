@@ -1,14 +1,14 @@
 <template>
-  <div class="comment-answer">
     <form @submit.prevent="handleSubmit">
+          <div class="comment-answer">
       <div class="comment-answer-input">
         <input v-model="answerValue" placeholder="Answer To This Comment" />
       </div>
       <button type="submit" class="comment-answer-send-button">
         <i class="fa fa-paper-plane"></i>
       </button>
+        </div>
     </form>
-  </div>
 </template>
 
 <script lang="ts">
