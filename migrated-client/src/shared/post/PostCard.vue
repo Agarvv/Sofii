@@ -1,5 +1,5 @@
 <template>
-    <div class="post">
+      <div class="post">
       <div class="post-header">
         <div>
           <img
@@ -9,7 +9,7 @@
               border-radius: 50%;
               object-fit: cover;
             "
-            src="post owner pic"
+            :src="post.user.profilePicture"
             alt="Post Owner"
           />
         </div>
@@ -22,9 +22,11 @@
         <div class="post-description">
           <p>{{ post.description }}</p>
         </div>
-        <div class="post-image">
+        <router-link :to="'/post/' + post.id">
+          <div class="post-image">
           <img :src="post.postPicture" alt="Post Image" />
         </div>
+        </router-link>
       </div>
   
       <div class="post-interactions">

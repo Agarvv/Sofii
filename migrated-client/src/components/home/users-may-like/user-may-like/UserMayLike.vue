@@ -16,12 +16,10 @@
       <div class="user-buttons">
         <div 
           class="view-profile">
-          <i class="fa fa-user"></i>
+          <router-link :to="'/profile/' + user.id">
+            <i class="fa fa-user"></i>
+          </router-link>
         </div>
-       <!--  <div 
-          class="follow">
-          <i class="fa fa-user-plus"></i>
-        </div> -->
       </div>
     </div>
   </template>
