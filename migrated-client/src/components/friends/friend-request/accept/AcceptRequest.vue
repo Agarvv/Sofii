@@ -6,7 +6,7 @@
 
 <script>
 import { defineComponent } from 'vue';
-import { useFriendRequest } from '@/composables/useFriendRequest';
+import useFriendRequest from '@/composables/useFriendRequest';
 
 export default defineComponent({
   name: 'AcceptRequest',
