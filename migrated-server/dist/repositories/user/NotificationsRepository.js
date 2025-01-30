@@ -23,6 +23,10 @@ class NotificationsRepository {
                     {
                         model: User_1.default,
                         as: 'targetUser'
+                    },
+                    {
+                        model: User_1.default,
+                        as: 'sender'
                     }
                 ]
             });

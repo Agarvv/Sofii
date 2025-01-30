@@ -45,11 +45,25 @@ class NotificationsService {
                 user_target: target,
                 notification_type: type,
                 notification: notificationText[type],
-                type_id: content.id || content.post_id || content.video_id || content.sender_id || content.friend_one_id || content.request_sender_id || user_id,
-            }, {
-                include: { model: User_1.default, as: 'targetUser' }
+                type_id: content.id || content.post_id || content.video_id || content.sender_id || content.friend_one_id || content.request_sender_id || user_id
             });
-            io.to(String(target)).emit('newNotification', originalNotification);
+            const fullNotification = yield Notifications_1.default.findOne({
+                where: {
+                    id: originalNotification.id
+                },
+                include: [
+                    {
+                        model: User_1.default,
+                        as: 'targetUser'
+                    },
+                    {
+                        model: User_1.default,
+                        as: 'sender'
+                    }
+                ]
+            });
+            io.to(String(target)).emit('newNotification', fullNotification);
+            //io.emit('newNotification', originalNotification);
         });
     }
 }

@@ -35,17 +35,32 @@ class NotificationsService {
             throw new Error(`Unknown notification type: ${type}`);
         }
 
+        
         const originalNotification = await Notifications.create({
-            user_id: user_id,
-            user_target: target,
-            notification_type: type,
-            notification: notificationText[type as keyof typeof notificationText],
-            type_id: content.id || content.post_id || content.video_id || content.sender_id || content.friend_one_id || content.request_sender_id || user_id,
-        }, {
-           include: { model: User, as: 'targetUser' }
-        });
+    user_id: user_id,
+    user_target: target,
+    notification_type: type,
+    notification: notificationText[type as keyof typeof notificationText],
+    type_id: content.id || content.post_id || content.video_id || content.sender_id || content.friend_one_id || content.request_sender_id || user_id
+});
+        
+        const fullNotification = await Notifications.findOne({
+            where: {
+                id: originalNotification.id 
+            },
+            include: [
+              {
+                  model: User,
+                  as: 'targetUser'
+              },
+              {
+                  model: User,
+                  as: 'sender'
+              }
+            ]
+        })
 
-        socket.to(String(target)).emit('newNotification', originalNotification);
+        io.to(String(target)).emit('newNotification', fullNotification);
         //io.emit('newNotification', originalNotification);
    }
 

@@ -11,6 +11,10 @@ class NotificationsRepository {
                 {
                     model: User, 
                     as: 'targetUser' 
+                },
+                {
+                    model: User,
+                    as: 'sender'
                 }
             ]
         });
