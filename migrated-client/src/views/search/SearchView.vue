@@ -44,6 +44,7 @@ import PostCard from '@/shared/post/PostCard.vue'
 import { storeToRefs } from 'pinia';
 import UserCard from '@/components/search/user-card/UserCard.vue';
 import SearchPageHeader from '@/components/search/search-header/SearchPageHeader.vue';
+import { useRoute } from 'vue-router';
 
 export default defineComponent({
     name: 'SearchView',
@@ -58,22 +59,24 @@ export default defineComponent({
         const { filteredResults } = storeToRefs(store) 
         const showFilters = ref<boolean>(false); 
 
+        const route = useRoute();  
+        const searchQuery = route.params.query || '';  
+
         const search = async () => {
-                const response = await useGet<SearchResults>({
-                    endpoint: '/search/a',
-                    withError: true,
-                });
-    
-                store.setOriginalResults((response as any).results); 
-                
-                store.setFilteredResults((response as any).results); 
-                              
-                console.log('data from search', response);
+            const response = await useGet<SearchResults>({
+                endpoint: `/search/${searchQuery}`,  
+                withError: true,
+            });
+
+            store.setOriginalResults((response as any).results); 
+            store.setFilteredResults((response as any).results); 
+                      
+            console.log('data from search', response);
         };
 
         const toggleFilters = () => {
-          console.log("received", showFilters.value)
-          showFilters.value = !showFilters.value; 
+            console.log("received", showFilters.value)
+            showFilters.value = !showFilters.value; 
         }
 
         onMounted(() => {

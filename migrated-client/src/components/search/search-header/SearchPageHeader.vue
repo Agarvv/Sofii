@@ -35,6 +35,7 @@
 
         const search = () => {
           router.push({ name: "search", params: { query: searchQ.value }})
+          window.location.reload(); 
         }
 
         return { toggleFilters, searchQ, search }
