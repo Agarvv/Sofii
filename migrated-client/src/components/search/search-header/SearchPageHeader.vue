@@ -18,19 +18,23 @@
 
 <script lang="ts">
    import { defineComponent, ref } from 'vue';
+   import { useRoute } from 'vue-router';
+   import { useRouter } from 'vue-router';
 
    export default defineComponent({
     name: 'SearchPageHeader',
     emits: ['toggleFilters'], 
     setup(_, { emit }) {
-        const searchQ = ref<string>("")
+        const route = useRoute();
+        const router = useRouter(); 
+        const searchQ = ref<string>(String(route.params.query))
 
         const toggleFilters = () => {
             emit("toggleFilters")
         }
 
         const search = () => {
-            console.warn("soon"); 
+          router.push({ name: "search", params: { query: searchQ.value }})
         }
 
         return { toggleFilters, searchQ, search }

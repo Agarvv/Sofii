@@ -1,7 +1,6 @@
 <template>
      <button @click="follow">
             <i :class="isFollowed ? 'fa fa-user-plus' : 'fa fa-user-minus'"></i>
-            <p>{{ isFollowed ? 'Followed' : 'Follow' }}</p> 
      </button>
 </template>
 
@@ -54,3 +53,5 @@
         }
     })
 </script>
+
+<style scoped src="./FollowButton.css"></style>

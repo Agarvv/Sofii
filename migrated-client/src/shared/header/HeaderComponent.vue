@@ -34,12 +34,8 @@
           <div class="icon-div chat">
             <i class="fas fa-comment"></i>
           </div>
-          <div class="user-img">
-            <img
-              style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover;"
-              src="soon"
-              alt="User Profile Picture"
-            />
+          <div class="icon-div profile">
+             <i class="fa fa-user"></i>
           </div>
         </div>
       </div>

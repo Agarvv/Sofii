@@ -36,11 +36,14 @@ import { useForm, useField } from 'vee-validate';
 import * as yup from 'yup';
 import { usePost } from '@/composables/usePost';
 import { apiService } from '@/api/ApiService';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
   name: 'CreateForm',
   components: { PostImage },
   setup() {
+    const router = useRouter(); 
+    
     interface CreatePostFormValues {
       description: string;
       picture: string;
@@ -66,7 +69,7 @@ export default defineComponent({
         apiService.post('/posts', data),
       withError: true,
       withLoading: true,
-      successMessage: 'Post Created!',
+      successFunc: () => router.push({ name: "home"})
     });
 
     const onSubmit = async (values: CreatePostFormValues) => {
