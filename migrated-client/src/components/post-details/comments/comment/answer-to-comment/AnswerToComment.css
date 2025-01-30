@@ -1,4 +1,4 @@
-.comment-awnser {
+.comment-answer {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -6,11 +6,11 @@
 }
 
 
-.comment-awnser-input {
+.comment-answer-input {
     flex: 1; 
 }
 
-.comment-awnser-input input {
+.comment-answer-input input {
     width: 100%;
     height: 35px;
     padding: 10px;
@@ -19,7 +19,7 @@
     border: 1px solid black;
 }
 
-.comment-awnser-send-button {
+.comment-answer-send-button {
     display: flex;
     align-items: center;
     justify-content: center;
