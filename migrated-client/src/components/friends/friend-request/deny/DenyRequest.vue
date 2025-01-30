@@ -18,7 +18,7 @@ props: {
 setup(props) {
   const { mutate } = usePost({
     serviceFunc: (data: { requestId: number }) => apiService.post('/users/friendRequest/deny', data),
-    successFunc: () => console.log("success"),
+    successFunc: () => window.location.reload(),
     withError: true,
     withLoading: true,
   });
