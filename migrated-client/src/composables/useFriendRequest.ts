@@ -2,12 +2,7 @@ import { usePost } from '@/composables/usePost';
 import { apiService } from "@/api/ApiService";
 
 export default function useFriendRequest() {
-  interface Options {
-    type: string; 
-    requestId: number;
-  }
-
-  const acceptOrDeny = async ({ type, requestId }: Options) => {
+  const acceptOrDeny = async ({ type, requestId }: { type: string; requestId: number }) => {
     const endpoint = type === "accept" ? "/users/friendRequest/accept" : "/users/friendRequest/deny";
 
     const { mutate } = usePost({
@@ -22,4 +17,3 @@ export default function useFriendRequest() {
 
   return { acceptOrDeny };
 }
-
