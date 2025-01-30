@@ -14,11 +14,13 @@
       <div class="notification-details">
         <h2>{{notification.notification}}</h2>
       </div>
-    </div>
 
-    <DeleteNotification
+      <DeleteNotification
       :notificationId="notification.id"
     /> 
+    </div>
+
+  
     
   </div> 
 </template>
