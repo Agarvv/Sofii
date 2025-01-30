@@ -6,13 +6,14 @@
           <p>Sofii</p>
         </div>
         <div class="f-flex-search">
-          <i class="fas fa-search"></i>
-          <input type="search" placeholder="Search Users, Posts, Videos....." />
+          <i @click="search" class="fas fa-search"></i>
+          <input
+            type="search"
+            v-model="searchQuery"
+            @keydown.enter="search"
+            placeholder="Search Users, Posts, Videos....."
+          />
         </div>
-      </div>
-
-      <div class="responsive-aside-open">
-        <i class="fas fa-bars"></i>
       </div>
 
       <div class="m-flex-nav-items">
@@ -53,9 +54,9 @@
       </div>
       <div
         class="rsb-i"
-        :class="{ on: activePage === 'watch' }"
+        :class="{ on: activePage === 'saved' }"
       >
-        <i class="fas fa-tv"></i>
+        <i class="fa fa-bookmark"></i>
       </div>
       <div
         class="rsb-i"
@@ -81,6 +82,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
   name: 'HeaderComponent',
@@ -91,6 +93,19 @@ export default defineComponent({
       value: 'home'
     },
   },
+  data() {
+    return {
+      searchQuery: ''
+    };
+  },
+  methods: {
+    search() {
+      const router = useRouter();
+      if (this.searchQuery) {
+        router.push(`/search/${this.searchQuery}`);
+      }
+    }
+  }
 });
 </script>
 
