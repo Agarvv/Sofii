@@ -60,7 +60,7 @@ export default defineComponent({
         const showFilters = ref<boolean>(false); 
 
         const route = useRoute();  
-        const searchQuery = route.params.query || '';  
+        let searchQuery = route.params.query || '';  
 
         const search = async () => {
             const response = await useGet<SearchResults>({
