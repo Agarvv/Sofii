@@ -21,6 +21,7 @@ import ErrorComponent from './shared/error/ErrorComponent.vue';
 import LoadingComponent from './shared/loading/LoadingComponent.vue';
 import { useSocket } from './composables/useWebSocket';
 import NotificationCard from './shared/notification/NotificationCard.vue';
+import { Notification } from '@/types/notifications/Notification'
 
 export default defineComponent({
   components: {
@@ -30,14 +31,14 @@ export default defineComponent({
     NotificationCard
   },
   setup() {
-    const notification = ref<any>(null); 
+    const notification = ref<Notification | null>(null); 
     
     const { socket } = useSocket(); 
     const apiStore = apiStatusStore(); 
     const { isLoading, successMessage, errorMessage } = storeToRefs(apiStore);
     
     onMounted(() => {
-      socket.instance.on('newNotification', (newNotification) => {
+      socket.instance.on('newNotification', (newNotification: Notification) => {
         console.log("new notification", newNotification);
         notification.value = newNotification;
         setTimeout(() => {

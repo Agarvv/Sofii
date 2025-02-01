@@ -1,4 +1,5 @@
 import { NotificationTarget } from './NotificationTarget'
+import { NotificationSender } from './NotificationSender'
 
 export interface Notification {
     id: number,
@@ -7,5 +8,6 @@ export interface Notification {
     notification_type: string,
     notification: string,
     type_id: number,
-    targetUser: NotificationTarget
+    targetUser: NotificationTarget,
+    sender: NotificationSender 
 }

@@ -1,16 +1,16 @@
 <template>
   <div @click="goToNTarget" class="notification-card">
     <div class="profile">
-        <img :src="notification.targetUser.profilePicture" class="profile-pic">
+        <img :src="notification.sender.profilePicture" class="profile-pic">
     </div>
     <div class="notification-content">
-        <h4 class="username">{{ notification.targetUser.username }}</h4>
+        <h4 class="username">{{ notification.sender.username }}</h4>
         <p class="notification-text">{{ notification.notification }}</p>
         <p class="date">Now</p>
     </div>
 
     <div @click.stop="hideNotification" class="notification-close">
-      <font-awesome-icon icon="close"/>
+      <i class="fa fa-close"></i>
     </div>
   </div>
 </template> 

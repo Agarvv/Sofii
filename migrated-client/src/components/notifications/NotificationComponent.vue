@@ -7,7 +7,7 @@
       <div class="notification-user-img">
         <img 
           style="width: 70px; border-radius: 50%" 
-          :src="notification.targetUser.profilePicture"
+          :src="notification.sender.profilePicture"
         />
       </div>
 
