@@ -63,7 +63,8 @@ class NotificationsService {
        // io.to(String(target)).emit('newNotification', fullNotification);
         //io.emit('newNotification', originalNotification);
         console.log("Socket rooms", io.sockets.adapter.rooms)
-        io.to(target.toString()).emit('newNotification', fullNotification);
+console.log(`Sending notification to room: ${target}, exists:`, io.sockets.adapter.rooms.has(target.toString()));
+        io.to(`${target}`).emit('newNotification', fullNotification);
    }
 
 }
