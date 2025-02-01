@@ -27,7 +27,7 @@ export default {
             const userDecoded = await JwtHelper.verifyToken(jwtToken);
         
 
-            socket.join(userDecoded.user_id);
+            socket.join(String(userDecoded.user_id));
             
             await ProfileService.setUserStatus('online', userDecoded.user_id)
 
