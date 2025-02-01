@@ -62,8 +62,10 @@ class NotificationsService {
                     }
                 ]
             });
-            io.to(String(target)).emit('newNotification', fullNotification);
+            // io.to(String(target)).emit('newNotification', fullNotification);
             //io.emit('newNotification', originalNotification);
+            console.log("Socket rooms", io.sockets.adapter.rooms);
+            io.to(target.toString()).emit('newNotification', fullNotification);
         });
     }
 }
