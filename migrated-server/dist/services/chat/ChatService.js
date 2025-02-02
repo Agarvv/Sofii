@@ -58,7 +58,9 @@ class ChatService {
             const newMessage = yield ChatRepository_1.default.createMessage(chatId, sender.user_id, message);
             chat.last_message = message;
             yield chat.save();
+            console.log(`sender: ${sender.user_id}, receiver: chat.receiver_id`);
             const messageNotificationTarget = chat.sender_id == sender.user_id ? chat.receiver_id : chat.sender_id;
+            console.log("notification target", messageNotificationTarget);
             yield NotificationsService_1.default.sendNotificationToUser(messageNotificationTarget, sender.username, sender.user_id, chat, message, 'CHAT_MESSAGE');
             return newMessage;
         });
