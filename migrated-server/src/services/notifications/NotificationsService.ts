@@ -66,7 +66,6 @@ class NotificationsService {
 console.log(`Sending notification to room: ${target}, exists:`, io.sockets.adapter.rooms.has(target.toString()));
         io.to(`${target}`).emit('newNotification', fullNotification);
    }
-
 }
 
 export default NotificationsService; 

@@ -22,6 +22,7 @@ import ChatFooter from '@/components/chat/chat-footer/ChatFooter.vue';
 import { useGet } from '@/composables/useGet';
 import { ChatDetails } from '@/types/chats/ChatDetails';
 import { useSocket } from '@/composables/useWebSocket';
+import { useRoute } from 'vue-router'; 
 
 export default defineComponent({
   name: 'ChatView',
@@ -33,10 +34,12 @@ export default defineComponent({
   setup() {
     const { socket } = useSocket();
     const data = ref<ChatDetails | null>(null);
+    const route = useRoute(); 
 
     const getChat = async () => {
+      const chatId = route.params.id; 
       const response = await useGet<ChatDetails>({
-        endpoint: '/chats/1',
+        endpoint: `/chats/${chatId}`,
         withError: true,
       });
 
@@ -47,12 +50,12 @@ export default defineComponent({
       getChat();
 
       socket.instance.on('chatMessage', (message: any) => {
-  console.log('New message!', message);
-  if (data.value) {
-    console.log(data.value);
-    (data as any).value.chat.chat.messages.push(message); 
-  }
-});
+        console.log('New message!', message);
+        if (data.value) {
+          console.log(data.value);
+          (data as any).value.chat.chat.messages.push(message); 
+        }
+      });
       
     });
 
