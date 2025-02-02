@@ -105,7 +105,6 @@ main .posts {
 }
 
 .interact-buttons button {
-  border: .3px solid gray;
   color: white;
   border-radius: 10px;
   height: 40px;
