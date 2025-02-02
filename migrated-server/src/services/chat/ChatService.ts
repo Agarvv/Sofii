@@ -61,8 +61,8 @@ class ChatService {
        
        chat.last_message = message; 
        await chat.save(); 
-        console.log(`sender: ${sender.user_id}, receiver: chat.receiver_id`)
-        
+        console.log(`sender: ${sender.user_id}, receiver: ${chat.receiver_id}`)
+
        const messageNotificationTarget = chat.sender_id == sender.user_id ? chat.receiver_id : chat.sender_id 
        console.log("notification target",messageNotificationTarget )
        await NotificationsService.sendNotificationToUser(
