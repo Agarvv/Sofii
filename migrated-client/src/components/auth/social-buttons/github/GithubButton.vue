@@ -1,7 +1,6 @@
 <template>
     <div class="github" @click="githubLogin">
         Use GitHub 
-        <i class="fa fa-github"></i>
     </div>
 </template>
 

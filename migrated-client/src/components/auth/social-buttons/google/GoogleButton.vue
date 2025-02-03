@@ -1,7 +1,6 @@
 <template>
     <div class="google" @click="googleLogin">
-        Use Google 
-        <i class="fa fa-google"></i>
+        Use Google
     </div>
 </template>
 
