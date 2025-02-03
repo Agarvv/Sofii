@@ -105,7 +105,7 @@ main .posts {
 }
 
 .interact-buttons button {
-  color: white;
+ 
   border-radius: 10px;
   height: 40px;
   display: flex;
@@ -124,7 +124,7 @@ main .posts {
 aside .user-info {
   padding: 15px;
   border-radius: 10px;
-}
+} 
 
 aside .info {
   border: 1px solid black;
