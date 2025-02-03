@@ -63,7 +63,7 @@ class ChatService {
        await chat.save(); 
         console.log(`sender: ${chat.sender_id}, receiver: ${chat.receiver_id}`)
 
-       const messageNotificationTarget = chat.sender_id === sender.user_id ? chat.receiver_id : chat.sender_id;
+       /*const messageNotificationTarget = chat.sender_id === sender.user_id ? chat.receiver_id : chat.sender_id;
 
        console.log("notification target",messageNotificationTarget )
        await NotificationsService.sendNotificationToUser(
@@ -73,7 +73,7 @@ class ChatService {
           chat, 
           message,
           'CHAT_MESSAGE'
-       ); 
+       ); */
        
        return newMessage; 
    }
