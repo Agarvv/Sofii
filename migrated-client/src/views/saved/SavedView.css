@@ -12,7 +12,7 @@
 }
 
 @media(max-width: 60px) {
-    .saved {
-        width: 100%;
+    .saved-wraper .saved {
+        width: 100%!important; 
     }
 }
